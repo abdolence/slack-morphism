@@ -43,8 +43,8 @@ case class SlackApiResponseError(
 ) extends SlackApiError(
       uri = uri,
       message = s"""Slack API error response: ${errorCode}.
-			   |${details.map( text => s" Details: ${text}." ).getOrElse( "" )}
-			   |${warning.map( text => s" Warning: ${text}." ).getOrElse( "" )}
+			   |${details.map(text => s" Details: ${text}." ).getOrElse( "" )}
+			   |${warning.map(text => s" Warning: ${text}." ).getOrElse( "" )}
 			   |""".stripMargin
     )
 

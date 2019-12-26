@@ -281,6 +281,39 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackAp
       )
     }
 
+    /**
+      * https://api.slack.com/methods/channels.setTopic
+      */
+    def setTopic( req: SlackApiChannelsSetTopicRequest )(
+        implicit slackApiToken: SlackApiToken,
+        backend: SttpBackend[Future, Nothing, NothingT],
+        ec: ExecutionContext
+    ): Future[Either[SlackApiError, SlackApiChannelsSetTopicResponse]] = {
+
+      protectedSlackHttpApiPost[SlackApiChannelsSetTopicRequest, SlackApiChannelsSetTopicResponse](
+        "channels.setTopic",
+        req
+      )
+    }
+
+    /**
+	   * https://api.slack.com/methods/channels.unarchive
+	   */
+    def unarchive( req: SlackApiChannelsUnarchiveRequest )(
+        implicit slackApiToken: SlackApiToken,
+        backend: SttpBackend[Future, Nothing, NothingT],
+        ec: ExecutionContext
+    ): Future[Either[SlackApiError, SlackApiChannelsUnarchiveResponse]] = {
+
+      protectedSlackHttpApiPost[
+        SlackApiChannelsUnarchiveRequest,
+        SlackApiChannelsUnarchiveResponse
+      ](
+        "channels.unarchive",
+        req
+      )
+    }
+
   }
 
 }

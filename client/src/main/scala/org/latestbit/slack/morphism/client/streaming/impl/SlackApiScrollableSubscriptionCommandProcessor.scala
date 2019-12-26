@@ -47,7 +47,7 @@ class SlackApiScrollableSubscriptionCommandProcessor[IT, PT](
 
     Option( lastItems )
       .filter( _.nonEmpty )
-      .map( items => Future.successful( Right( items ) ) )
+      .map(items => Future.successful( Right( items ) ) )
       .orElse(
         subscriptionLastResponse
           .map { futureResp =>

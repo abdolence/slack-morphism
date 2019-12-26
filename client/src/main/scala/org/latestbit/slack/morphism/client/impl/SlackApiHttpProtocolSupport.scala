@@ -87,7 +87,7 @@ trait SlackApiHttpProtocolSupport {
               .map( Either.left[SlackApiError, RS] )
               .getOrElse(
                 decode[RS]( successBody ).left
-                  .map( ex => circeDecodingErrorToApiError( uri, ex, successBody ) )
+                  .map(ex => circeDecodingErrorToApiError( uri, ex, successBody ) )
               )
           }
           case Left( ex ) => {
@@ -138,7 +138,7 @@ trait SlackApiHttpProtocolSupport {
       backend: SttpBackend[Future, Nothing, NothingT],
       ec: ExecutionContext
   ): Future[Either[SlackApiError, RS]] = {
-    request.send().map( response => decodeSlackResponse[RS]( request.uri, response ) ).recoverWith {
+    request.send().map(response => decodeSlackResponse[RS]( request.uri, response ) ).recoverWith {
       case ex: IOException =>
         Future.successful( Left( SlackApiConnectionError( request.uri, ex ) ) )
       case ex: Throwable =>
