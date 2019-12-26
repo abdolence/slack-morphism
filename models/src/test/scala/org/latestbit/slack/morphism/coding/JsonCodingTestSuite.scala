@@ -18,10 +18,13 @@
 
 package org.latestbit.slack.morphism.coding
 
+import java.time.Instant
+
 import io.circe.{ Decoder, Encoder }
 import io.circe.syntax._
 import io.circe.parser._
 import org.latestbit.circe.adt.codec._
+import org.latestbit.slack.morphism.client.models.common.SlackDateTime
 import org.scalatest.flatspec.AnyFlatSpec
 
 case class TestModel( f1: String, f2: Long = 5, f3: Option[String] = None, f4: Option[Long] = None )
@@ -33,6 +36,14 @@ case class TestEvent1( f1: String ) extends TestEvent
 
 @JsonAdt( "ev2" )
 case class TestEvent2( f1: String ) extends TestEvent
+
+case class TestSlackInstant(
+    simpleLong: Long,
+    instant: Instant,
+    slackTime: SlackDateTime,
+    optSlackTime: Option[SlackDateTime],
+    optSlackTimeAbsent: Option[SlackDateTime] = None
+)
 
 class JsonCodingTestSuite extends AnyFlatSpec {
 
@@ -84,6 +95,33 @@ class JsonCodingTestSuite extends AnyFlatSpec {
     ) match {
       case Right( model ) => assert( model === testModel )
       case Left( ex )     => fail( ex )
+    }
+  }
+
+  "A Slack response with instants" should "be serialised and deserialized correctly" in {
+    import io.circe.generic.auto._
+
+    val testTime = Instant.now()
+
+    val testModel = TestSlackInstant(
+      testTime.toEpochMilli,
+      testTime,
+      slackTime = testTime,
+      optSlackTime = Some( testTime )
+    )
+
+    val testJson = testModel.asJson.dropNullValues.noSpaces
+
+    assert( !(testJson contains "value") )
+
+    decode[TestSlackInstant](
+      testJson
+    ) match {
+      case Right( model ) => {
+        assert( model.slackTime.value.getEpochSecond === testTime.getEpochSecond )
+        assert( model.optSlackTime.exists( _.value.getEpochSecond === testTime.getEpochSecond ) )
+      }
+      case Left( ex ) => fail( ex )
     }
   }
 

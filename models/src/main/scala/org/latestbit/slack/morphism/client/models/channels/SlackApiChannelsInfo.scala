@@ -16,24 +16,14 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.models.bots
-
-import org.latestbit.slack.morphism.client.models.common.SlackDateTime
+package org.latestbit.slack.morphism.client.models.channels
 
 /**
-  * Response of https://api.slack.com/methods/bots.info
+  * Request of https://api.slack.com/methods/channels.info
   */
-case class SlackApiBotsInfo( bot: SlackApiBotsProfile )
+case class SlackApiChannelsInfoRequest( channel: String, include_locale: Option[Boolean] = None )
 
 /**
-  * Slack bot profile model
+  * Response of https://api.slack.com/methods/channels.info
   */
-case class SlackApiBotsProfile(
-    id: String,
-    deleted: Boolean = false,
-    name: String,
-    updated: SlackDateTime,
-    app_id: String,
-    user_id: String,
-    icons: Map[String, String] = Map()
-)
+case class SlackApiChannelsInfoResponse( channel: SlackChannelInfo )

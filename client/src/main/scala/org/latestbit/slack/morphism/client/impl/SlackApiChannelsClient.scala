@@ -79,6 +79,10 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackAp
       )
     }
 
+    /**
+      * Scrolling support for
+      * https://api.slack.com/methods/channels.history
+      */
     def historyScroller( req: SlackApiChannelsHistoryRequest )(
         implicit slackApiToken: SlackApiUserToken,
         backend: SttpBackend[Future, Nothing, NothingT],
@@ -97,6 +101,21 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackAp
             )
           )
         }
+      )
+    }
+
+    /**
+      * https://api.slack.com/methods/channels.info
+      */
+    def info( req: SlackApiChannelsInfoRequest )(
+        implicit slackApiToken: SlackApiUserToken,
+        backend: SttpBackend[Future, Nothing, NothingT],
+        ec: ExecutionContext
+    ): Future[Either[SlackApiError, SlackApiChannelsInfoResponse]] = {
+
+      protectedSlackHttpApiPost[SlackApiChannelsInfoRequest, SlackApiChannelsInfoResponse](
+        "channels.info",
+        req
       )
     }
 

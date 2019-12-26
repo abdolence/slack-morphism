@@ -18,13 +18,13 @@
 
 package org.latestbit.slack.morphism.client.models.channels
 
-import java.time.Instant
+import org.latestbit.slack.morphism.client.models.common.SlackDateTime
 
 case class SlackChannelInfo(
     id: String,
     name: String,
     is_channel: Boolean = true,
-    created: Instant,
+    created: SlackDateTime,
     creator: String,
     is_archived: Boolean = false,
     is_general: Boolean = false,
@@ -45,7 +45,7 @@ case class SlackChannelInfo(
 )
 
 object SlackChannelInfo {
-  case class SlackGeneralChannelInfo( value: String, creator: String, last_set: Instant )
+  case class SlackGeneralChannelInfo( value: String, creator: String, last_set: SlackDateTime )
 
   type SlackTopicInfo = SlackGeneralChannelInfo
   type SlackPurposeInfo = SlackGeneralChannelInfo
