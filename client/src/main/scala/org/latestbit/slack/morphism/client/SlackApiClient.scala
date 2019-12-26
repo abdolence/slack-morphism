@@ -30,6 +30,7 @@ class SlackApiClient
     with SlackApiAppsClient
     with SlackApiAuthClient
     with SlackApiBotsClient
-    with SlackApiChannelsClient {}
+    with SlackApiChannelsClient
+    with SlackApiChatClient {}
 
 object SlackApiClient {}
