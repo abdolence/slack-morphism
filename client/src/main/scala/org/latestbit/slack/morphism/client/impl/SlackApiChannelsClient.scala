@@ -218,6 +218,69 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackAp
       )
     }
 
+    /**
+      * https://api.slack.com/methods/channels.mark
+      */
+    def mark( req: SlackApiChannelsMarkRequest )(
+        implicit slackApiToken: SlackApiToken,
+        backend: SttpBackend[Future, Nothing, NothingT],
+        ec: ExecutionContext
+    ): Future[Either[SlackApiError, SlackApiChannelsMarkResponse]] = {
+
+      protectedSlackHttpApiPost[SlackApiChannelsMarkRequest, SlackApiChannelsMarkResponse](
+        "channels.mark",
+        req
+      )
+    }
+
+    /**
+	   * https://api.slack.com/methods/channels.rename
+	   */
+    def rename( req: SlackApiChannelsRenameRequest )(
+        implicit slackApiToken: SlackApiToken,
+        backend: SttpBackend[Future, Nothing, NothingT],
+        ec: ExecutionContext
+    ): Future[Either[SlackApiError, SlackApiChannelsRenameResponse]] = {
+
+      protectedSlackHttpApiPost[SlackApiChannelsRenameRequest, SlackApiChannelsRenameResponse](
+        "channels.rename",
+        req
+      )
+    }
+
+    /**
+      * https://api.slack.com/methods/channels.replies
+      */
+    def replies( req: SlackApiChannelsRepliesRequest )(
+        implicit slackApiToken: SlackApiToken,
+        backend: SttpBackend[Future, Nothing, NothingT],
+        ec: ExecutionContext
+    ): Future[Either[SlackApiError, SlackApiChannelsRepliesResponse]] = {
+
+      protectedSlackHttpApiPost[SlackApiChannelsRepliesRequest, SlackApiChannelsRepliesResponse](
+        "channels.replies",
+        req
+      )
+    }
+
+    /**
+      * https://api.slack.com/methods/channels.setPurpose
+      */
+    def setPurpose( req: SlackApiChannelsSetPurposeRequest )(
+        implicit slackApiToken: SlackApiToken,
+        backend: SttpBackend[Future, Nothing, NothingT],
+        ec: ExecutionContext
+    ): Future[Either[SlackApiError, SlackApiChannelsSetPurposeResponse]] = {
+
+      protectedSlackHttpApiPost[
+        SlackApiChannelsSetPurposeRequest,
+        SlackApiChannelsSetPurposeResponse
+      ](
+        "channels.setPurpose",
+        req
+      )
+    }
+
   }
 
 }
