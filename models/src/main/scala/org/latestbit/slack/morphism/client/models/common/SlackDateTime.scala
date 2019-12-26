@@ -26,17 +26,27 @@ import io.circe.{ Decoder, Encoder, HCursor, Json }
 import scala.language.implicitConversions
 
 case class SlackDateTime( value: Instant ) extends AnyVal
+case class SlackDateTimeAsStr( value: Instant ) extends AnyVal
 
 object SlackDateTime {
 
   implicit def toSlackDateTime( value: Instant ): SlackDateTime =
     SlackDateTime( value )
 
+  implicit def toSlackDateTimeStr( value: Instant ): SlackDateTimeAsStr =
+    SlackDateTimeAsStr( value )
+
   implicit def toSlackDateTime( value: Date ): SlackDateTime =
     toSlackDateTime( value.toInstant )
 
+  implicit def toSlackDateTimeStr( value: Date ): SlackDateTimeAsStr =
+    toSlackDateTimeStr( value.toInstant )
+
   implicit def toSlackDateTime( value: Long ): SlackDateTime =
     toSlackDateTime( Instant.ofEpochSecond( value ) )
+
+  implicit def toSlackDateTimeStr( value: Long ): SlackDateTimeAsStr =
+    toSlackDateTimeStr( Instant.ofEpochSecond( value ) )
 
   implicit def fromSlackDateTimeToInstant( dateTime: SlackDateTime ): Instant =
     dateTime.value
@@ -47,12 +57,23 @@ object SlackDateTime {
   implicit def fromSlackDateTimeToLong( dateTime: SlackDateTime ): Long =
     dateTime.value.getEpochSecond
 
+  implicit def fromSlackDateTimeStrToLong( dateTime: SlackDateTimeAsStr ): Long =
+    dateTime.value.getEpochSecond
+
   implicit val slackDateTimeEncoder: Encoder[SlackDateTime] = (a: SlackDateTime) => {
     Json.fromLong( fromSlackDateTimeToLong( a.value ) )
   }
 
   implicit val slackDateTimeDecoder: Decoder[SlackDateTime] = (c: HCursor) => {
     c.as[Long].map( toSlackDateTime )
+  }
+
+  implicit val slackDateTimeAsStrEncoder: Encoder[SlackDateTimeAsStr] = (a: SlackDateTimeAsStr) => {
+    Json.fromString( fromSlackDateTimeStrToLong( a.value ).toString )
+  }
+
+  implicit val slackDateTimeAsStrDecoder: Decoder[SlackDateTimeAsStr] = (c: HCursor) => {
+    c.as[String].map( _.toLong ).map( toSlackDateTimeStr )
   }
 
 }

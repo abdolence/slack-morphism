@@ -16,14 +16,25 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.models.channels
+package org.latestbit.slack.morphism.client.models.chat
+
+import org.latestbit.slack.morphism.client.models.messages.{ SlackAttachment, SlackBlock }
 
 /**
- * Request of https://api.slack.com/methods/channels.create
+ * Request of https://api.slack.com/methods/chat.update
  */
-case class SlackApiChannelsCreateRequest( name: String, validate: Option[Boolean] = None )
+case class SlackApiChatUpdateRequest(
+    channel: String,
+    text: String,
+    ts: String,
+    as_user: String,
+    attachments: Option[List[SlackAttachment]] = None,
+    blocks: Option[List[SlackBlock]] = None,
+    link_names: Option[Boolean] = None,
+    parse: Option[String] = None
+)
 
 /**
- * Response of https://api.slack.com/methods/channels.create
+ * Response of https://api.slack.com/methods/chat.update
  */
-case class SlackApiChannelsCreateResponse( channel: SlackChannelInfo )
+case class SlackApiChatUpdateResponse( channel: String, ts: String, text: Option[String] = None )

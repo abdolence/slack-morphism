@@ -21,8 +21,8 @@ package org.latestbit.slack.morphism.client.models.channels
 import org.latestbit.slack.morphism.client.streaming.SlackApiScrollableResponse
 
 /**
-  * Request of https://api.slack.com/methods/channels.list
-  */
+ * Request of https://api.slack.com/methods/channels.list
+ */
 case class SlackApiChannelsListRequest(
     cursor: String,
     exclude_archived: Option[Boolean] = None,
@@ -31,8 +31,8 @@ case class SlackApiChannelsListRequest(
 )
 
 /**
-  * Response of https://api.slack.com/methods/channels.list
-  */
+ * Response of https://api.slack.com/methods/channels.list
+ */
 case class SlackApiChannelsListResponse(
     channels: List[SlackChannelInfo] = List(),
     response_metadata: Option[SlackApiChannelsListMetadata] = None

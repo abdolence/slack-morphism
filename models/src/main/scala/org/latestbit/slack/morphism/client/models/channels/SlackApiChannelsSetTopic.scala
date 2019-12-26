@@ -19,11 +19,11 @@
 package org.latestbit.slack.morphism.client.models.channels
 
 /**
-  * Request of https://api.slack.com/methods/channels.setTopic
-  */
+ * Request of https://api.slack.com/methods/channels.setTopic
+ */
 case class SlackApiChannelsSetTopicRequest( channel: String, topic: String )
 
 /**
-  * Response of https://api.slack.com/methods/channels.setTopic
-  */
+ * Response of https://api.slack.com/methods/channels.setTopic
+ */
 case class SlackApiChannelsSetTopicResponse( topic: Option[String] = None )

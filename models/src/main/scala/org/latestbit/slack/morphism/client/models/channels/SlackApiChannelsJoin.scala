@@ -19,11 +19,11 @@
 package org.latestbit.slack.morphism.client.models.channels
 
 /**
-  * Request of https://api.slack.com/methods/channels.join
-  */
+ * Request of https://api.slack.com/methods/channels.join
+ */
 case class SlackApiChannelsJoinRequest( name: String, validate: Option[Boolean] = None )
 
 /**
-  * Response of https://api.slack.com/methods/channels.join
-  */
+ * Response of https://api.slack.com/methods/channels.join
+ */
 case class SlackApiChannelsJoinResponse( channel: SlackChannelInfo )

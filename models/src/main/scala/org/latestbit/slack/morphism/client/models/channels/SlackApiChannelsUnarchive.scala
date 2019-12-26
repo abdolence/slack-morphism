@@ -19,11 +19,11 @@
 package org.latestbit.slack.morphism.client.models.channels
 
 /**
-  * Request of https://api.slack.com/methods/channels.unarchive
-  */
+ * Request of https://api.slack.com/methods/channels.unarchive
+ */
 case class SlackApiChannelsUnarchiveRequest( channel: String )
 
 /**
-  * Response of https://api.slack.com/methods/channels.unarchive
-  */
+ * Response of https://api.slack.com/methods/channels.unarchive
+ */
 case class SlackApiChannelsUnarchiveResponse()

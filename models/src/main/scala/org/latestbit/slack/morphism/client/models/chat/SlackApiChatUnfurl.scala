@@ -16,14 +16,23 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.models.channels
+package org.latestbit.slack.morphism.client.models.chat
 
 /**
- * Request of https://api.slack.com/methods/channels.create
+ * Request of https://api.slack.com/methods/chat.unfurl
  */
-case class SlackApiChannelsCreateRequest( name: String, validate: Option[Boolean] = None )
+case class SlackApiChatUnfurlRequest(
+    channel: String,
+    ts: String,
+    unfurls: Map[String, SlackApiChatUnfurlMapItem],
+    user_auth_message: Option[String] = None,
+    user_auth_required: Option[Boolean] = None,
+    user_auth_url: Option[String] = None
+)
+
+case class SlackApiChatUnfurlMapItem( text: String )
 
 /**
- * Response of https://api.slack.com/methods/channels.create
+ * Response of https://api.slack.com/methods/chat.unfurl
  */
-case class SlackApiChannelsCreateResponse( channel: SlackChannelInfo )
+case class SlackApiChatUnfurlResponse()

@@ -21,13 +21,13 @@ package org.latestbit.slack.morphism.client.models.bots
 import org.latestbit.slack.morphism.client.models.common.SlackDateTime
 
 /**
-  * Response of https://api.slack.com/methods/bots.info
-  */
+ * Response of https://api.slack.com/methods/bots.info
+ */
 case class SlackApiBotsInfo( bot: SlackApiBotsProfile )
 
 /**
-  * Slack bot profile model
-  */
+ * Slack bot profile model
+ */
 case class SlackApiBotsProfile(
     id: String,
     deleted: Boolean = false,

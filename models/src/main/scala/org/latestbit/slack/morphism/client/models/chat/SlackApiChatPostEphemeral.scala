@@ -18,16 +18,27 @@
 
 package org.latestbit.slack.morphism.client.models.chat
 
+import org.latestbit.slack.morphism.client.models.messages._
+
 /**
- * Request of https://api.slack.com/methods/chat.deleteScheduledMessage
+ * Request of https://api.slack.com/methods/chat.postEphemeral
  */
-case class SlackApiChatDeleteScheduledMessageRequest(
+case class SlackApiChatPostEphemeralRequest(
     channel: String,
-    scheduled_message: String,
-    as_user: Option[Boolean] = None
+    text: String,
+    user: String,
+    attachments: Option[List[SlackAttachment]] = None,
+    as_user: Option[Boolean] = None,
+    blocks: Option[List[SlackBlock]] = None,
+    icon_emoji: Option[String] = None,
+    icon_url: Option[String] = None,
+    link_names: Option[Boolean] = None,
+    parse: Option[String] = None,
+    thread_ts: Option[String] = None,
+    username: Option[String] = None
 )
 
 /**
- * Response of https://api.slack.com/methods/chat.deleteScheduledMessage
+ * Response of https://api.slack.com/methods/chat.postEphemeral
  */
-case class SlackApiChatDeleteScheduledMessageResponse()
+case class SlackApiChatPostEphemeralResponse( message_ts: String )

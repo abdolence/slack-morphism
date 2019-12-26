@@ -26,8 +26,8 @@ import sttp.client._
 import scala.concurrent.{ ExecutionContext, Future }
 
 /**
-  * Support for Slack Chat API methods
-  */
+ * Support for Slack Chat API methods
+ */
 trait SlackApiChatClient extends SlackApiHttpProtocolSupport { self: SlackApiClient =>
 
   import org.latestbit.slack.morphism.ext.SttpExt._
@@ -35,8 +35,8 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
   object chat {
 
     /**
-      * https://api.slack.com/methods/chat.delete
-      */
+     * https://api.slack.com/methods/chat.delete
+     */
     def delete( req: SlackApiChatDeleteRequest )(
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
@@ -50,8 +50,8 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
     }
 
     /**
-      * https://api.slack.com/methods/chat.deleteScheduledMessage
-      */
+     * https://api.slack.com/methods/chat.deleteScheduledMessage
+     */
     def deleteScheduledMessage( req: SlackApiChatDeleteScheduledMessageRequest )(
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
@@ -63,6 +63,117 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
         SlackApiChatDeleteScheduledMessageResponse
       ](
         "chat.deleteScheduledMessage",
+        req
+      )
+    }
+
+    /**
+     * https://api.slack.com/methods/chat.getPermalink
+     */
+    def getPermalink( req: SlackApiChatGetPermalinkRequest )(
+        implicit slackApiToken: SlackApiToken,
+        backend: SttpBackend[Future, Nothing, NothingT],
+        ec: ExecutionContext
+    ): Future[Either[SlackApiError, SlackApiChatGetPermalinkResponse]] = {
+
+      protectedSlackHttpApiPost[SlackApiChatGetPermalinkRequest, SlackApiChatGetPermalinkResponse](
+        "chat.getPermalink",
+        req
+      )
+    }
+
+    /**
+     * https://api.slack.com/methods/chat.meMessage
+     */
+    def meMessage( req: SlackApiChatMeMessageRequest )(
+        implicit slackApiToken: SlackApiToken,
+        backend: SttpBackend[Future, Nothing, NothingT],
+        ec: ExecutionContext
+    ): Future[Either[SlackApiError, SlackApiChatMeMessageResponse]] = {
+
+      protectedSlackHttpApiPost[SlackApiChatMeMessageRequest, SlackApiChatMeMessageResponse](
+        "chat.meMessage",
+        req
+      )
+    }
+
+    /**
+     * https://api.slack.com/methods/chat.postEphemeral
+     */
+    def postEphemeral( req: SlackApiChatPostEphemeralRequest )(
+        implicit slackApiToken: SlackApiToken,
+        backend: SttpBackend[Future, Nothing, NothingT],
+        ec: ExecutionContext
+    ): Future[Either[SlackApiError, SlackApiChatPostEphemeralResponse]] = {
+
+      protectedSlackHttpApiPost[
+        SlackApiChatPostEphemeralRequest,
+        SlackApiChatPostEphemeralResponse
+      ](
+        "chat.postEphemeral",
+        req
+      )
+    }
+
+    /**
+     * https://api.slack.com/methods/chat.postMessage
+     */
+    def postMessage( req: SlackApiChatPostMessageRequest )(
+        implicit slackApiToken: SlackApiToken,
+        backend: SttpBackend[Future, Nothing, NothingT],
+        ec: ExecutionContext
+    ): Future[Either[SlackApiError, SlackApiChatPostMessageResponse]] = {
+
+      protectedSlackHttpApiPost[SlackApiChatPostMessageRequest, SlackApiChatPostMessageResponse](
+        "chat.postMessage",
+        req
+      )
+    }
+
+    /**
+     * https://api.slack.com/methods/chat.scheduleMessage
+     */
+    def scheduleMessage( req: SlackApiChatScheduleMessageRequest )(
+        implicit slackApiToken: SlackApiToken,
+        backend: SttpBackend[Future, Nothing, NothingT],
+        ec: ExecutionContext
+    ): Future[Either[SlackApiError, SlackApiChatScheduleMessageResponse]] = {
+
+      protectedSlackHttpApiPost[
+        SlackApiChatScheduleMessageRequest,
+        SlackApiChatScheduleMessageResponse
+      ](
+        "chat.scheduleMessage",
+        req
+      )
+    }
+
+    /**
+     * https://api.slack.com/methods/chat.unfurl
+     */
+    def unfurl( req: SlackApiChatUnfurlRequest )(
+        implicit slackApiToken: SlackApiToken,
+        backend: SttpBackend[Future, Nothing, NothingT],
+        ec: ExecutionContext
+    ): Future[Either[SlackApiError, SlackApiChatUnfurlResponse]] = {
+
+      protectedSlackHttpApiPost[SlackApiChatUnfurlRequest, SlackApiChatUnfurlResponse](
+        "chat.unfurl",
+        req
+      )
+    }
+
+    /**
+     * https://api.slack.com/methods/chat.update
+     */
+    def update( req: SlackApiChatUpdateRequest )(
+        implicit slackApiToken: SlackApiToken,
+        backend: SttpBackend[Future, Nothing, NothingT],
+        ec: ExecutionContext
+    ): Future[Either[SlackApiError, SlackApiChatUpdateResponse]] = {
+
+      protectedSlackHttpApiPost[SlackApiChatUpdateRequest, SlackApiChatUpdateResponse](
+        "chat.update",
         req
       )
     }

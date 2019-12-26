@@ -26,15 +26,15 @@ import sttp.client._
 import scala.concurrent.{ ExecutionContext, Future }
 
 /**
-  * Support for Slack Bots API methods
-  */
+ * Support for Slack Bots API methods
+ */
 trait SlackApiBotsClient extends SlackApiHttpProtocolSupport { self: SlackApiClient =>
 
   object bots {
 
     /**
-      * https://api.slack.com/methods/bots.info
-      */
+     * https://api.slack.com/methods/bots.info
+     */
     def info( bot: Option[String] = None )(
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],

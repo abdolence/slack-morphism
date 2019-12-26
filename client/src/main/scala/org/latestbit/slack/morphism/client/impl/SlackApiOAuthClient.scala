@@ -26,16 +26,16 @@ import sttp.client._
 import scala.concurrent.{ ExecutionContext, Future }
 
 /**
-  * Support for Slack OAuth (v1/v2) API methods
-  */
+ * Support for Slack OAuth (v1/v2) API methods
+ */
 trait SlackApiOAuthClient extends SlackApiHttpProtocolSupport {
   import org.latestbit.slack.morphism.ext.SttpExt._
 
   object oauth {
 
     /**
-      * https://api.slack.com/methods/oauth.access
-      */
+     * https://api.slack.com/methods/oauth.access
+     */
     def access(
         clientId: String,
         clientSecret: String,
@@ -63,8 +63,8 @@ trait SlackApiOAuthClient extends SlackApiHttpProtocolSupport {
     object v2 {
 
       /**
-        * https://api.slack.com/methods/oauth.v2.access
-        */
+       * https://api.slack.com/methods/oauth.v2.access
+       */
       def access(
           clientId: String,
           clientSecret: String,

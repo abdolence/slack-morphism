@@ -16,14 +16,14 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.models.channels
+package org.latestbit.slack.morphism.client.models.chat
 
 /**
- * Request of https://api.slack.com/methods/channels.create
+ * Request of https://api.slack.com/methods/chat.meMessage
  */
-case class SlackApiChannelsCreateRequest( name: String, validate: Option[Boolean] = None )
+case class SlackApiChatMeMessageRequest( channel: String, text: String )
 
 /**
- * Response of https://api.slack.com/methods/channels.create
+ * Response of https://api.slack.com/methods/chat.meMessage
  */
-case class SlackApiChannelsCreateResponse( channel: SlackChannelInfo )
+case class SlackApiChatMeMessageResponse( channel: String, ts: String )

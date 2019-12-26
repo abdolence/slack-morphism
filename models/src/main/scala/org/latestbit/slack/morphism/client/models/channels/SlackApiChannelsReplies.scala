@@ -21,14 +21,14 @@ package org.latestbit.slack.morphism.client.models.channels
 import org.latestbit.slack.morphism.client.models.messages.SlackMessage
 
 /**
-  * Request of https://api.slack.com/methods/channels.replies
-  */
+ * Request of https://api.slack.com/methods/channels.replies
+ */
 case class SlackApiChannelsRepliesRequest(
     channel: String,
     thread_ts: String
 )
 
 /**
-  * Response of https://api.slack.com/methods/channels.replies
-  */
+ * Response of https://api.slack.com/methods/channels.replies
+ */
 case class SlackApiChannelsRepliesResponse( messages: List[SlackMessage] = List() )

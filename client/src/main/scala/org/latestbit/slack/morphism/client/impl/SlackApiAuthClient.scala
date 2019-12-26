@@ -26,15 +26,15 @@ import sttp.client._
 import scala.concurrent.{ ExecutionContext, Future }
 
 /**
-  * Support for Slack Auth API methods
-  */
+ * Support for Slack Auth API methods
+ */
 trait SlackApiAuthClient extends SlackApiHttpProtocolSupport { self: SlackApiClient =>
 
   object auth {
 
     /**
-      * https://api.slack.com/methods/auth.test
-      */
+     * https://api.slack.com/methods/auth.test
+     */
     def test()(
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
@@ -48,8 +48,8 @@ trait SlackApiAuthClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
     }
 
     /**
-      * https://api.slack.com/methods/auth.revoke
-      */
+     * https://api.slack.com/methods/auth.revoke
+     */
     def revoke( test: Option[Boolean] = None )(
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],

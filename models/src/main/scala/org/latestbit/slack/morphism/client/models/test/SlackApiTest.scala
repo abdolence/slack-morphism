@@ -19,13 +19,13 @@
 package org.latestbit.slack.morphism.client.models.test
 
 /**
-  * Slack API test request
-  * https://api.slack.com/methods/api.test
-  */
+ * Slack API test request
+ * https://api.slack.com/methods/api.test
+ */
 case class SlackApiTestRequest( error: Option[String] = None, args: Map[String, String] = Map() )
 
 /**
-  * Slack API test response
-  * https://api.slack.com/methods/api.test
-  */
+ * Slack API test response
+ * https://api.slack.com/methods/api.test
+ */
 case class SlackApiTestResponse( args: Map[String, String] = Map() )

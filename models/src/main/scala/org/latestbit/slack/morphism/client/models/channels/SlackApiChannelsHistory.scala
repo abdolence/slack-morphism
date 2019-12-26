@@ -22,8 +22,8 @@ import org.latestbit.slack.morphism.client.models.messages.SlackMessage
 import org.latestbit.slack.morphism.client.streaming.SlackApiScrollableResponse
 
 /**
-  * Request of https://api.slack.com/methods/channels.history
-  */
+ * Request of https://api.slack.com/methods/channels.history
+ */
 case class SlackApiChannelsHistoryRequest(
     channel: String,
     count: Option[Int] = None,
@@ -34,8 +34,8 @@ case class SlackApiChannelsHistoryRequest(
 )
 
 /**
-  * Response of https://api.slack.com/methods/channels.history
-  */
+ * Response of https://api.slack.com/methods/channels.history
+ */
 case class SlackApiChannelsHistoryResponse(
     messages: List[SlackMessage],
     has_more: Option[Boolean] = None,

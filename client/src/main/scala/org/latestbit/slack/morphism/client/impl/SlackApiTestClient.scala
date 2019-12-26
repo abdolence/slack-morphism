@@ -26,16 +26,16 @@ import sttp.client._
 import scala.concurrent.{ ExecutionContext, Future }
 
 /**
-  * Support for Slack test API methods
-  */
+ * Support for Slack test API methods
+ */
 trait SlackApiTestClient extends SlackApiHttpProtocolSupport { self: SlackApiClient =>
   import org.latestbit.slack.morphism.ext.SttpExt._
 
   object api {
 
     /**
-      * https://api.slack.com/methods/api.test
-      */
+     * https://api.slack.com/methods/api.test
+     */
     def test( req: SlackApiTestRequest )(
         implicit slackApiToken: SlackApiUserToken,
         backend: SttpBackend[Future, Nothing, NothingT],

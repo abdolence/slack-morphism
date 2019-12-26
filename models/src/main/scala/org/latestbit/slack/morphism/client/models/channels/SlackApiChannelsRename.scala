@@ -19,8 +19,8 @@
 package org.latestbit.slack.morphism.client.models.channels
 
 /**
-  * Request of https://api.slack.com/methods/channels.rename
-  */
+ * Request of https://api.slack.com/methods/channels.rename
+ */
 case class SlackApiChannelsRenameRequest(
     channel: String,
     name: String,
@@ -28,6 +28,6 @@ case class SlackApiChannelsRenameRequest(
 )
 
 /**
-  * Response of https://api.slack.com/methods/channels.rename
-  */
+ * Response of https://api.slack.com/methods/channels.rename
+ */
 case class SlackApiChannelsRenameResponse()

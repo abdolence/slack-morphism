@@ -21,8 +21,8 @@ package org.latestbit.slack.morphism.client
 import org.latestbit.slack.morphism.client.impl._
 
 /**
-  * Slack API client
-  */
+ * Slack API client
+ */
 class SlackApiClient
     extends SlackApiHttpProtocolSupport
     with SlackApiOAuthClient

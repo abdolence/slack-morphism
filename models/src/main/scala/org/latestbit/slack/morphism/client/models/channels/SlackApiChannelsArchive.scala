@@ -19,11 +19,11 @@
 package org.latestbit.slack.morphism.client.models.channels
 
 /**
-  * Request of https://api.slack.com/methods/channels.archive
-  */
+ * Request of https://api.slack.com/methods/channels.archive
+ */
 case class SlackApiChannelsArchiveRequest( channel: String )
 
 /**
-  * Response of https://api.slack.com/methods/channels.archive
-  */
+ * Response of https://api.slack.com/methods/channels.archive
+ */
 case class SlackApiChannelsArchiveResponse()

@@ -19,8 +19,8 @@
 package org.latestbit.slack.morphism.client.models.auth
 
 /**
-  * Response of https://api.slack.com/methods/auth.test
-  */
+ * Response of https://api.slack.com/methods/auth.test
+ */
 //noinspection ScalaFileName
 case class SlackApiAuthTestResponse(
     url: Option[String] = None,

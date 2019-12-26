@@ -19,11 +19,11 @@
 package org.latestbit.slack.morphism.client.models.channels
 
 /**
-  * Request of https://api.slack.com/methods/channels.info
-  */
+ * Request of https://api.slack.com/methods/channels.info
+ */
 case class SlackApiChannelsInfoRequest( channel: String, include_locale: Option[Boolean] = None )
 
 /**
-  * Response of https://api.slack.com/methods/channels.info
-  */
+ * Response of https://api.slack.com/methods/channels.info
+ */
 case class SlackApiChannelsInfoResponse( channel: SlackChannelInfo )

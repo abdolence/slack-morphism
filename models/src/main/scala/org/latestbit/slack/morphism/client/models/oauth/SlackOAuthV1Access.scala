@@ -19,9 +19,9 @@
 package org.latestbit.slack.morphism.client.models.oauth
 
 /**
-  * Slack OAuth v1 access response
-  * https://api.slack.com/methods/oauth.access
-  */
+ * Slack OAuth v1 access response
+ * https://api.slack.com/methods/oauth.access
+ */
 case class SlackOAuthV1AccessTokenResponse(
     access_token: String,
     scope: String,
@@ -33,7 +33,7 @@ case class SlackOAuthV1AccessTokenResponse(
 )
 
 /**
-  * Slack OAuth v1 access bot token data
-  * https://api.slack.com/methods/oauth.access
-  */
+ * Slack OAuth v1 access bot token data
+ * https://api.slack.com/methods/oauth.access
+ */
 case class SlackOAuthV1BotToken( bot_user_id: String, bot_access_token: String )

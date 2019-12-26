@@ -19,11 +19,11 @@
 package org.latestbit.slack.morphism.client.models.channels
 
 /**
-  * Request of https://api.slack.com/methods/channels.leave
-  */
+ * Request of https://api.slack.com/methods/channels.leave
+ */
 case class SlackApiChannelsLeaveRequest( channel: String, user: String )
 
 /**
-  * Response of https://api.slack.com/methods/channels.leave
-  */
+ * Response of https://api.slack.com/methods/channels.leave
+ */
 case class SlackApiChannelsLeaveResponse( not_in_channel: Option[Boolean] = None )

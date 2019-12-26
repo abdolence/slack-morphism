@@ -19,11 +19,11 @@
 package org.latestbit.slack.morphism.client.models.channels
 
 /**
-  * Request of https://api.slack.com/methods/channels.mark
-  */
+ * Request of https://api.slack.com/methods/channels.mark
+ */
 case class SlackApiChannelsMarkRequest( channel: String, ts: String )
 
 /**
-  * Response of https://api.slack.com/methods/channels.mark
-  */
+ * Response of https://api.slack.com/methods/channels.mark
+ */
 case class SlackApiChannelsMarkResponse()

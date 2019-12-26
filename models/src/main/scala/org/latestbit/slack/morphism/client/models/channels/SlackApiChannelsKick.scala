@@ -19,11 +19,11 @@
 package org.latestbit.slack.morphism.client.models.channels
 
 /**
-  * Request of https://api.slack.com/methods/channels.kick
-  */
+ * Request of https://api.slack.com/methods/channels.kick
+ */
 case class SlackApiChannelsKickRequest( channel: String, user: String )
 
 /**
-  * Response of https://api.slack.com/methods/channels.kick
-  */
+ * Response of https://api.slack.com/methods/channels.kick
+ */
 case class SlackApiChannelsKickResponse()

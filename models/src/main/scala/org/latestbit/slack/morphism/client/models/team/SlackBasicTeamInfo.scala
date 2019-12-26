@@ -19,8 +19,8 @@
 package org.latestbit.slack.morphism.client.models.team
 
 /**
-  * Basic Slack team information
-  * @param id Slack Team Id
-  * @param name Slack Workspace Name
-  */
+ * Basic Slack team information
+ * @param id Slack Team Id
+ * @param name Slack Workspace Name
+ */
 case class SlackBasicTeamInfo( id: String, name: Option[String] = None )

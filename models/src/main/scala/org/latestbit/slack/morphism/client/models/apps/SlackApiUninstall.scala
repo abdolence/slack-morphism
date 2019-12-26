@@ -19,11 +19,11 @@
 package org.latestbit.slack.morphism.client.models.apps
 
 /**
-  * Request of https://api.slack.com/methods/apps.uninstall
-  */
+ * Request of https://api.slack.com/methods/apps.uninstall
+ */
 case class SlackApiUninstallRequest( client_id: String, client_secret: String )
 
 /**
-  * Response of https://api.slack.com/methods/apps.uninstall
-  */
+ * Response of https://api.slack.com/methods/apps.uninstall
+ */
 case class SlackApiUninstallResponse()

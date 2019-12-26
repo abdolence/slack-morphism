@@ -19,8 +19,8 @@
 package org.latestbit.slack.morphism.client.models.channels
 
 /**
-  * Request of https://api.slack.com/methods/channels.setPurpose
-  */
+ * Request of https://api.slack.com/methods/channels.setPurpose
+ */
 case class SlackApiChannelsSetPurposeRequest(
     channel: String,
     purpose: String,
@@ -28,6 +28,6 @@ case class SlackApiChannelsSetPurposeRequest(
 )
 
 /**
-  * Response of https://api.slack.com/methods/channels.setPurpose
-  */
+ * Response of https://api.slack.com/methods/channels.setPurpose
+ */
 case class SlackApiChannelsSetPurposeResponse( purpose: Option[String] = None )

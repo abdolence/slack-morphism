@@ -16,14 +16,7 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.models.channels
+package org.latestbit.slack.morphism.client.models.messages
 
-/**
- * Request of https://api.slack.com/methods/channels.create
- */
-case class SlackApiChannelsCreateRequest( name: String, validate: Option[Boolean] = None )
-
-/**
- * Response of https://api.slack.com/methods/channels.create
- */
-case class SlackApiChannelsCreateResponse( channel: SlackChannelInfo )
+sealed trait SlackAttachment
+case class TestSlackAttachment() extends SlackAttachment

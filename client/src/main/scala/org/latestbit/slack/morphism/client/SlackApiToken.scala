@@ -19,8 +19,8 @@
 package org.latestbit.slack.morphism.client
 
 /**
-  * Slack API token base representation
-  */
+ * Slack API token base representation
+ */
 trait SlackApiToken {
 
   /**
@@ -44,19 +44,19 @@ object SlackApiToken {
 }
 
 /**
-  * Slack API user token
-  * @param value token value
-  * @param scope token scope in a string form
-  */
+ * Slack API user token
+ * @param value token value
+ * @param scope token scope in a string form
+ */
 case class SlackApiUserToken( override val value: String, scope: String ) extends SlackApiToken {
   override val scopeSet: Set[String] = SlackApiToken.scopeToSet( scope )
 }
 
 /**
-  * Slack API bot token
-  * @param value token value
-  * @param scope token scope in a string form
-  */
+ * Slack API bot token
+ * @param value token value
+ * @param scope token scope in a string form
+ */
 case class SlackApiBotToken( override val value: String, scope: String ) extends SlackApiToken {
   override val scopeSet: Set[String] = SlackApiToken.scopeToSet( scope )
 }

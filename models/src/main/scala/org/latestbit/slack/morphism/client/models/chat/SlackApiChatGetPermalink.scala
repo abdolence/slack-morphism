@@ -16,14 +16,14 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.models.channels
+package org.latestbit.slack.morphism.client.models.chat
 
 /**
- * Request of https://api.slack.com/methods/channels.create
+ * Request of https://api.slack.com/methods/chat.getPermalink
  */
-case class SlackApiChannelsCreateRequest( name: String, validate: Option[Boolean] = None )
+case class SlackApiChatGetPermalinkRequest( channel: String, message_ts: String )
 
 /**
- * Response of https://api.slack.com/methods/channels.create
+ * Response of https://api.slack.com/methods/chat.getPermalink
  */
-case class SlackApiChannelsCreateResponse( channel: SlackChannelInfo )
+case class SlackApiChatGetPermalinkResponse( channel: String, permalink: String )

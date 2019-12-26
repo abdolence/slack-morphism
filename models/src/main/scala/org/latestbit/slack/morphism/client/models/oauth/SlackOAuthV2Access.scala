@@ -22,9 +22,9 @@ import org.latestbit.slack.morphism.client.models.enterprise.SlackBasicEnterpris
 import org.latestbit.slack.morphism.client.models.team.SlackBasicTeamInfo
 
 /**
-  * Slack OAuth v2 access response
-  * https://api.slack.com/methods/oauth.v2.access
-  */
+ * Slack OAuth v2 access response
+ * https://api.slack.com/methods/oauth.v2.access
+ */
 case class SlackOAuthV2AccessTokenResponse(
     access_token: String,
     token_type: String,
@@ -37,9 +37,9 @@ case class SlackOAuthV2AccessTokenResponse(
 )
 
 /**
-  * Slack OAuth v2 user info that installed a bot
-  * https://api.slack.com/methods/oauth.v2.access
-  */
+ * Slack OAuth v2 user info that installed a bot
+ * https://api.slack.com/methods/oauth.v2.access
+ */
 case class SlackOAuthV2AuthedUser(
     id: String,
     scope: Option[String] = None,
