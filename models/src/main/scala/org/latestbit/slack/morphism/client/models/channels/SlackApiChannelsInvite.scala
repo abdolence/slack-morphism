@@ -19,11 +19,11 @@
 package org.latestbit.slack.morphism.client.models.channels
 
 /**
-  * Request of https://api.slack.com/methods/channels.create
+  * Request of https://api.slack.com/methods/channels.invite
   */
-case class SlackApiChannelsCreateRequest( name: String, validate: Option[Boolean] = None )
+case class SlackApiChannelsInviteRequest( channel: String, user: String )
 
 /**
-  * Response of https://api.slack.com/methods/channels.create
+  * Response of https://api.slack.com/methods/channels.invite
   */
-case class SlackApiChannelsCreateResponse( channel: SlackChannelInfo )
+case class SlackApiChannelsInviteResponse( channel: SlackChannelInfo )
