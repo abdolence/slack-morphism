@@ -29,7 +29,7 @@ import sttp.client._
 import scala.concurrent.{ ExecutionContext, Future }
 
 /**
- * Support for Slack Channels API methods
+ * Support for Slack Conversations API methods
  */
 trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: SlackApiClient =>
 
