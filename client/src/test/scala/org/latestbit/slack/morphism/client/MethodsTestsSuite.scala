@@ -105,7 +105,6 @@ class MethodsTestsSuite
   }
 
   "A Slack client" should "able to execute API 'apps' methods" in {
-
     implicitly[Arbitrary[SlackApiUninstallRequest]]
 
     testSlackApiMethod { req: SlackApiUninstallRequest => implicit backend =>
