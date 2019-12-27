@@ -19,29 +19,35 @@
 package org.latestbit.slack.morphism.client.models.channels
 
 import org.latestbit.slack.morphism.client.models.common.SlackDateTime
+import org.latestbit.slack.morphism.client.models.messages.SlackMessage
 
 case class SlackChannelInfo(
     id: String,
     name: String,
-    is_channel: Boolean = true,
+    is_channel: Option[Boolean] = None,
+    is_group: Option[Boolean] = None,
+    is_im: Option[Boolean] = None,
     created: SlackDateTime,
-    creator: String,
-    is_archived: Boolean = false,
-    is_general: Boolean = false,
+    creator: Option[String] = None,
+    is_archived: Option[Boolean] = None,
+    is_general: Option[Boolean] = None,
+    unlinked: Option[Long] = None,
     name_normalized: Option[String] = None,
-    is_shared: Boolean = false,
-    is_org_shared: Boolean = false,
-    is_member: Boolean = false,
-    is_private: Boolean = false,
-    is_mpim: Boolean = false,
+    is_shared: Option[Boolean] = None,
+    is_org_shared: Option[Boolean] = None,
+    is_member: Option[Boolean] = None,
+    is_private: Option[Boolean] = None,
+    is_mpim: Option[Boolean] = None,
     last_read: Option[String] = None,
-    latest: Option[String] = None,
+    latest: Option[SlackMessage] = None,
     unread_count: Option[Long] = None,
     unread_count_display: Option[Long] = None,
-    members: List[String] = List(),
+    members: Option[List[String]] = None,
     topic: Option[SlackChannelInfo.SlackTopicInfo] = None,
     purpose: Option[SlackChannelInfo.SlackPurposeInfo] = None,
-    previous_names: List[String] = List()
+    previous_names: Option[List[String]] = None,
+    priority: Option[Long] = None,
+    locale: Option[String] = None
 )
 
 object SlackChannelInfo {
@@ -49,4 +55,5 @@ object SlackChannelInfo {
 
   type SlackTopicInfo = SlackGeneralChannelInfo
   type SlackPurposeInfo = SlackGeneralChannelInfo
+
 }

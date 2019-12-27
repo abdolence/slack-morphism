@@ -73,9 +73,16 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackAp
         ec: ExecutionContext
     ): Future[Either[SlackApiError, SlackApiChannelsHistoryResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiChannelsHistoryRequest, SlackApiChannelsHistoryResponse](
+      protectedSlackHttpApiGet[SlackApiChannelsHistoryResponse](
         "channels.history",
-        req
+        Map(
+          "channel" -> Option( req.channel ),
+          "count" -> req.count.map( _.toString ),
+          "inclusive" -> req.inclusive.map( _.toString ),
+          "latest" -> req.latest,
+          "oldest" -> req.oldest,
+          "unreads" -> req.unreads.map( _.toString )
+        )
       )
     }
 
@@ -188,9 +195,14 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackAp
         ec: ExecutionContext
     ): Future[Either[SlackApiError, SlackApiChannelsListResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiChannelsListRequest, SlackApiChannelsListResponse](
+      protectedSlackHttpApiGet[SlackApiChannelsListResponse](
         "channels.list",
-        req
+        Map(
+          "cursor" -> req.cursor,
+          "exclude_archived" -> req.exclude_archived.map( _.toString ),
+          "exclude_members" -> req.exclude_archived.map( _.toString ),
+          "limit" -> req.limit.map( _.toString )
+        )
       )
     }
 
@@ -210,7 +222,7 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackAp
         batchLoader = { cursor =>
           list(
             SlackApiChannelsListRequest(
-              cursor = cursor,
+              cursor = Some( cursor ),
               limit = req.limit
             )
           )
@@ -257,9 +269,12 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackAp
         ec: ExecutionContext
     ): Future[Either[SlackApiError, SlackApiChannelsRepliesResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiChannelsRepliesRequest, SlackApiChannelsRepliesResponse](
+      protectedSlackHttpApiGet[SlackApiChannelsRepliesResponse](
         "channels.replies",
-        req
+        Map(
+          "channel" -> Option( req.channel ),
+          "thread_ts" -> Option( req.thread_ts )
+        )
       )
     }
 

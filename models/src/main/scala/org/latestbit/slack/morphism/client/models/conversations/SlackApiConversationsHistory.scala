@@ -16,30 +16,35 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.models.channels
+package org.latestbit.slack.morphism.client.models.conversations
 
 import org.latestbit.slack.morphism.client.models.common.SlackApiResponseMetadata
+import org.latestbit.slack.morphism.client.models.messages.SlackMessage
 import org.latestbit.slack.morphism.client.streaming.SlackApiScrollableResponse
 
 /**
- * Request of https://api.slack.com/methods/channels.list
+ * Request of https://api.slack.com/methods/conversations.history
  */
-case class SlackApiChannelsListRequest(
+case class SlackApiConversationsHistoryRequest(
+    channel: String,
     cursor: Option[String] = None,
-    exclude_archived: Option[Boolean] = None,
-    exclude_members: Option[Boolean] = None,
-    limit: Option[Long] = None
+    limit: Option[Int] = None,
+    inclusive: Option[Boolean] = None,
+    latest: Option[String] = None,
+    oldest: Option[String] = None
 )
 
 /**
- * Response of https://api.slack.com/methods/channels.list
+ * Response of https://api.slack.com/methods/conversations.history
  */
-case class SlackApiChannelsListResponse(
-    channels: List[SlackChannelInfo],
+case class SlackApiConversationsHistoryResponse(
+    messages: List[SlackMessage],
+    has_more: Option[Boolean] = None,
+    pin_count: Option[Long] = None,
     response_metadata: Option[SlackApiResponseMetadata] = None
-) extends SlackApiScrollableResponse[SlackChannelInfo, String] {
+) extends SlackApiScrollableResponse[SlackMessage, String] {
 
-  override def items: List[SlackChannelInfo] = channels
+  override def items: List[SlackMessage] = messages
   override def getLatestPos: Option[String] = response_metadata.flatMap( _.next_cursor )
 
 }

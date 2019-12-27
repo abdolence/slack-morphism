@@ -16,14 +16,9 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.models.channels
+package org.latestbit.slack.morphism.client.models.common
 
-/**
- * Request of https://api.slack.com/methods/channels.leave
- */
-case class SlackApiChannelsLeaveRequest( channel: String )
-
-/**
- * Response of https://api.slack.com/methods/channels.leave
- */
-case class SlackApiChannelsLeaveResponse( not_in_channel: Option[Boolean] = None )
+case class SlackApiResponseMetadata(
+    next_cursor: Option[String] = None,
+    warnings: Option[Set[String]] = None
+)

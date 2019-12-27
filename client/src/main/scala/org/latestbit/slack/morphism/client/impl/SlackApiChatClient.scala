@@ -21,6 +21,7 @@ package org.latestbit.slack.morphism.client.impl
 import io.circe.generic.auto._
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.models.chat._
+import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
 import sttp.client._
 
 import scala.concurrent.{ ExecutionContext, Future }
@@ -76,9 +77,12 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
         ec: ExecutionContext
     ): Future[Either[SlackApiError, SlackApiChatGetPermalinkResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiChatGetPermalinkRequest, SlackApiChatGetPermalinkResponse](
+      protectedSlackHttpApiGet[SlackApiChatGetPermalinkResponse](
         "chat.getPermalink",
-        req
+        Map(
+          "channel" -> Option( req.channel ),
+          "message_ts" -> Option( req.message_ts )
+        )
       )
     }
 
@@ -176,6 +180,52 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
         "chat.update",
         req
       )
+    }
+
+    object scheduledMessages {
+
+      /**
+       * https://api.slack.com/methods/chat.scheduledMessages.list
+       */
+      def list( req: SlackApiChatScheduledMessagesListRequest )(
+          implicit slackApiToken: SlackApiToken,
+          backend: SttpBackend[Future, Nothing, NothingT],
+          ec: ExecutionContext
+      ): Future[Either[SlackApiError, SlackApiChatScheduledMessagesListResponse]] = {
+
+        protectedSlackHttpApiPost[
+          SlackApiChatScheduledMessagesListRequest,
+          SlackApiChatScheduledMessagesListResponse
+        ](
+          "chat.scheduledMessages.list",
+          req
+        )
+      }
+
+      /**
+	     * Scrolling support for
+	     * https://api.slack.com/methods/chat.scheduledMessages.list
+	     */
+      def listScroller( req: SlackApiChatScheduledMessagesListRequest )(
+          implicit slackApiToken: SlackApiToken,
+          backend: SttpBackend[Future, Nothing, NothingT],
+          ec: ExecutionContext
+      ): SlackApiResponseScroller[SlackApiChatScheduledMessageInfo, String] = {
+        new SlackApiResponseScroller[SlackApiChatScheduledMessageInfo, String](
+          initialLoader = { () =>
+            list( req )
+          },
+          batchLoader = { cursor =>
+            list(
+              SlackApiChatScheduledMessagesListRequest(
+                cursor = Some( cursor ),
+                limit = req.limit
+              )
+            )
+          }
+        )
+      }
+
     }
 
   }

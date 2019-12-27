@@ -30,10 +30,10 @@ case class SlackApiBotsInfo( bot: SlackApiBotsProfile )
  */
 case class SlackApiBotsProfile(
     id: String,
-    deleted: Boolean = false,
+    deleted: Option[Boolean] = None,
     name: String,
-    updated: SlackDateTime,
+    updated: Option[SlackDateTime] = None,
     app_id: String,
     user_id: String,
-    icons: Map[String, String] = Map()
+    icons: Option[Map[String, String]] = None
 )

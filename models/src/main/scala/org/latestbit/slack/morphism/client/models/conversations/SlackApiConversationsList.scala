@@ -16,25 +16,26 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.models.channels
+package org.latestbit.slack.morphism.client.models.conversations
 
+import org.latestbit.slack.morphism.client.models.channels.SlackChannelInfo
 import org.latestbit.slack.morphism.client.models.common.SlackApiResponseMetadata
 import org.latestbit.slack.morphism.client.streaming.SlackApiScrollableResponse
 
 /**
- * Request of https://api.slack.com/methods/channels.list
+ * Request of https://api.slack.com/methods/conversations.list
  */
-case class SlackApiChannelsListRequest(
+case class SlackApiConversationsListRequest(
     cursor: Option[String] = None,
     exclude_archived: Option[Boolean] = None,
-    exclude_members: Option[Boolean] = None,
-    limit: Option[Long] = None
+    limit: Option[Long] = None,
+    types: Option[List[String]] = None
 )
 
 /**
- * Response of https://api.slack.com/methods/channels.list
+ * Response of https://api.slack.com/methods/conversations.list
  */
-case class SlackApiChannelsListResponse(
+case class SlackApiConversationsListResponse(
     channels: List[SlackChannelInfo],
     response_metadata: Option[SlackApiResponseMetadata] = None
 ) extends SlackApiScrollableResponse[SlackChannelInfo, String] {

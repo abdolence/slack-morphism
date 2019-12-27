@@ -16,14 +16,17 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.models.channels
+package org.latestbit.slack.morphism.client.models.conversations
 
 /**
- * Request of https://api.slack.com/methods/channels.leave
+ * Request of https://api.slack.com/methods/conversations.setPurpose
  */
-case class SlackApiChannelsLeaveRequest( channel: String )
+case class SlackApiConversationsSetPurposeRequest(
+    channel: String,
+    purpose: String
+)
 
 /**
- * Response of https://api.slack.com/methods/channels.leave
+ * Response of https://api.slack.com/methods/conversations.setPurpose
  */
-case class SlackApiChannelsLeaveResponse( not_in_channel: Option[Boolean] = None )
+case class SlackApiConversationsSetPurposeResponse( purpose: Option[String] = None )

@@ -16,14 +16,21 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.models.channels
+package org.latestbit.slack.morphism.client.models.conversations
+
+import org.latestbit.slack.morphism.client.models.channels.SlackChannelInfo
+import org.latestbit.slack.morphism.client.models.common.SlackApiResponseMetadata
 
 /**
- * Request of https://api.slack.com/methods/channels.leave
+ * Request of https://api.slack.com/methods/conversations.join
  */
-case class SlackApiChannelsLeaveRequest( channel: String )
+case class SlackApiConversationsJoinRequest( channel: String )
 
 /**
- * Response of https://api.slack.com/methods/channels.leave
+ * Response of https://api.slack.com/methods/conversations.join
  */
-case class SlackApiChannelsLeaveResponse( not_in_channel: Option[Boolean] = None )
+case class SlackApiConversationsJoinResponse(
+    channel: SlackChannelInfo,
+    warning: Option[String] = None,
+    response_metadata: Option[SlackApiResponseMetadata] = None
+)

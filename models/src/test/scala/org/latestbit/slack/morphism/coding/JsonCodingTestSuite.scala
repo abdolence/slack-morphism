@@ -45,6 +45,13 @@ case class TestSlackInstant(
     optSlackTimeAbsent: Option[SlackDateTime] = None
 )
 
+case class TestBool(
+    b1: Boolean,
+    b2: Boolean = true,
+    b3: Option[Boolean] = None,
+    b4: Option[List[Int]] = None
+)
+
 class JsonCodingTestSuite extends AnyFlatSpec {
 
   private val testModelNoOpt = TestModel(
@@ -123,6 +130,32 @@ class JsonCodingTestSuite extends AnyFlatSpec {
       }
       case Left( ex ) => fail( ex )
     }
+  }
+
+  "A JSON model with primitive types like booleans" should "respect default values" in {
+    import io.circe.generic.auto._
+
+    val testIncorrectJson = """{}"""
+    val testJson = """{ "b1" : false, "b2" : true }"""
+
+    decode[TestBool](
+      testIncorrectJson
+    ) match {
+      case Right( model ) => {
+        fail( model.toString )
+      }
+      case Left( _ ) => {}
+    }
+
+    decode[TestBool](
+      testJson
+    ) match {
+      case Right( model ) => {
+        assert( model === TestBool( b1 = false ) )
+      }
+      case Left( err ) => fail( err )
+    }
+
   }
 
 }
