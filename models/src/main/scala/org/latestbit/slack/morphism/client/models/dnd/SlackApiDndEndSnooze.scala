@@ -16,24 +16,21 @@
  *
  */
 
-package org.latestbit.slack.morphism.client
+package org.latestbit.slack.morphism.client.models.dnd
 
-import org.latestbit.slack.morphism.client.impl._
+import org.latestbit.slack.morphism.client.models.common.SlackDateTime
 
 /**
- * Slack API client
+ * Request of https://api.slack.com/methods/dnd.endSnooze
  */
-class SlackApiClient
-    extends SlackApiHttpProtocolSupport
-    with SlackApiOAuthClient
-    with SlackApiTestClient
-    with SlackApiAppsClient
-    with SlackApiAuthClient
-    with SlackApiBotsClient
-    with SlackApiChannelsClient
-    with SlackApiChatClient
-    with SlackApiConversationsClient
-    with SlackApiDndClient
-    with SlackApiLowLevelClient {}
+case class SlackApiDndEndSnoozeRequest()
 
-object SlackApiClient {}
+/**
+ * Response of https://api.slack.com/methods/dnd.endSnooze
+ */
+case class SlackApiDndEndSnoozeResponse(
+    dnd_enabled: Option[Boolean] = None,
+    next_dnd_start_ts: Option[SlackDateTime] = None,
+    next_dnd_end_ts: Option[SlackDateTime] = None,
+    snooze_enabled: Option[Boolean] = None
+)

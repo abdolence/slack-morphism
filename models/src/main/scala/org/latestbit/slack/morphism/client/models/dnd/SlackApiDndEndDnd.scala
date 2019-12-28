@@ -16,24 +16,14 @@
  *
  */
 
-package org.latestbit.slack.morphism.client
-
-import org.latestbit.slack.morphism.client.impl._
+package org.latestbit.slack.morphism.client.models.dnd
 
 /**
- * Slack API client
+ * Request of https://api.slack.com/methods/dnd.endDnd
  */
-class SlackApiClient
-    extends SlackApiHttpProtocolSupport
-    with SlackApiOAuthClient
-    with SlackApiTestClient
-    with SlackApiAppsClient
-    with SlackApiAuthClient
-    with SlackApiBotsClient
-    with SlackApiChannelsClient
-    with SlackApiChatClient
-    with SlackApiConversationsClient
-    with SlackApiDndClient
-    with SlackApiLowLevelClient {}
+case class SlackApiDndEndDndRequest()
 
-object SlackApiClient {}
+/**
+ * Response of https://api.slack.com/methods/dnd.endDnd
+ */
+case class SlackApiDndEndDndResponse()

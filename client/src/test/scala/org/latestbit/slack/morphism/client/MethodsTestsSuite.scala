@@ -35,10 +35,7 @@ import scala.concurrent.Future
 
 case class Data( a: String, b: String, c: String )
 
-class MethodsTestsSuite
-    extends AsyncFlatSpec
-    with ScalaCheckDrivenPropertyChecks
-    with SlackApiClientTestsSuiteSupport {
+class MethodsTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenPropertyChecks with SlackApiClientTestsSuiteSupport {
 
   def genBoundedGenList[T]( maxSize: Int, g: Gen[T] ): Gen[List[T]] = {
     Gen.choose( 1, maxSize ) flatMap { sz =>
@@ -47,9 +44,7 @@ class MethodsTestsSuite
   }
 
   def testSlackApiMethod[RQ, RS](
-      apiMethodCall: ( RQ ) => (
-          SttpBackendStub[Future, Nothing]
-      ) => Future[Either[SlackApiError, RS]]
+      apiMethodCall: RQ => SttpBackendStub[Future, Nothing] => Future[Either[SlackApiError, RS]]
   )( responseFactory: RQ => RS )(
       reqRespAssertion: ( RQ, Either[SlackApiError, RS] ) => Assertion
   )( implicit arq: Arbitrary[RQ], encoder: Encoder.AsObject[RS] ) = {
