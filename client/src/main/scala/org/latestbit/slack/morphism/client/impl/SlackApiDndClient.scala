@@ -35,7 +35,7 @@ trait SlackApiDndClient extends SlackApiHttpProtocolSupport { self: SlackApiClie
     /**
      * https://api.slack.com/methods/dnd.endDnd
      */
-    def endDnd( req: SlackApiDndEndDndRequest )(
+    def endDnd()(
         implicit slackApiToken: SlackApiUserToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
@@ -43,14 +43,14 @@ trait SlackApiDndClient extends SlackApiHttpProtocolSupport { self: SlackApiClie
 
       protectedSlackHttpApiPost[SlackApiDndEndDndRequest, SlackApiDndEndDndResponse](
         "dnd.endDnd",
-        req
+        SlackApiDndEndDndRequest()
       )
     }
 
     /**
      * https://api.slack.com/methods/dnd.endSnooze
      */
-    def endSnooze( req: SlackApiDndEndSnoozeRequest )(
+    def endSnooze()(
         implicit slackApiToken: SlackApiUserToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
@@ -58,7 +58,7 @@ trait SlackApiDndClient extends SlackApiHttpProtocolSupport { self: SlackApiClie
 
       protectedSlackHttpApiPost[SlackApiDndEndSnoozeRequest, SlackApiDndEndSnoozeResponse](
         "dnd.endSnooze",
-        req
+        SlackApiDndEndSnoozeRequest()
       )
     }
 
@@ -82,7 +82,7 @@ trait SlackApiDndClient extends SlackApiHttpProtocolSupport { self: SlackApiClie
     /**
      * https://api.slack.com/methods/dnd.setSnooze
      */
-    def setSnooze( req: SlackApiDndSetSnoozeRequest )(
+    def setSnooze()(
         implicit slackApiToken: SlackApiUserToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
@@ -90,7 +90,7 @@ trait SlackApiDndClient extends SlackApiHttpProtocolSupport { self: SlackApiClie
 
       protectedSlackHttpApiPost[SlackApiDndSetSnoozeRequest, SlackApiDndSetSnoozeResponse](
         "dnd.setSnooze",
-        req
+        SlackApiDndSetSnoozeRequest()
       )
     }
 

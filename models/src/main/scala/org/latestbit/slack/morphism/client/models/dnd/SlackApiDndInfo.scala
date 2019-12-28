@@ -23,7 +23,7 @@ import org.latestbit.slack.morphism.client.models.common.SlackDateTime
 /**
  * Request of https://api.slack.com/methods/dnd.info
  */
-case class SlackApiDndInfoRequest( user: Option[String] )
+case class SlackApiDndInfoRequest( user: Option[String] = None )
 
 /**
  * Response of https://api.slack.com/methods/dnd.info

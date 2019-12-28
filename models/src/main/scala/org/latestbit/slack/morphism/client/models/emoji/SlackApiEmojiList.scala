@@ -16,25 +16,14 @@
  *
  */
 
-package org.latestbit.slack.morphism.client
-
-import org.latestbit.slack.morphism.client.impl._
+package org.latestbit.slack.morphism.client.models.emoji
 
 /**
- * Slack API client
+ * Request of https://api.slack.com/methods/emoji.list
  */
-class SlackApiClient
-    extends SlackApiHttpProtocolSupport
-    with SlackApiOAuthClient
-    with SlackApiTestClient
-    with SlackApiAppsClient
-    with SlackApiAuthClient
-    with SlackApiBotsClient
-    with SlackApiChannelsClient
-    with SlackApiChatClient
-    with SlackApiConversationsClient
-    with SlackApiDndClient
-    with SlackApiEmojiClient
-    with SlackApiLowLevelClient {}
+case class SlackApiEmojiListRequest()
 
-object SlackApiClient {}
+/**
+ * Response of https://api.slack.com/methods/emoji.list
+ */
+case class SlackApiEmojiListResponse( emoji: Map[String, String] )
