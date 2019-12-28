@@ -47,7 +47,8 @@ case class SlackChannelInfo(
     purpose: Option[SlackChannelInfo.SlackPurposeInfo] = None,
     previous_names: Option[List[String]] = None,
     priority: Option[Long] = None,
-    locale: Option[String] = None
+    locale: Option[String] = None,
+    is_user_deleted: Option[Boolean] = None
 )
 
 object SlackChannelInfo {

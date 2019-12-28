@@ -16,26 +16,14 @@
  *
  */
 
-package org.latestbit.slack.morphism.client
-
-import org.latestbit.slack.morphism.client.impl._
+package org.latestbit.slack.morphism.client.models.im
 
 /**
- * Slack API client
+ * Request of https://api.slack.com/methods/im.close
  */
-class SlackApiClient
-    extends SlackApiHttpProtocolSupport
-    with SlackApiOAuthClient
-    with SlackApiTestClient
-    with SlackApiAppsClient
-    with SlackApiAuthClient
-    with SlackApiBotsClient
-    with SlackApiChannelsClient
-    with SlackApiChatClient
-    with SlackApiConversationsClient
-    with SlackApiDndClient
-    with SlackApiEmojiClient
-    with SlackApiImClient
-    with SlackApiLowLevelClient {}
+case class SlackApiImCloseRequest( channel: String )
 
-object SlackApiClient {}
+/**
+ * Response of https://api.slack.com/methods/im.close
+ */
+case class SlackApiImCloseResponse( no_op: Option[Boolean] = None, already_closed: Option[Boolean] = None )

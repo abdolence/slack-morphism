@@ -16,26 +16,20 @@
  *
  */
 
-package org.latestbit.slack.morphism.client
+package org.latestbit.slack.morphism.client.models.im
 
-import org.latestbit.slack.morphism.client.impl._
+import org.latestbit.slack.morphism.client.models.channels.SlackChannelInfo
 
 /**
- * Slack API client
+ * Request of https://api.slack.com/methods/im.open
  */
-class SlackApiClient
-    extends SlackApiHttpProtocolSupport
-    with SlackApiOAuthClient
-    with SlackApiTestClient
-    with SlackApiAppsClient
-    with SlackApiAuthClient
-    with SlackApiBotsClient
-    with SlackApiChannelsClient
-    with SlackApiChatClient
-    with SlackApiConversationsClient
-    with SlackApiDndClient
-    with SlackApiEmojiClient
-    with SlackApiImClient
-    with SlackApiLowLevelClient {}
+case class SlackApiImOpenRequest(
+    user: String,
+    include_locale: Option[Boolean] = None,
+    return_im: Option[Boolean] = None
+)
 
-object SlackApiClient {}
+/**
+ * Response of https://api.slack.com/methods/im.open
+ */
+case class SlackApiImOpenResponse( channel: SlackChannelInfo )
