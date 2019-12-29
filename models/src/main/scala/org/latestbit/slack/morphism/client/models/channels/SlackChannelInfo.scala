@@ -37,6 +37,7 @@ case class SlackChannelInfo(
     purpose: Option[SlackChannelInfo.SlackPurposeInfo] = None,
     previous_names: Option[List[String]] = None,
     priority: Option[Long] = None,
+    num_members: Option[Long] = None,
     locale: Option[String] = None,
     flags: SlackChannelFlags = SlackChannelFlags(),
     lastState: SlackChannelLastState = SlackChannelLastState()
@@ -84,6 +85,7 @@ object SlackChannelInfo {
       "purpose" -> model.purpose.asJson,
       "previous_names" -> model.previous_names.asJson,
       "priority" -> model.priority.asJson,
+      "num_members" -> model.num_members.asJson,
       "locale" -> model.locale.asJson
     ).deepMerge( flagsEncoder.encodeObject( model.flags ) )
       .deepMerge( lastStateEncoder.encodeObject( model.lastState ) )
@@ -101,6 +103,7 @@ object SlackChannelInfo {
       purpose <- c.downField( "purpose" ).as[Option[SlackPurposeInfo]]
       previous_names <- c.downField( "previous_names" ).as[Option[List[String]]]
       priority <- c.downField( "priority" ).as[Option[Long]]
+      num_members <- c.downField( "num_members" ).as[Option[Long]]
       locale <- c.downField( "locale" ).as[Option[String]]
       flags <- c.as[SlackChannelFlags]
       lastState <- c.as[SlackChannelLastState]
@@ -115,6 +118,7 @@ object SlackChannelInfo {
       purpose,
       previous_names,
       priority,
+      num_members,
       locale,
       flags,
       lastState
