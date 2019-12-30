@@ -36,6 +36,7 @@ class SlackApiClient
     with SlackApiDndClient
     with SlackApiEmojiClient
     with SlackApiImClient
+    with SlackApiPinsClient
     with SlackApiLowLevelClient {}
 
 object SlackApiClient {}
