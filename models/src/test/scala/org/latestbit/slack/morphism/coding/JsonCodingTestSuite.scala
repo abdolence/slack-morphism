@@ -179,6 +179,9 @@ class JsonCodingTestSuite extends AnyFlatSpec {
       case Right( model: SlackUserMessage ) => {
         assert( model === testModel )
       }
+      case Right( model: SlackMessage ) => {
+        fail( model.toString )
+      }
       case Left( ex ) => fail( ex )
     }
   }

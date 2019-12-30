@@ -18,6 +18,7 @@
 
 package org.latestbit.slack.morphism.client.models.messages
 
+import cats.data.NonEmptyList
 import io.circe._
 import io.circe.generic.auto._
 import org.latestbit.circe.adt.codec._
@@ -93,7 +94,7 @@ case class SlackActionsBlock( elements: List[SlackBlockElement], override val bl
     extends SlackBlock
 
 @JsonAdt( "context" )
-case class SlackContextBlock( elements: List[SlackBlockElement], override val block_id: Option[String] = None )
+case class SlackContextBlock( elements: NonEmptyList[SlackBlockElement], override val block_id: Option[String] = None )
     extends SlackBlock
 
 @JsonAdt( "input" )
@@ -149,8 +150,8 @@ sealed trait SlackBlockMenuElement extends SlackBlockElement
 case class SlackBlockStaticMenuElement(
     placeholder: SlackBlockPlainText,
     action_id: String,
-    options: Option[List[SlackBlockOptionItem]] = None,
-    option_groups: Option[List[SlackBlockOptionGroup]] = None,
+    options: Option[NonEmptyList[SlackBlockOptionItem]] = None,
+    option_groups: Option[NonEmptyList[SlackBlockOptionGroup]] = None,
     initial_option: Option[SlackBlockOptionItem] = None,
     confirm: Option[SlackBlockConfirmItem] = None
 ) extends SlackBlockMenuElement
@@ -190,7 +191,7 @@ case class SlackBlockChannelsListMenuElement(
 @JsonAdt( "overflow" )
 case class SlackBlockOverflowMenuElement(
     action_id: String,
-    options: List[SlackBlockOptionItem],
+    options: NonEmptyList[SlackBlockOptionItem],
     confirm: Option[SlackBlockConfirmItem] = None
 ) extends SlackBlockMenuElement
 

@@ -10,7 +10,6 @@
 .idea/
 .idea/**
 
-
 # CMake
 cmake-build-*/
 
@@ -64,3 +63,5 @@ hs_err_pid*
 
 **/target/**
 *.swp
+
+test-output/**

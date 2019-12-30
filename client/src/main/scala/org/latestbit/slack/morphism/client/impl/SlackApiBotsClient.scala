@@ -19,7 +19,7 @@
 package org.latestbit.slack.morphism.client.impl
 
 import org.latestbit.slack.morphism.client._
-import org.latestbit.slack.morphism.client.models.bots.{ SlackApiBotsInfo, SlackApiBotsProfile }
+import org.latestbit.slack.morphism.client.models.bots._
 import sttp.client._
 import io.circe.generic.auto._
 
