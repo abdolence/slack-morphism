@@ -18,7 +18,6 @@
 
 package org.latestbit.slack.morphism.coding
 
-import cats.data.NonEmptyList
 import org.latestbit.slack.morphism.client.models.messages._
 import org.latestbit.slack.morphism.client.templating.SlackMessageTemplate
 import org.scalatest.flatspec.AnyFlatSpec
@@ -39,73 +38,80 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
       override def renderPlainText(): String = "Test template"
 
       override def renderBlocks(): Option[List[SlackBlock]] =
-        groupBlocks {
-          blocks {
-            block( dividerBlock() )
-            block( sectionBlock( text = md"Test: ${testCond}" ) )
-            optBlock( testCond > 0 )( dividerBlock() )
-            block(
-              sectionBlock(
-                text = md"Test",
-                fields = sectionFields {
-                  sectionField( md"Test 1" )
-                  sectionField( md"Test 2" )
-                  optSectionField( testCond > 0 )( md"Test 3" )
-                },
-                accessory = blockEl(
-                  image( "https://example.net/image.png" )
-                )
-              )
-            )
-            block(
-              contextBlock(
-                elements = blockElements(
-                  blockEl(
-                    button( text = plain"test button", action_id = "-" )
-                  ),
-                  blockEl(
-                    button( text = plain"test button", action_id = "-" )
+        blocksGroup {
+          blocksGroup {
+            blocks {
+              block( dividerBlock() )
+              block( sectionBlock( text = md"Test: ${testCond}" ) )
+              optBlock( testCond > 0 )( dividerBlock() )
+              block(
+                sectionBlock(
+                  text = md"Test",
+                  fields = sectionFields {
+                    sectionField( md"Test 1" )
+                    sectionField( md"Test 2" )
+                    optSectionField( testCond > 0 )( md"Test 3" )
+                  },
+                  accessory = blockEl(
+                    image( "https://example.net/image.png" )
                   )
                 )
               )
-            )
-            block(
-              sectionBlock(
-                text = md"Test 2",
-                accessory = blockEl(
-                  overflowMenu(
-                    action_id = "-",
-                    options = menuItems(
-                      menuItem( menuItemValue( text = plain"test-menu-item", value = "" ) )
+              block(
+                contextBlock(
+                  elements = blockElements(
+                    blockEl(
+                      button( text = plain"test button", action_id = "-" )
+                    ),
+                    blockEl(
+                      button( text = plain"test button", action_id = "-" )
                     )
                   )
                 )
               )
-            )
-            block(
-              contextBlock(
-                elements = blockElements(
-                  blockEl(
-                    staticMenu(
-                      placeholder = plain"test",
+              block(
+                sectionBlock(
+                  text = md"Test 2",
+                  accessory = blockEl(
+                    overflowMenu(
                       action_id = "-",
-                      options = staticMenuItems(
-                        menuItem( menuItemValue( text = plain"test-menu-item", value = "" ) ),
-                        optMenuItem( testCond > 0 )( menuItemValue( text = plain"test-menu-item2", value = "" ) )
-                      ),
-                      confirm = confirm(
-                        confirmValue(
-                          title = plain"Test title",
-                          text = md"Confirm this",
-                          confirm = plain"OK",
-                          deny = plain"Cancel"
+                      options = menuItems(
+                        menuItem( menuItemValue( text = plain"test-menu-item", value = "" ) )
+                      )
+                    )
+                  )
+                )
+              )
+              block(
+                contextBlock(
+                  elements = blockElements(
+                    blockEl(
+                      staticMenu(
+                        placeholder = plain"test",
+                        action_id = "-",
+                        options = staticMenuItems(
+                          menuItem( menuItemValue( text = plain"test-menu-item", value = "" ) ),
+                          optMenuItem( testCond > 0 )( menuItemValue( text = plain"test-menu-item2", value = "" ) )
+                        ),
+                        confirm = confirm(
+                          confirmValue(
+                            title = plain"Test title",
+                            text = md"Confirm this",
+                            confirm = plain"OK",
+                            deny = plain"Cancel"
+                          )
                         )
                       )
                     )
                   )
                 )
               )
-            )
+            }
+          }
+          blocksGroup {
+            blocks {
+              block( dividerBlock() )
+            }
           }
         }
     }

@@ -16,13 +16,14 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.templating
+package org.latestbit.slack.morphism.client.models.pins
 
-import org.latestbit.slack.morphism.client.models.messages.SlackBlock
+/**
+ * Request of https://api.slack.com/methods/pins.remove
+ */
+case class SlackApiPinsRemoveRequest( channel: String, timestamp: String )
 
-trait SlackMessageTemplate extends SlackMessageTemplateDsl with SlackMessageFormatters {
-  def renderPlainText(): String
-  def renderBlocks(): Option[List[SlackBlock]] = None
-}
-
-object SlackMessageTemplate {}
+/**
+ * Response of https://api.slack.com/methods/pins.remove
+ */
+case class SlackApiPinsRemoveResponse()

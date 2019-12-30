@@ -37,6 +37,11 @@ sealed trait SlackTextMessage {
   val thread_ts: Option[String]
 }
 
+sealed trait SlackPinnedMessage {
+  val permalink: Option[String]
+  val pinned_to: Option[List[String]]
+}
+
 case class SlackUserMessage(
     override val ts: String,
     override val channel: String,
@@ -49,9 +54,12 @@ case class SlackUserMessage(
     override val text: String,
     override val attachments: Option[List[SlackAttachment]] = None,
     override val blocks: Option[List[SlackBlock]] = None,
+    override val permalink: Option[String] = None,
+    override val pinned_to: Option[List[String]] = None,
     user: String
 ) extends SlackMessage
     with SlackTextMessage
+    with SlackPinnedMessage
 
 @JsonAdt( "bot_message" )
 case class SlackBotMessage(
@@ -66,10 +74,13 @@ case class SlackBotMessage(
     override val text: String,
     override val attachments: Option[List[SlackAttachment]] = None,
     override val blocks: Option[List[SlackBlock]] = None,
+    override val permalink: Option[String] = None,
+    override val pinned_to: Option[List[String]] = None,
     bot_id: String,
     username: String
 ) extends SlackMessage
     with SlackTextMessage
+    with SlackPinnedMessage
 
 @JsonAdt( "me_message" )
 case class SlackMeMessage(
@@ -82,9 +93,12 @@ case class SlackMeMessage(
     override val text: String,
     override val attachments: Option[List[SlackAttachment]] = None,
     override val blocks: Option[List[SlackBlock]] = None,
+    override val permalink: Option[String] = None,
+    override val pinned_to: Option[List[String]] = None,
     user: String
 ) extends SlackMessage
     with SlackTextMessage
+    with SlackPinnedMessage
 
 @JsonAdt( "message_changed" )
 case class SlackMessageChanged(
@@ -138,52 +152,86 @@ object SlackMessage {
   implicit val mmEncoder = deriveEncoder[SlackMeMessage]
   implicit val mmDecoder = deriveDecoder[SlackMeMessage]
 
-  implicit val encoder: Encoder[SlackMessage] = JsonTaggedAdtCodec.createEncoderDefinition[SlackMessage] {
-    case ( converter, obj ) =>
-      // converting our case classes accordingly to obj instance type
-      // and receiving JSON type field value from annotation
-      val ( jsonObj, subTypeFieldAnnotationValue ) = converter.toJsonObject( obj )
+  def messageEncoderDefinition[T]( converter: JsonTaggedAdtConverter[T], obj: T ): JsonObject = {
+    // converting our case classes accordingly to obj instance type
+    // and receiving JSON type field value from annotation
+    val ( jsonObj, subTypeFieldAnnotationValue ) = converter.toJsonObject( obj )
 
-      val subTypeValue: Option[String] =
-        if (subTypeFieldAnnotationValue == "SlackUserMessage") {
-          None
-        } else
-          Some( subTypeFieldAnnotationValue )
+    val subTypeValue: Option[String] =
+      if (subTypeFieldAnnotationValue == "SlackUserMessage") {
+        None
+      } else
+        Some( subTypeFieldAnnotationValue )
 
-      // Our custom JSON structure
-      val baseObject =
-        JsonObject(
-          "type" -> TYPE_VALUE.asJson,
-          "subtype" -> subTypeValue.asJson
-        )
+    // Our custom JSON structure
+    val baseObject =
+      JsonObject(
+        "type" -> TYPE_VALUE.asJson,
+        "subtype" -> subTypeValue.asJson
+      )
 
-      jsonObj.toMap.foldLeft( baseObject ) {
-        case ( wholeObj, ( key, value ) ) =>
-          wholeObj.add( key, value )
-      }
-
+    jsonObj.toMap.foldLeft( baseObject ) {
+      case ( wholeObj, ( key, value ) ) =>
+        wholeObj.add( key, value )
+    }
   }
+
+  def messageDecoderDefinition[T]( defaultObjectDecoder: HCursor => Decoder.Result[T] )(
+      converter: JsonTaggedAdtConverter[T],
+      cursor: HCursor
+  ): Decoder.Result[T] = {
+    cursor.get[Option[String]]( "type" ).flatMap {
+
+      case Some( typeFieldValue ) if typeFieldValue == TYPE_VALUE =>
+        cursor.get[Option[String]]( "subtype" ).flatMap {
+          case Some( subTypeValue ) =>
+            converter.fromJsonObject(
+              jsonTypeFieldValue = subTypeValue,
+              cursor = cursor
+            )
+          case _ => defaultObjectDecoder( cursor )
+        }
+
+      case _ =>
+        Decoder.failedWithMessage( s"Message 'type' either isn't specified in json or has an incorrect value." )(
+          cursor
+        )
+    }
+  }
+
+  implicit val encoder: Encoder[SlackMessage] = JsonTaggedAdtCodec.createEncoderDefinition[SlackMessage](
+    messageEncoderDefinition[SlackMessage]
+  )
 
   implicit val decoder: Decoder[SlackMessage] = JsonTaggedAdtCodec.createDecoderDefinition[SlackMessage] {
-    case ( converter, cursor ) =>
-      cursor.get[Option[String]]( "type" ).flatMap {
-
-        case Some( typeFieldValue ) if typeFieldValue == TYPE_VALUE =>
-          cursor.get[Option[String]]( "subtype" ).flatMap {
-            case Some( subTypeValue ) =>
-              converter.fromJsonObject(
-                jsonTypeFieldValue = subTypeValue,
-                cursor = cursor
-              )
-            case _ => cursor.as[SlackUserMessage]
-          }
-
-        case _ =>
-          Decoder.failedWithMessage( s"Message 'type' either isn't specified in json or has an incorrect value." )(
-            cursor
-          )
-      }
+    messageDecoderDefinition[SlackMessage] { cursor: HCursor =>
+      cursor.as[SlackUserMessage]
+    }
   }
+
+  implicit val encoderTextMessage: Encoder[SlackTextMessage] =
+    JsonTaggedAdtCodec.createEncoderDefinition[SlackTextMessage](
+      messageEncoderDefinition[SlackTextMessage]
+    )
+
+  implicit val decoderTextMessage: Decoder[SlackTextMessage] =
+    JsonTaggedAdtCodec.createDecoderDefinition[SlackTextMessage] {
+      messageDecoderDefinition[SlackTextMessage] { cursor: HCursor =>
+        cursor.as[SlackUserMessage]
+      }
+    }
+
+  implicit val encoderPinnedMessage: Encoder[SlackPinnedMessage] =
+    JsonTaggedAdtCodec.createEncoderDefinition[SlackPinnedMessage](
+      messageEncoderDefinition[SlackPinnedMessage]
+    )
+
+  implicit val decoderPinnedMessage: Decoder[SlackPinnedMessage] =
+    JsonTaggedAdtCodec.createDecoderDefinition[SlackPinnedMessage] {
+      messageDecoderDefinition[SlackPinnedMessage] { cursor: HCursor =>
+        cursor.as[SlackUserMessage]
+      }
+    }
 
   val TYPE_VALUE = "message"
 

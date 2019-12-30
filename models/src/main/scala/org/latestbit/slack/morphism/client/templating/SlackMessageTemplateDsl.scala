@@ -53,7 +53,7 @@ trait SlackMessageTemplateDsl {
   protected def blocks( blockDefs: Option[SlackBlock]* ): Option[List[SlackBlock]] =
     noneIfEmptyList( blockDefs.toList )
 
-  protected def groupBlocks( blockDefs: Option[List[SlackBlock]]* ): Option[List[SlackBlock]] =
+  protected def blocksGroup( blockDefs: Option[List[SlackBlock]]* ): Option[List[SlackBlock]] =
     blockDefs.toList.flatten.flatten match {
       case Nil => None
       case xs  => Some( xs )

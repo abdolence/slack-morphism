@@ -16,13 +16,19 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.templating
+package org.latestbit.slack.morphism.client.models.pins
 
-import org.latestbit.slack.morphism.client.models.messages.SlackBlock
+import org.latestbit.slack.morphism.client.models.common.SlackDateTime
+import org.latestbit.slack.morphism.client.models.messages.SlackPinnedMessage
 
-trait SlackMessageTemplate extends SlackMessageTemplateDsl with SlackMessageFormatters {
-  def renderPlainText(): String
-  def renderBlocks(): Option[List[SlackBlock]] = None
-}
+/**
+ * Request of https://api.slack.com/methods/pins.list
+ */
+case class SlackApiPinsListRequest( channel: String )
 
-object SlackMessageTemplate {}
+/**
+ * Response of https://api.slack.com/methods/pins.list
+ */
+case class SlackApiPinsListResponse( items: List[SlackPinItem] )
+
+case class SlackPinItem( channel: String, created: SlackDateTime, created_by: String, message: SlackPinnedMessage )
