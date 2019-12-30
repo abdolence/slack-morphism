@@ -35,6 +35,7 @@ sealed trait SlackTextMessage {
   val attachments: Option[List[SlackAttachment]]
   val blocks: Option[List[SlackBlock]]
   val thread_ts: Option[String]
+  val reactions: Option[List[SlackMessageReaction]]
 }
 
 sealed trait SlackPinnedMessage {
@@ -48,6 +49,7 @@ case class SlackUserMessage(
     override val channel_type: Option[String] = None,
     override val hidden: Option[Boolean] = None,
     override val thread_ts: Option[String] = None,
+    override val reactions: Option[List[SlackMessageReaction]] = None,
     edited: Option[SlackMessageEdited] = None,
     reply_count: Option[Long] = None,
     replies: Option[List[SlackMessageReplyInfo]] = None,
@@ -68,6 +70,7 @@ case class SlackBotMessage(
     override val channel_type: Option[String] = None,
     override val hidden: Option[Boolean] = None,
     override val thread_ts: Option[String] = None,
+    override val reactions: Option[List[SlackMessageReaction]] = None,
     edited: Option[SlackMessageEdited] = None,
     reply_count: Option[Long] = None,
     replies: Option[List[SlackMessageReplyInfo]] = None,
@@ -89,6 +92,7 @@ case class SlackMeMessage(
     override val channel_type: Option[String] = None,
     override val hidden: Option[Boolean] = None,
     override val thread_ts: Option[String] = None,
+    override val reactions: Option[List[SlackMessageReaction]] = None,
     edited: Option[SlackMessageEdited] = None,
     override val text: String,
     override val attachments: Option[List[SlackAttachment]] = None,
@@ -131,6 +135,8 @@ case class SlackMessageEdited( user: String, ts: String )
 
 case class SlackMessageReplyInfo( user: String, ts: String )
 
+case class SlackMessageReaction( count: Int, name: String, users: List[String] )
+
 object SlackMessage {
   import io.circe.generic.semiauto._
 
@@ -138,6 +144,8 @@ object SlackMessage {
   implicit val meDecoder = deriveDecoder[SlackMessageEdited]
   implicit val mriEncoder = deriveEncoder[SlackMessageReplyInfo]
   implicit val mriDecoder = deriveDecoder[SlackMessageReplyInfo]
+  implicit val mrtEncoder = deriveEncoder[SlackMessageReaction]
+  implicit val mrtDecoder = deriveDecoder[SlackMessageReaction]
   implicit val muEncoder = deriveEncoder[SlackUserMessage]
   implicit val muDecoder = deriveDecoder[SlackUserMessage]
 

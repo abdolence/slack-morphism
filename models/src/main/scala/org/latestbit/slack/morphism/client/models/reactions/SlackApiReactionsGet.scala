@@ -16,28 +16,16 @@
  *
  */
 
-package org.latestbit.slack.morphism.client
+package org.latestbit.slack.morphism.client.models.reactions
 
-import org.latestbit.slack.morphism.client.impl._
+import org.latestbit.slack.morphism.client.models.messages.SlackTextMessage
 
 /**
- * Slack API client
+ * Request of https://api.slack.com/methods/reactions.get
  */
-class SlackApiClient
-    extends SlackApiHttpProtocolSupport
-    with SlackApiOAuthClient
-    with SlackApiTestClient
-    with SlackApiAppsClient
-    with SlackApiAuthClient
-    with SlackApiBotsClient
-    with SlackApiChannelsClient
-    with SlackApiChatClient
-    with SlackApiConversationsClient
-    with SlackApiDndClient
-    with SlackApiEmojiClient
-    with SlackApiImClient
-    with SlackApiPinsClient
-    with SlackApiReactionsClient
-    with SlackApiLowLevelClient {}
+case class SlackApiReactionsGetRequest( channel: String, timestamp: String, full: Option[Boolean] = None )
 
-object SlackApiClient {}
+/**
+ * Response of https://api.slack.com/methods/reactions.get
+ */
+case class SlackApiReactionsGetResponse( message: SlackTextMessage )
