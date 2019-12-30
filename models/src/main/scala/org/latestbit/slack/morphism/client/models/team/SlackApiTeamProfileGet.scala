@@ -18,9 +18,26 @@
 
 package org.latestbit.slack.morphism.client.models.team
 
+import io.circe.Json
+
 /**
- * Basic Slack team information
- * @param id Slack Team Id
- * @param name Slack Workspace Name
+ * Request of https://api.slack.com/methods/team.profile.get
  */
-case class SlackBasicTeamInfo( id: String, name: Option[String] = None )
+case class SlackApiTeamProfileGetRequest( visibility: Option[String] = None )
+
+/**
+ * Response of https://api.slack.com/methods/team.profile.get
+ */
+case class SlackApiTeamProfileGetResponse( profile: SlackTeamProfile )
+
+case class SlackTeamProfile( fields: List[SlackTeamProfileField] )
+
+case class SlackTeamProfileField(
+    id: String,
+    ordering: Int,
+    label: String,
+    hint: Option[String] = None,
+    `type`: Option[String] = None,
+    possible_values: Option[List[String]] = None,
+    options: Option[Json] = None
+)

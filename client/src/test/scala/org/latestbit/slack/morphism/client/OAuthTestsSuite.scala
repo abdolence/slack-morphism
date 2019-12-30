@@ -19,7 +19,7 @@
 package org.latestbit.slack.morphism.client
 
 import io.circe.generic.auto._
-import org.latestbit.slack.morphism.client.models.team.SlackBasicTeamInfo
+import org.latestbit.slack.morphism.client.models.team.SlackTeamInfo
 import org.latestbit.slack.morphism.client.models.oauth._
 import org.scalatest.flatspec.AsyncFlatSpec
 import sttp.client.testing.SttpBackendStub
@@ -67,7 +67,7 @@ class OAuthTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuiteSupport
       access_token = "access-token-value",
       token_type = "test-token-type",
       scope = "something:something,anything:anything",
-      team = SlackBasicTeamInfo(
+      team = SlackTeamInfo(
         id = "test-slack-workspace-id",
         name = Some( "test-slack-workspace-name" )
       ),

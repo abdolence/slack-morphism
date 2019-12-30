@@ -22,8 +22,7 @@ import io.circe._
 import io.circe.parser._
 import io.circe.syntax._
 import io.circe.generic.auto._
-
-import org.latestbit.slack.morphism.client.models.common.SlackDateTime
+import org.latestbit.slack.morphism.client.models.common.{ SlackDateTime, SlackIcon }
 
 case class SlackUserInfo(
     id: String,
@@ -50,13 +49,7 @@ case class SlackUserProfile(
     real_name_normalized: Option[String] = None,
     display_name_normalized: Option[String] = None,
     email: Option[String] = None,
-    image_original: Option[String] = None,
-    image_24: Option[String] = None,
-    image_32: Option[String] = None,
-    image_48: Option[String] = None,
-    image_72: Option[String] = None,
-    image_192: Option[String] = None,
-    image_512: Option[String] = None,
+    icon: Option[SlackIcon] = None,
     team: Option[String] = None
 )
 
@@ -72,10 +65,41 @@ case class SlackUserFlags(
     has_2fa: Option[Boolean] = None
 )
 
+object SlackUserProfile {
+
+  def createEncoder()(
+      implicit derivedEncoder: Encoder.AsObject[SlackUserProfile],
+      iconEncoder: Encoder.AsObject[SlackIcon]
+  ): Encoder.AsObject[SlackUserProfile] = (model: SlackUserProfile) => {
+    model.icon
+      .map { icon =>
+        derivedEncoder.encodeObject( model.copy( icon = None ) ).deepMerge( iconEncoder.encodeObject( icon ) )
+      }
+      .getOrElse(
+        derivedEncoder.encodeObject( model )
+      )
+  }
+
+  def createDecoder()(
+      implicit derivedDecoder: Decoder[SlackUserProfile],
+      iconDecoder: Decoder[SlackIcon]
+  ): Decoder[SlackUserProfile] = (cursor: HCursor) => {
+    for {
+      icon <- cursor.as[SlackIcon]
+      baseUserInfo <- cursor.as[SlackUserProfile]
+    } yield baseUserInfo.copy( icon = Option( icon ) )
+  }
+
+  implicit val encoder = createEncoder()
+  implicit val decoder = createDecoder()
+
+}
+
 object SlackUserInfo {
 
-  implicit def slackChannelInfoEncoder()(
-      implicit flagsEncoder: Encoder.AsObject[SlackUserFlags]
+  def slackUserInfoEncoder()(
+      implicit derivedEncoder: Encoder.AsObject[SlackUserInfo],
+      flagsEncoder: Encoder.AsObject[SlackUserFlags]
   ): Encoder.AsObject[SlackUserInfo] = (model: SlackUserInfo) => {
     JsonObject(
       "id" -> model.id.asJson,
@@ -93,7 +117,7 @@ object SlackUserInfo {
     ).deepMerge( flagsEncoder.encodeObject( model.flags ) )
   }
 
-  implicit val slackChannelInfoDecoder: Decoder[SlackUserInfo] = (c: HCursor) => {
+  def slackUserInfoDecoder(): Decoder[SlackUserInfo] = (c: HCursor) => {
     for {
       id <- c.downField( "id" ).as[String]
       team_id <- c.downField( "team_id" ).as[Option[String]]
@@ -124,5 +148,8 @@ object SlackUserInfo {
       flags
     )
   }
+
+  implicit val encoder = slackUserInfoEncoder()
+  implicit val decoder = slackUserInfoDecoder()
 
 }

@@ -19,7 +19,7 @@
 package org.latestbit.slack.morphism.client.models.oauth
 
 import org.latestbit.slack.morphism.client.models.enterprise.SlackBasicEnterpriseInfo
-import org.latestbit.slack.morphism.client.models.team.SlackBasicTeamInfo
+import org.latestbit.slack.morphism.client.models.team.SlackTeamInfo
 
 /**
  * Slack OAuth v2 access response
@@ -31,7 +31,7 @@ case class SlackOAuthV2AccessTokenResponse(
     scope: String,
     bot_user_id: Option[String] = None,
     app_id: String,
-    team: SlackBasicTeamInfo,
+    team: SlackTeamInfo,
     enterprise: Option[SlackBasicEnterpriseInfo] = None,
     authed_user: SlackOAuthV2AuthedUser
 )

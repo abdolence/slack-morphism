@@ -16,29 +16,14 @@
  *
  */
 
-package org.latestbit.slack.morphism.client
-
-import org.latestbit.slack.morphism.client.impl._
+package org.latestbit.slack.morphism.client.models.team
 
 /**
- * Slack API client
+ * Request of https://api.slack.com/methods/team.info
  */
-class SlackApiClient
-    extends SlackApiHttpProtocolSupport
-    with SlackApiOAuthClient
-    with SlackApiTestClient
-    with SlackApiAppsClient
-    with SlackApiAuthClient
-    with SlackApiBotsClient
-    with SlackApiChannelsClient
-    with SlackApiChatClient
-    with SlackApiConversationsClient
-    with SlackApiDndClient
-    with SlackApiEmojiClient
-    with SlackApiImClient
-    with SlackApiPinsClient
-    with SlackApiReactionsClient
-    with SlackApiTeamClient
-    with SlackApiLowLevelClient {}
+case class SlackApiTeamInfoRequest( team: Option[String] = None )
 
-object SlackApiClient {}
+/**
+ * Response of https://api.slack.com/methods/team.info
+ */
+case class SlackApiTeamInfoResponse( team: SlackTeamInfo )
