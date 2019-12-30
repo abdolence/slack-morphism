@@ -30,6 +30,68 @@ import scala.concurrent.{ ExecutionContext, Future }
  */
 trait SlackApiViewsClient extends SlackApiHttpProtocolSupport { self: SlackApiClient =>
 
-  object views {}
+  object views {
+
+    /**
+     * https://api.slack.com/methods/views.open
+     */
+    def open( req: SlackApiViewsOpenRequest )(
+        implicit slackApiToken: SlackApiToken,
+        backend: SttpBackend[Future, Nothing, NothingT],
+        ec: ExecutionContext
+    ): Future[Either[SlackApiError, SlackApiViewsOpenResponse]] = {
+
+      protectedSlackHttpApiPost[SlackApiViewsOpenRequest, SlackApiViewsOpenResponse](
+        "views.open",
+        req
+      )
+    }
+
+    /**
+     * https://api.slack.com/methods/views.publish
+     */
+    def publish( req: SlackApiViewsPublishRequest )(
+        implicit slackApiToken: SlackApiToken,
+        backend: SttpBackend[Future, Nothing, NothingT],
+        ec: ExecutionContext
+    ): Future[Either[SlackApiError, SlackApiViewsPublishResponse]] = {
+
+      protectedSlackHttpApiPost[SlackApiViewsPublishRequest, SlackApiViewsPublishResponse](
+        "views.publish",
+        req
+      )
+    }
+
+    /**
+     * https://api.slack.com/methods/views.push
+     */
+    def push( req: SlackApiViewsPushRequest )(
+        implicit slackApiToken: SlackApiToken,
+        backend: SttpBackend[Future, Nothing, NothingT],
+        ec: ExecutionContext
+    ): Future[Either[SlackApiError, SlackApiViewsPushResponse]] = {
+
+      protectedSlackHttpApiPost[SlackApiViewsPushRequest, SlackApiViewsPushResponse](
+        "views.push",
+        req
+      )
+    }
+
+    /**
+     * https://api.slack.com/methods/views.update
+     */
+    def update( req: SlackApiViewsUpdateRequest )(
+        implicit slackApiToken: SlackApiToken,
+        backend: SttpBackend[Future, Nothing, NothingT],
+        ec: ExecutionContext
+    ): Future[Either[SlackApiError, SlackApiViewsUpdateResponse]] = {
+
+      protectedSlackHttpApiPost[SlackApiViewsUpdateRequest, SlackApiViewsUpdateResponse](
+        "views.update",
+        req
+      )
+    }
+
+  }
 
 }
