@@ -145,7 +145,7 @@ object SlackMessage {
       val ( jsonObj, subTypeFieldAnnotationValue ) = converter.toJsonObject( obj )
 
       val subTypeValue: Option[String] =
-        if (subTypeFieldAnnotationValue == SlackUserMessage.getClass.getSimpleName) {
+        if (subTypeFieldAnnotationValue == "SlackUserMessage") {
           None
         } else
           Some( subTypeFieldAnnotationValue )
@@ -168,7 +168,7 @@ object SlackMessage {
     case ( converter, cursor ) =>
       cursor.get[Option[String]]( "type" ).flatMap {
 
-        case Some( typeFieldValue ) if typeFieldValue != TYPE_VALUE =>
+        case Some( typeFieldValue ) if typeFieldValue == TYPE_VALUE =>
           cursor.get[Option[String]]( "subtype" ).flatMap {
             case Some( subTypeValue ) =>
               converter.fromJsonObject(

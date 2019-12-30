@@ -25,6 +25,7 @@ import io.circe.syntax._
 import io.circe.parser._
 import org.latestbit.circe.adt.codec._
 import org.latestbit.slack.morphism.client.models.common.SlackDateTime
+import org.latestbit.slack.morphism.client.models.messages.SlackUserMessage
 import org.scalatest.flatspec.AnyFlatSpec
 
 case class TestModel( f1: String, f2: Long = 5, f3: Option[String] = None, f4: Option[Long] = None )
@@ -156,6 +157,30 @@ class JsonCodingTestSuite extends AnyFlatSpec {
       case Left( err ) => fail( err )
     }
 
+  }
+
+  "A JSON/ADT model for SlackMessage" should "be available implicitly" in {
+    import org.latestbit.slack.morphism.client.models.messages.SlackMessage
+
+    val testModel: SlackMessage = org.latestbit.slack.morphism.client.models.messages.SlackUserMessage(
+      ts = "test",
+      channel = "test-channek",
+      text = "Test Text",
+      user = "test-user"
+    )
+
+    val testJson = testModel.asJson.dropNullValues.noSpaces
+
+    assert( !(testJson contains "SlackUserMessage") )
+
+    decode[SlackMessage](
+      testJson
+    ) match {
+      case Right( model: SlackUserMessage ) => {
+        assert( model === testModel )
+      }
+      case Left( ex ) => fail( ex )
+    }
   }
 
 }
