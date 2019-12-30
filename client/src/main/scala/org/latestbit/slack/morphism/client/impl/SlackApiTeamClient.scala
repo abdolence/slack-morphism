@@ -26,7 +26,7 @@ import sttp.client._
 import scala.concurrent.{ ExecutionContext, Future }
 
 /**
- * Support for Slack test API methods
+ * Support for Slack Team API methods
  */
 trait SlackApiTeamClient extends SlackApiHttpProtocolSupport { self: SlackApiClient =>
 

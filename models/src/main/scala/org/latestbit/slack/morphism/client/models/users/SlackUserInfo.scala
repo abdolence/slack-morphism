@@ -41,6 +41,7 @@ case class SlackUserInfo(
 )
 
 case class SlackUserProfile(
+    id: Option[String] = None,
     avatar_hash: Option[String] = None,
     status_text: Option[String] = None,
     status_expiration: Option[SlackDateTime] = None,
