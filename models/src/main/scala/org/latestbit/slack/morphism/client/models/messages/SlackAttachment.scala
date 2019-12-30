@@ -18,5 +18,19 @@
 
 package org.latestbit.slack.morphism.client.models.messages
 
+import io.circe._
+
+import org.latestbit.circe.adt.codec._
+
 sealed trait SlackAttachment
 case class TestSlackAttachment() extends SlackAttachment
+
+object SlackAttachment {
+
+  import io.circe.generic.auto._
+  import io.circe.syntax._
+
+  implicit val encoder: Encoder[SlackAttachment] = JsonTaggedAdtCodec.createEncoder[SlackAttachment]( "type" )
+  implicit val decoder: Decoder[SlackAttachment] = JsonTaggedAdtCodec.createDecoder[SlackAttachment]( "type" )
+
+}

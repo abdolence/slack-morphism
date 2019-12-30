@@ -18,7 +18,7 @@
 
 package org.latestbit.slack.morphism.client.impl
 
-import io.circe.generic.auto._
+import io.circe.generic.semiauto._
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.models.auth._
 import sttp.client._
@@ -40,6 +40,7 @@ trait SlackApiAuthClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
     ): Future[Either[SlackApiError, SlackApiAuthTestResponse]] = {
+      implicit val decoder = deriveDecoder[SlackApiAuthTestResponse]
 
       protectedSlackHttpApiPost[SlackApiEmptyType, SlackApiAuthTestResponse](
         "auth.test",
@@ -50,17 +51,18 @@ trait SlackApiAuthClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
     /**
      * https://api.slack.com/methods/auth.revoke
      */
-    def revoke( test: Option[Boolean] = None )(
+    def revoke( req: SlackApiAuthRevokeRequest )(
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): Future[Either[SlackApiError, SlackApiAuthTestResponse]] = {
+    ): Future[Either[SlackApiError, SlackApiAuthRevokeResponse]] = {
 
-      protectedSlackHttpApiGet[SlackApiAuthTestResponse](
+      implicit val encoder = deriveEncoder[SlackApiAuthRevokeRequest]
+      implicit val decoder = deriveDecoder[SlackApiAuthRevokeResponse]
+
+      protectedSlackHttpApiPost[SlackApiAuthRevokeRequest, SlackApiAuthRevokeResponse](
         "auth.revoke",
-        params = Map(
-          "test" -> test.map( _.toString )
-        )
+        req
       )
     }
 

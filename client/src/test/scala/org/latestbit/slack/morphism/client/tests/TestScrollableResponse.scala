@@ -19,10 +19,7 @@
 package org.latestbit.slack.morphism.client.tests
 
 import org.latestbit.slack.morphism.client.{ SlackApiError, SlackApiSystemError }
-import org.latestbit.slack.morphism.client.streaming.{
-  SlackApiResponseScroller,
-  SlackApiScrollableResponse
-}
+import org.latestbit.slack.morphism.client.streaming.{ SlackApiResponseScroller, SlackApiScrollableResponse }
 
 import scala.concurrent.Future
 

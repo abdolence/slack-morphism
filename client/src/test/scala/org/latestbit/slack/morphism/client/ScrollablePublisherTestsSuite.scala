@@ -38,7 +38,7 @@ class ScrollablePublisherTestsSuite( env: TestEnvironment, publisherShutdownTime
 
   def createPublisher( elements: Long ): Publisher[Int] = {
     val scrollableResponse = TestScrollableResponse.createTestScrollableResponse()
-    scrollableResponse.reactive.toPublisher( maxItems = Some( elements ) )
+    scrollableResponse.toPublisher( maxItems = Some( elements ) )
   }
 
   override def createFailedPublisher(): Publisher[Int] =

@@ -105,9 +105,9 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
         Map(
           "channel" -> Option( req.channel ),
           "cursor" -> req.cursor,
-          "inclusive" -> req.inclusive.map( _.toString ),
+          "inclusive" -> req.inclusive.map( _.toString() ),
           "latest" -> req.latest,
-          "limit" -> req.latest.map( _.toString ),
+          "limit" -> req.latest.map( _.toString() ),
           "oldest" -> req.oldest
         )
       )
@@ -153,8 +153,8 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
         "conversations.info",
         Map(
           "channel" -> Option( req.channel ),
-          "include_locale" -> req.include_locale.map( _.toString ),
-          "include_num_members" -> req.include_num_members.map( _.toString )
+          "include_locale" -> req.include_locale.map( _.toString() ),
+          "include_num_members" -> req.include_num_members.map( _.toString() )
         )
       )
     }
@@ -246,8 +246,8 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
         "conversations.list",
         Map(
           "cursor" -> req.cursor,
-          "exclude_archived" -> req.exclude_archived.map( _.toString ),
-          "limit" -> req.limit.map( _.toString ),
+          "exclude_archived" -> req.exclude_archived.map( _.toString() ),
+          "limit" -> req.limit.map( _.toString() ),
           "types" -> req.types.map( _.mkString( "," ) )
         )
       )
@@ -293,7 +293,7 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
         Map(
           "channel" -> Option( req.channel ),
           "cursor" -> req.cursor,
-          "limit" -> req.limit.map( _.toString )
+          "limit" -> req.limit.map( _.toString() )
         )
       )
     }
@@ -358,10 +358,10 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
           "channel" -> Option( req.channel ),
           "ts" -> Option( req.ts ),
           "cursor" -> req.cursor,
-          "inclusive" -> req.inclusive.map( _.toString ),
+          "inclusive" -> req.inclusive.map( _.toString() ),
           "latest" -> req.latest,
           "oldest" -> req.oldest,
-          "limit" -> req.limit.map( _.toString )
+          "limit" -> req.limit.map( _.toString() )
         )
       )
     }

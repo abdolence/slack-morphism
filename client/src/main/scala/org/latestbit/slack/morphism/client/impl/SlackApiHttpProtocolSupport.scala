@@ -98,8 +98,7 @@ trait SlackApiHttpProtocolSupport {
       case Right( _ ) => {
         Left( SlackApiEmptyResultError( uri = uri ) )
       }
-      case Left( errorBody )
-          if responseMediaType.exists( checkIfContentTypeIsJson ) && errorBody.nonEmpty => {
+      case Left( errorBody ) if responseMediaType.exists( checkIfContentTypeIsJson ) && errorBody.nonEmpty => {
         Left(
           decodeSlackGeneralResponse( errorBody ) match {
             case Right( generalResp ) =>
@@ -120,12 +119,11 @@ trait SlackApiHttpProtocolSupport {
         Left(
           SlackApiHttpError(
             uri = uri,
-            details =
-              s"HTTP error / ${response.code}: ${response.statusText}.\n${Option( errorBody )
-                .map { body =>
-                  s": ${body}"
-                }
-                .getOrElse( "" )}",
+            details = s"HTTP error / ${response.code}: ${response.statusText}.\n${Option( errorBody )
+              .map { body =>
+                s": ${body}"
+              }
+              .getOrElse( "" )}",
             httpResponseBody = Option( errorBody )
           )
         )

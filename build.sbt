@@ -15,7 +15,7 @@ ThisBuild / licenses := Seq(
   ( "Apache License v2.0", url( "http://www.apache.org/licenses/LICENSE-2.0.html" ) )
 )
 
-ThisBuild / crossScalaVersions := Seq( "2.12.10", "2.13.1" )
+ThisBuild / crossScalaVersions := Seq( "2.13.1", "2.12.10" )
 
 ThisBuild / scalaVersion := (ThisBuild / crossScalaVersions).value.head
 
@@ -71,7 +71,7 @@ val scalaTestVersion = "3.1.0"
 val scalaCollectionsCompatVersion = "2.1.3"
 val scalaCheckVersion = "1.14.3"
 val sttpVersion = "2.0.0-RC5"
-val circeAdtCodecVersion = "0.3.0"
+val circeAdtCodecVersion = "0.4.1"
 val reactiveStreamsVersion = "1.0.3"
 
 val baseDependencies =
@@ -98,7 +98,7 @@ val baseDependencies =
       "com.github.alexarchambault" %% "scalacheck-shapeless_1.14" % "1.2.3"
     ).map( _ % "test" )
 
-addCompilerPlugin( "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full )
+//addCompilerPlugin( "org.scalamacros" %% "paradise" % "2.1.1" cross CrossVersion.full )
 
 lazy val slackMorphismRoot = project
   .in( file( "." ) )

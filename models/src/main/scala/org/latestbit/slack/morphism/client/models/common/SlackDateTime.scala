@@ -69,7 +69,7 @@ object SlackDateTime {
   }
 
   implicit val slackDateTimeAsStrEncoder: Encoder[SlackDateTimeAsStr] = (a: SlackDateTimeAsStr) => {
-    Json.fromString( fromSlackDateTimeStrToLong( a.value ).toString )
+    Json.fromString( fromSlackDateTimeStrToLong( a.value ).toString() )
   }
 
   implicit val slackDateTimeAsStrDecoder: Decoder[SlackDateTimeAsStr] = (c: HCursor) => {

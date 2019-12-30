@@ -142,7 +142,7 @@ class JsonCodingTestSuite extends AnyFlatSpec {
       testIncorrectJson
     ) match {
       case Right( model ) => {
-        fail( model.toString )
+        fail( model.toString() )
       }
       case Left( _ ) => {}
     }

@@ -29,8 +29,7 @@ class SlackApiScrollableReactivePublisher[IT, PT](
 )( implicit ec: ExecutionContext )
     extends Publisher[IT] {
 
-  private class SlackApiScrollableSubscription( subscriber: Subscriber[_ >: IT] )
-      extends Subscription {
+  private class SlackApiScrollableSubscription( subscriber: Subscriber[_ >: IT] ) extends Subscription {
 
     val commandsProcessor = new SlackApiScrollableSubscriptionCommandProcessor[IT, PT](
       subscriber,

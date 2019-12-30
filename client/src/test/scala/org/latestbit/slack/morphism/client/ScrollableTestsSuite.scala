@@ -34,7 +34,7 @@ class ScrollableTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuiteSu
   val scrollableResponse = createTestScrollableResponse()
 
   "A scroller" should "be able to work as a sync Stream" in {
-    scrollableResponse.lazyload.toSyncScroller( 5.seconds ) map {
+    scrollableResponse.toSyncScroller( 5.seconds ) map {
       case Right( scroller ) => {
         val loadedList = scroller.toList
         assert( loadedList === testFoldedBatchesResults )
@@ -45,7 +45,7 @@ class ScrollableTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuiteSu
   }
 
   it should "be able to work as a async iterator" in {
-    val asyncIterator = scrollableResponse.lazyload.toAsyncScroller()
+    val asyncIterator = scrollableResponse.toAsyncScroller()
     asyncIterator.foldLeft( List[Int]() ) {
       case ( wholeList, futureRes ) =>
         futureRes.map( wholeList ++ _ ).getOrElse( wholeList )

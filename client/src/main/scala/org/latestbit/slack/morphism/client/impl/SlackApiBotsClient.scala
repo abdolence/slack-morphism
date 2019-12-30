@@ -18,10 +18,10 @@
 
 package org.latestbit.slack.morphism.client.impl
 
-import io.circe.generic.auto._
 import org.latestbit.slack.morphism.client._
-import org.latestbit.slack.morphism.client.models.bots.SlackApiBotsInfo
+import org.latestbit.slack.morphism.client.models.bots.{ SlackApiBotsInfo, SlackApiBotsProfile }
 import sttp.client._
+import io.circe.generic.auto._
 
 import scala.concurrent.{ ExecutionContext, Future }
 

@@ -23,74 +23,35 @@ import org.latestbit.slack.morphism.client.streaming.impl.SlackApiScrollableReac
 import org.latestbit.slack.morphism.concurrent.AsyncSeqIterator
 import org.reactivestreams.Publisher
 
-import scala.collection.AbstractIterator
-import scala.concurrent.duration.{ FiniteDuration, _ }
-import scala.concurrent.{ Await, ExecutionContext, Future }
+import scala.concurrent._
 
 class SlackApiResponseScroller[IT, PT](
     initialLoader: () => Future[Either[SlackApiError, SlackApiScrollableResponse[IT, PT]]],
     batchLoader: PT => Future[Either[SlackApiError, SlackApiScrollableResponse[IT, PT]]]
-) {
+) extends SlackApiResponseSyncScroller.LazyScalaCollectionSupport[IT, PT] {
 
   def first(): Future[Either[SlackApiError, SlackApiScrollableResponse[IT, PT]]] = initialLoader()
 
   def next( lastPosition: PT ): Future[Either[SlackApiError, SlackApiScrollableResponse[IT, PT]]] =
     batchLoader( lastPosition )
 
-  object lazyload {
-    type SyncStreamType = Stream[IT]
-    type AsyncItemType = Either[SlackApiError, SlackApiScrollableResponse[IT, PT]]
-    type AsyncValueType = Either[SlackApiError, Iterable[IT]]
-
-    def toSyncScroller(
-        scrollerTimeout: FiniteDuration = 60.seconds
-    )( implicit ec: ExecutionContext ): Future[Either[SlackApiError, SyncStreamType]] = {
-
-      def loadNext( scrollableResp: SlackApiScrollableResponse[IT, PT] ): SyncStreamType = {
-        val loadedStream = scrollableResp.items.toStream
-        scrollableResp.getLatestPos
-          .map { latestPos =>
-            lazy val scrollNext: SyncStreamType =
-              Await
-                .result(
-                  batchLoader( latestPos ),
-                  scrollerTimeout
-                )
-                .toOption
-                .map( loadNext )
-                .getOrElse( Stream.empty )
-
-            loadedStream #::: scrollNext
-          }
-          .getOrElse( loadedStream )
-      }
-
-      initialLoader().map( _.map( loadNext ) )
-    }
-
-    def toAsyncScroller()(
-        implicit ec: ExecutionContext
-    ): AsyncSeqIterator[AsyncItemType, AsyncValueType] = {
-      AsyncSeqIterator.cons(
-        first(), { item: AsyncItemType =>
-          item.map( _.items )
-        }, { item: AsyncItemType =>
-          item.toOption.flatMap( _.getLatestPos )
-        },
-        batchLoader
-      )
-    }
-
+  def toAsyncScroller()(
+      implicit ec: ExecutionContext
+  ): AsyncSeqIterator[AsyncItemType, AsyncValueType] = {
+    AsyncSeqIterator.cons(
+      first(), { item: AsyncItemType =>
+        item.map( _.items )
+      }, { item: AsyncItemType =>
+        item.toOption.flatMap( _.getLatestPos )
+      },
+      batchLoader
+    )
   }
 
-  object reactive {
-
-    def toPublisher(
-        maxItems: Option[Long] = None
-    )( implicit ec: ExecutionContext ): Publisher[IT] =
-      new SlackApiScrollableReactivePublisher( SlackApiResponseScroller.this, maxItems )
-
-  }
+  def toPublisher(
+      maxItems: Option[Long] = None
+  )( implicit ec: ExecutionContext ): Publisher[IT] =
+    new SlackApiScrollableReactivePublisher( this, maxItems )
 
 }
 

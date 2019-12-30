@@ -63,11 +63,11 @@ trait SlackApiImClient extends SlackApiHttpProtocolSupport { self: SlackApiClien
         "im.history",
         Map(
           "channel" -> Option( req.channel ),
-          "count" -> req.count.map( _.toString ),
-          "inclusive" -> req.inclusive.map( _.toString ),
+          "count" -> req.count.map( _.toString() ),
+          "inclusive" -> req.inclusive.map( _.toString() ),
           "latest" -> req.latest,
           "oldest" -> req.oldest,
-          "unreads" -> req.unreads.map( _.toString )
+          "unreads" -> req.unreads.map( _.toString() )
         )
       )
     }
@@ -110,7 +110,7 @@ trait SlackApiImClient extends SlackApiHttpProtocolSupport { self: SlackApiClien
         "im.list",
         Map(
           "cursor" -> req.cursor,
-          "limit" -> req.limit.map( _.toString )
+          "limit" -> req.limit.map( _.toString() )
         )
       )
     }

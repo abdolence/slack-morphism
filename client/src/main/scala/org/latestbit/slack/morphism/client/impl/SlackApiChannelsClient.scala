@@ -77,11 +77,11 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackAp
         "channels.history",
         Map(
           "channel" -> Option( req.channel ),
-          "count" -> req.count.map( _.toString ),
-          "inclusive" -> req.inclusive.map( _.toString ),
+          "count" -> req.count.map( _.toString() ),
+          "inclusive" -> req.inclusive.map( _.toString() ),
           "latest" -> req.latest,
           "oldest" -> req.oldest,
-          "unreads" -> req.unreads.map( _.toString )
+          "unreads" -> req.unreads.map( _.toString() )
         )
       )
     }
@@ -199,9 +199,9 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackAp
         "channels.list",
         Map(
           "cursor" -> req.cursor,
-          "exclude_archived" -> req.exclude_archived.map( _.toString ),
-          "exclude_members" -> req.exclude_archived.map( _.toString ),
-          "limit" -> req.limit.map( _.toString )
+          "exclude_archived" -> req.exclude_archived.map( _.toString() ),
+          "exclude_members" -> req.exclude_archived.map( _.toString() ),
+          "limit" -> req.limit.map( _.toString() )
         )
       )
     }

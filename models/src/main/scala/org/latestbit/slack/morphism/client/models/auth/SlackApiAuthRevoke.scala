@@ -18,4 +18,12 @@
 
 package org.latestbit.slack.morphism.client.models.auth
 
-class SlackApiAuthRevoke {}
+/**
+ * Request of https://api.slack.com/methods/auth.revoke
+ */
+case class SlackApiAuthRevokeRequest( test: Option[Boolean] = None )
+
+/**
+ * Response of https://api.slack.com/methods/auth.revoke
+ */
+case class SlackApiAuthRevokeResponse( revoked: Boolean )

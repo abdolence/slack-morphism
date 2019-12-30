@@ -19,8 +19,6 @@
 package org.latestbit.slack.morphism.client.models.messages
 
 import io.circe._
-import io.circe.generic.auto._
-import io.circe.parser._
 import io.circe.syntax._
 
 import org.latestbit.circe.adt.codec._
@@ -120,6 +118,25 @@ case class SlackMessageEdited( user: String, ts: String )
 case class SlackMessageReplyInfo( user: String, ts: String )
 
 object SlackMessage {
+  import io.circe.generic.semiauto._
+
+  implicit val meEncoder = deriveEncoder[SlackMessageEdited]
+  implicit val meDecoder = deriveDecoder[SlackMessageEdited]
+  implicit val mriEncoder = deriveEncoder[SlackMessageReplyInfo]
+  implicit val mriDecoder = deriveDecoder[SlackMessageReplyInfo]
+  implicit val muEncoder = deriveEncoder[SlackUserMessage]
+  implicit val muDecoder = deriveDecoder[SlackUserMessage]
+
+  implicit val mcEncoder = deriveEncoder[SlackMessageChanged]
+  implicit val mcDecoder = deriveDecoder[SlackMessageChanged]
+  implicit val mdEncoder = deriveEncoder[SlackMessageDeleted]
+  implicit val mdDecoder = deriveDecoder[SlackMessageDeleted]
+  implicit val mrEncoder = deriveEncoder[SlackMessageReplied]
+  implicit val mrDecoder = deriveDecoder[SlackMessageReplied]
+  implicit val mbEncoder = deriveEncoder[SlackBotMessage]
+  implicit val mbDecoder = deriveDecoder[SlackBotMessage]
+  implicit val mmEncoder = deriveEncoder[SlackMeMessage]
+  implicit val mmDecoder = deriveDecoder[SlackMeMessage]
 
   implicit val encoder: Encoder[SlackMessage] = JsonTaggedAdtCodec.createEncoderDefinition[SlackMessage] {
     case ( converter, obj ) =>
@@ -153,7 +170,7 @@ object SlackMessage {
 
         case Some( typeFieldValue ) if typeFieldValue != TYPE_VALUE =>
           cursor.get[Option[String]]( "subtype" ).flatMap {
-            case Some( subTypeValue ) => // Decode a case class from body accordingly to typeFieldValue
+            case Some( subTypeValue ) =>
               converter.fromJsonObject(
                 jsonTypeFieldValue = subTypeValue,
                 cursor = cursor

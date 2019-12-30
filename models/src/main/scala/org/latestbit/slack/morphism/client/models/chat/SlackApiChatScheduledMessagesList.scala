@@ -18,11 +18,7 @@
 
 package org.latestbit.slack.morphism.client.models.chat
 
-import org.latestbit.slack.morphism.client.models.common.{
-  SlackApiResponseMetadata,
-  SlackDateTime,
-  SlackDateTimeAsStr
-}
+import org.latestbit.slack.morphism.client.models.common.{ SlackApiResponseMetadata, SlackDateTime, SlackDateTimeAsStr }
 import org.latestbit.slack.morphism.client.streaming.SlackApiScrollableResponse
 
 /**
