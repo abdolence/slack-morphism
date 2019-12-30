@@ -42,7 +42,7 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
         groupBlocks {
           blocks {
             block( dividerBlock() )
-            block( sectionBlock( text = md"Test" ) )
+            block( sectionBlock( text = md"Test: ${testCond}" ) )
             optBlock( testCond > 0 )( dividerBlock() )
             block(
               sectionBlock(
