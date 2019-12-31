@@ -20,10 +20,10 @@ package org.latestbit.slack.morphism.client.impl
 
 import io.circe.generic.auto._
 import org.latestbit.slack.morphism.client._
-import org.latestbit.slack.morphism.client.models.channels.SlackChannelInfo
-import org.latestbit.slack.morphism.client.models.conversations._
-import org.latestbit.slack.morphism.client.models.messages.SlackMessage
+import org.latestbit.slack.morphism.client.reqresp.conversations._
+import org.latestbit.slack.morphism.messages.SlackTextMessage
 import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
+import org.latestbit.slack.morphism.common.SlackChannelInfo
 import sttp.client._
 
 import scala.concurrent.{ ExecutionContext, Future }
@@ -121,8 +121,8 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): SlackApiResponseScroller[SlackMessage, String] = {
-      new SlackApiResponseScroller[SlackMessage, String](
+    ): SlackApiResponseScroller[SlackTextMessage, String] = {
+      new SlackApiResponseScroller[SlackTextMessage, String](
         initialLoader = { () =>
           history( req )
         },
@@ -374,8 +374,8 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): SlackApiResponseScroller[SlackMessage, String] = {
-      new SlackApiResponseScroller[SlackMessage, String](
+    ): SlackApiResponseScroller[SlackTextMessage, String] = {
+      new SlackApiResponseScroller[SlackTextMessage, String](
         initialLoader = { () =>
           replies( req )
         },

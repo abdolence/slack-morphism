@@ -18,7 +18,7 @@
 
 package org.latestbit.slack.morphism.coding
 
-import org.latestbit.slack.morphism.client.models.messages._
+import org.latestbit.slack.morphism.messages._
 import org.latestbit.slack.morphism.client.templating.SlackMessageTemplate
 import org.scalatest.flatspec.AnyFlatSpec
 

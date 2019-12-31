@@ -18,7 +18,7 @@
 
 package org.latestbit.slack.morphism.client
 
-import org.latestbit.slack.morphism.client.models.test._
+import org.latestbit.slack.morphism.client.reqresp.test._
 import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatest.Succeeded
 import org.scalacheck.ScalacheckShapeless._
@@ -28,7 +28,7 @@ import sttp.client.testing.SttpBackendStub
 import cats.implicits._
 import io.circe.Encoder
 import io.circe.generic.auto._
-import org.latestbit.slack.morphism.client.models.apps._
+import org.latestbit.slack.morphism.client.reqresp.apps._
 import org.scalatest.compatible.Assertion
 
 import scala.concurrent.Future

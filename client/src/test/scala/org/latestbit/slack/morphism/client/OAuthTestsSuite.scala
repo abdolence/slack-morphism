@@ -19,8 +19,8 @@
 package org.latestbit.slack.morphism.client
 
 import io.circe.generic.auto._
-import org.latestbit.slack.morphism.client.models.team.SlackTeamInfo
-import org.latestbit.slack.morphism.client.models.oauth._
+import org.latestbit.slack.morphism.client.reqresp.oauth._
+import org.latestbit.slack.morphism.common.SlackTeamInfo
 import org.scalatest.flatspec.AsyncFlatSpec
 import sttp.client.testing.SttpBackendStub
 import sttp.model.HeaderNames

@@ -18,7 +18,7 @@
 
 package org.latestbit.slack.morphism.client.templating
 
-import org.latestbit.slack.morphism.client.models.messages.SlackBlock
+import org.latestbit.slack.morphism.messages.SlackBlock
 
 trait SlackMessageTemplate extends SlackMessageTemplateDsl with SlackMessageFormatters {
   def renderPlainText(): String

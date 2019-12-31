@@ -18,7 +18,7 @@
 
 package org.latestbit.slack.morphism.client.templating
 
-import org.latestbit.slack.morphism.client.models.messages._
+import org.latestbit.slack.morphism.messages._
 import cats.data._
 
 trait SlackMessageTemplateDsl {

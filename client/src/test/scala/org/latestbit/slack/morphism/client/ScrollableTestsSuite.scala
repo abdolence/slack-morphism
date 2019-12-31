@@ -19,7 +19,7 @@
 package org.latestbit.slack.morphism.client
 
 import io.circe.JsonObject
-import org.latestbit.slack.morphism.client.models.test._
+import org.latestbit.slack.morphism.client.reqresp.test._
 import org.latestbit.slack.morphism.client.streaming._
 import org.scalatest.flatspec.AsyncFlatSpec
 

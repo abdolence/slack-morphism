@@ -23,7 +23,7 @@ import java.util.Base64
 import io.circe.{ Encoder, JsonObject }
 import io.circe.generic.auto._
 import io.circe.syntax._
-import org.latestbit.slack.morphism.client.models.test._
+import org.latestbit.slack.morphism.client.reqresp.test._
 import org.scalatest.flatspec.AsyncFlatSpec
 import sttp.client._
 import sttp.client.testing.SttpBackendStub

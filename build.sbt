@@ -71,7 +71,7 @@ val scalaTestVersion = "3.1.0"
 val scalaCollectionsCompatVersion = "2.1.3"
 val scalaCheckVersion = "1.14.3"
 val sttpVersion = "2.0.0-RC5"
-val circeAdtCodecVersion = "0.4.1"
+val circeAdtCodecVersion = "0.5.0"
 val reactiveStreamsVersion = "1.0.3"
 
 val baseDependencies =

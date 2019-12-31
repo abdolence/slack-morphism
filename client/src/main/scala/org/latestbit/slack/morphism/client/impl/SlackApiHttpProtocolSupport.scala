@@ -26,7 +26,7 @@ import io.circe.generic.auto._
 import io.circe.parser._
 import io.circe.syntax._
 import org.latestbit.slack.morphism.client._
-import org.latestbit.slack.morphism.client.models.internal.SlackGeneralResponseParams
+import org.latestbit.slack.morphism.client.reqresp.internal.SlackGeneralResponseParams
 import sttp.client._
 import sttp.model.{ MediaType, Uri }
 

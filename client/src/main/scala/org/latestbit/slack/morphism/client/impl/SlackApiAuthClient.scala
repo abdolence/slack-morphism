@@ -20,7 +20,7 @@ package org.latestbit.slack.morphism.client.impl
 
 import io.circe.generic.semiauto._
 import org.latestbit.slack.morphism.client._
-import org.latestbit.slack.morphism.client.models.auth._
+import org.latestbit.slack.morphism.client.reqresp.auth._
 import sttp.client._
 
 import scala.concurrent.{ ExecutionContext, Future }
