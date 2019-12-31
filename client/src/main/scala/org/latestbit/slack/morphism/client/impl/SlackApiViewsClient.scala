@@ -39,7 +39,7 @@ trait SlackApiViewsClient extends SlackApiHttpProtocolSupport { self: SlackApiCl
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): Future[Either[SlackApiError, SlackApiViewsOpenResponse]] = {
+    ): Future[Either[SlackApiClientError, SlackApiViewsOpenResponse]] = {
 
       protectedSlackHttpApiPost[SlackApiViewsOpenRequest, SlackApiViewsOpenResponse](
         "views.open",
@@ -54,7 +54,7 @@ trait SlackApiViewsClient extends SlackApiHttpProtocolSupport { self: SlackApiCl
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): Future[Either[SlackApiError, SlackApiViewsPublishResponse]] = {
+    ): Future[Either[SlackApiClientError, SlackApiViewsPublishResponse]] = {
 
       protectedSlackHttpApiPost[SlackApiViewsPublishRequest, SlackApiViewsPublishResponse](
         "views.publish",
@@ -69,7 +69,7 @@ trait SlackApiViewsClient extends SlackApiHttpProtocolSupport { self: SlackApiCl
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): Future[Either[SlackApiError, SlackApiViewsPushResponse]] = {
+    ): Future[Either[SlackApiClientError, SlackApiViewsPushResponse]] = {
 
       protectedSlackHttpApiPost[SlackApiViewsPushRequest, SlackApiViewsPushResponse](
         "views.push",
@@ -84,7 +84,7 @@ trait SlackApiViewsClient extends SlackApiHttpProtocolSupport { self: SlackApiCl
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): Future[Either[SlackApiError, SlackApiViewsUpdateResponse]] = {
+    ): Future[Either[SlackApiClientError, SlackApiViewsUpdateResponse]] = {
 
       protectedSlackHttpApiPost[SlackApiViewsUpdateRequest, SlackApiViewsUpdateResponse](
         "views.update",

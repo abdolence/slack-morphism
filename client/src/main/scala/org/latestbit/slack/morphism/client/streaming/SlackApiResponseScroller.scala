@@ -18,7 +18,7 @@
 
 package org.latestbit.slack.morphism.client.streaming
 
-import org.latestbit.slack.morphism.client.SlackApiError
+import org.latestbit.slack.morphism.client.SlackApiClientError
 import org.latestbit.slack.morphism.client.streaming.impl.SlackApiScrollableReactivePublisher
 import org.latestbit.slack.morphism.concurrent.AsyncSeqIterator
 import org.reactivestreams.Publisher
@@ -26,13 +26,13 @@ import org.reactivestreams.Publisher
 import scala.concurrent._
 
 class SlackApiResponseScroller[IT, PT](
-    initialLoader: () => Future[Either[SlackApiError, SlackApiScrollableResponse[IT, PT]]],
-    batchLoader: PT => Future[Either[SlackApiError, SlackApiScrollableResponse[IT, PT]]]
+    initialLoader: () => Future[Either[SlackApiClientError, SlackApiScrollableResponse[IT, PT]]],
+    batchLoader: PT => Future[Either[SlackApiClientError, SlackApiScrollableResponse[IT, PT]]]
 ) extends SlackApiResponseSyncScroller.LazyScalaCollectionSupport[IT, PT] {
 
-  def first(): Future[Either[SlackApiError, SlackApiScrollableResponse[IT, PT]]] = initialLoader()
+  def first(): Future[Either[SlackApiClientError, SlackApiScrollableResponse[IT, PT]]] = initialLoader()
 
-  def next( lastPosition: PT ): Future[Either[SlackApiError, SlackApiScrollableResponse[IT, PT]]] =
+  def next( lastPosition: PT ): Future[Either[SlackApiClientError, SlackApiScrollableResponse[IT, PT]]] =
     batchLoader( lastPosition )
 
   def toAsyncScroller()(

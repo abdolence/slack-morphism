@@ -40,7 +40,7 @@ trait SlackApiReactionsClient extends SlackApiHttpProtocolSupport { self: SlackA
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): Future[Either[SlackApiError, SlackApiReactionsAddResponse]] = {
+    ): Future[Either[SlackApiClientError, SlackApiReactionsAddResponse]] = {
 
       protectedSlackHttpApiPost[SlackApiReactionsAddRequest, SlackApiReactionsAddResponse](
         "reactions.add",
@@ -55,7 +55,7 @@ trait SlackApiReactionsClient extends SlackApiHttpProtocolSupport { self: SlackA
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): Future[Either[SlackApiError, SlackApiReactionsGetResponse]] = {
+    ): Future[Either[SlackApiClientError, SlackApiReactionsGetResponse]] = {
 
       protectedSlackHttpApiGet[SlackApiReactionsGetResponse](
         "reactions.get",
@@ -74,7 +74,7 @@ trait SlackApiReactionsClient extends SlackApiHttpProtocolSupport { self: SlackA
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): Future[Either[SlackApiError, SlackApiReactionsListResponse]] = {
+    ): Future[Either[SlackApiClientError, SlackApiReactionsListResponse]] = {
 
       protectedSlackHttpApiGet[SlackApiReactionsListResponse](
         "reactions.list",
@@ -118,7 +118,7 @@ trait SlackApiReactionsClient extends SlackApiHttpProtocolSupport { self: SlackA
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): Future[Either[SlackApiError, SlackApiReactionsRemoveResponse]] = {
+    ): Future[Either[SlackApiClientError, SlackApiReactionsRemoveResponse]] = {
 
       protectedSlackHttpApiPost[SlackApiReactionsRemoveRequest, SlackApiReactionsRemoveResponse](
         "reactions.remove",

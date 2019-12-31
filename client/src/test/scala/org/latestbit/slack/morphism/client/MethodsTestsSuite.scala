@@ -44,9 +44,9 @@ class MethodsTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenPropertyCheck
   }
 
   def testSlackApiMethod[RQ, RS](
-      apiMethodCall: RQ => SttpBackendStub[Future, Nothing] => Future[Either[SlackApiError, RS]]
+      apiMethodCall: RQ => SttpBackendStub[Future, Nothing] => Future[Either[SlackApiClientError, RS]]
   )( responseFactory: RQ => RS )(
-      reqRespAssertion: ( RQ, Either[SlackApiError, RS] ) => Assertion
+      reqRespAssertion: ( RQ, Either[SlackApiClientError, RS] ) => Assertion
   )( implicit arq: Arbitrary[RQ], encoder: Encoder.AsObject[RS] ) = {
 
     genBoundedGenList( 6, arq.arbitrary ).sample match {

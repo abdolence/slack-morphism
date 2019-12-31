@@ -42,7 +42,7 @@ trait SlackApiImClient extends SlackApiHttpProtocolSupport { self: SlackApiClien
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): Future[Either[SlackApiError, SlackApiImCloseResponse]] = {
+    ): Future[Either[SlackApiClientError, SlackApiImCloseResponse]] = {
 
       protectedSlackHttpApiPost[SlackApiImCloseRequest, SlackApiImCloseResponse](
         "im.close",
@@ -57,7 +57,7 @@ trait SlackApiImClient extends SlackApiHttpProtocolSupport { self: SlackApiClien
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): Future[Either[SlackApiError, SlackApiImHistoryResponse]] = {
+    ): Future[Either[SlackApiClientError, SlackApiImHistoryResponse]] = {
 
       protectedSlackHttpApiGet[SlackApiImHistoryResponse](
         "im.history",
@@ -104,7 +104,7 @@ trait SlackApiImClient extends SlackApiHttpProtocolSupport { self: SlackApiClien
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): Future[Either[SlackApiError, SlackApiImListResponse]] = {
+    ): Future[Either[SlackApiClientError, SlackApiImListResponse]] = {
 
       protectedSlackHttpApiGet[SlackApiImListResponse](
         "im.list",
@@ -146,7 +146,7 @@ trait SlackApiImClient extends SlackApiHttpProtocolSupport { self: SlackApiClien
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): Future[Either[SlackApiError, SlackApiImMarkResponse]] = {
+    ): Future[Either[SlackApiClientError, SlackApiImMarkResponse]] = {
 
       protectedSlackHttpApiPost[SlackApiImMarkRequest, SlackApiImMarkResponse](
         "im.mark",
@@ -161,7 +161,7 @@ trait SlackApiImClient extends SlackApiHttpProtocolSupport { self: SlackApiClien
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): Future[Either[SlackApiError, SlackApiImOpenResponse]] = {
+    ): Future[Either[SlackApiClientError, SlackApiImOpenResponse]] = {
 
       protectedSlackHttpApiPost[SlackApiImOpenRequest, SlackApiImOpenResponse](
         "im.open",
@@ -176,7 +176,7 @@ trait SlackApiImClient extends SlackApiHttpProtocolSupport { self: SlackApiClien
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): Future[Either[SlackApiError, SlackApiImRepliesResponse]] = {
+    ): Future[Either[SlackApiClientError, SlackApiImRepliesResponse]] = {
 
       protectedSlackHttpApiGet[SlackApiImRepliesResponse](
         "im.replies",

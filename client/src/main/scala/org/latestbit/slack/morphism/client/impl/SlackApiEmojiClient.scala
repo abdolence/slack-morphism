@@ -39,7 +39,7 @@ trait SlackApiEmojiClient extends SlackApiHttpProtocolSupport { self: SlackApiCl
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): Future[Either[SlackApiError, SlackApiEmojiListResponse]] = {
+    ): Future[Either[SlackApiClientError, SlackApiEmojiListResponse]] = {
 
       protectedSlackHttpApiGet[SlackApiEmojiListResponse](
         "emoji.list",

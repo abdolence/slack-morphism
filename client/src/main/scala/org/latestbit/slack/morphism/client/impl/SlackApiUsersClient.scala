@@ -41,7 +41,7 @@ trait SlackApiUsersClient extends SlackApiHttpProtocolSupport { self: SlackApiCl
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): Future[Either[SlackApiError, SlackApiUsersConversationsResponse]] = {
+    ): Future[Either[SlackApiClientError, SlackApiUsersConversationsResponse]] = {
 
       protectedSlackHttpApiGet[SlackApiUsersConversationsResponse](
         "users.conversations",
@@ -86,7 +86,7 @@ trait SlackApiUsersClient extends SlackApiHttpProtocolSupport { self: SlackApiCl
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): Future[Either[SlackApiError, SlackApiUsersGetPresenceResponse]] = {
+    ): Future[Either[SlackApiClientError, SlackApiUsersGetPresenceResponse]] = {
 
       protectedSlackHttpApiGet[SlackApiUsersGetPresenceResponse](
         "users.getPresence",
@@ -103,7 +103,7 @@ trait SlackApiUsersClient extends SlackApiHttpProtocolSupport { self: SlackApiCl
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): Future[Either[SlackApiError, SlackApiUsersIdentityResponse]] = {
+    ): Future[Either[SlackApiClientError, SlackApiUsersIdentityResponse]] = {
 
       protectedSlackHttpApiGet[SlackApiUsersIdentityResponse](
         "users.identity",
@@ -118,7 +118,7 @@ trait SlackApiUsersClient extends SlackApiHttpProtocolSupport { self: SlackApiCl
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): Future[Either[SlackApiError, SlackApiUsersInfoResponse]] = {
+    ): Future[Either[SlackApiClientError, SlackApiUsersInfoResponse]] = {
 
       protectedSlackHttpApiGet[SlackApiUsersInfoResponse](
         "users.info",
@@ -136,7 +136,7 @@ trait SlackApiUsersClient extends SlackApiHttpProtocolSupport { self: SlackApiCl
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): Future[Either[SlackApiError, SlackApiUsersListResponse]] = {
+    ): Future[Either[SlackApiClientError, SlackApiUsersListResponse]] = {
 
       protectedSlackHttpApiGet[SlackApiUsersListResponse](
         "users.list",
@@ -179,7 +179,7 @@ trait SlackApiUsersClient extends SlackApiHttpProtocolSupport { self: SlackApiCl
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): Future[Either[SlackApiError, SlackApiUsersLookupByEmailResponse]] = {
+    ): Future[Either[SlackApiClientError, SlackApiUsersLookupByEmailResponse]] = {
 
       protectedSlackHttpApiGet[SlackApiUsersLookupByEmailResponse](
         "users.lookupByEmail",
@@ -196,7 +196,7 @@ trait SlackApiUsersClient extends SlackApiHttpProtocolSupport { self: SlackApiCl
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): Future[Either[SlackApiError, SlackApiUsersSetPresenceResponse]] = {
+    ): Future[Either[SlackApiClientError, SlackApiUsersSetPresenceResponse]] = {
 
       protectedSlackHttpApiPost[SlackApiUsersSetPresenceRequest, SlackApiUsersSetPresenceResponse](
         "users.setPresence",
@@ -213,7 +213,7 @@ trait SlackApiUsersClient extends SlackApiHttpProtocolSupport { self: SlackApiCl
           implicit slackApiToken: SlackApiToken,
           backend: SttpBackend[Future, Nothing, NothingT],
           ec: ExecutionContext
-      ): Future[Either[SlackApiError, SlackApiUsersProfileGetResponse]] = {
+      ): Future[Either[SlackApiClientError, SlackApiUsersProfileGetResponse]] = {
 
         protectedSlackHttpApiGet[SlackApiUsersProfileGetResponse](
           "users.profile.get",
@@ -231,7 +231,7 @@ trait SlackApiUsersClient extends SlackApiHttpProtocolSupport { self: SlackApiCl
           implicit slackApiToken: SlackApiToken,
           backend: SttpBackend[Future, Nothing, NothingT],
           ec: ExecutionContext
-      ): Future[Either[SlackApiError, SlackApiUsersProfileSetResponse]] = {
+      ): Future[Either[SlackApiClientError, SlackApiUsersProfileSetResponse]] = {
 
         protectedSlackHttpApiPost[SlackApiUsersProfileSetRequest, SlackApiUsersProfileSetResponse](
           "users.profile.set",

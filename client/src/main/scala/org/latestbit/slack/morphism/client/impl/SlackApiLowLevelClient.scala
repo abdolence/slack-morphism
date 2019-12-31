@@ -42,7 +42,7 @@ trait SlackApiLowLevelClient extends SlackApiHttpProtocolSupport { self: SlackAp
         backend: SttpBackend[Future, Nothing, NothingT],
         decoder: Decoder[RS],
         ec: ExecutionContext
-    ): Future[Either[SlackApiError, RS]] = {
+    ): Future[Either[SlackApiClientError, RS]] = {
       protectedSlackHttpApiGet[RS](
         methodUri,
         params
@@ -61,7 +61,7 @@ trait SlackApiLowLevelClient extends SlackApiHttpProtocolSupport { self: SlackAp
         encoder: Encoder[RQ],
         decoder: Decoder[RS],
         ec: ExecutionContext
-    ): Future[Either[SlackApiError, RS]] = {
+    ): Future[Either[SlackApiClientError, RS]] = {
       protectedSlackHttpApiPost[RQ, RS](
         methodUri,
         req

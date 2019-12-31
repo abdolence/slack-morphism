@@ -20,7 +20,7 @@ package org.latestbit.slack.morphism.client.streaming.impl
 
 import java.util.concurrent.Executors
 
-import org.latestbit.slack.morphism.client.SlackApiError
+import org.latestbit.slack.morphism.client.SlackApiClientError
 import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
 import org.reactivestreams.Subscriber
 
@@ -43,7 +43,7 @@ class SlackApiScrollableSubscriptionCommandProcessor[IT, PT](
 
   private def nextBatch()(
       implicit ec: ExecutionContext
-  ): Future[Either[SlackApiError, Iterable[IT]]] = {
+  ): Future[Either[SlackApiClientError, Iterable[IT]]] = {
 
     Option( lastItems )
       .filter( _.nonEmpty )

@@ -47,7 +47,7 @@ trait SlackApiHttpProtocolSupport {
   protected def slackGeneralResponseToError(
       uri: Uri,
       generalResponseParams: SlackGeneralResponseParams
-  ): Option[SlackApiError] = {
+  ): Option[SlackApiClientError] = {
     generalResponseParams.error.map { errorCode =>
       SlackApiResponseError(
         uri = uri,
@@ -61,7 +61,7 @@ trait SlackApiHttpProtocolSupport {
       uri: Uri,
       error: io.circe.Error,
       body: String
-  ): SlackApiError = {
+  ): SlackApiClientError = {
     SlackApiDecodingError(
       uri = uri,
       coderError = error,
@@ -75,7 +75,7 @@ trait SlackApiHttpProtocolSupport {
 
   protected def decodeSlackResponse[RS]( uri: Uri, response: Response[Either[String, String]] )(
       implicit decoder: Decoder[RS]
-  ): Either[SlackApiError, RS] = {
+  ): Either[SlackApiClientError, RS] = {
     val responseMediaType =
       response.contentType.map( MediaType.parse ).flatMap( _.toOption )
 
@@ -84,7 +84,7 @@ trait SlackApiHttpProtocolSupport {
         decodeSlackGeneralResponse( successBody ) match {
           case Right( generalResp ) => {
             slackGeneralResponseToError( uri, generalResp )
-              .map( Either.left[SlackApiError, RS] )
+              .map( Either.left[SlackApiClientError, RS] )
               .getOrElse(
                 decode[RS]( successBody ).left
                   .map(ex => circeDecodingErrorToApiError( uri, ex, successBody ) )
@@ -135,7 +135,7 @@ trait SlackApiHttpProtocolSupport {
       implicit decoder: Decoder[RS],
       backend: SttpBackend[Future, Nothing, NothingT],
       ec: ExecutionContext
-  ): Future[Either[SlackApiError, RS]] = {
+  ): Future[Either[SlackApiClientError, RS]] = {
     request.send().map(response => decodeSlackResponse[RS]( request.uri, response ) ).recoverWith {
       case ex: IOException =>
         Future.successful( Left( SlackApiConnectionError( request.uri, ex ) ) )
@@ -151,7 +151,7 @@ trait SlackApiHttpProtocolSupport {
       decoder: Decoder[RS],
       backend: SttpBackend[Future, Nothing, NothingT],
       ec: ExecutionContext
-  ): Future[Either[SlackApiError, RS]] = {
+  ): Future[Either[SlackApiClientError, RS]] = {
     sendSlackRequest[RS](
       request.auth.bearer( slackApiToken.value )
     )
@@ -170,7 +170,7 @@ trait SlackApiHttpProtocolSupport {
       decoder: Decoder[RS],
       backend: SttpBackend[Future, Nothing, NothingT],
       ec: ExecutionContext
-  ): Future[Either[SlackApiError, RS]] = {
+  ): Future[Either[SlackApiClientError, RS]] = {
     val bodyAsStr = body.asJson.dropNullValues.noSpaces
 
     protectedSlackHttpApiRequest[RS](
@@ -195,7 +195,7 @@ trait SlackApiHttpProtocolSupport {
       decoder: Decoder[RS],
       backend: SttpBackend[Future, Nothing, NothingT],
       ec: ExecutionContext
-  ): Future[Either[SlackApiError, RS]] = {
+  ): Future[Either[SlackApiClientError, RS]] = {
 
     val filteredParams: Map[String, String] =
       params.foldLeft( Map[String, String]() ) {
@@ -215,7 +215,7 @@ trait SlackApiHttpProtocolSupport {
       decoder: Decoder[RS],
       backend: SttpBackend[Future, Nothing, NothingT],
       ec: ExecutionContext
-  ): Future[Either[SlackApiError, RS]] = {
+  ): Future[Either[SlackApiClientError, RS]] = {
     protectedSlackHttpApiGet( methodUri, createSlackHttpApiRequest() )
   }
 

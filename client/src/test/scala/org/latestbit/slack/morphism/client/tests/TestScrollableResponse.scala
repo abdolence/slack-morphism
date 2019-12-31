@@ -18,7 +18,7 @@
 
 package org.latestbit.slack.morphism.client.tests
 
-import org.latestbit.slack.morphism.client.{ SlackApiError, SlackApiSystemError }
+import org.latestbit.slack.morphism.client.{ SlackApiClientError, SlackApiSystemError }
 import org.latestbit.slack.morphism.client.streaming.{ SlackApiResponseScroller, SlackApiScrollableResponse }
 
 import scala.concurrent.Future
@@ -57,7 +57,7 @@ object TestScrollableResponse {
 
   def createTestScrollableResponse(): SlackApiResponseScroller[Int, String] = {
 
-    def initialResponseLoader(): Future[Either[SlackApiError, TestScrollableResponse]] = {
+    def initialResponseLoader(): Future[Either[SlackApiClientError, TestScrollableResponse]] = {
       Future {
         testBatches.headOption
           .map( Right.apply )
@@ -69,7 +69,7 @@ object TestScrollableResponse {
 
     def responseScroller(
         cursor: String
-    ): Future[Either[SlackApiError, TestScrollableResponse]] = {
+    ): Future[Either[SlackApiClientError, TestScrollableResponse]] = {
       Future {
         testBatches
           .lift( cursor.toInt )

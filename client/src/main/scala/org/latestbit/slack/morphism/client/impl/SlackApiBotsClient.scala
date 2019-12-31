@@ -39,7 +39,7 @@ trait SlackApiBotsClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): Future[Either[SlackApiError, SlackApiBotsInfo]] = {
+    ): Future[Either[SlackApiClientError, SlackApiBotsInfo]] = {
 
       protectedSlackHttpApiGet[SlackApiBotsInfo](
         "bots.info",

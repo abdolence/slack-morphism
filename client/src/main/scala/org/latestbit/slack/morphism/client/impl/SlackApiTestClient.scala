@@ -40,7 +40,7 @@ trait SlackApiTestClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
         implicit slackApiToken: SlackApiUserToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): Future[Either[SlackApiError, SlackApiTestResponse]] = {
+    ): Future[Either[SlackApiClientError, SlackApiTestResponse]] = {
 
       protectedSlackHttpApiPost[SlackApiTestRequest, SlackApiTestResponse](
         "api.test",

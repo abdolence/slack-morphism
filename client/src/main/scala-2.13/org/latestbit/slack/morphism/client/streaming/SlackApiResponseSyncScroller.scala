@@ -18,7 +18,7 @@
 
 package org.latestbit.slack.morphism.client.streaming
 
-import org.latestbit.slack.morphism.client.SlackApiError
+import org.latestbit.slack.morphism.client.SlackApiClientError
 
 import scala.concurrent.{ Await, ExecutionContext, Future }
 import scala.concurrent.duration._
@@ -28,12 +28,12 @@ object SlackApiResponseSyncScroller {
   trait LazyScalaCollectionSupport[IT, PT] { self: SlackApiResponseScroller[IT, PT] =>
     type SyncStreamType = LazyList[IT]
 
-    type AsyncItemType = Either[SlackApiError, SlackApiScrollableResponse[IT, PT]]
-    type AsyncValueType = Either[SlackApiError, Iterable[IT]]
+    type AsyncItemType = Either[SlackApiClientError, SlackApiScrollableResponse[IT, PT]]
+    type AsyncValueType = Either[SlackApiClientError, Iterable[IT]]
 
     def toSyncScroller(
         scrollerTimeout: FiniteDuration = 60.seconds
-    )( implicit ec: ExecutionContext ): Future[Either[SlackApiError, SyncStreamType]] = {
+    )( implicit ec: ExecutionContext ): Future[Either[SlackApiClientError, SyncStreamType]] = {
 
       def loadNext( scrollableResp: SlackApiScrollableResponse[IT, PT] ): SyncStreamType = {
         val loadedStream = scrollableResp.items.to( LazyList )
