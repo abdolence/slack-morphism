@@ -19,7 +19,7 @@
 package org.latestbit.slack.morphism.client.reqresp.channels
 
 import org.latestbit.slack.morphism.client.streaming.SlackApiScrollableResponse
-import org.latestbit.slack.morphism.messages.SlackTextMessage
+import org.latestbit.slack.morphism.messages.SlackMessage
 
 /**
  * Request of https://api.slack.com/methods/channels.history
@@ -37,12 +37,12 @@ case class SlackApiChannelsHistoryRequest(
  * Response of https://api.slack.com/methods/channels.history
  */
 case class SlackApiChannelsHistoryResponse(
-    messages: List[SlackTextMessage],
+    messages: List[SlackMessage],
     has_more: Option[Boolean] = None,
     latest: Option[String] = None
-) extends SlackApiScrollableResponse[SlackTextMessage, String] {
+) extends SlackApiScrollableResponse[SlackMessage, String] {
 
-  override def items: List[SlackTextMessage] = messages
+  override def items: List[SlackMessage] = messages
   override def getLatestPos: Option[String] = latest
 
 }

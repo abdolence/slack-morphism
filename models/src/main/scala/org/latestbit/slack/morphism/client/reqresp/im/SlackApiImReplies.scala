@@ -18,7 +18,7 @@
 
 package org.latestbit.slack.morphism.client.reqresp.im
 
-import org.latestbit.slack.morphism.messages.SlackTextMessage
+import org.latestbit.slack.morphism.messages.SlackMessage
 
 /**
  * Request of https://api.slack.com/methods/im.replies
@@ -28,4 +28,4 @@ case class SlackApiImRepliesRequest( channel: String, thread_ts: String )
 /**
  * Response of https://api.slack.com/methods/im.replies
  */
-case class SlackApiImRepliesResponse( messages: List[SlackTextMessage] = List() )
+case class SlackApiImRepliesResponse( messages: List[SlackMessage] = List() )

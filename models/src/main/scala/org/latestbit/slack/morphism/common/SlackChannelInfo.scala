@@ -19,9 +19,10 @@
 package org.latestbit.slack.morphism.common
 
 import io.circe._
-import io.circe.generic.auto._
+import io.circe.generic.semiauto._
 import io.circe.syntax._
-import org.latestbit.slack.morphism.messages.SlackTextMessage
+import org.latestbit.slack.morphism.common
+import org.latestbit.slack.morphism.messages.SlackMessage
 
 case class SlackChannelInfo(
     id: String,
@@ -56,17 +57,30 @@ case class SlackChannelFlags(
 
 case class SlackChannelLastState(
     last_read: Option[String] = None,
-    latest: Option[SlackTextMessage] = None,
+    latest: Option[SlackMessage] = None,
     unread_count: Option[Long] = None,
     unread_count_display: Option[Long] = None,
     members: Option[List[String]] = None
 )
 
 object SlackChannelInfo {
-  case class SlackGeneralChannelInfo( value: String, creator: String, last_set: SlackDateTime )
+  case class SlackChannelDetails( value: String, creator: String, last_set: SlackDateTime )
 
-  type SlackTopicInfo = SlackGeneralChannelInfo
-  type SlackPurposeInfo = SlackGeneralChannelInfo
+  implicit val encoderSlackChannelDetails: Encoder.AsObject[common.SlackChannelInfo.SlackPurposeInfo] =
+    deriveEncoder[common.SlackChannelInfo.SlackPurposeInfo]
+
+  implicit val decoderSlackChannelDetails: Decoder[common.SlackChannelInfo.SlackPurposeInfo] =
+    deriveDecoder[common.SlackChannelInfo.SlackPurposeInfo]
+
+  implicit val encoderSlackChannelFlags: Encoder.AsObject[SlackChannelFlags] = deriveEncoder[SlackChannelFlags]
+  implicit val decoderSlackChannelFlags: Decoder[SlackChannelFlags] = deriveDecoder[SlackChannelFlags]
+
+  implicit val encoderSlackChannelLastState: Encoder.AsObject[SlackChannelLastState] =
+    deriveEncoder[SlackChannelLastState]
+  implicit val decoderSlackChannelLastState: Decoder[SlackChannelLastState] = deriveDecoder[SlackChannelLastState]
+
+  type SlackTopicInfo = SlackChannelDetails
+  type SlackPurposeInfo = SlackChannelDetails
 
   implicit def slackChannelInfoEncoder()(
       implicit flagsEncoder: Encoder.AsObject[SlackChannelFlags],

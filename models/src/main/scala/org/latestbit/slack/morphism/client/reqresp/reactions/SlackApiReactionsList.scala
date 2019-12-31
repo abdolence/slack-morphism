@@ -19,7 +19,7 @@
 package org.latestbit.slack.morphism.client.reqresp.reactions
 
 import org.latestbit.slack.morphism.common.SlackApiResponseMetadata
-import org.latestbit.slack.morphism.messages.SlackTextMessage
+import org.latestbit.slack.morphism.messages.SlackMessage
 import org.latestbit.slack.morphism.client.streaming.SlackApiScrollableResponse
 
 /**
@@ -44,4 +44,4 @@ case class SlackApiReactionsListResponse(
 
 }
 
-case class SlackApiReactionsListItem( channel: String, message: SlackTextMessage )
+case class SlackApiReactionsListItem( channel: String, message: SlackMessage )

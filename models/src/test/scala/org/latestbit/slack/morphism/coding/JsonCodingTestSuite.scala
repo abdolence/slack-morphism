@@ -160,9 +160,10 @@ class JsonCodingTestSuite extends AnyFlatSpec {
   }
 
   "A JSON/ADT model for SlackMessage" should "be available implicitly" in {
-    import org.latestbit.slack.morphism.messages.SlackMessage
+    import org.latestbit.slack.morphism.events.SlackMessageEvent
+    import org.latestbit.slack.morphism.events.SlackUserMessage
 
-    val testModel: SlackMessage = org.latestbit.slack.morphism.messages.SlackUserMessage(
+    val testModel: SlackMessageEvent = SlackUserMessage(
       ts = "test",
       channel = "test-channek",
       text = "Test Text",
@@ -173,13 +174,13 @@ class JsonCodingTestSuite extends AnyFlatSpec {
 
     assert( !(testJson contains "SlackUserMessage") )
 
-    decode[SlackMessage](
+    decode[SlackMessageEvent](
       testJson
     ) match {
       case Right( model: SlackUserMessage ) => {
         assert( model === testModel )
       }
-      case Right( model: SlackMessage ) => {
+      case Right( model: SlackMessageEvent ) => {
         fail( model.toString )
       }
       case Left( ex ) => fail( ex )

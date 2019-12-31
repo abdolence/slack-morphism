@@ -16,19 +16,12 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.reqresp.channels
+package org.latestbit.slack.morphism
 
-import org.latestbit.slack.morphism.messages.SlackMessage
-
-/**
- * Request of https://api.slack.com/methods/channels.replies
- */
-case class SlackApiChannelsRepliesRequest(
-    channel: String,
-    thread_ts: String
-)
-
-/**
- * Response of https://api.slack.com/methods/channels.replies
- */
-case class SlackApiChannelsRepliesResponse( messages: List[SlackMessage] = List() )
+package object messages {
+  type SlackMessage = events.SlackMessage
+  type SlackPinnedMessage = events.SlackPinnedMessage
+  type SlackUserMessage = events.SlackUserMessage
+  type SlackBotMessage = events.SlackBotMessage
+  type SlackMeMessage = events.SlackMeMessage
+}

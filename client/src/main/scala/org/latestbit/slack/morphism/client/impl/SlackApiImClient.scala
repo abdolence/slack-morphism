@@ -21,7 +21,7 @@ package org.latestbit.slack.morphism.client.impl
 import io.circe.generic.auto._
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.reqresp.im._
-import org.latestbit.slack.morphism.messages.SlackTextMessage
+import org.latestbit.slack.morphism.messages.SlackMessage
 import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
 import org.latestbit.slack.morphism.common.SlackChannelInfo
 import sttp.client._
@@ -80,8 +80,8 @@ trait SlackApiImClient extends SlackApiHttpProtocolSupport { self: SlackApiClien
         implicit slackApiToken: SlackApiToken,
         backend: SttpBackend[Future, Nothing, NothingT],
         ec: ExecutionContext
-    ): SlackApiResponseScroller[SlackTextMessage, String] = {
-      new SlackApiResponseScroller[SlackTextMessage, String](
+    ): SlackApiResponseScroller[SlackMessage, String] = {
+      new SlackApiResponseScroller[SlackMessage, String](
         initialLoader = { () =>
           history( req )
         },

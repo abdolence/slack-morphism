@@ -19,7 +19,7 @@
 package org.latestbit.slack.morphism.views
 
 import io.circe._
-import io.circe.generic.auto._
+import io.circe.generic.semiauto._
 import org.latestbit.circe.adt.codec._
 import org.latestbit.slack.morphism.messages.{ SlackBlock, SlackBlockPlainText }
 
@@ -48,6 +48,11 @@ case class SlackHomeView(
 ) extends SlackView
 
 object SlackView {
+  implicit val encoderSlackModalView: Encoder.AsObject[SlackModalView] = deriveEncoder[SlackModalView]
+  implicit val decoderSlackModalView: Decoder[SlackModalView] = deriveDecoder[SlackModalView]
+  implicit val encoderSlackHomeView: Encoder.AsObject[SlackHomeView] = deriveEncoder[SlackHomeView]
+  implicit val decoderSlackHomeView: Decoder[SlackHomeView] = deriveDecoder[SlackHomeView]
+
   implicit val encoder = JsonTaggedAdtCodec.createEncoder[SlackView]( "type" )
   implicit val decoder = JsonTaggedAdtCodec.createDecoder[SlackView]( "type" )
 }
@@ -74,14 +79,20 @@ case class SlackViewState( values: Map[String, Json] = Map() ) {}
 
 object SlackStatefulView {
 
-  def createEncoder()(
-      implicit viewEncoder: Encoder.AsObject[SlackView],
-      paramsEncoder: Encoder.AsObject[SlackStatefulViewParams]
-  ): Encoder.AsObject[SlackStatefulView] = (model: SlackStatefulView) => {
-    viewEncoder.encodeObject( model.view ).deepMerge( paramsEncoder.encodeObject( model.params ) )
+  implicit val encoderSlackViewState: Encoder.AsObject[SlackViewState] = deriveEncoder[SlackViewState]
+  implicit val decoderSlackViewState: Decoder[SlackViewState] = deriveDecoder[SlackViewState]
+
+  def createEncoder(): Encoder.AsObject[SlackStatefulView] = (model: SlackStatefulView) => {
+    implicit val encoderSlackView: Encoder.AsObject[SlackView] = deriveEncoder[SlackView]
+    implicit val encoderSlackStatefulViewParams: Encoder.AsObject[SlackStatefulViewParams] =
+      deriveEncoder[SlackStatefulViewParams]
+
+    encoderSlackView.encodeObject( model.view ).deepMerge( encoderSlackStatefulViewParams.encodeObject( model.params ) )
   }
 
   def createDecoder(): Decoder[SlackStatefulView] = (cursor: HCursor) => {
+    implicit val decoderSlackStatefulViewParams: Decoder[SlackStatefulViewParams] =
+      deriveDecoder[SlackStatefulViewParams]
     for {
       view <- cursor.as[SlackView]
       params <- cursor.as[SlackStatefulViewParams]

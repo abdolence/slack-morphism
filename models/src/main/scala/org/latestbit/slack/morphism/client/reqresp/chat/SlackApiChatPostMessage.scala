@@ -43,4 +43,4 @@ case class SlackApiChatPostMessageRequest(
 /**
  * Response of https://api.slack.com/methods/chat.postMessage
  */
-case class SlackApiChatPostMessageResponse( ts: String, message: SlackTextMessage )
+case class SlackApiChatPostMessageResponse( ts: String, message: SlackMessage )

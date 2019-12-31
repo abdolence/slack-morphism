@@ -20,7 +20,7 @@ package org.latestbit.slack.morphism.client.reqresp.conversations
 
 import org.latestbit.slack.morphism.client.streaming.SlackApiScrollableResponse
 import org.latestbit.slack.morphism.common.SlackApiResponseMetadata
-import org.latestbit.slack.morphism.messages.SlackTextMessage
+import org.latestbit.slack.morphism.messages.SlackMessage
 
 /**
  * Request of https://api.slack.com/methods/conversations.replies
@@ -39,12 +39,12 @@ case class SlackApiConversationsRepliesRequest(
  * Response of https://api.slack.com/methods/conversations.replies
  */
 case class SlackApiConversationsRepliesResponse(
-    messages: List[SlackTextMessage] = List(),
+    messages: List[SlackMessage] = List(),
     has_more: Option[Boolean] = None,
     response_metadata: Option[SlackApiResponseMetadata] = None
-) extends SlackApiScrollableResponse[SlackTextMessage, String] {
+) extends SlackApiScrollableResponse[SlackMessage, String] {
 
-  override def items: List[SlackTextMessage] = messages
+  override def items: List[SlackMessage] = messages
   override def getLatestPos: Option[String] = response_metadata.flatMap( _.next_cursor )
 
 }

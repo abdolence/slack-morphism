@@ -27,8 +27,11 @@ case class TestSlackAttachment() extends SlackAttachment
 
 object SlackAttachment {
 
-  import io.circe.generic.auto._
+  import io.circe.generic.semiauto._
   import io.circe.syntax._
+
+  implicit val encoderTestSlackAttachment: Encoder.AsObject[TestSlackAttachment] = deriveEncoder[TestSlackAttachment]
+  implicit val decoderTestSlackAttachment: Decoder[TestSlackAttachment] = deriveDecoder[TestSlackAttachment]
 
   implicit val encoder: Encoder[SlackAttachment] = JsonTaggedAdtCodec.createEncoder[SlackAttachment]( "type" )
   implicit val decoder: Decoder[SlackAttachment] = JsonTaggedAdtCodec.createDecoder[SlackAttachment]( "type" )
