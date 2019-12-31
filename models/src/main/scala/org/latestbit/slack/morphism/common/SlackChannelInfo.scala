@@ -82,7 +82,7 @@ object SlackChannelInfo {
   type SlackTopicInfo = SlackChannelDetails
   type SlackPurposeInfo = SlackChannelDetails
 
-  implicit def slackChannelInfoEncoder()(
+  def createEncoder()(
       implicit flagsEncoder: Encoder.AsObject[SlackChannelFlags],
       lastStateEncoder: Encoder.AsObject[SlackChannelLastState]
   ): Encoder.AsObject[SlackChannelInfo] = (model: SlackChannelInfo) => {
@@ -101,6 +101,8 @@ object SlackChannelInfo {
     ).deepMerge( flagsEncoder.encodeObject( model.flags ) )
       .deepMerge( lastStateEncoder.encodeObject( model.lastState ) )
   }
+
+  implicit val slackChannelInfoEncoder = createEncoder()
 
   implicit val slackChannelInfoDecoder: Decoder[SlackChannelInfo] = (c: HCursor) => {
     for {

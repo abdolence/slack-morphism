@@ -53,8 +53,8 @@ object SlackView {
   implicit val encoderSlackHomeView: Encoder.AsObject[SlackHomeView] = deriveEncoder[SlackHomeView]
   implicit val decoderSlackHomeView: Decoder[SlackHomeView] = deriveDecoder[SlackHomeView]
 
-  implicit val encoder = JsonTaggedAdtCodec.createEncoder[SlackView]( "type" )
-  implicit val decoder = JsonTaggedAdtCodec.createDecoder[SlackView]( "type" )
+  implicit val encoder: Encoder.AsObject[SlackView] = JsonTaggedAdtCodec.createEncoder[SlackView]( "type" )
+  implicit val decoder: Decoder[SlackView] = JsonTaggedAdtCodec.createDecoder[SlackView]( "type" )
 }
 
 case class SlackStatefulViewParams(

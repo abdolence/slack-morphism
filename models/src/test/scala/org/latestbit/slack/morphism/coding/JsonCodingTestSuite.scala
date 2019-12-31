@@ -166,7 +166,7 @@ class JsonCodingTestSuite extends AnyFlatSpec {
     val testModel: SlackMessageEvent = SlackUserMessage(
       ts = "test",
       channel = "test-channek",
-      text = "Test Text",
+      text = Some( "Test Text" ),
       user = "test-user"
     )
 
