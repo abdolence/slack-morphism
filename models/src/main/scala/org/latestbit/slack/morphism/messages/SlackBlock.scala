@@ -84,7 +84,7 @@ object SlackBlockText {
     JsonTaggedAdtCodec.createDecoder[SlackBlockText]( "type" )
   }
 
-  implicit val encoder: Encoder[SlackBlockText] = createEncoder()
+  implicit val encoder: Encoder.AsObject[SlackBlockText] = createEncoder()
   implicit val decoder: Decoder[SlackBlockText] = createDecoder()
 }
 

@@ -21,8 +21,7 @@ package org.latestbit.slack.morphism.events
 import io.circe._
 import io.circe.syntax._
 import org.latestbit.circe.adt.codec._
-
-import org.latestbit.slack.morphism.messages._
+import org.latestbit.slack.morphism.messages.{ SlackAttachment, SlackBlock }
 
 /**
  * Events from https://api.slack.com/events
@@ -31,8 +30,6 @@ sealed trait SlackEventCallbackBody
 
 object SlackEventCallbackBody {
   import io.circe.generic.semiauto._
-  import SlackMessageEvent._
-  import SlackMessage._
 
   implicit val encoderMessageEvent: Encoder[SlackEventCallbackBody] =
     JsonTaggedAdtCodec.createEncoder[SlackEventCallbackBody]( "type" )
@@ -41,6 +38,7 @@ object SlackEventCallbackBody {
     JsonTaggedAdtCodec.createDecoder[SlackEventCallbackBody]( "type" )
 }
 
+@JsonAdt( SlackMessage.TYPE_VALUE )
 sealed trait SlackMessageEvent extends SlackEventCallbackBody {
   val ts: String
   val channel: String
@@ -59,7 +57,13 @@ object SlackMessageEvent {
   implicit val encoderSlackMessageDeleted: Encoder.AsObject[SlackMessageDeleted] = deriveEncoder[SlackMessageDeleted]
   implicit val decoderSlackMessageDeleted: Decoder[SlackMessageDeleted] = deriveDecoder[SlackMessageDeleted]
 
-  implicit val encoderMessageEvent: Encoder[SlackMessageEvent] =
+  implicit val encoderSlackMessageThreadBroadcast: Encoder.AsObject[SlackMessageThreadBroadcast] =
+    deriveEncoder[SlackMessageThreadBroadcast]
+
+  implicit val decoderSlackMessageThreadBroadcast: Decoder[SlackMessageThreadBroadcast] =
+    deriveDecoder[SlackMessageThreadBroadcast]
+
+  implicit val encoderMessageEvent: Encoder.AsObject[SlackMessageEvent] =
     JsonTaggedAdtCodec.createEncoderDefinition[SlackMessageEvent](
       SlackMessage.messageEncoderDefinition[SlackMessageEvent]
     )
@@ -99,6 +103,16 @@ case class SlackMessageReplied(
     message: SlackMessage
 ) extends SlackMessageEvent
 
+@JsonAdt( "thread_broadcast" )
+case class SlackMessageThreadBroadcast(
+    override val ts: String,
+    override val channel: String,
+    override val channel_type: Option[String] = None,
+    override val hidden: Option[Boolean] = None,
+    message: SlackMessage
+) extends SlackMessageEvent
+
+@JsonAdtPassThrough
 sealed trait SlackMessage extends SlackMessageEvent {
   override val ts: String
   override val channel: String
@@ -264,7 +278,7 @@ object SlackPinnedMessage {
   import io.circe.generic.semiauto._
   import SlackMessage._
 
-  implicit val encoderPinnedMessage: Encoder[SlackPinnedMessage] =
+  implicit val encoderPinnedMessage: Encoder.AsObject[SlackPinnedMessage] =
     JsonTaggedAdtCodec.createEncoderDefinition[SlackPinnedMessage](
       SlackMessage.messageEncoderDefinition[SlackPinnedMessage]
     )
