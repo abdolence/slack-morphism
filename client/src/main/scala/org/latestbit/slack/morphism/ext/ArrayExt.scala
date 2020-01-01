@@ -23,11 +23,11 @@ import scala.language.implicitConversions
 object ArrayExt {
 
   private final val DIGITS_LOWER =
-    Vector('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' )
+    Array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' )
   private final val DIGITS_UPPER = DIGITS_LOWER.map( _.toUpper )
 
   trait ArrayBytesSupport[T] {
-    @inline def toByte( value: T ): Byte
+    def toByte( value: T ): Byte
   }
 
   implicit object ArrayOfBytes extends ArrayBytesSupport[Byte] {
@@ -41,7 +41,7 @@ object ArrayExt {
     /**
      * Convert an array to hex string
      */
-    @inline def toHexString( toLowerCase: Boolean = true ): String = {
+    @inline final def toHexString( toLowerCase: Boolean = true ): String = {
       val outputArrayLen = array.length << 1
       val outputArray = new Array[Char]( outputArrayLen )
 
@@ -51,11 +51,9 @@ object ArrayExt {
         else
           DIGITS_UPPER
 
-      val byteExtractor = implicitly[ArrayBytesSupport[T]]
-
-      array.indices.zip( 0 until outputArrayLen by 2 ).foreach {
+      array.indices.zip( outputArray.indices.by( 2 ) ).foreach {
         case ( i, j ) =>
-          val currentByte = byteExtractor.toByte( array( i ) )
+          val currentByte = implicitly[ArrayBytesSupport[T]].toByte( array( i ) )
           outputArray( j ) = currentDigits( (0xF0 & currentByte) >>> 4 )
           outputArray( j + 1 ) = currentDigits( 0x0F & currentByte )
       }

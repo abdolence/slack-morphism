@@ -20,7 +20,7 @@ package org.latestbit.slack.morphism.coding
 
 import java.time.Instant
 
-import io.circe.{ Decoder, Encoder }
+import io.circe.{ Decoder, Encoder, Json }
 import io.circe.syntax._
 import io.circe.parser._
 import org.latestbit.circe.adt.codec._
@@ -51,6 +51,13 @@ case class TestBool(
     b2: Boolean = true,
     b3: Option[Boolean] = None,
     b4: Option[List[Int]] = None
+)
+
+case class TestAbstractMap(
+    b1: Boolean,
+    b2: Boolean = true,
+    b3: Map[String, Json],
+    b4: Json
 )
 
 class JsonCodingTestSuite extends AnyFlatSpec {
@@ -184,6 +191,22 @@ class JsonCodingTestSuite extends AnyFlatSpec {
         fail( model.toString )
       }
       case Left( ex ) => fail( ex )
+    }
+  }
+
+  "A JSON model" should "be able to encoded/decoded to abstract map of values" in {
+    import io.circe.generic.auto._
+    val testJson =
+      """{ "b1" : false, "b2" : true, "b3" : { "b31" : 10, "b32" : "test" }, "b4" : { "b31" : 10, "b32" : "test" } }"""
+
+    decode[TestAbstractMap](
+      testJson
+    ) match {
+      case Right( model ) => {
+        assert( model.b3.nonEmpty )
+        assert( model.b4.isObject )
+      }
+      case Left( err ) => fail( err )
     }
   }
 

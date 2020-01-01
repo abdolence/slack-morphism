@@ -57,7 +57,7 @@ object SlackView {
   implicit val decoder: Decoder[SlackView] = JsonTaggedAdtCodec.createDecoder[SlackView]( "type" )
 }
 
-case class SlackStatefulViewParams(
+case class SlackStatefulStateParams(
     id: String,
     team_id: String,
     state: Option[SlackViewState] = None,
@@ -69,7 +69,7 @@ case class SlackStatefulViewParams(
 )
 
 case class SlackStatefulView(
-    params: SlackStatefulViewParams,
+    stateParams: SlackStatefulStateParams,
     view: SlackView
 )
 
@@ -84,20 +84,22 @@ object SlackStatefulView {
 
   def createEncoder(): Encoder.AsObject[SlackStatefulView] = (model: SlackStatefulView) => {
     implicit val encoderSlackView: Encoder.AsObject[SlackView] = deriveEncoder[SlackView]
-    implicit val encoderSlackStatefulViewParams: Encoder.AsObject[SlackStatefulViewParams] =
-      deriveEncoder[SlackStatefulViewParams]
+    implicit val encoderSlackStatefulViewParams: Encoder.AsObject[SlackStatefulStateParams] =
+      deriveEncoder[SlackStatefulStateParams]
 
-    encoderSlackView.encodeObject( model.view ).deepMerge( encoderSlackStatefulViewParams.encodeObject( model.params ) )
+    encoderSlackView
+      .encodeObject( model.view )
+      .deepMerge( encoderSlackStatefulViewParams.encodeObject( model.stateParams ) )
   }
 
   def createDecoder(): Decoder[SlackStatefulView] = (cursor: HCursor) => {
-    implicit val decoderSlackStatefulViewParams: Decoder[SlackStatefulViewParams] =
-      deriveDecoder[SlackStatefulViewParams]
+    implicit val decoderSlackStatefulViewParams: Decoder[SlackStatefulStateParams] =
+      deriveDecoder[SlackStatefulStateParams]
     for {
       view <- cursor.as[SlackView]
-      params <- cursor.as[SlackStatefulViewParams]
+      stateParams <- cursor.as[SlackStatefulStateParams]
     } yield SlackStatefulView(
-      params,
+      stateParams,
       view
     )
   }
