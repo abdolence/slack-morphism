@@ -24,6 +24,7 @@ import cats.implicits._
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import org.latestbit.slack.morphism.common.SlackApiError
+import org.latestbit.slack.morphism.ext.ArrayExt._
 
 import scala.util.Try
 
@@ -50,9 +51,6 @@ case class SlackSignatureVerificationSuccess()
 class SlackEventSignatureVerifier() {
   import SlackEventSignatureVerifier._
 
-  private def bytes2hex( bytes: Array[Byte], sep: String = "" ): String =
-    bytes.map( "%02x".format( _ ) ).mkString( sep )
-
   private def signDataWithKeySecret( mac: Mac, signingSecret: String, signData: String ): Array[Byte] = {
     val secretKeySpec = new SecretKeySpec( signingSecret.getBytes(), mac.getAlgorithm )
     mac.init( secretKeySpec )
@@ -69,7 +67,7 @@ class SlackEventSignatureVerifier() {
       .flatMap { mac =>
         val toEncrypt = s"v0:${timestamp}:${body}"
         Try( signDataWithKeySecret( mac, signingSecret, toEncrypt ) ).toEither.flatMap { signedBytes =>
-          val generatedHash = s"v0=${bytes2hex( signedBytes )}"
+          val generatedHash = s"v0=${signedBytes.toHexString()}"
           if (generatedHash != receivedHash) {
             SlackSignatureWrongSignatureError(
               receivedHash = receivedHash,
