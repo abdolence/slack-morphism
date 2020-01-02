@@ -57,7 +57,7 @@ class QuickCheck extends AsyncFlatSpec {
       val testOptStr1 = Option( "test 1" )
       val testOptStr2 = Option( "test 2" )
 
-      ( testOptStr1, testOptStr2 ).mapN( test3 )
+      val mappedXs = ( testOptStr1, testOptStr2 ).mapN( test3 )
 
       val xs: Future[List[MyModel]] =
         List( Future { MyModel( "test1" ) }, Future { MyModel( "test2" ) } )
@@ -66,6 +66,14 @@ class QuickCheck extends AsyncFlatSpec {
           }
 
       println( xs )
+
+      val testList = List[Option[MyModel]]( Some( MyModel( "S" ) ), Some( MyModel( "A" ) ) )
+
+      val collectedTestList = testList.collect {
+        case Some( MyModel( x ) ) if x == "S" => x
+      }
+
+      println( collectedTestList )
 
     }
   }

@@ -39,7 +39,7 @@ class SlackApiResponseScroller[IT, PT](
       implicit ec: ExecutionContext
   ): AsyncSeqIterator[AsyncItemType, AsyncValueType] = {
     AsyncSeqIterator.cons(
-      first(), { item: AsyncItemType =>
+      initialLoader(), { item: AsyncItemType =>
         item.map( _.items )
       }, { item: AsyncItemType =>
         item.toOption.flatMap( _.getLatestPos )

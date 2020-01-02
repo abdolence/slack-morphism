@@ -16,45 +16,22 @@
  *
  */
 
-package org.latestbit.slack.morphism.events
+package org.latestbit.slack.morphism.events.signature
 
-import cats._
 import cats.implicits._
-
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
-import org.latestbit.slack.morphism.common.SlackApiError
 import org.latestbit.slack.morphism.ext.ArrayExt._
 
 import scala.util.Try
 
-sealed abstract class SlackSignatureVerificationError( message: String, cause: Option[Throwable] = None )
-    extends SlackApiError( message, cause )
-
-case class SlackSignatureCryptoInitError( cause: Throwable )
-    extends SlackSignatureVerificationError(
-      s"Unable to init crypto algorithm: ${SlackEventSignatureVerifier.SIGNING_ALGORITHM}",
-      Some( cause )
-    )
-
-case class SlackSignatureWrongSignatureError(
-    receivedHash: String,
-    generatedHash: String,
-    timestamp: String,
-    cause: Option[Throwable] = None
-) extends SlackSignatureVerificationError( s"""
-      | Received hash from Slack '${receivedHash}' doesn't match with generated: ${generatedHash}. Received timestamp: '${timestamp}''
-      |""".stripMargin, cause )
-
-case class SlackSignatureVerificationSuccess()
-
 class SlackEventSignatureVerifier() {
   import SlackEventSignatureVerifier._
 
-  private def signDataWithKeySecret( mac: Mac, signingSecret: String, signData: String ): Array[Byte] = {
+  private def signDataWithKeySecret( mac: Mac, signingSecret: String, dataToSign: String ): Array[Byte] = {
     val secretKeySpec = new SecretKeySpec( signingSecret.getBytes(), mac.getAlgorithm )
     mac.init( secretKeySpec )
-    mac.doFinal( signData.getBytes )
+    mac.doFinal( dataToSign.getBytes )
   }
 
   def verify(
@@ -65,8 +42,8 @@ class SlackEventSignatureVerifier() {
   ): Either[SlackSignatureVerificationError, SlackSignatureVerificationSuccess] = {
     Try( Mac.getInstance( SIGNING_ALGORITHM ) ).toEither
       .flatMap { mac =>
-        val toEncrypt = s"v0:${timestamp}:${body}"
-        Try( signDataWithKeySecret( mac, signingSecret, toEncrypt ) ).toEither.flatMap { signedBytes =>
+        val dataToSign = s"v0:${timestamp}:${body}"
+        Try( signDataWithKeySecret( mac, signingSecret, dataToSign ) ).toEither.flatMap { signedBytes =>
           val generatedHash = s"v0=${signedBytes.toHexString()}"
           if (generatedHash != receivedHash) {
             SlackSignatureWrongSignatureError(
