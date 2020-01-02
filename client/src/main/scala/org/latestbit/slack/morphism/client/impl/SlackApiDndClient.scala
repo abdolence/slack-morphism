@@ -37,7 +37,6 @@ trait SlackApiDndClient extends SlackApiHttpProtocolSupport { self: SlackApiClie
      */
     def endDnd()(
         implicit slackApiToken: SlackApiUserToken,
-        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiDndEndDndResponse]] = {
 
@@ -52,7 +51,6 @@ trait SlackApiDndClient extends SlackApiHttpProtocolSupport { self: SlackApiClie
      */
     def endSnooze()(
         implicit slackApiToken: SlackApiUserToken,
-        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiDndEndSnoozeResponse]] = {
 
@@ -67,7 +65,6 @@ trait SlackApiDndClient extends SlackApiHttpProtocolSupport { self: SlackApiClie
      */
     def info( req: SlackApiDndInfoRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiDndInfoResponse]] = {
 
@@ -84,7 +81,6 @@ trait SlackApiDndClient extends SlackApiHttpProtocolSupport { self: SlackApiClie
      */
     def setSnooze()(
         implicit slackApiToken: SlackApiUserToken,
-        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiDndSetSnoozeResponse]] = {
 
@@ -99,7 +95,6 @@ trait SlackApiDndClient extends SlackApiHttpProtocolSupport { self: SlackApiClie
      */
     def teamInfo( req: SlackApiDndTeamInfoRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiDndTeamInfoResponse]] = {
 

@@ -18,30 +18,14 @@
 
 package org.latestbit.slack.morphism.client.impl
 
-import io.circe.generic.auto._
-import org.latestbit.slack.morphism.client._
-import org.latestbit.slack.morphism.client.reqresp.apps._
-import sttp.client._
+import sttp.client.{ NothingT, SttpBackend }
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.Future
 
-/**
- * Support for Slack Apps API methods
- */
-trait SlackApiAppsClient extends SlackApiHttpProtocolSupport { self: SlackApiClient =>
+trait SlackApiClientBackend {
+  protected implicit val sttpBackend: SlackApiClientBackend.SttpFutureBackendType
+}
 
-  object apps {
-
-    def uninstall( req: SlackApiUninstallRequest )(
-        implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiUninstallResponse]] = {
-
-      http.post[SlackApiUninstallRequest, SlackApiUninstallResponse](
-        "apps.uninstall",
-        req
-      )
-    }
-  }
-
+object SlackApiClientBackend {
+  type SttpFutureBackendType = SttpBackend[Future, Nothing, NothingT]
 }

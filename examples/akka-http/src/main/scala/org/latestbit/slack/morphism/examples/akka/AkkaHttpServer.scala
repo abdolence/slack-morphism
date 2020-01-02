@@ -29,6 +29,7 @@ import akka.http.scaladsl.server._
 import akka.stream.typed.scaladsl._
 import com.typesafe.scalalogging._
 import org.latestbit.slack.morphism.client.SlackApiClient
+import org.latestbit.slack.morphism.client.impl.SlackApiClientBackend
 import org.latestbit.slack.morphism.examples.akka.routes._
 import sttp.client.akkahttp.AkkaHttpBackend
 
@@ -60,7 +61,7 @@ object AkkaHttpServer extends LazyLogging {
             s"Starting routes on ${config.httpServerHost}:${config.httpServerPort}"
           )
           implicit val appConfig = config
-          implicit val akkaSttpBackend: SlackApiClient.SttpFutureBackend =
+          implicit val akkaSttpBackend: SlackApiClientBackend.SttpFutureBackendType =
             AkkaHttpBackend.usingActorSystem( classicSystem )
           implicit val slackApiClient = new SlackApiClient()
 

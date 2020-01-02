@@ -34,8 +34,6 @@ trait SlackApiClientTestsSuiteSupport {
 
   protected implicit val testApiUserToken = SlackApiUserToken( "test-token", "test-scope" )
 
-  protected val slackApiClient = new SlackApiClient()
-
   protected def createResponseStub[RQ, RS](
       response: RS
   )( implicit encoder: Encoder.AsObject[RS], ec: ExecutionContext ) = {

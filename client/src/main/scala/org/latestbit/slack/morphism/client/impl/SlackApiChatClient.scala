@@ -29,7 +29,7 @@ import scala.concurrent.{ ExecutionContext, Future }
 /**
  * Support for Slack Chat API methods
  */
-trait SlackApiChatClient extends SlackApiHttpProtocolSupport { self: SlackApiClient =>
+trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
 
   import org.latestbit.slack.morphism.ext.SttpExt._
 
@@ -40,7 +40,6 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
      */
     def delete( req: SlackApiChatDeleteRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiChatDeleteResponse]] = {
 
@@ -55,7 +54,6 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
      */
     def deleteScheduledMessage( req: SlackApiChatDeleteScheduledMessageRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiChatDeleteScheduledMessageResponse]] = {
 
@@ -73,7 +71,6 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
      */
     def getPermalink( req: SlackApiChatGetPermalinkRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiChatGetPermalinkResponse]] = {
 
@@ -91,7 +88,6 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
      */
     def meMessage( req: SlackApiChatMeMessageRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiChatMeMessageResponse]] = {
 
@@ -106,7 +102,6 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
      */
     def postEphemeral( req: SlackApiChatPostEphemeralRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiChatPostEphemeralResponse]] = {
 
@@ -124,7 +119,6 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
      */
     def postMessage( req: SlackApiChatPostMessageRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiChatPostMessageResponse]] = {
 
@@ -141,7 +135,6 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
      */
     def postEventReply( response_url: String, reply: SlackApiPostEventReply )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiPostEventReplyResponse]] = {
 
@@ -157,7 +150,6 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
      */
     def scheduleMessage( req: SlackApiChatScheduleMessageRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiChatScheduleMessageResponse]] = {
 
@@ -175,7 +167,6 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
      */
     def unfurl( req: SlackApiChatUnfurlRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiChatUnfurlResponse]] = {
 
@@ -190,7 +181,6 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
      */
     def update( req: SlackApiChatUpdateRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiChatUpdateResponse]] = {
 
@@ -207,7 +197,6 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
        */
       def list( req: SlackApiChatScheduledMessagesListRequest )(
           implicit slackApiToken: SlackApiToken,
-          backend: SttpFutureBackend,
           ec: ExecutionContext
       ): Future[Either[SlackApiClientError, SlackApiChatScheduledMessagesListResponse]] = {
 
@@ -226,7 +215,6 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
 	     */
       def listScroller( req: SlackApiChatScheduledMessagesListRequest )(
           implicit slackApiToken: SlackApiToken,
-          backend: SttpFutureBackend,
           ec: ExecutionContext
       ): SlackApiResponseScroller[SlackApiChatScheduledMessageInfo, String] = {
         new SlackApiResponseScroller[SlackApiChatScheduledMessageInfo, String](

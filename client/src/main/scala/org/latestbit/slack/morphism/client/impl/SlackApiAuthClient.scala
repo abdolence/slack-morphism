@@ -37,7 +37,6 @@ trait SlackApiAuthClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
      */
     def test()(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiAuthTestResponse]] = {
       implicit val decoder = deriveDecoder[SlackApiAuthTestResponse]
@@ -53,7 +52,6 @@ trait SlackApiAuthClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
      */
     def revoke( req: SlackApiAuthRevokeRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiAuthRevokeResponse]] = {
 

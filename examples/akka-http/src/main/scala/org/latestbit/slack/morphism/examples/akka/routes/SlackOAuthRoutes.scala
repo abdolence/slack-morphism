@@ -37,8 +37,7 @@ class SlackOAuthRoutes(
     implicit ctx: ActorContext[_],
     materializer: ActorMaterializer,
     config: AppConfig,
-    slackApiClient: SlackApiClient,
-    sttpBackend: SlackApiClient.SttpFutureBackend
+    slackApiClient: SlackApiClient
 ) extends LazyLogging
     with AkkaHttpServerRoutesSupport
     with Directives {

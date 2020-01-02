@@ -28,7 +28,7 @@ import scala.concurrent.{ ExecutionContext, Future }
 /**
  * Support for Slack OAuth (v1/v2) API methods
  */
-trait SlackApiOAuthClient extends SlackApiHttpProtocolSupport {
+trait SlackApiOAuthClient extends SlackApiHttpProtocolSupport { self: SlackApiClient =>
   import org.latestbit.slack.morphism.ext.SttpExt._
 
   object oauth {
@@ -42,8 +42,7 @@ trait SlackApiOAuthClient extends SlackApiHttpProtocolSupport {
         code: String,
         redirectUri: Option[String] = None
     )(
-        implicit backend: SttpFutureBackend,
-        ec: ExecutionContext
+        implicit ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackOAuthV1AccessTokenResponse]] = {
 
       sendSlackRequest[SlackOAuthV1AccessTokenResponse](
@@ -71,7 +70,7 @@ trait SlackApiOAuthClient extends SlackApiHttpProtocolSupport {
           code: String,
           redirectUri: Option[String] = None
       )(
-          implicit backend: SttpFutureBackend,
+          implicit
           ec: ExecutionContext
       ): Future[Either[SlackApiClientError, SlackOAuthV2AccessTokenResponse]] = {
 

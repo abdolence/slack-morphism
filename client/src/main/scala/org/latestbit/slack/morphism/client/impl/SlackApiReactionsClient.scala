@@ -38,7 +38,6 @@ trait SlackApiReactionsClient extends SlackApiHttpProtocolSupport { self: SlackA
      */
     def add( req: SlackApiReactionsAddRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiReactionsAddResponse]] = {
 
@@ -53,7 +52,6 @@ trait SlackApiReactionsClient extends SlackApiHttpProtocolSupport { self: SlackA
      */
     def get( req: SlackApiReactionsGetRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiReactionsGetResponse]] = {
 
@@ -72,7 +70,6 @@ trait SlackApiReactionsClient extends SlackApiHttpProtocolSupport { self: SlackA
      */
     def list( req: SlackApiReactionsListRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiReactionsListResponse]] = {
 
@@ -93,7 +90,6 @@ trait SlackApiReactionsClient extends SlackApiHttpProtocolSupport { self: SlackA
      */
     def listScroller( req: SlackApiReactionsListRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): SlackApiResponseScroller[SlackApiReactionsListItem, String] = {
       new SlackApiResponseScroller[SlackApiReactionsListItem, String](
@@ -116,7 +112,6 @@ trait SlackApiReactionsClient extends SlackApiHttpProtocolSupport { self: SlackA
      */
     def remove( req: SlackApiReactionsRemoveRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiReactionsRemoveResponse]] = {
 

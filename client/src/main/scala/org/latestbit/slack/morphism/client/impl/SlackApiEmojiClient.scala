@@ -37,7 +37,6 @@ trait SlackApiEmojiClient extends SlackApiHttpProtocolSupport { self: SlackApiCl
      */
     def list()(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiEmojiListResponse]] = {
 
