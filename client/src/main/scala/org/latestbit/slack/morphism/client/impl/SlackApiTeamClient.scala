@@ -37,11 +37,11 @@ trait SlackApiTeamClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
      */
     def info( req: SlackApiTeamInfoRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiTeamInfoResponse]] = {
 
-      protectedSlackHttpApiGet[SlackApiTeamInfoResponse](
+      http.get[SlackApiTeamInfoResponse](
         "team.info",
         Map(
           "team" -> req.team
@@ -56,11 +56,11 @@ trait SlackApiTeamClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
        */
       def get( req: SlackApiTeamProfileGetRequest )(
           implicit slackApiToken: SlackApiToken,
-          backend: SttpBackend[Future, Nothing, NothingT],
+          backend: SttpFutureBackend,
           ec: ExecutionContext
       ): Future[Either[SlackApiClientError, SlackApiTeamProfileGetResponse]] = {
 
-        protectedSlackHttpApiGet[SlackApiTeamProfileGetResponse](
+        http.get[SlackApiTeamProfileGetResponse](
           "team.profile.get",
           Map(
             "visibility" -> req.visibility

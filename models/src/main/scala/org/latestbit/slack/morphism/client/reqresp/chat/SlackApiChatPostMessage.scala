@@ -26,7 +26,6 @@ import org.latestbit.slack.morphism.messages._
 case class SlackApiChatPostMessageRequest(
     channel: String,
     text: String,
-    attachments: Option[List[SlackAttachment]] = None,
     as_user: Option[Boolean] = None,
     blocks: Option[List[SlackBlock]] = None,
     icon_emoji: Option[String] = None,

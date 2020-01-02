@@ -19,14 +19,12 @@
 package org.latestbit.slack.morphism.events
 
 import io.circe._
-import io.circe.generic.semiauto.{ deriveDecoder, deriveEncoder }
 import io.circe.syntax._
 import org.latestbit.circe.adt.codec._
 import org.latestbit.slack.morphism.client.reqresp.dnd.SlackApiDndInfoResponse
 import org.latestbit.slack.morphism.client.reqresp.pins.SlackPinItem
-import org.latestbit.slack.morphism.client.reqresp.reactions.SlackApiReactionsListItem
 import org.latestbit.slack.morphism.common._
-import org.latestbit.slack.morphism.messages.{ SlackAttachment, SlackBlock }
+import org.latestbit.slack.morphism.messages._
 import org.latestbit.slack.morphism.views.SlackView
 
 /**
@@ -94,7 +92,6 @@ sealed trait SlackMessage {
   val channel: String
   val channel_type: Option[String]
   val text: Option[String]
-  val attachments: Option[List[SlackAttachment]]
   val blocks: Option[List[SlackBlock]]
   val thread_ts: Option[String]
   val reactions: Option[List[SlackMessageReaction]]
@@ -115,7 +112,6 @@ case class SlackUserMessage(
     reply_count: Option[Long] = None,
     replies: Option[List[SlackMessageReplyInfo]] = None,
     override val text: Option[String] = None,
-    override val attachments: Option[List[SlackAttachment]] = None,
     override val blocks: Option[List[SlackBlock]] = None,
     override val permalink: Option[String] = None,
     override val pinned_to: Option[List[String]] = None,
@@ -136,7 +132,6 @@ case class SlackBotMessage(
     reply_count: Option[Long] = None,
     replies: Option[List[SlackMessageReplyInfo]] = None,
     override val text: Option[String] = None,
-    override val attachments: Option[List[SlackAttachment]] = None,
     override val blocks: Option[List[SlackBlock]] = None,
     override val permalink: Option[String] = None,
     override val pinned_to: Option[List[String]] = None,
@@ -156,7 +151,6 @@ case class SlackMeMessage(
     override val reactions: Option[List[SlackMessageReaction]] = None,
     edited: Option[SlackMessageEdited] = None,
     override val text: Option[String] = None,
-    override val attachments: Option[List[SlackAttachment]] = None,
     override val blocks: Option[List[SlackBlock]] = None,
     override val permalink: Option[String] = None,
     override val pinned_to: Option[List[String]] = None,
@@ -198,7 +192,6 @@ case class SlackAppMentionEvent(
     reply_count: Option[Long] = None,
     replies: Option[List[SlackMessageReplyInfo]] = None,
     override val text: Option[String] = None,
-    override val attachments: Option[List[SlackAttachment]] = None,
     override val blocks: Option[List[SlackBlock]] = None,
     user: String,
     event_ts: String,

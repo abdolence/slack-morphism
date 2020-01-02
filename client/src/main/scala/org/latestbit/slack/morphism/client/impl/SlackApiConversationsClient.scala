@@ -40,11 +40,11 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
      */
     def archive( req: SlackApiConversationsArchiveRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiConversationsArchiveResponse]] = {
 
-      protectedSlackHttpApiPost[
+      http.post[
         SlackApiConversationsArchiveRequest,
         SlackApiConversationsArchiveResponse
       ](
@@ -58,11 +58,11 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
      */
     def close( req: SlackApiConversationsCloseRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiConversationsCloseResponse]] = {
 
-      protectedSlackHttpApiPost[
+      http.post[
         SlackApiConversationsCloseRequest,
         SlackApiConversationsCloseResponse
       ](
@@ -76,11 +76,11 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
      */
     def create( req: SlackApiConversationsCreateRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiConversationsCreateResponse]] = {
 
-      protectedSlackHttpApiPost[
+      http.post[
         SlackApiConversationsCreateRequest,
         SlackApiConversationsCreateResponse
       ](
@@ -94,11 +94,11 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
      */
     def history( req: SlackApiConversationsHistoryRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiConversationsHistoryResponse]] = {
 
-      protectedSlackHttpApiGet[
+      http.get[
         SlackApiConversationsHistoryResponse
       ](
         "conversations.history",
@@ -119,7 +119,7 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
      */
     def historyScroller( req: SlackApiConversationsHistoryRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): SlackApiResponseScroller[SlackMessage, String] = {
       new SlackApiResponseScroller[SlackMessage, String](
@@ -143,11 +143,11 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
      */
     def info( req: SlackApiConversationsInfoRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiConversationsInfoResponse]] = {
 
-      protectedSlackHttpApiGet[
+      http.get[
         SlackApiConversationsInfoResponse
       ](
         "conversations.info",
@@ -164,11 +164,11 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
      */
     def invite( req: SlackApiConversationsInviteRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiConversationsInviteResponse]] = {
 
-      protectedSlackHttpApiPost[
+      http.post[
         SlackApiConversationsInviteRequest,
         SlackApiConversationsInviteResponse
       ](
@@ -182,11 +182,11 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
      */
     def join( req: SlackApiConversationsJoinRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiConversationsJoinResponse]] = {
 
-      protectedSlackHttpApiPost[
+      http.post[
         SlackApiConversationsJoinRequest,
         SlackApiConversationsJoinResponse
       ](
@@ -200,11 +200,11 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
      */
     def kick( req: SlackApiConversationsKickRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiConversationsKickResponse]] = {
 
-      protectedSlackHttpApiPost[
+      http.post[
         SlackApiConversationsKickRequest,
         SlackApiConversationsKickResponse
       ](
@@ -218,11 +218,11 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
      */
     def leave( req: SlackApiConversationsLeaveRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiConversationsLeaveResponse]] = {
 
-      protectedSlackHttpApiPost[
+      http.post[
         SlackApiConversationsLeaveRequest,
         SlackApiConversationsLeaveResponse
       ](
@@ -236,11 +236,11 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
      */
     def list( req: SlackApiConversationsListRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiConversationsListResponse]] = {
 
-      protectedSlackHttpApiGet[
+      http.get[
         SlackApiConversationsListResponse
       ](
         "conversations.list",
@@ -259,7 +259,7 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
      */
     def listScroller( req: SlackApiConversationsListRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): SlackApiResponseScroller[SlackChannelInfo, String] = {
       new SlackApiResponseScroller[SlackChannelInfo, String](
@@ -282,11 +282,11 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
      */
     def members( req: SlackApiConversationsMembersRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiConversationsMembersResponse]] = {
 
-      protectedSlackHttpApiGet[
+      http.get[
         SlackApiConversationsMembersResponse
       ](
         "conversations.members",
@@ -304,7 +304,7 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
      */
     def membersScroller( req: SlackApiConversationsMembersRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): SlackApiResponseScroller[String, String] = {
       new SlackApiResponseScroller[String, String](
@@ -328,11 +328,11 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
 	   */
     def rename( req: SlackApiConversationsRenameRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiConversationsRenameResponse]] = {
 
-      protectedSlackHttpApiPost[
+      http.post[
         SlackApiConversationsRenameRequest,
         SlackApiConversationsRenameResponse
       ](
@@ -346,11 +346,11 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
      */
     def replies( req: SlackApiConversationsRepliesRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiConversationsRepliesResponse]] = {
 
-      protectedSlackHttpApiGet[
+      http.get[
         SlackApiConversationsRepliesResponse
       ](
         "conversations.replies",
@@ -372,7 +372,7 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
      */
     def repliesScroller( req: SlackApiConversationsRepliesRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): SlackApiResponseScroller[SlackMessage, String] = {
       new SlackApiResponseScroller[SlackMessage, String](
@@ -397,11 +397,11 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
      */
     def setPurpose( req: SlackApiConversationsSetPurposeRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiConversationsSetPurposeResponse]] = {
 
-      protectedSlackHttpApiPost[
+      http.post[
         SlackApiConversationsSetPurposeRequest,
         SlackApiConversationsSetPurposeResponse
       ](
@@ -415,11 +415,11 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
      */
     def setTopic( req: SlackApiConversationsSetTopicRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiConversationsSetTopicResponse]] = {
 
-      protectedSlackHttpApiPost[
+      http.post[
         SlackApiConversationsSetTopicRequest,
         SlackApiConversationsSetTopicResponse
       ](
@@ -433,11 +433,11 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
 	   */
     def unarchive( req: SlackApiConversationsUnarchiveRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiConversationsUnarchiveResponse]] = {
 
-      protectedSlackHttpApiPost[
+      http.post[
         SlackApiConversationsUnarchiveRequest,
         SlackApiConversationsUnarchiveResponse
       ](

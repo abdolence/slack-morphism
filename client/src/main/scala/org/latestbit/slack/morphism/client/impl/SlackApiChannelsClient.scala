@@ -40,11 +40,11 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackAp
      */
     def archive( req: SlackApiChannelsArchiveRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiChannelsArchiveResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiChannelsArchiveRequest, SlackApiChannelsArchiveResponse](
+      http.post[SlackApiChannelsArchiveRequest, SlackApiChannelsArchiveResponse](
         "channels.archive",
         req
       )
@@ -55,11 +55,11 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackAp
      */
     def create( req: SlackApiChannelsCreateRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiChannelsCreateResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiChannelsCreateRequest, SlackApiChannelsCreateResponse](
+      http.post[SlackApiChannelsCreateRequest, SlackApiChannelsCreateResponse](
         "channels.create",
         req
       )
@@ -70,11 +70,11 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackAp
      */
     def history( req: SlackApiChannelsHistoryRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiChannelsHistoryResponse]] = {
 
-      protectedSlackHttpApiGet[SlackApiChannelsHistoryResponse](
+      http.get[SlackApiChannelsHistoryResponse](
         "channels.history",
         Map(
           "channel" -> Option( req.channel ),
@@ -93,7 +93,7 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackAp
      */
     def historyScroller( req: SlackApiChannelsHistoryRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): SlackApiResponseScroller[SlackMessage, String] = {
       new SlackApiResponseScroller[SlackMessage, String](
@@ -117,11 +117,11 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackAp
      */
     def info( req: SlackApiChannelsInfoRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiChannelsInfoResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiChannelsInfoRequest, SlackApiChannelsInfoResponse](
+      http.post[SlackApiChannelsInfoRequest, SlackApiChannelsInfoResponse](
         "channels.info",
         req
       )
@@ -132,11 +132,11 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackAp
      */
     def invite( req: SlackApiChannelsInviteRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiChannelsInviteResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiChannelsInviteRequest, SlackApiChannelsInviteResponse](
+      http.post[SlackApiChannelsInviteRequest, SlackApiChannelsInviteResponse](
         "channels.invite",
         req
       )
@@ -147,11 +147,11 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackAp
      */
     def join( req: SlackApiChannelsJoinRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiChannelsJoinResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiChannelsJoinRequest, SlackApiChannelsJoinResponse](
+      http.post[SlackApiChannelsJoinRequest, SlackApiChannelsJoinResponse](
         "channels.join",
         req
       )
@@ -162,11 +162,11 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackAp
      */
     def kick( req: SlackApiChannelsKickRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiChannelsKickResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiChannelsKickRequest, SlackApiChannelsKickResponse](
+      http.post[SlackApiChannelsKickRequest, SlackApiChannelsKickResponse](
         "channels.kick",
         req
       )
@@ -177,11 +177,11 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackAp
      */
     def leave( req: SlackApiChannelsLeaveRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiChannelsLeaveResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiChannelsLeaveRequest, SlackApiChannelsLeaveResponse](
+      http.post[SlackApiChannelsLeaveRequest, SlackApiChannelsLeaveResponse](
         "channels.leave",
         req
       )
@@ -192,11 +192,11 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackAp
      */
     def list( req: SlackApiChannelsListRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiChannelsListResponse]] = {
 
-      protectedSlackHttpApiGet[SlackApiChannelsListResponse](
+      http.get[SlackApiChannelsListResponse](
         "channels.list",
         Map(
           "cursor" -> req.cursor,
@@ -213,7 +213,7 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackAp
      */
     def listScroller( req: SlackApiChannelsListRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): SlackApiResponseScroller[SlackChannelInfo, String] = {
       new SlackApiResponseScroller[SlackChannelInfo, String](
@@ -236,11 +236,11 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackAp
      */
     def mark( req: SlackApiChannelsMarkRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiChannelsMarkResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiChannelsMarkRequest, SlackApiChannelsMarkResponse](
+      http.post[SlackApiChannelsMarkRequest, SlackApiChannelsMarkResponse](
         "channels.mark",
         req
       )
@@ -251,11 +251,11 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackAp
 	   */
     def rename( req: SlackApiChannelsRenameRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiChannelsRenameResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiChannelsRenameRequest, SlackApiChannelsRenameResponse](
+      http.post[SlackApiChannelsRenameRequest, SlackApiChannelsRenameResponse](
         "channels.rename",
         req
       )
@@ -266,11 +266,11 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackAp
      */
     def replies( req: SlackApiChannelsRepliesRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiChannelsRepliesResponse]] = {
 
-      protectedSlackHttpApiGet[SlackApiChannelsRepliesResponse](
+      http.get[SlackApiChannelsRepliesResponse](
         "channels.replies",
         Map(
           "channel" -> Option( req.channel ),
@@ -284,11 +284,11 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackAp
      */
     def setPurpose( req: SlackApiChannelsSetPurposeRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiChannelsSetPurposeResponse]] = {
 
-      protectedSlackHttpApiPost[
+      http.post[
         SlackApiChannelsSetPurposeRequest,
         SlackApiChannelsSetPurposeResponse
       ](
@@ -302,11 +302,11 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackAp
      */
     def setTopic( req: SlackApiChannelsSetTopicRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiChannelsSetTopicResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiChannelsSetTopicRequest, SlackApiChannelsSetTopicResponse](
+      http.post[SlackApiChannelsSetTopicRequest, SlackApiChannelsSetTopicResponse](
         "channels.setTopic",
         req
       )
@@ -317,11 +317,11 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackAp
 	   */
     def unarchive( req: SlackApiChannelsUnarchiveRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiChannelsUnarchiveResponse]] = {
 
-      protectedSlackHttpApiPost[
+      http.post[
         SlackApiChannelsUnarchiveRequest,
         SlackApiChannelsUnarchiveResponse
       ](

@@ -42,7 +42,7 @@ trait SlackApiOAuthClient extends SlackApiHttpProtocolSupport {
         code: String,
         redirectUri: Option[String] = None
     )(
-        implicit backend: SttpBackend[Future, Nothing, NothingT],
+        implicit backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackOAuthV1AccessTokenResponse]] = {
 
@@ -71,7 +71,7 @@ trait SlackApiOAuthClient extends SlackApiHttpProtocolSupport {
           code: String,
           redirectUri: Option[String] = None
       )(
-          implicit backend: SttpBackend[Future, Nothing, NothingT],
+          implicit backend: SttpFutureBackend,
           ec: ExecutionContext
       ): Future[Either[SlackApiClientError, SlackOAuthV2AccessTokenResponse]] = {
 

@@ -19,7 +19,7 @@
 package org.latestbit.slack.morphism.client.reqresp.chat
 
 import org.latestbit.slack.morphism.common.SlackDateTimeAsStr
-import org.latestbit.slack.morphism.messages.{ SlackAttachment, SlackBlock }
+import org.latestbit.slack.morphism.messages.SlackBlock
 
 /**
  * Request of https://api.slack.com/methods/chat.scheduleMessage
@@ -28,7 +28,6 @@ case class SlackApiChatScheduleMessageRequest(
     channel: String,
     text: String,
     post_at: SlackDateTimeAsStr,
-    attachments: Option[List[SlackAttachment]] = None,
     as_user: Option[Boolean] = None,
     blocks: Option[List[SlackBlock]] = None,
     icon_emoji: Option[String] = None,

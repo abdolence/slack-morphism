@@ -27,7 +27,6 @@ case class SlackApiChatPostEphemeralRequest(
     channel: String,
     text: String,
     user: String,
-    attachments: Option[List[SlackAttachment]] = None,
     as_user: Option[Boolean] = None,
     blocks: Option[List[SlackBlock]] = None,
     icon_emoji: Option[String] = None,

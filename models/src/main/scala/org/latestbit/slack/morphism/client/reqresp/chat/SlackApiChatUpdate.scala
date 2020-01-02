@@ -18,7 +18,7 @@
 
 package org.latestbit.slack.morphism.client.reqresp.chat
 
-import org.latestbit.slack.morphism.messages.{ SlackAttachment, SlackBlock }
+import org.latestbit.slack.morphism.messages.SlackBlock
 
 /**
  * Request of https://api.slack.com/methods/chat.update
@@ -28,7 +28,6 @@ case class SlackApiChatUpdateRequest(
     text: String,
     ts: String,
     as_user: String,
-    attachments: Option[List[SlackAttachment]] = None,
     blocks: Option[List[SlackBlock]] = None,
     link_names: Option[Boolean] = None,
     parse: Option[String] = None

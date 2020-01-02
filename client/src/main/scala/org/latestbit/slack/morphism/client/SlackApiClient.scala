@@ -40,7 +40,6 @@ class SlackApiClient
     with SlackApiReactionsClient
     with SlackApiTeamClient
     with SlackApiUsersClient
-    with SlackApiViewsClient
-    with SlackApiLowLevelClient {}
+    with SlackApiViewsClient {}
 
 object SlackApiClient {}

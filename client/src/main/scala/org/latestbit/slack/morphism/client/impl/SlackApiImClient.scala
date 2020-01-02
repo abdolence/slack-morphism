@@ -40,11 +40,11 @@ trait SlackApiImClient extends SlackApiHttpProtocolSupport { self: SlackApiClien
      */
     def close( req: SlackApiImCloseRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiImCloseResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiImCloseRequest, SlackApiImCloseResponse](
+      http.post[SlackApiImCloseRequest, SlackApiImCloseResponse](
         "im.close",
         req
       )
@@ -55,11 +55,11 @@ trait SlackApiImClient extends SlackApiHttpProtocolSupport { self: SlackApiClien
      */
     def history( req: SlackApiImHistoryRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiImHistoryResponse]] = {
 
-      protectedSlackHttpApiGet[SlackApiImHistoryResponse](
+      http.get[SlackApiImHistoryResponse](
         "im.history",
         Map(
           "channel" -> Option( req.channel ),
@@ -78,7 +78,7 @@ trait SlackApiImClient extends SlackApiHttpProtocolSupport { self: SlackApiClien
      */
     def historyScroller( req: SlackApiImHistoryRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): SlackApiResponseScroller[SlackMessage, String] = {
       new SlackApiResponseScroller[SlackMessage, String](
@@ -102,11 +102,11 @@ trait SlackApiImClient extends SlackApiHttpProtocolSupport { self: SlackApiClien
      */
     def list( req: SlackApiImListRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiImListResponse]] = {
 
-      protectedSlackHttpApiGet[SlackApiImListResponse](
+      http.get[SlackApiImListResponse](
         "im.list",
         Map(
           "cursor" -> req.cursor,
@@ -121,7 +121,7 @@ trait SlackApiImClient extends SlackApiHttpProtocolSupport { self: SlackApiClien
      */
     def listScroller( req: SlackApiImListRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): SlackApiResponseScroller[SlackChannelInfo, String] = {
       new SlackApiResponseScroller[SlackChannelInfo, String](
@@ -144,11 +144,11 @@ trait SlackApiImClient extends SlackApiHttpProtocolSupport { self: SlackApiClien
      */
     def mark( req: SlackApiImMarkRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiImMarkResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiImMarkRequest, SlackApiImMarkResponse](
+      http.post[SlackApiImMarkRequest, SlackApiImMarkResponse](
         "im.mark",
         req
       )
@@ -159,11 +159,11 @@ trait SlackApiImClient extends SlackApiHttpProtocolSupport { self: SlackApiClien
      */
     def open( req: SlackApiImOpenRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiImOpenResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiImOpenRequest, SlackApiImOpenResponse](
+      http.post[SlackApiImOpenRequest, SlackApiImOpenResponse](
         "im.open",
         req
       )
@@ -174,11 +174,11 @@ trait SlackApiImClient extends SlackApiHttpProtocolSupport { self: SlackApiClien
      */
     def replies( req: SlackApiImRepliesRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiImRepliesResponse]] = {
 
-      protectedSlackHttpApiGet[SlackApiImRepliesResponse](
+      http.get[SlackApiImRepliesResponse](
         "im.replies",
         Map(
           "channel" -> Option( req.channel ),

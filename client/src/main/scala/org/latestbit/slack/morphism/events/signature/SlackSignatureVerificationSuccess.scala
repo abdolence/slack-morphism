@@ -18,4 +18,7 @@
 
 package org.latestbit.slack.morphism.events.signature
 
+/**
+ * Signature verified successfully
+ */
 case class SlackSignatureVerificationSuccess()

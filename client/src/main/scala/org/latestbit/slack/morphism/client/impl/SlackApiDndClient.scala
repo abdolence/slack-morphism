@@ -37,11 +37,11 @@ trait SlackApiDndClient extends SlackApiHttpProtocolSupport { self: SlackApiClie
      */
     def endDnd()(
         implicit slackApiToken: SlackApiUserToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiDndEndDndResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiDndEndDndRequest, SlackApiDndEndDndResponse](
+      http.post[SlackApiDndEndDndRequest, SlackApiDndEndDndResponse](
         "dnd.endDnd",
         SlackApiDndEndDndRequest()
       )
@@ -52,11 +52,11 @@ trait SlackApiDndClient extends SlackApiHttpProtocolSupport { self: SlackApiClie
      */
     def endSnooze()(
         implicit slackApiToken: SlackApiUserToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiDndEndSnoozeResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiDndEndSnoozeRequest, SlackApiDndEndSnoozeResponse](
+      http.post[SlackApiDndEndSnoozeRequest, SlackApiDndEndSnoozeResponse](
         "dnd.endSnooze",
         SlackApiDndEndSnoozeRequest()
       )
@@ -67,11 +67,11 @@ trait SlackApiDndClient extends SlackApiHttpProtocolSupport { self: SlackApiClie
      */
     def info( req: SlackApiDndInfoRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiDndInfoResponse]] = {
 
-      protectedSlackHttpApiGet[SlackApiDndInfoResponse](
+      http.get[SlackApiDndInfoResponse](
         "dnd.info",
         Map(
           "user" -> req.user
@@ -84,11 +84,11 @@ trait SlackApiDndClient extends SlackApiHttpProtocolSupport { self: SlackApiClie
      */
     def setSnooze()(
         implicit slackApiToken: SlackApiUserToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiDndSetSnoozeResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiDndSetSnoozeRequest, SlackApiDndSetSnoozeResponse](
+      http.post[SlackApiDndSetSnoozeRequest, SlackApiDndSetSnoozeResponse](
         "dnd.setSnooze",
         SlackApiDndSetSnoozeRequest()
       )
@@ -99,11 +99,11 @@ trait SlackApiDndClient extends SlackApiHttpProtocolSupport { self: SlackApiClie
      */
     def teamInfo( req: SlackApiDndTeamInfoRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiDndTeamInfoResponse]] = {
 
-      protectedSlackHttpApiGet[SlackApiDndTeamInfoResponse](
+      http.get[SlackApiDndTeamInfoResponse](
         "dnd.teamInfo",
         Map(
           "users" -> Some( req.users.mkString( "," ) )

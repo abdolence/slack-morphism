@@ -23,6 +23,10 @@ import io.circe._
 import io.circe.generic.semiauto._
 import org.latestbit.circe.adt.codec._
 
+/**
+ * Blocks are a series of components that can be combined to create visually rich and compellingly interactive messages and views.
+ * https://api.slack.com/reference/block-kit/blocks
+ */
 sealed trait SlackBlock {
   val block_id: Option[String]
 }
@@ -165,6 +169,10 @@ case class SlackFileBlock(
 case class SlackRichTextBlock( elements: List[SlackBlockElement], override val block_id: Option[String] = None )
     extends SlackBlock
 
+/**
+ * Block elements can be used inside of section, context, and actions layout blocks. Inputs can only be used inside of input blocks.
+ * https://api.slack.com/reference/block-kit/block-elements
+ */
 sealed trait SlackBlockElement
 
 object SlackBlockElement {

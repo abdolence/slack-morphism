@@ -37,11 +37,11 @@ trait SlackApiViewsClient extends SlackApiHttpProtocolSupport { self: SlackApiCl
      */
     def open( req: SlackApiViewsOpenRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiViewsOpenResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiViewsOpenRequest, SlackApiViewsOpenResponse](
+      http.post[SlackApiViewsOpenRequest, SlackApiViewsOpenResponse](
         "views.open",
         req
       )
@@ -52,11 +52,11 @@ trait SlackApiViewsClient extends SlackApiHttpProtocolSupport { self: SlackApiCl
      */
     def publish( req: SlackApiViewsPublishRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiViewsPublishResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiViewsPublishRequest, SlackApiViewsPublishResponse](
+      http.post[SlackApiViewsPublishRequest, SlackApiViewsPublishResponse](
         "views.publish",
         req
       )
@@ -67,11 +67,11 @@ trait SlackApiViewsClient extends SlackApiHttpProtocolSupport { self: SlackApiCl
      */
     def push( req: SlackApiViewsPushRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiViewsPushResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiViewsPushRequest, SlackApiViewsPushResponse](
+      http.post[SlackApiViewsPushRequest, SlackApiViewsPushResponse](
         "views.push",
         req
       )
@@ -82,11 +82,11 @@ trait SlackApiViewsClient extends SlackApiHttpProtocolSupport { self: SlackApiCl
      */
     def update( req: SlackApiViewsUpdateRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiViewsUpdateResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiViewsUpdateRequest, SlackApiViewsUpdateResponse](
+      http.post[SlackApiViewsUpdateRequest, SlackApiViewsUpdateResponse](
         "views.update",
         req
       )

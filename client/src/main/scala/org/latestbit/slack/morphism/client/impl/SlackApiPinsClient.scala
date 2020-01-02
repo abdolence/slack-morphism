@@ -37,11 +37,11 @@ trait SlackApiPinsClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
      */
     def add( req: SlackApiPinsAddRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiPinsAddResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiPinsAddRequest, SlackApiPinsAddResponse](
+      http.post[SlackApiPinsAddRequest, SlackApiPinsAddResponse](
         "pins.add",
         req
       )
@@ -52,11 +52,11 @@ trait SlackApiPinsClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
      */
     def list( req: SlackApiPinsListRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiPinsListResponse]] = {
 
-      protectedSlackHttpApiGet[SlackApiPinsListResponse](
+      http.get[SlackApiPinsListResponse](
         "pins.list",
         Map(
           "channel" -> Option( req.channel )
@@ -69,11 +69,11 @@ trait SlackApiPinsClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
      */
     def remove( req: SlackApiPinsRemoveRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiPinsRemoveResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiPinsRemoveRequest, SlackApiPinsRemoveResponse](
+      http.post[SlackApiPinsRemoveRequest, SlackApiPinsRemoveResponse](
         "pins.remove",
         req
       )

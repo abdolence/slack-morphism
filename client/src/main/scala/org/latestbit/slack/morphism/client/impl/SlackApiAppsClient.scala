@@ -34,11 +34,11 @@ trait SlackApiAppsClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
 
     def uninstall( req: SlackApiUninstallRequest )(
         implicit slackApiToken: SlackApiToken,
-        backend: SttpBackend[Future, Nothing, NothingT],
+        backend: SttpFutureBackend,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiUninstallResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiUninstallRequest, SlackApiUninstallResponse](
+      http.post[SlackApiUninstallRequest, SlackApiUninstallResponse](
         "apps.uninstall",
         req
       )

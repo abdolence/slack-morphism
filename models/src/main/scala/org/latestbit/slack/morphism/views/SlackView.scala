@@ -23,6 +23,10 @@ import io.circe.generic.semiauto._
 import org.latestbit.circe.adt.codec._
 import org.latestbit.slack.morphism.messages.{ SlackBlock, SlackBlockPlainText }
 
+/**
+ * Views are app-customized visual areas within modals and Home tabs.
+ * https://api.slack.com/reference/surfaces/views
+ */
 sealed trait SlackView
 
 @JsonAdt( "modal" )
