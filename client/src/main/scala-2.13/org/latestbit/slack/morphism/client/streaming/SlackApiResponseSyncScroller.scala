@@ -31,6 +31,12 @@ object SlackApiResponseSyncScroller {
     type AsyncItemType = Either[SlackApiClientError, SlackApiScrollableResponse[IT, PT]]
     type AsyncValueType = Either[SlackApiClientError, Iterable[IT]]
 
+    /**
+     * Lazy load data synchronously batching using standard lazy container
+     *
+     * @param scrollerTimeout timeout to receive next batch
+     * @return lazy stream of data
+     */
     def toSyncScroller(
         scrollerTimeout: FiniteDuration = 60.seconds
     )( implicit ec: ExecutionContext ): Future[Either[SlackApiClientError, SyncStreamType]] = {

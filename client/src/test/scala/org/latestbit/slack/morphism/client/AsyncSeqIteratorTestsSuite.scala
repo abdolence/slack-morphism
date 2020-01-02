@@ -35,11 +35,11 @@ class AsyncSeqIteratorTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenProp
     }
   }
 
-  def initialValue(): Future[MyItem] = Future.successful(
+  def initialItem(): Future[MyItem] = Future.successful(
     MyItem( "initial", Some( 1 ) )
   )
 
-  def nextValue( position: Int ): Future[MyItem] = {
+  def nextItem( position: Int ): Future[MyItem] = {
     if (position < 10) {
       Future.successful(
         MyItem( s"next: ${position}", Some( position + 1 ) )
@@ -52,14 +52,10 @@ class AsyncSeqIteratorTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenProp
   }
 
   val iterator = AsyncSeqIterator.cons[MyItem, String, Int](
-    initial = initialValue(),
-    convValue = { item: MyItem =>
-      item.value
-    },
-    getPos = { item: MyItem =>
-      item.cursor
-    },
-    producer = nextValue
+    initial = initialItem(),
+    toValue = _.value,
+    getPos = _.cursor,
+    producer = nextItem
   )
 
   "iterating over generated async results" should "be in correct order" in {

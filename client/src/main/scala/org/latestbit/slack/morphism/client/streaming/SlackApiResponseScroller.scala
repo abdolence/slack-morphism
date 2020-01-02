@@ -25,16 +25,40 @@ import org.reactivestreams.Publisher
 
 import scala.concurrent._
 
+/**
+ * Support for batch loading remote data
+ * @param initialLoader a function to initial request for data
+ * @param batchLoader a function to load next batch based on previous state
+ * @tparam IT batch item type
+ * @tparam PT batch value type
+ */
 class SlackApiResponseScroller[IT, PT](
     initialLoader: () => Future[Either[SlackApiClientError, SlackApiScrollableResponse[IT, PT]]],
     batchLoader: PT => Future[Either[SlackApiClientError, SlackApiScrollableResponse[IT, PT]]]
 ) extends SlackApiResponseSyncScroller.LazyScalaCollectionSupport[IT, PT] {
 
+  /**
+   * Read the initial data
+   *
+   * @note this functions is mostly available to help to implement your own batching. If it wasn't your intention look at toAsync/SyncScroller or toPublisher
+   * @return a scrollable response with a cursor position
+   */
   def first(): Future[Either[SlackApiClientError, SlackApiScrollableResponse[IT, PT]]] = initialLoader()
 
+  /**
+   * Read a next batch providing a last position
+   *
+   * @note this functions is mostly available to help to implement your own batching. If it wasn't your intention look at toAsync/SyncScroller or toPublisher
+   * @param lastPosition a cursor position
+   * @return
+   */
   def next( lastPosition: PT ): Future[Either[SlackApiClientError, SlackApiScrollableResponse[IT, PT]]] =
     batchLoader( lastPosition )
 
+  /**
+   * Read data as an infinite async iterator
+   * @return infinite async sequence iterator
+   */
   def toAsyncScroller()(
       implicit ec: ExecutionContext
   ): AsyncSeqIterator[AsyncItemType, AsyncValueType] = {
@@ -48,6 +72,11 @@ class SlackApiResponseScroller[IT, PT](
     )
   }
 
+  /**
+   * Read data as a reactive publisher
+   * @param maxItems - limit optionally maximum items you want to receive
+   * @return reactive publisher
+   */
   def toPublisher(
       maxItems: Option[Long] = None
   )( implicit ec: ExecutionContext ): Publisher[IT] =
