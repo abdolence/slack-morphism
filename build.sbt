@@ -82,6 +82,7 @@ val scalaCheckShapeless = "1.2.3"
 // For examples we use akka-http
 val akkaVersion = "2.5.27"
 val akkaHttpVersion = "10.1.11"
+val akkaHttpCirceVersion = "1.30.0"
 val logbackVersion = "1.2.3"
 val scalaLoggingVersion = "3.9.2"
 val scoptVersion = "3.7.1"
@@ -149,7 +150,9 @@ lazy val slackMorphismExamples =
         "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion,
         "com.github.scopt" %% "scopt" % scoptVersion,
         "ch.qos.logback" % "logback-classic" % logbackVersion,
-        "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion
+        "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion,
+        "de.heikoseeberger" %% "akka-http-circe" % akkaHttpCirceVersion
+          excludeAll (ExclusionRule( organization = "com.typesafe.akka" ) )
       )
     )
     .dependsOn( slackMorphismClient )

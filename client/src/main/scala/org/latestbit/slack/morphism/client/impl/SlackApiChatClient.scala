@@ -135,6 +135,24 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
     }
 
     /**
+     * Post an event reply message using response_url from Slack Events
+     * @param response_url a url from Slack Event
+     * @param reply reply to an event
+     */
+    def postEventReply( response_url: String, reply: SlackApiPostEventReply )(
+        implicit slackApiToken: SlackApiToken,
+        backend: SttpFutureBackend,
+        ec: ExecutionContext
+    ): Future[Either[SlackApiClientError, SlackApiPostEventReplyResponse]] = {
+
+      protectedSlackHttpApiPost[SlackApiPostEventReply, SlackApiPostEventReplyResponse](
+        absoluteUri = uri"${response_url}",
+        request = createSlackHttpApiRequest(),
+        body = reply
+      )
+    }
+
+    /**
      * https://api.slack.com/methods/chat.scheduleMessage
      */
     def scheduleMessage( req: SlackApiChatScheduleMessageRequest )(

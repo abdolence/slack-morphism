@@ -47,13 +47,14 @@ object AkkaHttpServer extends LazyLogging {
       implicit val classicSystem = context.system.toClassic
       implicit val materializer = ActorMaterializer()
       implicit val ec: ExecutionContextExecutor = context.system.executionContext
-      val httpServerRoutes = new AkkaHttpServerRoutes()
 
       Behaviors.receiveMessage {
         case Start( config ) => {
           logger.info(
             s"Starting routes on ${config.httpServerHost}:${config.httpServerPort}"
           )
+          implicit val appConfig = config
+          val httpServerRoutes = new AkkaHttpServerRoutes()
 
           val binding = Http().bindAndHandle(
             httpServerRoutes.createRoutes(),

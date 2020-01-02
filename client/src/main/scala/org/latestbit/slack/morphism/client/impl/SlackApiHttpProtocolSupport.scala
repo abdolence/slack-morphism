@@ -166,7 +166,11 @@ trait SlackApiHttpProtocolSupport {
   protected def getSlackMethodAbsoluteUri( methodUri: String ): Uri =
     uri"${SLACK_BASE_URI}/${methodUri}"
 
-  protected def protectedSlackHttpApiPost[RQ, RS]( methodUri: String, body: RQ )(
+  protected def protectedSlackHttpApiPost[RQ, RS](
+      absoluteUri: Uri,
+      request: RequestT[Empty, Either[String, String], Nothing],
+      body: RQ
+  )(
       implicit slackApiToken: SlackApiToken,
       encoder: Encoder[RQ],
       decoder: Decoder[RS],
@@ -176,7 +180,7 @@ trait SlackApiHttpProtocolSupport {
     val bodyAsStr = body.asJson.dropNullValues.noSpaces
 
     protectedSlackHttpApiRequest[RS](
-      createSlackHttpApiRequest()
+      request
         .body(
           StringBody(
             bodyAsStr,
@@ -184,7 +188,21 @@ trait SlackApiHttpProtocolSupport {
             Some( MediaType.ApplicationJson )
           )
         )
-        .post( getSlackMethodAbsoluteUri( methodUri ) )
+        .post( absoluteUri )
+    )
+  }
+
+  protected def protectedSlackHttpApiPost[RQ, RS]( methodUri: String, body: RQ )(
+      implicit slackApiToken: SlackApiToken,
+      encoder: Encoder[RQ],
+      decoder: Decoder[RS],
+      backend: SttpFutureBackend,
+      ec: ExecutionContext
+  ): Future[Either[SlackApiClientError, RS]] = {
+    protectedSlackHttpApiPost[RQ, RS](
+      absoluteUri = getSlackMethodAbsoluteUri( methodUri ),
+      request = createSlackHttpApiRequest(),
+      body = body
     )
   }
 
