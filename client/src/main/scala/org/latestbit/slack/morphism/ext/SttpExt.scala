@@ -28,8 +28,8 @@ object SttpExt {
   case class UriExtensions( uri: Uri ) {
 
     /**
-		 * Adds the given parameter with an optional value to the query if it is present.
-		 */
+     * Adds the given parameter with an optional value to the query if it is present.
+     */
     def param( k: String, v: Option[String] ): Uri = v.map( uri.param( k, _ ) ).getOrElse( uri )
   }
 
