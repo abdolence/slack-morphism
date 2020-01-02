@@ -41,12 +41,12 @@ object ArrayExt {
     /**
      * Convert an array to hex string
      */
-    @inline final def toHexString( toLowerCase: Boolean = true ): String = {
+    @inline final def toHexString( lowerCased: Boolean = true ): String = {
       val outputArrayLen = array.length << 1
       val outputArray = new Array[Char]( outputArrayLen )
 
       val currentDigits =
-        if (toLowerCase)
+        if (lowerCased)
           DIGITS_LOWER
         else
           DIGITS_UPPER
