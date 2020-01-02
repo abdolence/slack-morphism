@@ -67,12 +67,24 @@ ThisBuild / packageOptions := Seq(
 
 val catsVersion = "2.0.0"
 val circeVersion = "0.12.3"
-val scalaTestVersion = "3.1.0"
 val scalaCollectionsCompatVersion = "2.1.3"
-val scalaCheckVersion = "1.14.3"
 val sttpVersion = "2.0.0-RC5"
 val circeAdtCodecVersion = "0.5.1"
 val reactiveStreamsVersion = "1.0.3"
+
+// For tests
+val scalaTestVersion = "3.1.0"
+val scalaCheckVersion = "1.14.3"
+val scalaTestPlusCheck = "3.1.0.0-RC2"
+val scalaTestPlusTestNG = "3.1.0.0" // for reactive publisher tck testing
+val scalaCheckShapeless = "1.2.3"
+
+// For examples we use akka-http
+val akkaVersion = "2.5.27"
+val akkaHttpVersion = "10.1.11"
+val logbackVersion = "1.2.3"
+val scalaLoggingVersion = "3.9.2"
+val scoptVersion = "3.7.1"
 
 val baseDependencies =
   Seq(
@@ -93,9 +105,9 @@ val baseDependencies =
       "org.typelevel" %% "cats-laws" % catsVersion,
       "org.typelevel" %% "cats-testkit" % catsVersion,
       "org.reactivestreams" % "reactive-streams-tck" % reactiveStreamsVersion,
-      "org.scalatestplus" %% "scalatestplus-scalacheck" % "3.1.0.0-RC2",
-      "org.scalatestplus" %% "testng-6-7" % "3.1.0.0",
-      "com.github.alexarchambault" %% "scalacheck-shapeless_1.14" % "1.2.3"
+      "org.scalatestplus" %% "scalatestplus-scalacheck" % scalaTestPlusCheck,
+      "org.scalatestplus" %% "testng-6-7" % scalaTestPlusTestNG,
+      "com.github.alexarchambault" %% "scalacheck-shapeless_1.14" % scalaCheckShapeless
     ).map( _ % "test" )
 
 //addCompilerPlugin( "org.scalamacros" %% "paradise" % "2.1.1" cross CrossVersion.full )
@@ -128,9 +140,16 @@ lazy val slackMorphismClient =
     .dependsOn( slackMorphismModels )
 
 lazy val slackMorphismExamples =
-  (project in file( "examples" ))
+  (project in file( "examples/akka-http" ))
     .settings(
-      name := "slack-morphism-client",
-      libraryDependencies ++= baseDependencies ++ Seq()
+      name := "slack-morphism-akka",
+      libraryDependencies ++= baseDependencies ++ Seq(
+        "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
+        "com.typesafe.akka" %% "akka-stream-typed" % akkaVersion,
+        "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion,
+        "com.github.scopt" %% "scopt" % scoptVersion,
+        "ch.qos.logback" % "logback-classic" % logbackVersion,
+        "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion
+      )
     )
     .dependsOn( slackMorphismClient )
