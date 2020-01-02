@@ -89,6 +89,9 @@ object Main extends App with LazyLogging {
       opt[String]( "slack-signing-secret" ).abbr( "ss" ).text( "Slack Signing Secret" ).required().action { ( v, c ) =>
         c.copy( slackAppConfig = c.slackAppConfig.copy( signingSecret = v ) )
       }
+      opt[String]( "slack-redirect-url" ).abbr( "rurl" ).text( "Slack Redirect URL" ).action { ( v, c ) =>
+        c.copy( slackAppConfig = c.slackAppConfig.copy( redirectUrl = Some( v ) ) )
+      }
 
     }
   }

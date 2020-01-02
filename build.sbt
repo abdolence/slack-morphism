@@ -152,7 +152,8 @@ lazy val slackMorphismExamples =
         "ch.qos.logback" % "logback-classic" % logbackVersion,
         "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion,
         "de.heikoseeberger" %% "akka-http-circe" % akkaHttpCirceVersion
-          excludeAll (ExclusionRule( organization = "com.typesafe.akka" ) )
+          excludeAll (ExclusionRule( organization = "com.typesafe.akka" ) ),
+        "com.softwaremill.sttp.client" %% "akka-http-backend" % sttpVersion
       )
     )
     .dependsOn( slackMorphismClient )

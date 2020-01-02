@@ -21,7 +21,13 @@ package org.latestbit.slack.morphism.examples.akka
 /**
  * Your slack App profile data
  */
-case class SlackAppConfig( appId: String, clientId: String, clientSecret: String, signingSecret: String )
+case class SlackAppConfig(
+    appId: String,
+    clientId: String,
+    clientSecret: String,
+    signingSecret: String,
+    redirectUrl: Option[String] = None
+)
 
 object SlackAppConfig {
   final val empty = SlackAppConfig( null, null, null, null )

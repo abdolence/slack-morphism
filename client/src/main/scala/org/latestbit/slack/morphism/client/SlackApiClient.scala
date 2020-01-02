@@ -42,4 +42,4 @@ class SlackApiClient
     with SlackApiUsersClient
     with SlackApiViewsClient {}
 
-object SlackApiClient {}
+object SlackApiClient extends SlackApiHttpProtocolSupport {}

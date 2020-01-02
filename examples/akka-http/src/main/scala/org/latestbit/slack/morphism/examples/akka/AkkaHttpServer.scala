@@ -23,8 +23,14 @@ import akka.actor.typed._
 import akka.actor.typed.scaladsl._
 import akka.actor.typed.scaladsl.adapter._
 import akka.http.scaladsl.Http
+import akka.http.scaladsl.model.StatusCodes
+import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.server._
 import akka.stream.typed.scaladsl._
 import com.typesafe.scalalogging._
+import org.latestbit.slack.morphism.client.SlackApiClient
+import org.latestbit.slack.morphism.examples.akka.routes._
+import sttp.client.akkahttp.AkkaHttpBackend
 
 import scala.concurrent.duration._
 import scala.concurrent.{ ExecutionContextExecutor, Future }
@@ -54,10 +60,26 @@ object AkkaHttpServer extends LazyLogging {
             s"Starting routes on ${config.httpServerHost}:${config.httpServerPort}"
           )
           implicit val appConfig = config
-          val httpServerRoutes = new AkkaHttpServerRoutes()
+          implicit val akkaSttpBackend: SlackApiClient.SttpFutureBackend =
+            AkkaHttpBackend.usingActorSystem( classicSystem )
+          implicit val slackApiClient = new SlackApiClient()
+
+          val slackEventsRoute = new SlackPushEventsRoute()
+          val slackOAuthRoute = new SlackOAuthRoutes()
+
+          val allRoutes: Route = {
+            ignoreTrailingSlash {
+              path( "test" ) {
+                get {
+                  complete( StatusCodes.OK )
+                }
+              } ~ slackEventsRoute.routes ~ slackOAuthRoute.routes
+
+            }
+          }
 
           val binding = Http().bindAndHandle(
-            httpServerRoutes.createRoutes(),
+            allRoutes,
             config.httpServerHost,
             config.httpServerPort
           )
