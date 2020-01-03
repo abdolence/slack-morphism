@@ -26,7 +26,9 @@ case class SlackAppConfig(
     clientId: String,
     clientSecret: String,
     signingSecret: String,
-    redirectUrl: Option[String] = None
+    redirectUrl: Option[String] = None,
+    botScope: String =
+      "app_mentions:read,channels:history,channels:read,dnd:read,emoji:read,im:history,im:read,im:write,mpim:history,mpim:read,mpim:write,reactions:read,reactions:write,reminders:read,reminders:write,team:read,users.profile:read,users:read"
 )
 
 object SlackAppConfig {

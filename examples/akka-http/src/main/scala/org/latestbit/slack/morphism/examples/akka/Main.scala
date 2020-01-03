@@ -30,7 +30,7 @@ import scala.concurrent.{ Await, ExecutionContextExecutor }
 import scala.concurrent.duration._
 import scala.util._
 
-object Main extends App with LazyLogging {
+object Main extends App with StrictLogging {
 
   val APP_NAME = "Slack-Morphism-Example"
   val APP_VER = "0.1.0"

@@ -27,5 +27,6 @@ package org.latestbit.slack.morphism.examples.akka
 case class AppConfig(
     httpServerHost: String = "0.0.0.0",
     httpServerPort: Int = 8080,
-    slackAppConfig: SlackAppConfig
+    slackAppConfig: SlackAppConfig,
+    databaseDir: String = "data"
 )

@@ -22,7 +22,7 @@ import akka.actor.typed.scaladsl.ActorContext
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server._
 import akka.stream.typed.scaladsl.ActorMaterializer
-import com.typesafe.scalalogging.LazyLogging
+import com.typesafe.scalalogging._
 import org.latestbit.slack.morphism.events._
 import org.latestbit.slack.morphism.examples.akka.AppConfig
 
@@ -30,7 +30,7 @@ import scala.concurrent.ExecutionContext
 import io.circe.parser._
 
 class SlackPushEventsRoute( implicit ctx: ActorContext[_], materializer: ActorMaterializer, config: AppConfig )
-    extends LazyLogging
+    extends StrictLogging
     with AkkaHttpServerRoutesSupport
     with Directives {
 

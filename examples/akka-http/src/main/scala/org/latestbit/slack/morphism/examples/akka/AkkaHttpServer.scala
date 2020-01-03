@@ -30,6 +30,7 @@ import akka.stream.typed.scaladsl._
 import com.typesafe.scalalogging._
 import org.latestbit.slack.morphism.client.SlackApiClient
 import org.latestbit.slack.morphism.client.impl.SlackApiClientBackend
+import org.latestbit.slack.morphism.examples.akka.db.SlackTokensDb
 import org.latestbit.slack.morphism.examples.akka.routes._
 import sttp.client.akkahttp.AkkaHttpBackend
 
@@ -37,7 +38,7 @@ import scala.concurrent.duration._
 import scala.concurrent.{ ExecutionContextExecutor, Future }
 import scala.util._
 
-object AkkaHttpServer extends LazyLogging {
+object AkkaHttpServer extends StrictLogging {
   sealed trait Command
   case class Start( config: AppConfig ) extends Command
   case class Stop() extends Command
@@ -45,7 +46,8 @@ object AkkaHttpServer extends LazyLogging {
   val run: Behavior[Command] = runBehavior( None )
 
   private case class HttpServerState(
-      httpBinding: Future[Http.ServerBinding]
+      httpBinding: Future[Http.ServerBinding],
+      tokensDbRef: ActorRef[SlackTokensDb.Command]
   )
 
   private def runBehavior( serverState: Option[HttpServerState] ): Behavior[Command] =
@@ -64,6 +66,10 @@ object AkkaHttpServer extends LazyLogging {
           implicit val akkaSttpBackend: SlackApiClientBackend.SttpFutureBackendType =
             AkkaHttpBackend.usingActorSystem( classicSystem )
           implicit val slackApiClient = new SlackApiClient()
+
+          implicit val tokensDbRef = context.spawnAnonymous( SlackTokensDb.run )
+
+          tokensDbRef ! SlackTokensDb.OpenDb( config )
 
           val slackEventsRoute = new SlackPushEventsRoute()
           val slackOAuthRoute = new SlackOAuthRoutes()
@@ -98,7 +104,8 @@ object AkkaHttpServer extends LazyLogging {
           runBehavior(
             Some(
               HttpServerState(
-                httpBinding = binding
+                httpBinding = binding,
+                tokensDbRef = tokensDbRef
               )
             )
           )
@@ -109,6 +116,7 @@ object AkkaHttpServer extends LazyLogging {
             state.httpBinding.foreach { binding =>
               binding.terminate( 5.seconds )
             }
+            state.tokensDbRef ! SlackTokensDb.Close()
           }
           Behavior.stopped
         }

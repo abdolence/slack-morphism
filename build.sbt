@@ -79,13 +79,14 @@ val scalaTestPlusCheck = "3.1.0.0-RC2"
 val scalaTestPlusTestNG = "3.1.0.0" // for reactive publisher tck testing
 val scalaCheckShapeless = "1.2.3"
 
-// For examples we use akka-http
+// For full-featured examples we use additional libs like akka-http
 val akkaVersion = "2.5.27"
 val akkaHttpVersion = "10.1.11"
 val akkaHttpCirceVersion = "1.30.0"
 val logbackVersion = "1.2.3"
 val scalaLoggingVersion = "3.9.2"
 val scoptVersion = "3.7.1"
+val swayDbVersion = "0.10.9"
 
 val baseDependencies =
   Seq(
@@ -153,7 +154,8 @@ lazy val slackMorphismExamples =
         "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion,
         "de.heikoseeberger" %% "akka-http-circe" % akkaHttpCirceVersion
           excludeAll (ExclusionRule( organization = "com.typesafe.akka" ) ),
-        "com.softwaremill.sttp.client" %% "akka-http-backend" % sttpVersion
+        "com.softwaremill.sttp.client" %% "akka-http-backend" % sttpVersion,
+        "io.swaydb" %% "swaydb" % swayDbVersion
       )
     )
     .dependsOn( slackMorphismClient )
