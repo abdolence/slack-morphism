@@ -18,10 +18,6 @@
 
 package org.latestbit.slack.morphism.common
 
-import io.circe._
-import io.circe.generic.semiauto._
-import io.circe.syntax._
-import org.latestbit.slack.morphism.common
 import org.latestbit.slack.morphism.messages.SlackMessage
 
 case class SlackChannelInfo(
@@ -63,79 +59,13 @@ case class SlackChannelLastState(
     members: Option[List[String]] = None
 )
 
+case class SlackBasicChannelInfo(
+    id: String,
+    name: Option[String] = None
+)
+
 object SlackChannelInfo {
   case class SlackChannelDetails( value: String, creator: String, last_set: SlackDateTime )
-
-  implicit val encoderSlackChannelDetails: Encoder.AsObject[common.SlackChannelInfo.SlackPurposeInfo] =
-    deriveEncoder[common.SlackChannelInfo.SlackPurposeInfo]
-
-  implicit val decoderSlackChannelDetails: Decoder[common.SlackChannelInfo.SlackPurposeInfo] =
-    deriveDecoder[common.SlackChannelInfo.SlackPurposeInfo]
-
-  implicit val encoderSlackChannelFlags: Encoder.AsObject[SlackChannelFlags] = deriveEncoder[SlackChannelFlags]
-  implicit val decoderSlackChannelFlags: Decoder[SlackChannelFlags] = deriveDecoder[SlackChannelFlags]
-
-  implicit val encoderSlackChannelLastState: Encoder.AsObject[SlackChannelLastState] =
-    deriveEncoder[SlackChannelLastState]
-  implicit val decoderSlackChannelLastState: Decoder[SlackChannelLastState] = deriveDecoder[SlackChannelLastState]
-
   type SlackTopicInfo = SlackChannelDetails
   type SlackPurposeInfo = SlackChannelDetails
-
-  def createEncoder()(
-      implicit flagsEncoder: Encoder.AsObject[SlackChannelFlags],
-      lastStateEncoder: Encoder.AsObject[SlackChannelLastState]
-  ): Encoder.AsObject[SlackChannelInfo] = (model: SlackChannelInfo) => {
-    JsonObject(
-      "id" -> model.id.asJson,
-      "name" -> model.name.asJson,
-      "created" -> model.created.asJson,
-      "unlinked" -> model.unlinked.asJson,
-      "name_normalized" -> model.name_normalized.asJson,
-      "topic" -> model.topic.asJson,
-      "purpose" -> model.purpose.asJson,
-      "previous_names" -> model.previous_names.asJson,
-      "priority" -> model.priority.asJson,
-      "num_members" -> model.num_members.asJson,
-      "locale" -> model.locale.asJson
-    ).deepMerge( flagsEncoder.encodeObject( model.flags ) )
-      .deepMerge( lastStateEncoder.encodeObject( model.lastState ) )
-  }
-
-  implicit val slackChannelInfoEncoder = createEncoder()
-
-  implicit val slackChannelInfoDecoder: Decoder[SlackChannelInfo] = (c: HCursor) => {
-    for {
-      id <- c.downField( "id" ).as[String]
-      name <- c.downField( "name" ).as[String]
-      created <- c.downField( "created" ).as[SlackDateTime]
-      creator <- c.downField( "creator" ).as[Option[String]]
-      unlinked <- c.downField( "unlinked" ).as[Option[Long]]
-      name_normalized <- c.downField( "name_normalized" ).as[Option[String]]
-      topic <- c.downField( "topic" ).as[Option[SlackTopicInfo]]
-      purpose <- c.downField( "purpose" ).as[Option[SlackPurposeInfo]]
-      previous_names <- c.downField( "previous_names" ).as[Option[List[String]]]
-      priority <- c.downField( "priority" ).as[Option[Long]]
-      num_members <- c.downField( "num_members" ).as[Option[Long]]
-      locale <- c.downField( "locale" ).as[Option[String]]
-      flags <- c.as[SlackChannelFlags]
-      lastState <- c.as[SlackChannelLastState]
-    } yield SlackChannelInfo(
-      id,
-      name,
-      created,
-      creator,
-      unlinked,
-      name_normalized,
-      topic,
-      purpose,
-      previous_names,
-      priority,
-      num_members,
-      locale,
-      flags,
-      lastState
-    )
-  }
-
 }

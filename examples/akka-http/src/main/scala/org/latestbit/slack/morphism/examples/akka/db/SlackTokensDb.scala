@@ -82,7 +82,11 @@ object SlackTokensDb extends StrictLogging {
             swayMap
               .get( key = teamId )
               .map(
-                _.map(rec => rec.copy( tokens = rec.tokens :+ tokenRecord ) ).getOrElse(
+                _.map(rec =>
+                  rec.copy(tokens =
+                    rec.tokens.filterNot( _.userId == tokenRecord.userId ) :+ tokenRecord
+                  )
+                ).getOrElse(
                   TeamTokensRecord(
                     teamId = teamId,
                     tokens = List(

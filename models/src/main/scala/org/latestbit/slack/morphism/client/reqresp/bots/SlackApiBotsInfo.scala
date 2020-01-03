@@ -28,6 +28,7 @@ case class SlackApiBotsInfo( bot: SlackApiBotsProfile )
 /**
  * Slack bot profile model
  */
+
 case class SlackApiBotsProfile(
     id: String,
     deleted: Option[Boolean] = None,

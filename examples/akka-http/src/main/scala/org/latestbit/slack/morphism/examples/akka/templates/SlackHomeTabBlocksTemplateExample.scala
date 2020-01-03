@@ -37,13 +37,20 @@ class SlackHomeTabBlocksTemplateExample( userId: String ) extends SlackBlocksTem
         block(
           contextBlock(
             blockElements(
-              blockEl( md"Hello to this example tab" ),
+              blockEl( md"This is an example of Slack Home Tab" ),
               blockEl( md"Last updated: ${formatDate( Instant.now() )}" )
             )
           )
         ),
         block( dividerBlock() ),
-        block( imageBlock( image_url = "https://www.gstatic.com/webp/gallery/4.png", alt_text = "Test Image" ) )
+        block( imageBlock( image_url = "https://www.gstatic.com/webp/gallery/4.png", alt_text = "Test Image" ) ),
+        block(
+          actionsBlock(
+            blockElements(
+              blockEl( button( text = plain"Simple", action_id = "simple-home-button" ) )
+            )
+          )
+        )
       )
     ).getOrElse( List() )
 }

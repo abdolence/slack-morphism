@@ -16,6 +16,20 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.reqresp.enterprise
+package org.latestbit.slack.morphism.client.reqresp.interaction
 
-case class SlackBasicEnterpriseInfo( id: String, name: Option[String] = None )
+import org.latestbit.slack.morphism.messages.SlackBlock
+
+/**
+ * Response to interaction event
+ *
+ * https://api.slack.com/interactivity/handling#responding_to_users
+ */
+case class SlackInteractionResponse(
+    text: Option[String] = None,
+    thread_ts: Option[String] = None,
+    blocks: Option[List[SlackBlock]] = None,
+    response_type: Option[String] = None,
+    replace_original: Option[Boolean] = None,
+    delete_original: Option[Boolean] = None
+)

@@ -19,8 +19,8 @@
 package org.latestbit.slack.morphism.common
 
 import io.circe._
-import io.circe.generic.auto._
 import io.circe.syntax._
+import io.circe.generic.semiauto._
 
 case class SlackUserInfo(
     id: String,
@@ -64,91 +64,4 @@ case class SlackUserFlags(
     has_2fa: Option[Boolean] = None
 )
 
-object SlackUserProfile {
-
-  def createEncoder()(
-      implicit derivedEncoder: Encoder.AsObject[SlackUserProfile],
-      iconEncoder: Encoder.AsObject[SlackIcon]
-  ): Encoder.AsObject[SlackUserProfile] = (model: SlackUserProfile) => {
-    model.icon
-      .map { icon =>
-        derivedEncoder.encodeObject( model.copy( icon = None ) ).deepMerge( iconEncoder.encodeObject( icon ) )
-      }
-      .getOrElse(
-        derivedEncoder.encodeObject( model )
-      )
-  }
-
-  def createDecoder()(
-      implicit derivedDecoder: Decoder[SlackUserProfile],
-      iconDecoder: Decoder[SlackIcon]
-  ): Decoder[SlackUserProfile] = (cursor: HCursor) => {
-    for {
-      icon <- cursor.as[SlackIcon]
-      baseUserInfo <- cursor.as[SlackUserProfile]
-    } yield baseUserInfo.copy( icon = Option( icon ) )
-  }
-
-  implicit val encoder = createEncoder()
-  implicit val decoder = createDecoder()
-
-}
-
-object SlackUserInfo {
-
-  def slackUserInfoEncoder()(
-      implicit derivedEncoder: Encoder.AsObject[SlackUserInfo],
-      flagsEncoder: Encoder.AsObject[SlackUserFlags]
-  ): Encoder.AsObject[SlackUserInfo] = (model: SlackUserInfo) => {
-    JsonObject(
-      "id" -> model.id.asJson,
-      "team_id" -> model.team_id.asJson,
-      "name" -> model.name.asJson,
-      "deleted" -> model.deleted.asJson,
-      "color" -> model.color.asJson,
-      "real_name" -> model.real_name.asJson,
-      "tz" -> model.tz.asJson,
-      "tz_label" -> model.tz_label.asJson,
-      "tz_offset" -> model.tz_offset.asJson,
-      "profile" -> model.profile.asJson,
-      "updated" -> model.updated.asJson,
-      "locale" -> model.locale.asJson
-    ).deepMerge( flagsEncoder.encodeObject( model.flags ) )
-  }
-
-  def slackUserInfoDecoder(): Decoder[SlackUserInfo] = (c: HCursor) => {
-    for {
-      id <- c.downField( "id" ).as[String]
-      team_id <- c.downField( "team_id" ).as[Option[String]]
-      name <- c.downField( "name" ).as[Option[String]]
-      deleted <- c.downField( "deleted" ).as[Option[Boolean]]
-      color <- c.downField( "color" ).as[Option[String]]
-      real_name <- c.downField( "real_name" ).as[Option[String]]
-      tz <- c.downField( "tz" ).as[Option[String]]
-      tz_label <- c.downField( "tz_label" ).as[Option[String]]
-      tz_offset <- c.downField( "tz_offset" ).as[Option[Int]]
-      updated <- c.downField( "updated" ).as[Option[SlackDateTime]]
-      locale <- c.downField( "locale" ).as[Option[String]]
-      profile <- c.downField( "profile" ).as[Option[SlackUserProfile]]
-      flags <- c.as[SlackUserFlags]
-    } yield SlackUserInfo(
-      id,
-      team_id,
-      name,
-      deleted,
-      color,
-      real_name,
-      tz,
-      tz_label,
-      tz_offset,
-      updated,
-      locale,
-      profile,
-      flags
-    )
-  }
-
-  implicit val encoder = slackUserInfoEncoder()
-  implicit val decoder = slackUserInfoDecoder()
-
-}
+case class SlackBasicUserInfo( id: String, team_id: Option[String] = None, username: Option[String] = None )

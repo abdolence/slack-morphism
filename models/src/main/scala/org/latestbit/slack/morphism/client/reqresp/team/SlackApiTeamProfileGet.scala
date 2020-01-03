@@ -18,7 +18,7 @@
 
 package org.latestbit.slack.morphism.client.reqresp.team
 
-import io.circe.Json
+import org.latestbit.slack.morphism.common.SlackTeamProfile
 
 /**
  * Request of https://api.slack.com/methods/team.profile.get
@@ -29,15 +29,3 @@ case class SlackApiTeamProfileGetRequest( visibility: Option[String] = None )
  * Response of https://api.slack.com/methods/team.profile.get
  */
 case class SlackApiTeamProfileGetResponse( profile: SlackTeamProfile )
-
-case class SlackTeamProfile( fields: List[SlackTeamProfileField] )
-
-case class SlackTeamProfileField(
-    id: String,
-    ordering: Int,
-    label: String,
-    hint: Option[String] = None,
-    `type`: Option[String] = None,
-    possible_values: Option[List[String]] = None,
-    options: Option[Json] = None
-)

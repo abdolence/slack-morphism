@@ -22,7 +22,6 @@ import java.io.IOException
 
 import cats.implicits._
 import io.circe._
-import io.circe.generic.auto._
 import io.circe.parser._
 import io.circe.syntax._
 import org.latestbit.slack.morphism.client._
@@ -32,7 +31,7 @@ import sttp.model.{ MediaType, Uri }
 
 import scala.concurrent.{ ExecutionContext, Future }
 
-trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
+trait SlackApiHttpProtocolSupport extends SlackApiClientBackend with org.latestbit.slack.morphism.codecs.CirceCodecs {
 
   import SlackApiHttpProtocolSupport._
   import SlackApiClientBackend._
@@ -234,7 +233,7 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
         decoder: Decoder[RS],
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, RS]] = {
-      protectedSlackHttpApiGet( methodUri, createSlackHttpApiRequest() )
+      protectedSlackHttpApiGet[RS]( methodUri, createSlackHttpApiRequest() )
     }
 
     /**

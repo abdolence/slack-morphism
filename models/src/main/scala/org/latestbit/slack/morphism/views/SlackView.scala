@@ -51,16 +51,6 @@ case class SlackHomeView(
     external_id: Option[String] = None
 ) extends SlackView
 
-object SlackView {
-  implicit val encoderSlackModalView: Encoder.AsObject[SlackModalView] = deriveEncoder[SlackModalView]
-  implicit val decoderSlackModalView: Decoder[SlackModalView] = deriveDecoder[SlackModalView]
-  implicit val encoderSlackHomeView: Encoder.AsObject[SlackHomeView] = deriveEncoder[SlackHomeView]
-  implicit val decoderSlackHomeView: Decoder[SlackHomeView] = deriveDecoder[SlackHomeView]
-
-  implicit val encoder: Encoder.AsObject[SlackView] = JsonTaggedAdtCodec.createEncoder[SlackView]( "type" )
-  implicit val decoder: Decoder[SlackView] = JsonTaggedAdtCodec.createDecoder[SlackView]( "type" )
-}
-
 case class SlackStatefulStateParams(
     id: String,
     team_id: String,
@@ -80,34 +70,3 @@ case class SlackStatefulView(
 case class SlackViewStateValue( `type`: String, value: String )
 
 case class SlackViewState( values: Map[String, Json] = Map() ) {}
-
-object SlackStatefulView {
-
-  implicit val encoderSlackViewState: Encoder.AsObject[SlackViewState] = deriveEncoder[SlackViewState]
-  implicit val decoderSlackViewState: Decoder[SlackViewState] = deriveDecoder[SlackViewState]
-
-  def createEncoder(): Encoder.AsObject[SlackStatefulView] = (model: SlackStatefulView) => {
-    implicit val encoderSlackView: Encoder.AsObject[SlackView] = deriveEncoder[SlackView]
-    implicit val encoderSlackStatefulViewParams: Encoder.AsObject[SlackStatefulStateParams] =
-      deriveEncoder[SlackStatefulStateParams]
-
-    encoderSlackView
-      .encodeObject( model.view )
-      .deepMerge( encoderSlackStatefulViewParams.encodeObject( model.stateParams ) )
-  }
-
-  def createDecoder(): Decoder[SlackStatefulView] = (cursor: HCursor) => {
-    implicit val decoderSlackStatefulViewParams: Decoder[SlackStatefulStateParams] =
-      deriveDecoder[SlackStatefulStateParams]
-    for {
-      view <- cursor.as[SlackView]
-      stateParams <- cursor.as[SlackStatefulStateParams]
-    } yield SlackStatefulView(
-      stateParams,
-      view
-    )
-  }
-
-  implicit val encoder = createEncoder()
-  implicit val decoder = createDecoder()
-}

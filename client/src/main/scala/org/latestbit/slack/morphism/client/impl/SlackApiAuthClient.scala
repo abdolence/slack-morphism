@@ -18,10 +18,8 @@
 
 package org.latestbit.slack.morphism.client.impl
 
-import io.circe.generic.semiauto._
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.reqresp.auth._
-import sttp.client._
 
 import scala.concurrent.{ ExecutionContext, Future }
 
@@ -39,7 +37,6 @@ trait SlackApiAuthClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
         implicit slackApiToken: SlackApiToken,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiAuthTestResponse]] = {
-      implicit val decoder = deriveDecoder[SlackApiAuthTestResponse]
 
       http.post[SlackApiEmptyType, SlackApiAuthTestResponse](
         "auth.test",
@@ -54,9 +51,6 @@ trait SlackApiAuthClient extends SlackApiHttpProtocolSupport { self: SlackApiCli
         implicit slackApiToken: SlackApiToken,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiAuthRevokeResponse]] = {
-
-      implicit val encoder = deriveEncoder[SlackApiAuthRevokeRequest]
-      implicit val decoder = deriveDecoder[SlackApiAuthRevokeResponse]
 
       http.post[SlackApiAuthRevokeRequest, SlackApiAuthRevokeResponse](
         "auth.revoke",

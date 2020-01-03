@@ -16,25 +16,18 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.reqresp.chat
+package org.latestbit.slack.morphism.common
 
-import org.latestbit.slack.morphism.messages.{ SlackBlock, SlackMessage }
+import io.circe.Json
 
-/**
- * An event reply message using response_url
- */
-case class SlackApiPostEventReply(
-    text: String,
-    blocks: Option[List[SlackBlock]] = None,
-    response_type: Option[String] = None,
-    replace_original: Option[Boolean] = None,
-    delete_original: Option[Boolean] = None
-)
+case class SlackTeamProfile( fields: List[SlackTeamProfileField] )
 
-/**
- * Response for posting event reply
- */
-case class SlackApiPostEventReplyResponse(
-    channel: String,
-    message: Option[SlackMessage] = None
+case class SlackTeamProfileField(
+    id: String,
+    ordering: Int,
+    label: String,
+    hint: Option[String] = None,
+    `type`: Option[String] = None,
+    possible_values: Option[List[String]] = None,
+    options: Option[Json] = None
 )

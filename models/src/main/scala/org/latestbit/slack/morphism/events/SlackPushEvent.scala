@@ -19,7 +19,6 @@
 package org.latestbit.slack.morphism.events
 
 import io.circe._
-import io.circe.generic.auto._
 import org.latestbit.circe.adt.codec._
 import org.latestbit.slack.morphism.common.SlackDateTime
 
@@ -57,8 +56,3 @@ case class SlackEventCallback(
 @JsonAdt( "app_rate_limited" )
 case class SlackAppRateLimitedEvent( team_id: String, minute_rate_limited: SlackDateTime, api_app_id: String )
     extends SlackPushEvent
-
-object SlackPushEvent {
-  implicit val encoder = JsonTaggedAdtCodec.createEncoder[SlackPushEvent]( "type" )
-  implicit val decoder = JsonTaggedAdtCodec.createDecoder[SlackPushEvent]( "type" )
-}

@@ -16,25 +16,9 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.reqresp.chat
+package org.latestbit.slack.morphism.common
 
-import org.latestbit.slack.morphism.messages.{ SlackBlock, SlackMessage }
-
-/**
- * An event reply message using response_url
- */
-case class SlackApiPostEventReply(
-    text: String,
-    blocks: Option[List[SlackBlock]] = None,
-    response_type: Option[String] = None,
-    replace_original: Option[Boolean] = None,
-    delete_original: Option[Boolean] = None
-)
-
-/**
- * Response for posting event reply
- */
-case class SlackApiPostEventReplyResponse(
-    channel: String,
-    message: Option[SlackMessage] = None
-)
+object SlackResponseTypes {
+  val IN_CHANNEL = "in_channel"
+  val EPHEMERAL = "ephemeral"
+}

@@ -18,7 +18,6 @@
 
 package org.latestbit.slack.morphism.client.impl
 
-import io.circe.generic.auto._
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.reqresp.chat._
 import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller

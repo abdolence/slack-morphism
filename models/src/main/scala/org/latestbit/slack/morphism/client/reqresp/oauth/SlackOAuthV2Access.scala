@@ -18,8 +18,7 @@
 
 package org.latestbit.slack.morphism.client.reqresp.oauth
 
-import org.latestbit.slack.morphism.client.reqresp.enterprise.SlackBasicEnterpriseInfo
-import org.latestbit.slack.morphism.common.SlackTeamInfo
+import org.latestbit.slack.morphism.common.{ SlackBasicEnterpriseInfo, SlackTeamInfo }
 
 /**
  * Slack OAuth v2 access response

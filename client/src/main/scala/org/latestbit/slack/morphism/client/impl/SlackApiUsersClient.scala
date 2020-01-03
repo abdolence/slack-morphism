@@ -18,12 +18,10 @@
 
 package org.latestbit.slack.morphism.client.impl
 
-import io.circe.generic.auto._
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.reqresp.users._
 import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
 import org.latestbit.slack.morphism.common.{ SlackChannelInfo, SlackUserInfo }
-import sttp.client._
 
 import scala.concurrent.{ ExecutionContext, Future }
 

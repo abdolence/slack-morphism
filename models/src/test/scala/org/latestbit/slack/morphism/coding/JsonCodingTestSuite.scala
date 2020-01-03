@@ -169,6 +169,7 @@ class JsonCodingTestSuite extends AnyFlatSpec {
   "A JSON/ADT model for SlackMessage" should "be available implicitly" in {
     import org.latestbit.slack.morphism.events.SlackMessageEvent
     import org.latestbit.slack.morphism.events.SlackUserMessage
+    import org.latestbit.slack.morphism.codecs.implicits._
 
     val testModel: SlackMessageEvent = SlackUserMessage(
       ts = "test",
