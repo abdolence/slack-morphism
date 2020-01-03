@@ -41,6 +41,26 @@ object SlackApiToken {
       .map( _.split( ',' ).map( _.trim ).filterNot( _.isEmpty ).toSet )
       .getOrElse( Set() )
   }
+
+  object TokenTypes {
+    val BOT = "bot"
+    val USER = "user"
+  }
+
+  /**
+   * Create an API token instance provided its type, value and scope
+   * @param tokenType a token type
+   * @param tokenValue a token value
+   * @param scope a token scope
+   * @return an API token instance for Slack API client
+   */
+  def createFrom( tokenType: String, tokenValue: String, scope: String ): Option[SlackApiToken] = {
+    tokenType match {
+      case TokenTypes.BOT  => Some( SlackApiBotToken( tokenValue, scope ) )
+      case TokenTypes.USER => Some( SlackApiUserToken( tokenValue, scope ) )
+      case _               => None
+    }
+  }
 }
 
 /**

@@ -72,7 +72,7 @@ object SlackTokensDb extends StrictLogging {
         case OpenDb( config ) => {
           logger.info( s"Opening sway db in ${config.databaseDir}" )
           val map: SwayDbType =
-            persistent.zero.Map[String, TeamTokensRecord, FunctionType, IO.ApiIO]( dir = config.databaseDir ).get
+            persistent.Map[String, TeamTokensRecord, FunctionType, IO.ApiIO]( dir = config.databaseDir ).get
 
           runBehavior( Some( map ) )
         }
@@ -81,9 +81,8 @@ object SlackTokensDb extends StrictLogging {
           swayMap.foreach { swayMap =>
             swayMap
               .get( key = teamId )
-              .map( _.map(rec => rec.copy( tokens = rec.tokens :+ tokenRecord ) ) )
-              .getOrElse(
-                Some(
+              .map(
+                _.map(rec => rec.copy( tokens = rec.tokens :+ tokenRecord ) ).getOrElse(
                   TeamTokensRecord(
                     teamId = teamId,
                     tokens = List(

@@ -16,13 +16,30 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.templating
+package org.latestbit.slack.morphism.examples.akka.templates
 
+import org.latestbit.slack.morphism.client.templating.SlackBlocksTemplate
 import org.latestbit.slack.morphism.messages.SlackBlock
 
-trait SlackMessageTemplate extends SlackBlocksTemplateDsl with SlackTextFormatters {
-  def renderPlainText(): String
-  def renderBlocks(): Option[List[SlackBlock]] = None
-}
+class SlackHomeTabBlocksTemplateExample( userId: String ) extends SlackBlocksTemplate {
 
-object SlackMessageTemplate {}
+  override def renderBlocks(): List[SlackBlock] =
+    blocksGroup(
+      blocks(
+        block(
+          sectionBlock(
+            text = md"Hey ${formatSlackUserId( userId )}"
+          )
+        ),
+        block( dividerBlock() ),
+        block(
+          contextBlock(
+            blockElements(
+              blockEl( md"Context el 1" ),
+              blockEl( md"Context el 2" )
+            )
+          )
+        )
+      )
+    ).getOrElse( List() )
+}

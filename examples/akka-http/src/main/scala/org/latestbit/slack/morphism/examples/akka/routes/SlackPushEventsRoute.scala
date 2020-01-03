@@ -18,6 +18,7 @@
 
 package org.latestbit.slack.morphism.examples.akka.routes
 
+import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.ActorContext
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server._
@@ -28,9 +29,19 @@ import org.latestbit.slack.morphism.examples.akka.AppConfig
 
 import scala.concurrent.ExecutionContext
 import io.circe.parser._
+import org.latestbit.slack.morphism.client.SlackApiClient
+import org.latestbit.slack.morphism.client.reqresp.views.SlackApiViewsPublishRequest
+import org.latestbit.slack.morphism.examples.akka.db.SlackTokensDb
+import org.latestbit.slack.morphism.examples.akka.templates.SlackHomeTabBlocksTemplateExample
+import org.latestbit.slack.morphism.views.SlackHomeView
 
-class SlackPushEventsRoute( implicit ctx: ActorContext[_], materializer: ActorMaterializer, config: AppConfig )
-    extends StrictLogging
+class SlackPushEventsRoute(
+    implicit ctx: ActorContext[_],
+    materializer: ActorMaterializer,
+    config: AppConfig,
+    slackApiClient: SlackApiClient,
+    slackTokensDb: ActorRef[SlackTokensDb.Command]
+) extends StrictLogging
     with AkkaHttpServerRoutesSupport
     with Directives {
 
@@ -43,7 +54,7 @@ class SlackPushEventsRoute( implicit ctx: ActorContext[_], materializer: ActorMa
           decode[SlackPushEvent]( requestBody ) match {
             case Right( event ) => onEvent( event )
             case Left( ex ) => {
-              logger.error( "Can't decode push event from Slack.", ex )
+              logger.error( s"Can't decode push event from Slack: ${ex.toString}\n${requestBody}" )
               complete( StatusCodes.BadRequest )
             }
           }
@@ -53,18 +64,53 @@ class SlackPushEventsRoute( implicit ctx: ActorContext[_], materializer: ActorMa
   }
 
   def onEvent( event: SlackPushEvent ): Route = event match {
-    case ev: SlackUrlVerificationEvent => {
-      logger.info( s"Received a challenge request:\n${ev.challenge}" )
+    case urlVerEv: SlackUrlVerificationEvent => {
+      logger.info( s"Received a challenge request:\n${urlVerEv.challenge}" )
       complete(
         StatusCodes.OK,
         HttpEntity(
           ContentTypes.`text/plain(UTF-8)`,
-          ev.challenge
+          urlVerEv.challenge
         )
       )
     }
-    case ev: SlackPushEvent => {
-      logger.warn( s"Unsupported event received: ${ev}" )
+    case callbackEvent: SlackEventCallback => {
+      callbackEvent.event match {
+        case body: SlackAppHomeOpenedEvent => {
+          logger.info( s"User opened home: ${body}" )
+          routeWithSlackApiToken( callbackEvent.team_id ) { implicit slackApiToken =>
+            onSuccess(
+              slackApiClient.views.publish(
+                SlackApiViewsPublishRequest(
+                  user_id = body.user,
+                  view = SlackHomeView(
+                    blocks = new SlackHomeTabBlocksTemplateExample(
+                      userId = body.user
+                    ).renderBlocks()
+                  )
+                )
+              )
+            ) {
+              case Right( publishResp ) => {
+                logger.info( s"Home view for ${body.user} has been published: ${publishResp}" )
+                complete( StatusCodes.OK )
+              }
+              case Left( err ) => {
+                logger.error( s"Unable to update home view for ${body.user}", err )
+                complete( StatusCodes.InternalServerError )
+              }
+            }
+          }
+        }
+        case unknownBody: SlackEventCallbackBody => {
+          logger.warn( s"Unsupported callback event received: ${unknownBody}" )
+          complete( StatusCodes.OK )
+        }
+      }
+    }
+
+    case pushEvent: SlackPushEvent => {
+      logger.warn( s"Unsupported push event received: ${pushEvent}" )
       complete( StatusCodes.OK )
     }
   }

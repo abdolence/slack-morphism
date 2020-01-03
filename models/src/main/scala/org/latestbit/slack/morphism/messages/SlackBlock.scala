@@ -32,9 +32,10 @@ sealed trait SlackBlock {
 }
 
 object SlackBlock {
-  import SlackBlockText._
   import SlackBlockPlainText._
   import SlackBlockMarkDownText._
+
+  import SlackBlockText._
 
   implicit val encoderSlackInputBlock: Encoder.AsObject[SlackInputBlock] = deriveEncoder[SlackInputBlock]
   implicit val decoderSlackInputBlock: Decoder[SlackInputBlock] = deriveDecoder[SlackInputBlock]
@@ -62,34 +63,27 @@ object SlackBlockTextTypes {
   final val PLAIN_TEXT = "plain_text"
 }
 
+@JsonAdtPassThrough
 sealed trait SlackBlockText extends SlackBlockElement
 
 object SlackBlockText {
 
-  def createEncoder() = {
-    implicit val encoderSlackBlockPlainText: Encoder.AsObject[SlackBlockPlainText] = deriveEncoder[SlackBlockPlainText]
-    implicit val encoderSlackMarkDownText: Encoder.AsObject[SlackBlockMarkDownText] =
-      deriveEncoder[SlackBlockMarkDownText]
+  implicit val encoderSlackBlockPlainText: Encoder.AsObject[SlackBlockPlainText] = deriveEncoder[SlackBlockPlainText]
 
-    implicit val decoderSlackBlockPlainText: Decoder[SlackBlockPlainText] = deriveDecoder[SlackBlockPlainText]
-    implicit val decoderSlackMarkDownText: Decoder[SlackBlockMarkDownText] = deriveDecoder[SlackBlockMarkDownText]
+  implicit val encoderSlackMarkDownText: Encoder.AsObject[SlackBlockMarkDownText] =
+    deriveEncoder[SlackBlockMarkDownText]
 
-    JsonTaggedAdtCodec.createEncoder[SlackBlockText]( "type" )
-  }
+  implicit val decoderSlackBlockPlainText: Decoder[SlackBlockPlainText] = deriveDecoder[SlackBlockPlainText]
+  implicit val decoderSlackMarkDownText: Decoder[SlackBlockMarkDownText] = deriveDecoder[SlackBlockMarkDownText]
 
-  def createDecoder() = {
-    implicit val encoderSlackBlockPlainText: Encoder.AsObject[SlackBlockPlainText] = deriveEncoder[SlackBlockPlainText]
-    implicit val encoderSlackMarkDownText: Encoder.AsObject[SlackBlockMarkDownText] =
-      deriveEncoder[SlackBlockMarkDownText]
+  implicit val encoder: Encoder.AsObject[SlackBlockText] = JsonTaggedAdtCodec.createEncoder[SlackBlockText]( "type" )
+  implicit val decoder: Decoder[SlackBlockText] = JsonTaggedAdtCodec.createDecoder[SlackBlockText]( "type" )
 
-    implicit val decoderSlackBlockPlainText: Decoder[SlackBlockPlainText] = deriveDecoder[SlackBlockPlainText]
-    implicit val decoderSlackMarkDownText: Decoder[SlackBlockMarkDownText] = deriveDecoder[SlackBlockMarkDownText]
+  /*implicit val encoderMarkDown: Encoder.AsObject[SlackBlockMarkDownText] =
+    JsonTaggedAdtCodec.createEncoder[SlackBlockMarkDownText]( "type" )
 
-    JsonTaggedAdtCodec.createDecoder[SlackBlockText]( "type" )
-  }
-
-  implicit val encoder: Encoder.AsObject[SlackBlockText] = createEncoder()
-  implicit val decoder: Decoder[SlackBlockText] = createDecoder()
+  implicit val decoderMarkDown: Decoder[SlackBlockMarkDownText] =
+    JsonTaggedAdtCodec.createDecoder[SlackBlockMarkDownText]( "type" )*/
 }
 
 @JsonAdt( SlackBlockTextTypes.PLAIN_TEXT )
@@ -98,29 +92,11 @@ case class SlackBlockPlainText(
     emoji: Option[Boolean] = None
 ) extends SlackBlockText
 
-object SlackBlockPlainText {
-  implicit val encoderSlackBlockPlainText: Encoder.AsObject[SlackBlockPlainText] = deriveEncoder[SlackBlockPlainText]
-  implicit val encoder: Encoder[SlackBlockPlainText] = JsonTaggedAdtCodec.createEncoder[SlackBlockPlainText]( "type" )
-  implicit val decoder: Decoder[SlackBlockPlainText] = JsonTaggedAdtCodec.createDecoder[SlackBlockPlainText]( "type" )
-}
-
 @JsonAdt( SlackBlockTextTypes.MARK_DOWN )
 case class SlackBlockMarkDownText(
     text: String,
     verbatim: Option[Boolean] = None
 ) extends SlackBlockText
-
-object SlackBlockMarkDownText {
-
-  implicit val encoderSlackMarkDownText: Encoder.AsObject[SlackBlockMarkDownText] =
-    deriveEncoder[SlackBlockMarkDownText]
-
-  implicit val encoder: Encoder[SlackBlockMarkDownText] =
-    JsonTaggedAdtCodec.createEncoder[SlackBlockMarkDownText]( "type" )
-
-  implicit val decoder: Decoder[SlackBlockMarkDownText] =
-    JsonTaggedAdtCodec.createDecoder[SlackBlockMarkDownText]( "type" )
-}
 
 @JsonAdt( "section" )
 case class SlackSectionBlock(
@@ -176,9 +152,8 @@ case class SlackRichTextBlock( elements: List[SlackBlockElement], override val b
 sealed trait SlackBlockElement
 
 object SlackBlockElement {
+
   import SlackBlockText._
-  import SlackBlockPlainText._
-  import SlackBlockMarkDownText._
 
   implicit val encoderSlackBlockConfirmItem: Encoder.AsObject[SlackBlockConfirmItem] =
     deriveEncoder[SlackBlockConfirmItem]

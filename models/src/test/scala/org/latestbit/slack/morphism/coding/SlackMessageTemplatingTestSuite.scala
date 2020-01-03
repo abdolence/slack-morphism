@@ -19,7 +19,11 @@
 package org.latestbit.slack.morphism.coding
 
 import org.latestbit.slack.morphism.messages._
-import org.latestbit.slack.morphism.client.templating.SlackMessageTemplate
+import org.latestbit.slack.morphism.client.templating.{
+  SlackBlocksTemplate,
+  SlackBlocksTemplateDsl,
+  SlackMessageTemplate
+}
 import org.scalatest.flatspec.AnyFlatSpec
 
 class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
@@ -38,25 +42,25 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
       override def renderPlainText(): String = "Test template"
 
       override def renderBlocks(): Option[List[SlackBlock]] =
-        blocksGroup {
-          blocksGroup {
-            blocks {
-              block( dividerBlock() )
-              block( sectionBlock( text = md"Test: ${testCond}" ) )
-              optBlock( testCond > 0 )( dividerBlock() )
+        blocksGroup(
+          blocksGroup(
+            blocks(
+              block( dividerBlock() ),
+              block( sectionBlock( text = md"Test: ${testCond}" ) ),
+              optBlock( testCond > 0 )( dividerBlock() ),
               block(
                 sectionBlock(
                   text = md"Test",
-                  fields = sectionFields {
-                    sectionField( md"Test 1" )
-                    sectionField( md"Test 2" )
+                  fields = sectionFields(
+                    sectionField( md"Test 1" ),
+                    sectionField( md"Test 2" ),
                     optSectionField( testCond > 0 )( md"Test 3" )
-                  },
+                  ),
                   accessory = blockEl(
                     image( "https://example.net/image.png" )
                   )
                 )
-              )
+              ),
               block(
                 contextBlock(
                   elements = blockElements(
@@ -68,7 +72,7 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
                     )
                   )
                 )
-              )
+              ),
               block(
                 sectionBlock(
                   text = md"Test 2",
@@ -81,7 +85,7 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
                     )
                   )
                 )
-              )
+              ),
               block(
                 contextBlock(
                   elements = blockElements(
@@ -106,16 +110,33 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
                   )
                 )
               )
-            }
-          }
-          blocksGroup {
-            blocks {
+            )
+          ),
+          blocksGroup(
+            blocks(
               block( dividerBlock() )
-            }
-          }
-        }
+            )
+          )
+        )
     }
 
+  }
+
+  it should "support text block interpolators" in {
+    object TestInters extends SlackBlocksTemplateDsl {
+      val m1: SlackBlockMarkDownText = md"test"
+      val p1: SlackBlockPlainText = plain"test"
+
+      val testParamStr = "1"
+      val testParamInt = 1
+      val m1p: SlackBlockMarkDownText = md"test${testParamStr}${testParamInt}"
+      val p1p: SlackBlockPlainText = plain"test${testParamStr}${testParamInt}"
+    }
+
+    assert( TestInters.m1.text === "test" )
+    assert( TestInters.p1.text === "test" )
+    assert( TestInters.m1p.text === "test11" )
+    assert( TestInters.p1p.text === "test11" )
   }
 
 }

@@ -21,19 +21,26 @@ package org.latestbit.slack.morphism.client.templating
 import org.latestbit.slack.morphism.messages._
 import cats.data._
 
-trait SlackMessageTemplateDsl {
+trait SlackBlocksTemplateDsl {
 
-  implicit class SlackTextInterpolators( sc: StringContext ) {
+  implicit final class SlackTextInterpolators( private val sc: StringContext ) {
+
+    private def applySubs( subs: Seq[Any] ): String = {
+      if (subs.nonEmpty)
+        sc.s( subs: _* )
+      else
+        sc.s()
+    }
 
     def plain( subs: Any* ): SlackBlockPlainText = {
       SlackBlockPlainText(
-        text = sc.s( subs )
+        text = applySubs( subs )
       )
     }
 
     def md( subs: Any* ): SlackBlockMarkDownText = {
       SlackBlockMarkDownText(
-        text = sc.s( subs )
+        text = applySubs( subs )
       )
     }
 

@@ -174,8 +174,7 @@ case class SlackAppHomeOpenedEvent(
     user: String,
     channel: String,
     tab: String,
-    event_ts: SlackDateTimeAsStr,
-    view: SlackView
+    view: Option[SlackView] = None
 ) extends SlackEventCallbackBody
 
 /**
@@ -194,8 +193,7 @@ case class SlackAppMentionEvent(
     override val text: Option[String] = None,
     override val blocks: Option[List[SlackBlock]] = None,
     user: String,
-    event_ts: String,
-    view: SlackView
+    event_ts: String
 ) extends SlackEventCallbackBody
     with SlackMessage
 
@@ -227,8 +225,7 @@ case class SlackChannelDeletedEvent( channel: String ) extends SlackEventCallbac
  * https://api.slack.com/events/channel_history_changed
  */
 @JsonAdt( "channel_history_changed" )
-case class SlackChannelHistoryChangedEvent( latest: String, ts: String, event_ts: String )
-    extends SlackEventCallbackBody
+case class SlackChannelHistoryChangedEvent( latest: String, ts: String ) extends SlackEventCallbackBody
 
 /**
  * https://api.slack.com/events/channel_left
@@ -246,8 +243,7 @@ case class SlackChannelRenameEvent( id: String, name: String, created: SlackDate
  * https://api.slack.com/events/channel_shared
  */
 @JsonAdt( "channel_shared" )
-case class SlackChannelSharedEvent( connected_team_id: String, channel: String, event_ts: String )
-    extends SlackEventCallbackBody
+case class SlackChannelSharedEvent( connected_team_id: String, channel: String ) extends SlackEventCallbackBody
 
 /**
  * https://api.slack.com/events/channel_unarchive
@@ -262,7 +258,6 @@ case class SlackChannelUnarchiveEvent( channel: String, user: Option[String] = N
 case class SlackChannelUnsharedEvent(
     previously_connected_team_id: String,
     channel: String,
-    event_ts: String,
     is_ext_shared: Option[Boolean] = None
 ) extends SlackEventCallbackBody
 
@@ -294,7 +289,7 @@ case class SlackImCreatedEvent( channel: SlackChannelInfo, user: String ) extend
  * https://api.slack.com/events/im_history_changed
  */
 @JsonAdt( "im_history_changed" )
-case class SlackImHistoryChangedEvent( latest: String, ts: String, event_ts: String ) extends SlackEventCallbackBody
+case class SlackImHistoryChangedEvent( latest: String, ts: String ) extends SlackEventCallbackBody
 
 /**
  * https://api.slack.com/events/im_open
@@ -339,8 +334,7 @@ case class SlackPinRemovedEvent(
     channel_id: String,
     user: String,
     item: SlackPinItem,
-    has_pins: Option[Boolean] = None,
-    event_ts: String
+    has_pins: Option[Boolean] = None
 ) extends SlackEventCallbackBody
 
 /**
@@ -358,8 +352,7 @@ case class SlackReactionRemovedEvent(
     reaction: String,
     user: String,
     item_user: String,
-    item: SlackMessageGeneralInfo,
-    event_ts: String
+    item: SlackMessageGeneralInfo
 ) extends SlackEventCallbackBody
 
 /**

@@ -18,17 +18,27 @@
 
 package org.latestbit.slack.morphism.examples.akka.routes
 
-import akka.http.scaladsl.model.{ HttpCharset, HttpCharsets, HttpEntity }
+import akka.actor.typed._
+import akka.actor.typed.scaladsl._
+import akka.actor.typed.scaladsl.AskPattern._
+import akka.http.scaladsl.model.{ HttpCharset, HttpCharsets, HttpEntity, StatusCodes }
 import akka.http.scaladsl.server.{ AuthorizationFailedRejection, Route }
 import akka.http.scaladsl.server.Directives.{ complete, extractRequestEntity, headerValueByName, onSuccess }
 import akka.stream.typed.scaladsl.ActorMaterializer
-import akka.util.ByteString
+import akka.util.{ ByteString, Timeout }
 import io.circe.Encoder
 import io.circe.syntax._
+import org.latestbit.slack.morphism.client.SlackApiToken
 import org.latestbit.slack.morphism.events.signature.SlackEventSignatureVerifier
 import org.latestbit.slack.morphism.examples.akka.AppConfig
+import org.latestbit.slack.morphism.examples.akka.db.SlackTokensDb
+import org.latestbit.slack.morphism.examples.akka.db.SlackTokensDb.TeamTokensRecord
 
 import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.duration._
+import cats.Functor
+import cats.instances.option._
+import cats.implicits._
 
 trait AkkaHttpServerRoutesSupport {
 
@@ -71,6 +81,42 @@ trait AkkaHttpServerRoutesSupport {
       }
     }
 
+  }
+
+  def getLastSlackTokenFromDb[T]( teamId: String )(
+      implicit timeout: Timeout = 3.seconds,
+      slackTokensDb: ActorRef[SlackTokensDb.Command],
+      context: ActorContext[T]
+  ): Future[Option[SlackApiToken]] = {
+    implicit val scheduler = context.system.scheduler
+    implicit val ec: ExecutionContext = context.system.executionContext
+
+    (slackTokensDb ? { ref: ActorRef[Option[TeamTokensRecord]] =>
+      SlackTokensDb.ReadTokens( teamId, ref )
+    }).map( _.flatMap { record =>
+      record.tokens.lastOption.flatMap { lastToken =>
+        SlackApiToken.createFrom(
+          tokenType = lastToken.tokenType,
+          tokenValue = lastToken.tokenValue,
+          scope = lastToken.scope
+        )
+      }
+    } )
+  }
+
+  def routeWithSlackApiToken[T, B]( teamId: String )( route: SlackApiToken => Route )(
+      implicit timeout: Timeout = 3.seconds,
+      slackTokensDb: ActorRef[SlackTokensDb.Command],
+      context: ActorContext[T]
+  ): Route = {
+    onSuccess(
+      getLastSlackTokenFromDb( teamId )
+    ) {
+      case Some( apiToken ) => route( apiToken )
+      case _ => {
+        complete( StatusCodes.Unauthorized )
+      }
+    }
   }
 
 }

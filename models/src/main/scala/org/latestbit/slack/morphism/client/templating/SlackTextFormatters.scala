@@ -20,7 +20,7 @@ package org.latestbit.slack.morphism.client.templating
 
 import java.time.Instant
 
-trait SlackMessageFormatters {
+trait SlackTextFormatters {
 
   protected def formatSlackQuoteText( srcText: String ) = {
     s">${srcText.replace( "\n", "\n>" )}"
@@ -44,7 +44,7 @@ trait SlackMessageFormatters {
 
   protected def formatDate(
       timestamp: Instant,
-      formatType: SlackMessageFormatters.SlackDateFormatType = SlackMessageFormatters.SlackPrettyDateFormatType,
+      formatType: SlackTextFormatters.SlackDateFormatType = SlackTextFormatters.SlackPrettyDateFormatType,
       link: Option[String] = None
   ): String = {
     val linkPart = link.map(value => s"^${value}" ).getOrElse( "" )
@@ -53,7 +53,7 @@ trait SlackMessageFormatters {
 
 }
 
-object SlackMessageFormatters {
+object SlackTextFormatters {
   sealed trait SlackDateFormatType { val code: String }
 
   case object SlackDateNumFormatType extends SlackDateFormatType { override val code: String = "date_num" }

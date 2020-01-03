@@ -173,7 +173,7 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
       decoder: Decoder[RS],
       ec: ExecutionContext
   ): Future[Either[SlackApiClientError, RS]] = {
-    val bodyAsStr = body.asJson.dropNullValues.noSpaces
+    val bodyAsStr = body.asJson.printWith( SlackJsonPrinter )
 
     protectedSlackHttpApiRequest[RS](
       request
@@ -262,4 +262,9 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
 object SlackApiHttpProtocolSupport {
   val SLACK_BASE_URI = "https://slack.com/api"
   val SLACK_API_CHAR_ENCODING = "UTF-8"
+
+  final val SlackJsonPrinter = Printer(
+    dropNullValues = true,
+    indent = ""
+  )
 }
