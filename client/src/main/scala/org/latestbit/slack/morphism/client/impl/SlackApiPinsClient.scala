@@ -22,11 +22,12 @@ import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.reqresp.pins._
 
 import scala.concurrent.{ ExecutionContext, Future }
+import org.latestbit.slack.morphism.codecs.implicits._
 
 /**
  * Support for Slack Pins API methods
  */
-trait SlackApiPinsClient extends SlackApiHttpProtocolSupport { self: SlackApiClient =>
+trait SlackApiPinsClient extends SlackApiHttpProtocolSupport {
 
   object pins {
 

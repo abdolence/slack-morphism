@@ -22,6 +22,7 @@ import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.reqresp.emoji._
 
 import scala.concurrent.{ ExecutionContext, Future }
+import org.latestbit.slack.morphism.codecs.implicits._
 
 /**
  * Support for Slack Emoji API methods

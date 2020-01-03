@@ -25,6 +25,7 @@ import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
 import org.latestbit.slack.morphism.common.SlackChannelInfo
 
 import scala.concurrent.{ ExecutionContext, Future }
+import org.latestbit.slack.morphism.codecs.implicits._
 
 /**
  * Support for Slack IM API methods

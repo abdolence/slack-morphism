@@ -22,11 +22,12 @@ import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.reqresp.team._
 
 import scala.concurrent.{ ExecutionContext, Future }
+import org.latestbit.slack.morphism.codecs.implicits._
 
 /**
  * Support for Slack Team API methods
  */
-trait SlackApiTeamClient extends SlackApiHttpProtocolSupport { self: SlackApiClient =>
+trait SlackApiTeamClient extends SlackApiHttpProtocolSupport {
 
   object team {
 

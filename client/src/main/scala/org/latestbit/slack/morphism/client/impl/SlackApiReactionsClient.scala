@@ -23,11 +23,12 @@ import org.latestbit.slack.morphism.client.reqresp.reactions._
 import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
 
 import scala.concurrent.{ ExecutionContext, Future }
+import org.latestbit.slack.morphism.codecs.implicits._
 
 /**
  * Support for Slack test API methods
  */
-trait SlackApiReactionsClient extends SlackApiHttpProtocolSupport { self: SlackApiClient =>
+trait SlackApiReactionsClient extends SlackApiHttpProtocolSupport {
 
   object reactions {
 

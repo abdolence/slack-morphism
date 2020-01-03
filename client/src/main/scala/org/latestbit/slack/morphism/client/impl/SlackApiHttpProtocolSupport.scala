@@ -24,6 +24,8 @@ import cats.implicits._
 import io.circe._
 import io.circe.parser._
 import io.circe.syntax._
+import org.latestbit.slack.morphism.codecs.implicits._
+
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.reqresp.internal.SlackGeneralResponseParams
 import sttp.client._
@@ -31,7 +33,7 @@ import sttp.model.{ MediaType, Uri }
 
 import scala.concurrent.{ ExecutionContext, Future }
 
-trait SlackApiHttpProtocolSupport extends SlackApiClientBackend with org.latestbit.slack.morphism.codecs.CirceCodecs {
+trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
 
   import SlackApiHttpProtocolSupport._
   import SlackApiClientBackend._
@@ -203,7 +205,7 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend with org.latestb
   protected def protectedSlackHttpApiGet[RS](
       methodUri: String,
       request: RequestT[Empty, Either[String, String], Nothing],
-      params: Map[String, Option[String]] = Map()
+      params: Map[String, Option[String]]
   )(
       implicit slackApiToken: SlackApiToken,
       decoder: Decoder[RS],
@@ -233,7 +235,7 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend with org.latestb
         decoder: Decoder[RS],
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, RS]] = {
-      protectedSlackHttpApiGet[RS]( methodUri, createSlackHttpApiRequest() )
+      protectedSlackHttpApiGet[RS]( methodUri, createSlackHttpApiRequest(), params )
     }
 
     /**

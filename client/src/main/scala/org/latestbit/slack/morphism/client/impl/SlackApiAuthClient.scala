@@ -22,11 +22,12 @@ import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.reqresp.auth._
 
 import scala.concurrent.{ ExecutionContext, Future }
+import org.latestbit.slack.morphism.codecs.implicits._
 
 /**
  * Support for Slack Auth API methods
  */
-trait SlackApiAuthClient extends SlackApiHttpProtocolSupport { self: SlackApiClient =>
+trait SlackApiAuthClient extends SlackApiHttpProtocolSupport {
 
   object auth {
 

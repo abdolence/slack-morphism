@@ -27,12 +27,20 @@ import com.typesafe.scalalogging._
 import org.latestbit.slack.morphism.events._
 import org.latestbit.slack.morphism.examples.akka.AppConfig
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ ExecutionContext, Future }
 import io.circe.parser._
-import org.latestbit.slack.morphism.client.SlackApiClient
+import org.latestbit.slack.morphism.client.reqresp.chat.SlackApiChatPostMessageRequest
+import org.latestbit.slack.morphism.client.reqresp.conversations.{
+  SlackApiConversationsArchiveRequest,
+  SlackApiConversationsHistoryRequest
+}
+import org.latestbit.slack.morphism.client.{ SlackApiClient, SlackApiToken }
 import org.latestbit.slack.morphism.client.reqresp.views.SlackApiViewsPublishRequest
 import org.latestbit.slack.morphism.examples.akka.db.SlackTokensDb
-import org.latestbit.slack.morphism.examples.akka.templates.SlackHomeTabBlocksTemplateExample
+import org.latestbit.slack.morphism.examples.akka.templates.{
+  SlackHomeTabBlocksTemplateExample,
+  SlackWelcomeMessageTemplateExample
+}
 import org.latestbit.slack.morphism.views.SlackHomeView
 
 class SlackPushEventsRoute(
@@ -63,6 +71,72 @@ class SlackPushEventsRoute(
     }
   }
 
+  private def updateHomeTab( userId: String )( implicit slackApiToken: SlackApiToken ) = {
+    onSuccess(
+      slackApiClient.views.publish(
+        SlackApiViewsPublishRequest(
+          user_id = userId,
+          view = SlackHomeView(
+            blocks = new SlackHomeTabBlocksTemplateExample(
+              userId = userId
+            ).renderBlocks()
+          )
+        )
+      )
+    ) {
+      case Right( publishResp ) => {
+        logger.info( s"Home view for ${userId} has been published: ${publishResp}" )
+        complete( StatusCodes.OK )
+      }
+      case Left( err ) => {
+        logger.error( s"Unable to update home view for ${userId}", err )
+        complete( StatusCodes.InternalServerError )
+      }
+    }
+  }
+
+  private def sendWelcomeMessage( channelId: String, userId: String )(
+      implicit slackApiToken: SlackApiToken
+  ): Route = {
+    onComplete(
+      slackApiClient.conversations
+        .historyScroller(
+          SlackApiConversationsHistoryRequest( channel = channelId, limit = Some( 5 ) )
+        )
+        .toSyncScroller()
+        .flatMap {
+          case Right( channelHistory ) => {
+            if (channelHistory.isEmpty) {
+              val template = new SlackWelcomeMessageTemplateExample( userId )
+              slackApiClient.chat
+                .postMessage(
+                  SlackApiChatPostMessageRequest(
+                    channel = channelId,
+                    text = template.renderPlainText(),
+                    blocks = template.renderBlocks()
+                  )
+                )
+                .map { _ =>
+                  StatusCodes.OK
+                }
+            } else {
+              Future.successful(
+                StatusCodes.OK
+              )
+            }
+          }
+          case Left( err ) => {
+            logger.error( s"Unable to load channel ${channelId} history for ${userId}", err )
+            Future.successful(
+              StatusCodes.InternalServerError
+            )
+          }
+        }
+    ) { statusCode =>
+      complete( statusCode )
+    }
+  }
+
   def onEvent( event: SlackPushEvent ): Route = event match {
     case urlVerEv: SlackUrlVerificationEvent => {
       logger.info( s"Received a challenge request:\n${urlVerEv.challenge}" )
@@ -79,26 +153,10 @@ class SlackPushEventsRoute(
         case body: SlackAppHomeOpenedEvent => {
           logger.info( s"User opened home: ${body}" )
           routeWithSlackApiToken( callbackEvent.team_id ) { implicit slackApiToken =>
-            onSuccess(
-              slackApiClient.views.publish(
-                SlackApiViewsPublishRequest(
-                  user_id = body.user,
-                  view = SlackHomeView(
-                    blocks = new SlackHomeTabBlocksTemplateExample(
-                      userId = body.user
-                    ).renderBlocks()
-                  )
-                )
-              )
-            ) {
-              case Right( publishResp ) => {
-                logger.info( s"Home view for ${body.user} has been published: ${publishResp}" )
-                complete( StatusCodes.OK )
-              }
-              case Left( err ) => {
-                logger.error( s"Unable to update home view for ${body.user}", err )
-                complete( StatusCodes.InternalServerError )
-              }
+            if (body.tab == "home")
+              updateHomeTab( body.user )
+            else {
+              sendWelcomeMessage( body.channel, body.user )
             }
           }
         }

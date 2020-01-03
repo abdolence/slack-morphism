@@ -22,12 +22,12 @@ import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.reqresp.test._
 
 import scala.concurrent.{ ExecutionContext, Future }
+import org.latestbit.slack.morphism.codecs.implicits._
 
 /**
  * Support for Slack test API methods
  */
-trait SlackApiTestClient extends SlackApiHttpProtocolSupport { self: SlackApiClient =>
-  import org.latestbit.slack.morphism.ext.SttpExt._
+trait SlackApiTestClient extends SlackApiHttpProtocolSupport {
 
   object api {
 

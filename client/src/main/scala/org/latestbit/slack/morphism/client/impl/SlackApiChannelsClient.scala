@@ -25,11 +25,12 @@ import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
 import org.latestbit.slack.morphism.common.SlackChannelInfo
 
 import scala.concurrent.{ ExecutionContext, Future }
+import org.latestbit.slack.morphism.codecs.implicits._
 
 /**
  * Support for Slack Channels API methods
  */
-trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport { self: SlackApiClient =>
+trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport {
 
   object channels {
 

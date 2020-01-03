@@ -22,11 +22,12 @@ import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.reqresp.views._
 
 import scala.concurrent.{ ExecutionContext, Future }
+import org.latestbit.slack.morphism.codecs.implicits._
 
 /**
  * Support for Slack Views API methods
  */
-trait SlackApiViewsClient extends SlackApiHttpProtocolSupport { self: SlackApiClient =>
+trait SlackApiViewsClient extends SlackApiHttpProtocolSupport {
 
   object views {
 

@@ -36,7 +36,7 @@ sealed trait SlackEventCallbackBody
 @JsonAdt( "message" )
 sealed trait SlackMessageEvent extends SlackEventCallbackBody {
   val ts: String
-  val channel: String
+  val channel: Option[String]
   val channel_type: Option[String]
   val hidden: Option[Boolean]
 }
@@ -44,7 +44,7 @@ sealed trait SlackMessageEvent extends SlackEventCallbackBody {
 @JsonAdt( "message_changed" )
 case class SlackMessageChanged(
     override val ts: String,
-    override val channel: String,
+    override val channel: Option[String],
     override val channel_type: Option[String] = None,
     override val hidden: Option[Boolean] = None,
     message: SlackMessage
@@ -53,7 +53,7 @@ case class SlackMessageChanged(
 @JsonAdt( "message_deleted" )
 case class SlackMessageDeleted(
     override val ts: String,
-    override val channel: String,
+    override val channel: Option[String] = None,
     override val channel_type: Option[String] = None,
     override val hidden: Option[Boolean] = None,
     deleted_ts: String
@@ -62,7 +62,7 @@ case class SlackMessageDeleted(
 @JsonAdt( "message_replied" )
 case class SlackMessageReplied(
     override val ts: String,
-    override val channel: String,
+    override val channel: Option[String] = None,
     override val channel_type: Option[String] = None,
     override val hidden: Option[Boolean] = None,
     message: SlackMessage
@@ -71,7 +71,7 @@ case class SlackMessageReplied(
 @JsonAdt( "thread_broadcast" )
 case class SlackMessageThreadBroadcast(
     override val ts: String,
-    override val channel: String,
+    override val channel: Option[String] = None,
     override val channel_type: Option[String] = None,
     override val hidden: Option[Boolean] = None,
     message: SlackMessage
@@ -87,7 +87,7 @@ case class SlackMessageGeneralInfo(
 @JsonAdtPassThrough
 sealed trait SlackMessage {
   val ts: String
-  val channel: String
+  val channel: Option[String]
   val channel_type: Option[String]
   val text: Option[String]
   val blocks: Option[List[SlackBlock]]
@@ -102,7 +102,7 @@ sealed trait SlackPinnedMessage {
 
 case class SlackUserMessage(
     override val ts: String,
-    override val channel: String,
+    override val channel: Option[String] = None,
     override val channel_type: Option[String] = None,
     override val thread_ts: Option[String] = None,
     override val reactions: Option[List[SlackMessageReaction]] = None,
@@ -122,7 +122,7 @@ case class SlackUserMessage(
 @JsonAdt( "bot_message" )
 case class SlackBotMessage(
     override val ts: String,
-    override val channel: String,
+    override val channel: Option[String] = None,
     override val channel_type: Option[String] = None,
     override val thread_ts: Option[String] = None,
     override val reactions: Option[List[SlackMessageReaction]] = None,
@@ -143,7 +143,7 @@ case class SlackBotMessage(
 @JsonAdt( "me_message" )
 case class SlackMeMessage(
     override val ts: String,
-    override val channel: String,
+    override val channel: Option[String] = None,
     override val channel_type: Option[String] = None,
     override val thread_ts: Option[String] = None,
     override val reactions: Option[List[SlackMessageReaction]] = None,
@@ -181,7 +181,7 @@ case class SlackAppHomeOpenedEvent(
 @JsonAdt( "app_mention" )
 case class SlackAppMentionEvent(
     override val ts: String,
-    override val channel: String,
+    override val channel: Option[String] = None,
     override val channel_type: Option[String] = None,
     override val thread_ts: Option[String] = None,
     override val reactions: Option[List[SlackMessageReaction]] = None,

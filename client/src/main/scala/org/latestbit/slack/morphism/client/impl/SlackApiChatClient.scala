@@ -22,6 +22,7 @@ import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.reqresp.chat._
 import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
 import sttp.client._
+import org.latestbit.slack.morphism.codecs.implicits._
 
 import scala.concurrent.{ ExecutionContext, Future }
 
