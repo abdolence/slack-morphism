@@ -86,7 +86,7 @@ val akkaHttpCirceVersion = "1.30.0"
 val logbackVersion = "1.2.3"
 val scalaLoggingVersion = "3.9.2"
 val scoptVersion = "3.7.1"
-val swayDbVersion = "0.10.9"
+val swayDbVersion = "0.11"
 
 val baseDependencies =
   Seq(

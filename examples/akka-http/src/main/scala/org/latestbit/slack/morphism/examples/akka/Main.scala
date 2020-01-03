@@ -35,6 +35,8 @@ object Main extends App with StrictLogging {
   val APP_NAME = "Slack-Morphism-Example"
   val APP_VER = "0.1.0"
 
+  System.setProperty( "logback.configurationFile", "logback.xml" );
+
   private def addShutdownHook( hook: () => Unit ) = {
     Runtime.getRuntime.addShutdownHook( new Thread() {
       override def run() = {
