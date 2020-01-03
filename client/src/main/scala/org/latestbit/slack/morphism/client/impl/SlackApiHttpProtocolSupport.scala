@@ -181,7 +181,7 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
           StringBody(
             bodyAsStr,
             SLACK_API_CHAR_ENCODING,
-            Some( MediaType.ApplicationJson )
+            Some( MediaType.ApplicationJson.charset( SLACK_API_CHAR_ENCODING ) )
           )
         )
         .post( absoluteUri )

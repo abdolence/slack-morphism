@@ -18,6 +18,8 @@
 
 package org.latestbit.slack.morphism.examples.akka.templates
 
+import java.time.Instant
+
 import org.latestbit.slack.morphism.client.templating.SlackBlocksTemplate
 import org.latestbit.slack.morphism.messages.SlackBlock
 
@@ -35,11 +37,13 @@ class SlackHomeTabBlocksTemplateExample( userId: String ) extends SlackBlocksTem
         block(
           contextBlock(
             blockElements(
-              blockEl( md"Context el 1" ),
-              blockEl( md"Context el 2" )
+              blockEl( md"Hello to this example tab" ),
+              blockEl( md"Last updated: ${formatDate( Instant.now() )}" )
             )
           )
-        )
+        ),
+        block( dividerBlock() ),
+        block( imageBlock( image_url = "https://www.gstatic.com/webp/gallery/4.png", alt_text = "Test Image" ) )
       )
     ).getOrElse( List() )
 }

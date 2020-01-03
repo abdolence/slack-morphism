@@ -42,13 +42,16 @@ trait SlackTextFormatters {
     ids.map( formatSlackChannelId ).mkString( ", " )
   }
 
+  /**
+   * https://api.slack.com/reference/surfaces/formatting#date-formatting
+   */
   protected def formatDate(
       timestamp: Instant,
       formatType: SlackTextFormatters.SlackDateFormatType = SlackTextFormatters.SlackPrettyDateFormatType,
       link: Option[String] = None
   ): String = {
     val linkPart = link.map(value => s"^${value}" ).getOrElse( "" )
-    s"<!date^${timestamp.getEpochSecond}^{${formatType.code}${linkPart}|${timestamp.toString}>"
+    s"<!date^${timestamp.getEpochSecond}^{${formatType.code}}${linkPart}|${timestamp.toString}>"
   }
 
 }
