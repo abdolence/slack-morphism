@@ -31,14 +31,6 @@ sealed trait SlackBlock {
   val block_id: Option[String]
 }
 
-object SlackBlock {
-  import SlackBlockPlainText._
-  import SlackBlockMarkDownText._
-
-  import SlackBlockText._
-
-}
-
 object SlackBlockTextTypes {
   final val MARK_DOWN = "mrkdwn"
   final val PLAIN_TEXT = "plain_text"
@@ -46,15 +38,6 @@ object SlackBlockTextTypes {
 
 @JsonAdtPassThrough
 sealed trait SlackBlockText extends SlackBlockElement
-
-object SlackBlockText {
-
-  /*implicit val encoderMarkDown: Encoder.AsObject[SlackBlockMarkDownText] =
-    JsonTaggedAdtCodec.createEncoder[SlackBlockMarkDownText]( "type" )
-
-  implicit val decoderMarkDown: Decoder[SlackBlockMarkDownText] =
-    JsonTaggedAdtCodec.createDecoder[SlackBlockMarkDownText]( "type" )*/
-}
 
 @JsonAdt( SlackBlockTextTypes.PLAIN_TEXT )
 case class SlackBlockPlainText(
@@ -120,12 +103,6 @@ case class SlackRichTextBlock( elements: List[SlackBlockElement], override val b
  * https://api.slack.com/reference/block-kit/block-elements
  */
 sealed trait SlackBlockElement
-
-object SlackBlockElement {
-
-  import SlackBlockText._
-
-}
 
 @JsonAdt( "image" )
 case class SlackBlockImageElement( image_url: String, alt_text: Option[String] = None ) extends SlackBlockElement
