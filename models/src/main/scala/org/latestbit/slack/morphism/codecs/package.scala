@@ -20,7 +20,6 @@ package org.latestbit.slack.morphism
 
 import io.circe._
 import io.circe.syntax._
-import io.circe.parser._
 import io.circe.generic.semiauto._
 import org.latestbit.slack.morphism.common.SlackChannelInfo._
 import org.latestbit.slack.morphism.common._
@@ -237,7 +236,7 @@ package object codecs {
     implicit val encoderSlackUserBasicInfo: Encoder.AsObject[SlackBasicUserInfo] = deriveEncoder[SlackBasicUserInfo]
     implicit val decoderSlackUserBasicInfo: Decoder[SlackBasicUserInfo] = deriveDecoder[SlackBasicUserInfo]
 
-    def messageEncoderDefinition[T]( converter: JsonTaggedAdtConverter[T], obj: T ): JsonObject = {
+    def messageEncoderDefinition[T]( converter: JsonTaggedAdtEncoder[T], obj: T ): JsonObject = {
       // converting our case classes accordingly to obj instance type
       // and receiving JSON type field value from annotation
       val ( jsonObj, subTypeFieldAnnotationValue ) = converter.toJsonObject( obj )
@@ -262,7 +261,7 @@ package object codecs {
     }
 
     def messageDecoderDefinition[T]( defaultObjectDecoder: HCursor => Decoder.Result[T] )(
-        converter: JsonTaggedAdtConverter[T],
+        converter: JsonTaggedAdtDecoder[T],
         cursor: HCursor
     ): Decoder.Result[T] = {
       cursor.get[Option[String]]( "type" ).flatMap {
@@ -274,7 +273,18 @@ package object codecs {
                 jsonTypeFieldValue = subTypeValue,
                 cursor = cursor
               )
-            case _ => defaultObjectDecoder( cursor )
+            case _ => {
+              cursor.get[Option[String]]( "bot_id" ).flatMap {
+                case Some( _ ) => {
+                  converter.fromJsonObject(
+                    jsonTypeFieldValue = "bot_message",
+                    cursor = cursor
+                  )
+                }
+                case _ => defaultObjectDecoder( cursor )
+              }
+            }
+
           }
 
         case _ =>
@@ -304,13 +314,17 @@ package object codecs {
     implicit val encoderSlackBlock: Encoder[SlackBlock] = JsonTaggedAdtCodec.createEncoder[SlackBlock]( "type" )
     implicit val decoderSlackBlock: Decoder[SlackBlock] = JsonTaggedAdtCodec.createDecoder[SlackBlock]( "type" )
 
-    implicit val encoderSlackBlockPlainText: Encoder.AsObject[SlackBlockPlainText] = deriveEncoder[SlackBlockPlainText]
+    implicit val encoderSlackBlockPlainText: Encoder.AsObject[SlackBlockPlainText] =
+      JsonTaggedAdtCodec.createEncoder[SlackBlockPlainText]( "type" )
 
     implicit val encoderSlackMarkDownText: Encoder.AsObject[SlackBlockMarkDownText] =
-      deriveEncoder[SlackBlockMarkDownText]
+      JsonTaggedAdtCodec.createEncoder[SlackBlockMarkDownText]( "type" )
 
-    implicit val decoderSlackBlockPlainText: Decoder[SlackBlockPlainText] = deriveDecoder[SlackBlockPlainText]
-    implicit val decoderSlackMarkDownText: Decoder[SlackBlockMarkDownText] = deriveDecoder[SlackBlockMarkDownText]
+    implicit val decoderSlackBlockPlainText: Decoder[SlackBlockPlainText] =
+      JsonTaggedAdtCodec.createDecoder[SlackBlockPlainText]( "type" )
+
+    implicit val decoderSlackMarkDownText: Decoder[SlackBlockMarkDownText] =
+      JsonTaggedAdtCodec.createDecoder[SlackBlockMarkDownText]( "type" )
 
     implicit val encoderSlackBlockText: Encoder.AsObject[SlackBlockText] =
       JsonTaggedAdtCodec.createEncoder[SlackBlockText]( "type" )

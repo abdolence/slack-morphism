@@ -49,19 +49,22 @@ trait SlackBlocksTemplateDslInternals {
   implicit final def slackBlockTextToDef( blockEl: => SlackBlockText ) =
     SlackDslSomeItem[SlackBlockText](() => blockEl )
 
-  implicit final def slackStrictBlockElToDef( item: => SlackBlockOptionItem ) =
+  implicit final def slackBlockOptionItemToDef( item: => SlackBlockOptionItem ) =
     SlackDslSomeItem[SlackBlockOptionItem](() => item )
-
-  implicit def slackDslItemDefToOption[T]( itemDef: SlackDslItemDef[T] ): Iterable[T] = itemDef match {
-    case SlackDslSomeItem( item )            => Iterable.single( item() )
-    case SlackDslSomeIterableOfItem( items ) => items()
-    case SlackDslNoneItem                    => Iterable.empty
-  }
 
   implicit def slackBlockElementToOption( el: SlackBlockElement ): Option[SlackBlockElement] = Some( el )
   implicit def slackBlockConfirmItemToOption( el: SlackBlockConfirmItem ): Option[SlackBlockConfirmItem] = Some( el )
 
   implicit def slackBlocksListToOption( blocks: List[SlackBlock] ): Option[List[SlackBlock]] = noneIfEmptyList( blocks )
+
+  implicit def slackDslItemDefToIterable[T]( itemDef: SlackDslItemDef[T] ): Iterable[T] = itemDef match {
+    case SlackDslSomeItem( item )            => Iterable.single( item() )
+    case SlackDslSomeIterableOfItem( items ) => items()
+    case SlackDslNoneItem                    => Iterable.empty
+  }
+
+  implicit final def slackDslListInnerItemsToListItems[T]( items: => Iterable[Iterable[T]] ) =
+    SlackDslSomeIterableOfItem[T](() => items.flatten )
 
   implicit final class SlackTextInterpolators( private val sc: StringContext ) {
 

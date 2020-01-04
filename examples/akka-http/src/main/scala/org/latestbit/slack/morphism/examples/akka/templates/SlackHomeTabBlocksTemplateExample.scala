@@ -32,9 +32,8 @@ class SlackHomeTabBlocksTemplateExample( latestNews: List[SlackHomeNewsItem], us
     blocks(
       blocks(
         sectionBlock(
-          text = md"Hey ${formatSlackUserId( userId )}"
+          text = md"Home tab for ${formatSlackUserId( userId )}"
         ),
-        dividerBlock(),
         contextBlock(
           blockElements(
             md"This is an example of Slack Home Tab",
@@ -47,18 +46,24 @@ class SlackHomeTabBlocksTemplateExample( latestNews: List[SlackHomeNewsItem], us
           blockElements(
             button( text = plain"Simple", action_id = "simple-home-button" )
           )
-        ),
-        blocks(
-          )
+        )
       ),
       optBlocks( latestNews.nonEmpty )(
         sectionBlock(
-          text = md"*LatestNews*"
+          text = md"*Latest news:*"
         ),
         dividerBlock(),
         latestNews.map { news =>
-          sectionBlock(
-            text = md" * ${news.title}\n${formatSlackQuoteText( news.body )}"
+          blocks(
+            sectionBlock(
+              text = md" • *${news.title}*\n${formatSlackQuoteText( news.body )}"
+            ),
+            contextBlock(
+              blockElements(
+                md"*Published*",
+                md"${formatDate( news.published )}"
+              )
+            )
           )
         }
       )

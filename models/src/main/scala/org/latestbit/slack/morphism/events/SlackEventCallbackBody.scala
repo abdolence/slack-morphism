@@ -135,7 +135,7 @@ case class SlackBotMessage(
     override val pinned_to: Option[List[String]] = None,
     override val hidden: Option[Boolean] = None,
     bot_id: String,
-    username: String
+    user: Option[String] = None
 ) extends SlackMessage
     with SlackPinnedMessage
     with SlackMessageEvent

@@ -42,60 +42,62 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
       override def renderPlainText(): String = "Test template"
 
       override def renderBlocks(): Option[List[SlackBlock]] =
-        blocksOrEmpty(
+        blocks(
           blocks(
             blocks(
-              dividerBlock(),
-              sectionBlock( text = md"Test: ${testCond}" ),
-              optBlock( testCond > 0 )( dividerBlock() ),
-              sectionBlock(
-                text = md"Test",
-                fields = sectionFields(
-                  md"Test 1",
-                  md"Test 2",
-                  plain"Test 3",
-                  optSectionField( testCond > 0 )( plain"Test 3" )
+              blocks(
+                dividerBlock(),
+                sectionBlock( text = md"Test: ${testCond}" ),
+                optBlock( testCond > 0 )( dividerBlock() ),
+                sectionBlock(
+                  text = md"Test",
+                  fields = sectionFields(
+                    md"Test 1",
+                    md"Test 2",
+                    plain"Test 3",
+                    optSectionField( testCond > 0 )( plain"Test 3" )
+                  ),
+                  accessory = image( "https://example.net/image.png" )
                 ),
-                accessory = image( "https://example.net/image.png" )
-              ),
-              contextBlock(
-                elements = blockElements(
-                  button( text = plain"test button", action_id = "-" ),
-                  button( text = plain"test button", action_id = "-" )
-                )
-              ),
-              sectionBlock(
-                text = md"Test 2",
-                accessory = overflowMenu(
-                  action_id = "-",
-                  options = menuItems(
-                    menuItem( text = plain"test-menu-item", value = "" )
+                contextBlock(
+                  elements = blockElements(
+                    button( text = plain"test button", action_id = "-" ),
+                    button( text = plain"test button", action_id = "-" )
                   )
-                )
-              ),
-              contextBlock(
-                elements = blockElements(
-                  staticMenu(
-                    placeholder = plain"test",
+                ),
+                sectionBlock(
+                  text = md"Test 2",
+                  accessory = overflowMenu(
                     action_id = "-",
-                    options = staticMenuItems(
-                      menuItem( text = plain"test-menu-item", value = "" ),
-                      optMenuItem( testCond > 0 )( menuItem( text = plain"test-menu-item2", value = "" ) )
-                    ),
-                    confirm = confirm(
-                      title = plain"Test title",
-                      text = md"Confirm this",
-                      confirm = plain"OK",
-                      deny = plain"Cancel"
+                    options = menuItems(
+                      menuItem( text = plain"test-menu-item", value = "" )
+                    )
+                  )
+                ),
+                contextBlock(
+                  elements = blockElements(
+                    staticMenu(
+                      placeholder = plain"test",
+                      action_id = "-",
+                      options = staticMenuItems(
+                        menuItem( text = plain"test-menu-item", value = "" ),
+                        optMenuItem( testCond > 0 )( menuItem( text = plain"test-menu-item2", value = "" ) )
+                      ),
+                      confirm = confirm(
+                        title = plain"Test title",
+                        text = md"Confirm this",
+                        confirm = plain"OK",
+                        deny = plain"Cancel"
+                      )
                     )
                   )
                 )
               )
-            )
-          ),
-          blocks(
+            ),
             blocks(
-              dividerBlock()
+              blocks(
+                dividerBlock()
+              )
             )
           )
         )

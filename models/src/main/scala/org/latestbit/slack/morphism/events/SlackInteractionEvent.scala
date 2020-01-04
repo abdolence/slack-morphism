@@ -39,7 +39,7 @@ sealed trait SlackInteractionEvent
  */
 @JsonAdt( "block_actions" )
 case class SlackInteractionBlockActionEvent(
-    team: Option[SlackBasicTeamInfo] = None,
+    team: SlackBasicTeamInfo,
     user: Option[SlackBasicUserInfo] = None,
     api_app_id: String,
     container: SlackInteractionActionContainer,

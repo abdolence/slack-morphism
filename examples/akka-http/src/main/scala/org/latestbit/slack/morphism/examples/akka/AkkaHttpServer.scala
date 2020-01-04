@@ -71,8 +71,9 @@ object AkkaHttpServer extends StrictLogging {
 
           tokensDbRef ! SlackTokensDb.OpenDb( config )
 
-          val slackEventsRoute = new SlackPushEventsRoute()
+          val slackPushEventsRoute = new SlackPushEventsRoute()
           val slackOAuthRoute = new SlackOAuthRoutes()
+          val slackInteractionEventsRoute = new SlackInteractionEventsRoute()
 
           val allRoutes: Route = {
             ignoreTrailingSlash {
@@ -80,7 +81,7 @@ object AkkaHttpServer extends StrictLogging {
                 get {
                   complete( StatusCodes.OK )
                 }
-              } ~ slackEventsRoute.routes ~ slackOAuthRoute.routes
+              } ~ slackPushEventsRoute.routes ~ slackOAuthRoute.routes ~ slackInteractionEventsRoute.routes
 
             }
           }

@@ -18,7 +18,7 @@
 
 package org.latestbit.slack.morphism.examples.akka.routes
 
-import java.time.{ LocalDateTime, ZoneId, ZoneOffset }
+import java.time._
 
 import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.ActorContext
@@ -32,18 +32,11 @@ import org.latestbit.slack.morphism.examples.akka.AppConfig
 import scala.concurrent.{ ExecutionContext, Future }
 import io.circe.parser._
 import org.latestbit.slack.morphism.client.reqresp.chat.SlackApiChatPostMessageRequest
-import org.latestbit.slack.morphism.client.reqresp.conversations.{
-  SlackApiConversationsArchiveRequest,
-  SlackApiConversationsHistoryRequest
-}
-import org.latestbit.slack.morphism.client.{ SlackApiClient, SlackApiToken }
+import org.latestbit.slack.morphism.client.reqresp.conversations._
+import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.reqresp.views.SlackApiViewsPublishRequest
 import org.latestbit.slack.morphism.examples.akka.db.SlackTokensDb
-import org.latestbit.slack.morphism.examples.akka.templates.{
-  SlackHomeNewsItem,
-  SlackHomeTabBlocksTemplateExample,
-  SlackWelcomeMessageTemplateExample
-}
+import org.latestbit.slack.morphism.examples.akka.templates._
 import org.latestbit.slack.morphism.views.SlackHomeView
 
 class SlackPushEventsRoute(
@@ -136,8 +129,15 @@ class SlackPushEventsRoute(
                     blocks = template.renderBlocks()
                   )
                 )
-                .map { _ =>
-                  StatusCodes.OK
+                .map {
+                  case Right( publishResp ) => {
+                    logger.info( s"Home view for ${userId} has been published: ${publishResp}" )
+                    StatusCodes.OK
+                  }
+                  case Left( err ) => {
+                    logger.error( s"Unable to update home view for ${userId}", err )
+                    StatusCodes.InternalServerError
+                  }
                 }
             } else {
               Future.successful(
@@ -169,20 +169,43 @@ class SlackPushEventsRoute(
       )
     }
     case callbackEvent: SlackEventCallback => {
-      callbackEvent.event match {
-        case body: SlackAppHomeOpenedEvent => {
-          logger.info( s"User opened home: ${body}" )
-          routeWithSlackApiToken( callbackEvent.team_id ) { implicit slackApiToken =>
+      routeWithSlackApiToken( callbackEvent.team_id ) { implicit slackApiToken =>
+        callbackEvent.event match {
+          case body: SlackAppHomeOpenedEvent => {
+            logger.info( s"User opened home: ${body}" )
+
             if (body.tab == "home")
               updateHomeTab( body.user )
             else {
               sendWelcomeMessage( body.channel, body.user )
             }
           }
-        }
-        case unknownBody: SlackEventCallbackBody => {
-          logger.warn( s"Unsupported callback event received: ${unknownBody}" )
-          complete( StatusCodes.OK )
+          case msg: SlackUserMessage => {
+            val template = new SlackSampleMessageReplyTemplateExample( msg.text.getOrElse( "" ) )
+            onSuccess(
+              slackApiClient.chat
+                .postMessage(
+                  SlackApiChatPostMessageRequest(
+                    channel = msg.channel.get,
+                    text = template.renderPlainText(),
+                    blocks = template.renderBlocks()
+                  )
+                )
+            ) {
+              case Right( resp ) => {
+                logger.info( s"Sent a reply message: ${resp}" )
+                complete( StatusCodes.OK )
+              }
+              case Left( err ) => {
+                logger.error( s"Unable to sent a reply message: ", err )
+                complete( StatusCodes.InternalServerError )
+              }
+            }
+          }
+          case unknownBody: SlackEventCallbackBody => {
+            logger.warn( s"Unsupported callback event received: ${unknownBody}" )
+            complete( StatusCodes.OK )
+          }
         }
       }
     }

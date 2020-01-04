@@ -69,7 +69,7 @@ val catsVersion = "2.0.0"
 val circeVersion = "0.12.3"
 val scalaCollectionsCompatVersion = "2.1.3"
 val sttpVersion = "2.0.0-RC5"
-val circeAdtCodecVersion = "0.5.1"
+val circeAdtCodecVersion = "0.6.1"
 val reactiveStreamsVersion = "1.0.3"
 
 // For tests
