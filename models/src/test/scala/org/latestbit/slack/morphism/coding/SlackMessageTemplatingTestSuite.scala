@@ -42,79 +42,60 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
       override def renderPlainText(): String = "Test template"
 
       override def renderBlocks(): Option[List[SlackBlock]] =
-        blocksGroup(
-          blocksGroup(
+        blocksOrEmpty(
+          blocks(
             blocks(
-              block( dividerBlock() ),
-              block( sectionBlock( text = md"Test: ${testCond}" ) ),
+              dividerBlock(),
+              sectionBlock( text = md"Test: ${testCond}" ),
               optBlock( testCond > 0 )( dividerBlock() ),
-              block(
-                sectionBlock(
-                  text = md"Test",
-                  fields = sectionFields(
-                    sectionField( md"Test 1" ),
-                    sectionField( md"Test 2" ),
-                    optSectionField( testCond > 0 )( md"Test 3" )
-                  ),
-                  accessory = blockEl(
-                    image( "https://example.net/image.png" )
+              sectionBlock(
+                text = md"Test",
+                fields = sectionFields(
+                  md"Test 1",
+                  md"Test 2",
+                  plain"Test 3",
+                  optSectionField( testCond > 0 )( plain"Test 3" )
+                ),
+                accessory = image( "https://example.net/image.png" )
+              ),
+              contextBlock(
+                elements = blockElements(
+                  button( text = plain"test button", action_id = "-" ),
+                  button( text = plain"test button", action_id = "-" )
+                )
+              ),
+              sectionBlock(
+                text = md"Test 2",
+                accessory = overflowMenu(
+                  action_id = "-",
+                  options = menuItems(
+                    menuItem( text = plain"test-menu-item", value = "" )
                   )
                 )
               ),
-              block(
-                contextBlock(
-                  elements = blockElements(
-                    blockEl(
-                      button( text = plain"test button", action_id = "-" )
+              contextBlock(
+                elements = blockElements(
+                  staticMenu(
+                    placeholder = plain"test",
+                    action_id = "-",
+                    options = staticMenuItems(
+                      menuItem( text = plain"test-menu-item", value = "" ),
+                      optMenuItem( testCond > 0 )( menuItem( text = plain"test-menu-item2", value = "" ) )
                     ),
-                    blockEl(
-                      button( text = plain"test button", action_id = "-" )
-                    )
-                  )
-                )
-              ),
-              block(
-                sectionBlock(
-                  text = md"Test 2",
-                  accessory = blockEl(
-                    overflowMenu(
-                      action_id = "-",
-                      options = menuItems(
-                        menuItem( menuItemValue( text = plain"test-menu-item", value = "" ) )
-                      )
-                    )
-                  )
-                )
-              ),
-              block(
-                contextBlock(
-                  elements = blockElements(
-                    blockEl(
-                      staticMenu(
-                        placeholder = plain"test",
-                        action_id = "-",
-                        options = staticMenuItems(
-                          menuItem( menuItemValue( text = plain"test-menu-item", value = "" ) ),
-                          optMenuItem( testCond > 0 )( menuItemValue( text = plain"test-menu-item2", value = "" ) )
-                        ),
-                        confirm = confirm(
-                          confirmValue(
-                            title = plain"Test title",
-                            text = md"Confirm this",
-                            confirm = plain"OK",
-                            deny = plain"Cancel"
-                          )
-                        )
-                      )
+                    confirm = confirm(
+                      title = plain"Test title",
+                      text = md"Confirm this",
+                      confirm = plain"OK",
+                      deny = plain"Cancel"
                     )
                   )
                 )
               )
             )
           ),
-          blocksGroup(
+          blocks(
             blocks(
-              block( dividerBlock() )
+              dividerBlock()
             )
           )
         )

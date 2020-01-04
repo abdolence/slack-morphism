@@ -29,34 +29,22 @@ class SlackWelcomeMessageTemplateExample( userId: String ) extends SlackMessageT
     s"Hey ${formatSlackUserId( userId )}"
 
   override def renderBlocks(): Option[List[SlackBlock]] =
-    blocksGroup(
-      blocks(
-        block(
-          sectionBlock(
-            text = md"Hey ${formatSlackUserId( userId )}"
-          )
-        ),
-        block( dividerBlock() ),
-        block(
-          contextBlock(
-            blockElements(
-              blockEl( md"This is an example of block message" ),
-              blockEl(
-                md"Current time is: ${formatDate( Instant.now(), SlackTextFormatters.SlackLongPrettyDateFormatType )}"
-              )
-            )
-          )
-        ),
-        block( dividerBlock() ),
-        block(
-          imageBlock( image_url = "https://www.gstatic.com/webp/gallery3/2_webp_ll.png", alt_text = "Test Image" )
-        ),
-        block(
-          actionsBlock(
-            blockElements(
-              blockEl( button( text = plain"Simple", action_id = "simple-message-button" ) )
-            )
-          )
+    blocks(
+      sectionBlock(
+        text = md"Hey ${formatSlackUserId( userId )}"
+      ),
+      dividerBlock(),
+      contextBlock(
+        blockElements(
+          md"This is an example of block message",
+          md"Current time is: ${formatDate( Instant.now(), SlackTextFormatters.SlackLongPrettyDateFormatType )}"
+        )
+      ),
+      dividerBlock(),
+      imageBlock( image_url = "https://www.gstatic.com/webp/gallery3/2_webp_ll.png", alt_text = "Test Image" ),
+      actionsBlock(
+        blockElements(
+          button( text = plain"Simple", action_id = "simple-message-button" )
         )
       )
     )

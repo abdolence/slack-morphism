@@ -21,50 +21,23 @@ package org.latestbit.slack.morphism.client.templating
 import org.latestbit.slack.morphism.messages._
 import cats.data._
 
-trait SlackBlocksTemplateDsl {
+import scala.language.implicitConversions
 
-  implicit final class SlackTextInterpolators( private val sc: StringContext ) {
+trait SlackBlocksTemplateDsl extends SlackBlocksTemplateDslInternals {
 
-    private def applySubs( subs: Seq[Any] ): String = {
-      if (subs.nonEmpty)
-        sc.s( subs: _* )
-      else
-        sc.s()
-    }
+  protected def blocks( blockDefs: SlackDslItemDef[SlackBlock]* ): List[SlackBlock] =
+    blockDefs.toList.flatten
 
-    def plain( subs: Any* ): SlackBlockPlainText = {
-      SlackBlockPlainText(
-        text = applySubs( subs )
-      )
-    }
+  protected def blocksOrEmpty( blockDefs: SlackDslItemDef[SlackBlock]* ): Option[List[SlackBlock]] =
+    noneIfEmptyList( blocks( blockDefs: _* ) )
 
-    def md( subs: Any* ): SlackBlockMarkDownText = {
-      SlackBlockMarkDownText(
-        text = applySubs( subs )
-      )
-    }
+  protected def optBlocks( condition: => Boolean )( blockDefs: SlackDslItemDef[SlackBlock]* ): List[SlackBlock] =
+    if (condition) {
+      blocks( blockDefs: _* )
+    } else List.empty
 
-  }
-
-  private def noneIfEmptyList[T]( xs: => List[Option[T]] ): Option[List[T]] = xs.flatten match {
-    case Nil => None
-    case xs  => Some( xs )
-  }
-
-  private def optElement[T]( condition: => Boolean = true, element: => T ) =
-    if (condition)
-      Option( element )
-    else
-      None
-
-  protected def blocks( blockDefs: Option[SlackBlock]* ): Option[List[SlackBlock]] =
-    noneIfEmptyList( blockDefs.toList )
-
-  protected def blocksGroup( blockDefs: Option[List[SlackBlock]]* ): Option[List[SlackBlock]] =
-    blockDefs.toList.flatten.flatten match {
-      case Nil => None
-      case xs  => Some( xs )
-    }
+  protected def optBlock[T <: SlackBlock]( condition: => Boolean )( block: => T ): SlackDslItemDef[T] =
+    optElement( condition, block )
 
   protected def dividerBlock = SlackDividerBlock
   protected def sectionBlock = SlackSectionBlock
@@ -75,27 +48,17 @@ trait SlackBlocksTemplateDsl {
   protected def imageBlock = SlackImageBlock
   protected def richBlock = SlackRichTextBlock
 
-  protected def block[BT <: SlackBlock]( block: => BT ): Option[BT] = Option( block )
+  protected def sectionFields( defs: SlackDslItemDef[SlackBlockText]* ): Option[List[SlackBlockText]] =
+    noneIfEmptyList( defs.toList.flatten )
 
-  protected def optBlock[BT <: SlackBlock]( condition: => Boolean = true )( block: => BT ): Option[BT] =
-    optElement( condition, block )
-
-  protected def sectionField[BT <: SlackBlockText]( field: => BT ): Option[BT] = Option( field )
-
-  protected def optSectionField[BT <: SlackBlockText]( condition: => Boolean = true )( field: => BT ): Option[BT] =
+  protected def optSectionField[T <: SlackBlockText]( condition: => Boolean )( field: => T ): SlackDslItemDef[T] =
     optElement( condition, field )
 
-  protected def sectionFields( sectionFieldDefs: Option[SlackBlockText]* ): Option[List[SlackBlockText]] =
-    noneIfEmptyList( sectionFieldDefs.toList )
-
   protected def blockElements(
-      defs: Option[SlackBlockElement]*
-  ): NonEmptyList[SlackBlockElement] =
-    NonEmptyList.fromListUnsafe( defs.flatten.toList )
+      defs: SlackDslItemDef[SlackBlockElement]*
+  ): NonEmptyList[SlackBlockElement] = NonEmptyList.fromListUnsafe( defs.toList.flatten )
 
-  protected def blockEl[BE <: SlackBlockElement]( blockElement: => BE ): Option[BE] = Option( blockElement )
-
-  protected def optBlockEl[BE <: SlackBlockElement]( condition: => Boolean = true )( blockElement: => BE ): Option[BE] =
+  protected def optBlockEl[T <: SlackBlockElement]( condition: => Boolean )( blockElement: => T ): SlackDslItemDef[T] =
     optElement( condition, blockElement )
 
   protected def button = SlackBlockButtonElement
@@ -109,37 +72,36 @@ trait SlackBlocksTemplateDsl {
   protected def staticMenu = SlackBlockStaticMenuElement
   protected def externalMenu = SlackBlockExternalMenuElement
 
-  protected def menuItems( defs: Option[SlackBlockOptionItem]* ): NonEmptyList[SlackBlockOptionItem] =
-    NonEmptyList.fromListUnsafe( defs.flatten.toList )
+  protected def menuItems( defs: SlackDslItemDef[SlackBlockOptionItem]* ): NonEmptyList[SlackBlockOptionItem] =
+    NonEmptyList.fromListUnsafe( defs.toList.flatten )
 
-  protected def staticMenuItems( defs: Option[SlackBlockOptionItem]* ): Option[NonEmptyList[SlackBlockOptionItem]] =
+  protected def staticMenuItems(
+      defs: SlackDslItemDef[SlackBlockOptionItem]*
+  ): Option[NonEmptyList[SlackBlockOptionItem]] =
     Some( menuItems( defs: _* ) )
 
-  protected def menuItem( item: => SlackBlockOptionItem ): Option[SlackBlockOptionItem] = Option( item )
-
   protected def optMenuItem(
-      condition: => Boolean = true
-  )( item: => SlackBlockOptionItem ): Option[SlackBlockOptionItem] =
+      condition: => Boolean
+  )( item: => SlackBlockOptionItem ): SlackDslItemDef[SlackBlockOptionItem] =
     optElement( condition, item )
 
-  protected def menuItemValue = SlackBlockOptionItem
+  protected def menuItem = SlackBlockOptionItem
 
-  protected def menuGroups( defs: Option[SlackBlockOptionGroup]* ): NonEmptyList[SlackBlockOptionGroup] =
+  protected def menuGroups( defs: SlackDslItemDef[SlackBlockOptionGroup]* ): NonEmptyList[SlackBlockOptionGroup] =
     NonEmptyList.fromListUnsafe( defs.flatten.toList )
 
-  protected def staticMenuGroups( defs: Option[SlackBlockOptionGroup]* ): Option[NonEmptyList[SlackBlockOptionGroup]] =
+  protected def staticMenuGroups(
+      defs: SlackDslItemDef[SlackBlockOptionGroup]*
+  ): Option[NonEmptyList[SlackBlockOptionGroup]] =
     Option( menuGroups( defs: _* ) )
 
-  protected def menuGroup( group: => SlackBlockOptionGroup ): Option[SlackBlockOptionGroup] = Option( group )
+  protected def menuGroup = SlackBlockOptionGroup
 
   protected def optMenuGroup(
-      condition: => Boolean = true
-  )( group: => SlackBlockOptionGroup ): Option[SlackBlockOptionGroup] =
+      condition: => Boolean
+  )( group: => SlackBlockOptionGroup ): SlackDslItemDef[SlackBlockOptionGroup] =
     optElement( condition, group )
 
-  protected def menuGroupValue = SlackBlockOptionGroup
-
-  protected def confirm( value: => SlackBlockConfirmItem ): Option[SlackBlockConfirmItem] = Option( value )
-  protected def confirmValue = SlackBlockConfirmItem
+  protected def confirm = SlackBlockConfirmItem
 
 }

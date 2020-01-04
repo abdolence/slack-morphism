@@ -23,34 +23,44 @@ import java.time.Instant
 import org.latestbit.slack.morphism.client.templating.SlackBlocksTemplate
 import org.latestbit.slack.morphism.messages.SlackBlock
 
-class SlackHomeTabBlocksTemplateExample( userId: String ) extends SlackBlocksTemplate {
+case class SlackHomeNewsItem( title: String, body: String, published: Instant )
+
+class SlackHomeTabBlocksTemplateExample( latestNews: List[SlackHomeNewsItem], userId: String )
+    extends SlackBlocksTemplate {
 
   override def renderBlocks(): List[SlackBlock] =
-    blocksGroup(
+    blocks(
       blocks(
-        block(
+        sectionBlock(
+          text = md"Hey ${formatSlackUserId( userId )}"
+        ),
+        dividerBlock(),
+        contextBlock(
+          blockElements(
+            md"This is an example of Slack Home Tab",
+            md"Last updated: ${formatDate( Instant.now() )}"
+          )
+        ),
+        dividerBlock(),
+        imageBlock( image_url = "https://www.gstatic.com/webp/gallery/4.png", alt_text = "Test Image" ),
+        actionsBlock(
+          blockElements(
+            button( text = plain"Simple", action_id = "simple-home-button" )
+          )
+        ),
+        blocks(
+          )
+      ),
+      optBlocks( latestNews.nonEmpty )(
+        sectionBlock(
+          text = md"*LatestNews*"
+        ),
+        dividerBlock(),
+        latestNews.map { news =>
           sectionBlock(
-            text = md"Hey ${formatSlackUserId( userId )}"
+            text = md" * ${news.title}\n${formatSlackQuoteText( news.body )}"
           )
-        ),
-        block( dividerBlock() ),
-        block(
-          contextBlock(
-            blockElements(
-              blockEl( md"This is an example of Slack Home Tab" ),
-              blockEl( md"Last updated: ${formatDate( Instant.now() )}" )
-            )
-          )
-        ),
-        block( dividerBlock() ),
-        block( imageBlock( image_url = "https://www.gstatic.com/webp/gallery/4.png", alt_text = "Test Image" ) ),
-        block(
-          actionsBlock(
-            blockElements(
-              blockEl( button( text = plain"Simple", action_id = "simple-home-button" ) )
-            )
-          )
-        )
+        }
       )
-    ).getOrElse( List() )
+    )
 }

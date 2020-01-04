@@ -18,6 +18,8 @@
 
 package org.latestbit.slack.morphism.examples.akka.routes
 
+import java.time.{ LocalDateTime, ZoneId, ZoneOffset }
+
 import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.ActorContext
 import akka.http.scaladsl.model._
@@ -38,6 +40,7 @@ import org.latestbit.slack.morphism.client.{ SlackApiClient, SlackApiToken }
 import org.latestbit.slack.morphism.client.reqresp.views.SlackApiViewsPublishRequest
 import org.latestbit.slack.morphism.examples.akka.db.SlackTokensDb
 import org.latestbit.slack.morphism.examples.akka.templates.{
+  SlackHomeNewsItem,
   SlackHomeTabBlocksTemplateExample,
   SlackWelcomeMessageTemplateExample
 }
@@ -71,6 +74,22 @@ class SlackPushEventsRoute(
     }
   }
 
+  private def generateLatestNews(): List[SlackHomeNewsItem] = {
+    List(
+      SlackHomeNewsItem(
+        title = "Google claimed quantum supremacy in 2019 — and sparked controversy",
+        body =
+          "In October, researchers from Google claimed to have achieved a milestone known as quantum supremacy.\nThey had created the first quantum computer that could perform a calculation that is impossible for a standard computer.",
+        published = LocalDateTime.of(2019, 12, 16, 10, 20, 0 ).atZone( ZoneId.systemDefault() ).toInstant
+      ),
+      SlackHomeNewsItem(
+        title = "Quantum jitter lets heat travel across a vacuum",
+        body = "A new experiment shows that quantum fluctuations permit heat to bridge empty space.",
+        published = LocalDateTime.of(2019, 12, 11, 10, 20, 0 ).atZone( ZoneId.systemDefault() ).toInstant
+      )
+    )
+  }
+
   private def updateHomeTab( userId: String )( implicit slackApiToken: SlackApiToken ) = {
     onSuccess(
       slackApiClient.views.publish(
@@ -78,6 +97,7 @@ class SlackPushEventsRoute(
           user_id = userId,
           view = SlackHomeView(
             blocks = new SlackHomeTabBlocksTemplateExample(
+              latestNews = generateLatestNews(),
               userId = userId
             ).renderBlocks()
           )
