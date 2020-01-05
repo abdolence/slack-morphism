@@ -58,7 +58,7 @@ trait SlackBlocksTemplateDslInternals {
   implicit def slackBlocksListToOption( blocks: List[SlackBlock] ): Option[List[SlackBlock]] = noneIfEmptyList( blocks )
 
   implicit def slackDslItemDefToIterable[T]( itemDef: SlackDslItemDef[T] ): Iterable[T] = itemDef match {
-    case SlackDslSomeItem( item )            => Iterable.single( item() )
+    case SlackDslSomeItem( item )            => List( item() ) // We can't use Iterable.single( item() ) in Scala 2.12
     case SlackDslSomeIterableOfItem( items ) => items()
     case SlackDslNoneItem                    => Iterable.empty
   }

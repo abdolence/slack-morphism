@@ -9,7 +9,7 @@ ThisBuild / version := "1.0.0-SNAPSHOT"
 
 ThisBuild / organization := "org.latestbit"
 
-ThisBuild / homepage := Some( url( "https://latestbit.com" ) )
+ThisBuild / homepage := Some( url( "https://github.com/abdolence/slack-morphism" ) )
 
 ThisBuild / licenses := Seq(
   ( "Apache License v2.0", url( "http://www.apache.org/licenses/LICENSE-2.0.html" ) )
