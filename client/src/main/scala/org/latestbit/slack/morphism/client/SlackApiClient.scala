@@ -23,7 +23,7 @@ import org.latestbit.slack.morphism.client.impl._
 /**
  * Slack API client
  */
-class SlackApiClient()( implicit override val sttpBackend: SlackApiClientBackend.SttpFutureBackendType )
+class SlackApiClient()( implicit protected override val sttpBackend: SlackApiClientBackend.SttpFutureBackendType )
     extends SlackApiHttpProtocolSupport
     with SlackApiOAuthClient
     with SlackApiTestClient
