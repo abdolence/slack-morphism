@@ -182,7 +182,7 @@ lazy val docSettings = Seq(
   micrositeGithubRepo := "slack-morphism",
   micrositePushSiteWith := GitHub4s,
   autoAPIMappings := true,
-  micrositeTheme := "light",
+  //micrositeTheme := "light",
   micrositePalette := Map(
     "brand-primary" -> "#E05236",
     "brand-secondary" -> "#3F3242",
