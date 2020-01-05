@@ -16,7 +16,7 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.impl
+package org.latestbit.slack.morphism.client
 
 import sttp.client.{ NothingT, SttpBackend }
 

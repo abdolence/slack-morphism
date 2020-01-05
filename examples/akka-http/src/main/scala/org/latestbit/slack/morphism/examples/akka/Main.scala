@@ -18,24 +18,18 @@
 
 package org.latestbit.slack.morphism.examples.akka
 
+import akka.Done
 import akka.actor.typed._
 import akka.actor.typed.scaladsl._
 import com.typesafe.scalalogging._
-import akka.{ Done, actor }
-import akka.actor.typed.scaladsl.adapter._
-import akka.stream.ActorMaterializer
-import akka.http.scaladsl.Http
 
-import scala.concurrent.{ Await, ExecutionContextExecutor }
+import scala.concurrent.Await
 import scala.concurrent.duration._
-import scala.util._
 
 object Main extends App with StrictLogging {
 
   val APP_NAME = "Slack-Morphism-Example"
   val APP_VER = "0.1.0"
-
-  System.setProperty( "logback.configurationFile", "logback.xml" );
 
   private def addShutdownHook( hook: () => Unit ) = {
     Runtime.getRuntime.addShutdownHook( new Thread() {
