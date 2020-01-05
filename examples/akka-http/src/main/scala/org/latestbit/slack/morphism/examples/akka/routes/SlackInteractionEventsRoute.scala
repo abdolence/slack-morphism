@@ -25,7 +25,7 @@ import akka.http.scaladsl.server._
 import akka.stream.typed.scaladsl.ActorMaterializer
 import com.typesafe.scalalogging._
 import io.circe.parser._
-import org.latestbit.slack.morphism.client.SlackApiClient
+import org.latestbit.slack.morphism.client.{ SlackApiClient, SlackApiToken }
 import org.latestbit.slack.morphism.client.reqresp.views.SlackApiViewsOpenRequest
 import org.latestbit.slack.morphism.events._
 import org.latestbit.slack.morphism.examples.akka.AppConfig
@@ -64,34 +64,43 @@ class SlackInteractionEventsRoute(
     }
   }
 
-  def onEvent( event: SlackInteractionEvent ): Route = event match {
-    case blockActionEvent: SlackInteractionBlockActionEvent => {
-      logger.warn( s"Received a block action event: ${blockActionEvent}" )
-      routeWithSlackApiToken( blockActionEvent.team.id ) { implicit slackApiToken =>
-        val modalTemplateExample = new SlackModalTemplateExample()
-
-        onSuccess(
-          slackApiClient.views.open(
-            SlackApiViewsOpenRequest(
-              trigger_id = blockActionEvent.trigger_id,
-              view = modalTemplateExample.toModalView()
-            )
-          )
-        ) {
-          case Right( resp ) => {
-            logger.info( s"Modal view has been opened: ${resp}" )
-            complete( StatusCodes.OK )
-          }
-          case Left( err ) => {
-            logger.error( s"Unable to open modal view", err )
-            complete( StatusCodes.InternalServerError )
-          }
-        }
+  private def showDummyModal( triggerId: String )( implicit slackApiToken: SlackApiToken ) = {
+    val modalTemplateExample = new SlackModalTemplateExample()
+    onSuccess(
+      slackApiClient.views.open(
+        SlackApiViewsOpenRequest(
+          trigger_id = triggerId,
+          view = modalTemplateExample.toModalView()
+        )
+      )
+    ) {
+      case Right( resp ) => {
+        logger.info( s"Modal view has been opened: ${resp}" )
+        complete( StatusCodes.OK )
+      }
+      case Left( err ) => {
+        logger.error( s"Unable to open modal view", err )
+        complete( StatusCodes.InternalServerError )
       }
     }
-    case interactionEvent: SlackInteractionEvent => {
-      logger.warn( s"Unsupported push event received: ${interactionEvent}" )
-      complete( StatusCodes.OK )
+  }
+
+  def onEvent( event: SlackInteractionEvent ): Route = {
+    routeWithSlackApiToken( event.team.id ) { implicit slackApiToken =>
+      event match {
+        case blockActionEvent: SlackInteractionBlockActionEvent => {
+          logger.warn( s"Received a block action event: ${blockActionEvent}" )
+          showDummyModal( blockActionEvent.trigger_id )
+        }
+        case messageActionEvent: SlackInteractionMessageActionEvent => {
+          logger.warn( s"Received a message action event: ${messageActionEvent}" )
+          showDummyModal( messageActionEvent.trigger_id )
+        }
+        case interactionEvent: SlackInteractionEvent => {
+          logger.warn( s"We don't handle this interaction in this example: ${interactionEvent}" )
+          complete( StatusCodes.OK )
+        }
+      }
     }
   }
 

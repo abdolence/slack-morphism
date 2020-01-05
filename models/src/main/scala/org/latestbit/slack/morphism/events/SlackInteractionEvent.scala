@@ -32,14 +32,16 @@ import org.latestbit.slack.morphism.views.{ SlackStatefulView, SlackView }
  *
  * https://api.slack.com/messaging/interactivity#components
  */
-sealed trait SlackInteractionEvent
+sealed trait SlackInteractionEvent {
+  val team: SlackBasicTeamInfo
+}
 
 /**
  * https://api.slack.com/reference/interaction-payloads/block-actions
  */
 @JsonAdt( "block_actions" )
 case class SlackInteractionBlockActionEvent(
-    team: SlackBasicTeamInfo,
+    override val team: SlackBasicTeamInfo,
     user: Option[SlackBasicUserInfo] = None,
     api_app_id: String,
     container: SlackInteractionActionContainer,
@@ -53,7 +55,7 @@ case class SlackInteractionBlockActionEvent(
 
 @JsonAdt( "dialog_submission" )
 case class SlackInteractionDialogueSubmissionEvent(
-    team: SlackBasicTeamInfo,
+    override val team: SlackBasicTeamInfo,
     user: SlackBasicUserInfo,
     channel: Option[SlackBasicChannelInfo] = None,
     callback_id: Option[String] = None,
@@ -66,7 +68,7 @@ case class SlackInteractionDialogueSubmissionEvent(
  */
 @JsonAdt( "message_action" )
 case class SlackInteractionMessageActionEvent(
-    team: SlackBasicTeamInfo,
+    override val team: SlackBasicTeamInfo,
     user: SlackBasicUserInfo,
     channel: Option[SlackBasicChannelInfo] = None,
     message: Option[SlackMessage] = None,

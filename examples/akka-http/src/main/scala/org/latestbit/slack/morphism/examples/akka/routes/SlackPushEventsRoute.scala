@@ -203,7 +203,7 @@ class SlackPushEventsRoute(
             }
           }
           case unknownBody: SlackEventCallbackBody => {
-            logger.warn( s"Unsupported callback event received: ${unknownBody}" )
+            logger.warn( s"We don't handle this callback event we received in this example: ${unknownBody}" )
             complete( StatusCodes.OK )
           }
         }
@@ -211,7 +211,7 @@ class SlackPushEventsRoute(
     }
 
     case pushEvent: SlackPushEvent => {
-      logger.warn( s"Unsupported push event received: ${pushEvent}" )
+      logger.warn( s"We don't handle this push event we received in this example: ${pushEvent}" )
       complete( StatusCodes.OK )
     }
   }
