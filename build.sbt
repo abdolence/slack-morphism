@@ -10,7 +10,7 @@ name := "slack-morphism-root"
 
 ThisBuild / version := "1.0.0-SNAPSHOT"
 
-ThisBuild / description := "Type-Safe Reactive Client and Blocks Templating for Slack"
+ThisBuild / description := "Open Type-Safe Reactive Client with Blocks Templating for Slack"
 
 ThisBuild / organization := "org.latestbit"
 
