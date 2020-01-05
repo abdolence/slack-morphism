@@ -1,6 +1,6 @@
 ---
 layout: homeFeatures
-title:  "Slack Morphism : Type-Safe Reactive Client and Blocks Templating"
+title:  "Type-Safe Reactive Client and Blocks Templating"
 section: "home"
 technologies:
  - first:  ["Slack", "This is a Slack client to Web and Events API"]
@@ -8,5 +8,5 @@ technologies:
 features:
  - first: ["Web API", "Access to Slack Web API."]
  - second: ["Events API", "Models for Slack Events."]
- - second: ["Blocks Templating", "Templating DSL for Slack Blocks."]
+ - third: ["Blocks Templating", "Templating DSL for Slack Blocks."]
 ---
