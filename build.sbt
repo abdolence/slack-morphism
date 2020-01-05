@@ -182,19 +182,15 @@ lazy val docSettings = Seq(
   micrositeGithubRepo := "slack-morphism",
   micrositePushSiteWith := GitHub4s,
   autoAPIMappings := true,
-  //micrositeTheme := "light",
+  micrositeTheme := "light",
   micrositePalette := Map(
-    "brand-primary" -> "#E05236",
-    "brand-secondary" -> "#3F3242",
-    "brand-tertiary" -> "#2D232F",
-    "gray-dark" -> "#453E46",
-    "gray" -> "#837F84",
-    "gray-light" -> "#E3E2E3",
-    "gray-lighter" -> "#F4F3F4",
+    "brand-primary" -> "#bf360c",
+    "brand-secondary" -> "#aeea00",
     "white-color" -> "#FFFFFF"
   ),
   micrositeGithubToken := sys.env.get( "GITHUB_TOKEN" ),
-  micrositeGitterChannel := false
+  micrositeGitterChannel := false,
+  micrositeFooterText := None
 )
 
 ThisBuild / GitKeys.gitReader := baseDirectory(base => new DefaultReadableGit( base ) ).value
