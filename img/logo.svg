@@ -8,22 +8,22 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   inkscape:export-ydpi="4.5700002"
-   inkscape:export-xdpi="4.5700002"
-   inkscape:export-filename="/opt/devel/projects/slack-morphism-project/slack-morphism/site/src/main/resources/microsite/img/light-navbar-brand.svg.png"
+   inkscape:export-ydpi="65.019997"
+   inkscape:export-xdpi="65.019997"
+   inkscape:export-filename="/opt/devel/projects/slack-morphism-project/slack-morphism/site/src/main/resources/microsite/img/logo-512.png"
    inkscape:version="1.0beta1 (fe3e306, 2019-09-17)"
-   sodipodi:docname="light-sidebar-brand.svg"
+   sodipodi:docname="logo.svg"
    id="svg8"
    version="1.1"
-   viewBox="0 0 9.5249999 9.5249999"
-   height="36"
-   width="36">
+   viewBox="0 0 200 200"
+   height="200mm"
+   width="200mm">
   <defs
      id="defs2">
     <linearGradient
-       x1="0"
-       y1="0.5"
-       y2="0.5"
+       x1="0%"
+       y1="50%"
+       y2="50%"
        id="a">
       <stop
          stop-color="#4F4F4F"
@@ -34,9 +34,9 @@
          id="stop1610" />
     </linearGradient>
     <linearGradient
-       x1="0"
-       y1="0.5"
-       y2="0.5"
+       x1="0%"
+       y1="50%"
+       y2="50%"
        id="b">
       <stop
          stop-color="#C40000"
@@ -59,19 +59,18 @@
        inkscape:collect="always" />
   </defs>
   <sodipodi:namedview
-     units="px"
      inkscape:window-maximized="0"
-     inkscape:window-y="478"
-     inkscape:window-x="415"
+     inkscape:window-y="205"
+     inkscape:window-x="2057"
      inkscape:window-height="759"
      inkscape:window-width="1571"
      showgrid="false"
      inkscape:document-rotation="0"
      inkscape:current-layer="layer1"
      inkscape:document-units="mm"
-     inkscape:cy="39.438542"
-     inkscape:cx="54.689587"
-     inkscape:zoom="5.6"
+     inkscape:cy="442.03431"
+     inkscape:cx="97.861575"
+     inkscape:zoom="0.7"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      borderopacity="1.0"
@@ -99,7 +98,7 @@
      inkscape:groupmode="layer"
      inkscape:label="Layer 1">
     <g
-       transform="matrix(0.04081047,0,0,0.04081047,0.8516325,0.77446704)"
+       transform="translate(4.1699961,2.279171)"
        id="g2055">
       <g
          id="g2040">
