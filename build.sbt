@@ -201,6 +201,7 @@ lazy val docSettings = Seq(
     MicrositeFavicon( "favicon-196x196.png", "196x196" )
   ),
   apiDocsDir := "api",
+  unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects( slackMorphismModels, slackMorphismClient ),
   addMappingsToSiteDir( mappings in (ScalaUnidoc, packageDoc), apiDocsDir )
 )
 
