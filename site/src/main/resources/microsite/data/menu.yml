@@ -1,0 +1,16 @@
+options:
+
+  - title: Web API
+    url: web-api.html
+    menu_type: webapi
+    menu_section: webapi
+
+  - title: Events API
+    url: events-api.html
+    menu_type: eventsapi
+    menu_section: eventsapi
+
+  - title: Blocks Templating
+    url: blocks-templating.html
+    menu_type: blockstemplating
+    menu_section: blockstemplating

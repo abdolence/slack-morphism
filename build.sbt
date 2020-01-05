@@ -1,5 +1,6 @@
 import java.time.format.DateTimeFormatter
 import java.time.{ ZoneOffset, ZonedDateTime }
+import microsites._
 
 import sbt.Package.ManifestAttributes
 
@@ -7,9 +8,11 @@ name := "slack-morphism-root"
 
 ThisBuild / version := "1.0.0-SNAPSHOT"
 
+ThisBuild / description := "Type-Safe Reactive Client and Blocks Templating for Slack"
+
 ThisBuild / organization := "org.latestbit"
 
-ThisBuild / homepage := Some( url( "https://github.com/abdolence/slack-morphism" ) )
+ThisBuild / homepage := Some( url( "https://slack.abdolence.dev" ) )
 
 ThisBuild / licenses := Seq(
   ( "Apache License v2.0", url( "http://www.apache.org/licenses/LICENSE-2.0.html" ) )
@@ -39,7 +42,10 @@ ThisBuild / scalacOptions ++= Seq(
   "-deprecation",
   "-unchecked",
   "-feature",
-  "-language:higherKinds"
+  "-language:higherKinds",
+  "-Ywarn-dead-code",
+  "-Ywarn-numeric-widen",
+  "-Ywarn-value-discard"
 ) ++ (CrossVersion.partialVersion( (ThisBuild / scalaVersion).value ) match {
   case Some( ( 2, n ) ) if n >= 13 => Seq( "-Xsource:2.14" )
   case Some( ( 2, n ) ) if n < 13  => Seq( "-Ypartial-unification" )
@@ -114,14 +120,16 @@ val baseDependencies =
 
 //addCompilerPlugin( "org.scalamacros" %% "paradise" % "2.1.1" cross CrossVersion.full )
 
+lazy val noPublishSettings = Seq(
+  publish := {},
+  publishLocal := {},
+  publishArtifact := false
+)
+
 lazy val slackMorphismRoot = project
   .in( file( "." ) )
   .aggregate( slackMorphismModels, slackMorphismClient, slackMorphismExamples )
-  .settings(
-    publish := {},
-    publishLocal := {},
-    crossScalaVersions := List()
-  )
+  .settings( noPublishSettings )
 
 lazy val slackMorphismModels =
   (project in file( "models" )).settings(
@@ -159,3 +167,39 @@ lazy val slackMorphismExamples =
       )
     )
     .dependsOn( slackMorphismClient )
+
+lazy val docSettings = Seq(
+  micrositeName := "Slack Morphism for Scala",
+  micrositeUrl := "https://slack.abdolence.dev",
+  micrositeDocumentationUrl := "/docs",
+  micrositeDocumentationLabelDescription := "Docs",
+  micrositeAuthor := "Abdulla Abdurakhmanov",
+  micrositeHomepage := "https://slack.abdolence.dev",
+  micrositeOrganizationHomepage := "https://abdolence.dev",
+  micrositeGithubOwner := "abdolence",
+  micrositeGithubRepo := "slack-morphism",
+  micrositePushSiteWith := GitHub4s,
+  autoAPIMappings := true,
+  micrositeTheme := "light",
+  micrositePalette := Map(
+    "brand-primary" -> "#E05236",
+    "brand-secondary" -> "#3F3242",
+    "brand-tertiary" -> "#2D232F",
+    "gray-dark" -> "#453E46",
+    "gray" -> "#837F84",
+    "gray-light" -> "#E3E2E3",
+    "gray-lighter" -> "#F4F3F4",
+    "white-color" -> "#FFFFFF"
+  )
+)
+
+lazy val slackMorphismMicrosite = project
+  .in( file( "site" ) )
+  .enablePlugins( MicrositesPlugin )
+  .settings(
+    name := "slack-morphism-microsite"
+  )
+  .settings( docSettings )
+  .settings( noPublishSettings )
+  .settings( docSettings )
+  .dependsOn( slackMorphismModels, slackMorphismClient, slackMorphismExamples )
