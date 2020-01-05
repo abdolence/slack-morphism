@@ -25,7 +25,7 @@ trait AsyncSeqIteratorPosition[A, +P] {
 }
 
 /**
- * This async iterator is able to provide infinite async computed values lazily iterating over some function
+ * Async iterator is able to provide infinite async computed values lazily iterating over some function
  * Unlike standard Stream[]/LazyList[] from Scala, this implementation doesn't memorise previous values.
  * Unlike Future.sequence/fold we don't know beforehand how many async actions are coming
  *
@@ -68,8 +68,14 @@ trait AsyncSeqIterator[+I, +A] {
 
 }
 
+/**
+ * Async iterator constructors
+ */
 object AsyncSeqIterator {
 
+  /**
+   * Async iterator constructor
+   */
   object cons {
 
     /**
