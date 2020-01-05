@@ -24,18 +24,47 @@ import io.circe
 import org.latestbit.slack.morphism.common.SlackApiError
 import sttp.model.Uri
 
+/**
+ * Slack Web API error
+ * @param uri Web method URL
+ * @param message error message
+ * @param cause original cause
+ */
 sealed abstract class SlackApiClientError( uri: Uri, message: String, cause: Option[Throwable] = None )
     extends SlackApiError( message, cause )
 
+/**
+ * System/unexpected Slack Web API error
+ * @param uri Web method URL
+ * @param cause original cause
+ */
 case class SlackApiSystemError( uri: Uri, cause: Throwable )
     extends SlackApiClientError( uri = uri, message = cause.getMessage, cause = Some( cause ) )
 
+/**
+ * Slack Web API network/connection error
+ * @param uri Web method URL
+ * @param cause original cause
+ */
 case class SlackApiConnectionError( uri: Uri, cause: IOException )
     extends SlackApiClientError( uri = uri, message = cause.getMessage, cause = Some( cause ) )
 
-case class SlackApiHttpError( uri: Uri, details: String, httpResponseBody: Option[String] = None )
-    extends SlackApiClientError( uri = uri, details )
+/**
+ * Slack Web API HTTP protocol error
+ * @param uri Web method URL
+ * @param message error message
+ * @param httpResponseBody HTTP response body
+ */
+case class SlackApiHttpError( uri: Uri, message: String, httpResponseBody: Option[String] = None )
+    extends SlackApiClientError( uri = uri, message )
 
+/**
+ * Slack Web API protocol error
+ * @param uri Web method URL
+ * @param errorCode Slack error code
+ * @param details error detail message
+ * @param warning Slack warnings
+ */
 case class SlackApiResponseError(
     uri: Uri,
     errorCode: String,
@@ -49,6 +78,12 @@ case class SlackApiResponseError(
 			   |""".stripMargin
     )
 
+/**
+ * Slack Web API JSON decoding error
+ * @param uri Web method URL
+ * @param coderError JSON decoder error
+ * @param httpResponseBody HTTP response body
+ */
 case class SlackApiDecodingError(
     uri: Uri,
     coderError: circe.Error,

@@ -107,7 +107,7 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
               slackGeneralResponseToError( uri, generalResp ).getOrElse(
                 SlackApiHttpError(
                   uri = uri,
-                  details = s"HTTP error / ${response.code}: ${response.statusText}.\n${errorBody}",
+                  message = s"HTTP error / ${response.code}: ${response.statusText}.\n${errorBody}",
                   httpResponseBody = Option( errorBody )
                 )
               )
@@ -121,7 +121,7 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
         Left(
           SlackApiHttpError(
             uri = uri,
-            details = s"HTTP error / ${response.code}: ${response.statusText}.\n${Option( errorBody )
+            message = s"HTTP error / ${response.code}: ${response.statusText}.\n${Option( errorBody )
               .map { body =>
                 s": ${body}"
               }

@@ -20,20 +20,36 @@ package org.latestbit.slack.morphism.events.signature
 
 import org.latestbit.slack.morphism.common.SlackApiError
 
+/**
+ * Slack Events API verification errors
+ * @param message error message
+ * @param cause original cause
+ */
 sealed abstract class SlackSignatureVerificationError( message: String, cause: Option[Throwable] = None )
     extends SlackApiError( message, cause )
 
+/**
+ * Slack Events verifier init error
+ * @param cause original cause
+ */
 case class SlackSignatureCryptoInitError( cause: Throwable )
     extends SlackSignatureVerificationError(
       s"Unable to init crypto algorithm: ${SlackEventSignatureVerifier.SIGNING_ALGORITHM}",
       Some( cause )
     )
 
+/**
+ * Wrong or absent signature has been received
+ * @param receivedHash received hash in an event
+ * @param generatedHash generated hash
+ * @param timestamp received timestamp in an event
+ * @param cause original cause
+ */
 case class SlackSignatureWrongSignatureError(
     receivedHash: String,
     generatedHash: String,
     timestamp: String,
     cause: Option[Throwable] = None
 ) extends SlackSignatureVerificationError( s"""
-| Received hash from Slack '${receivedHash}' doesn't match with generated: ${generatedHash}. Received timestamp: '${timestamp}''
+| Received hash from Slack '${receivedHash}' doesn't match with the generated: ${generatedHash}. Received timestamp: '${timestamp}''
 |""".stripMargin, cause )
