@@ -18,9 +18,12 @@
 
 package org.latestbit.slack.morphism.client.templating
 
-import org.latestbit.slack.morphism.messages.{ SlackBlock, SlackBlockPlainText }
+import org.latestbit.slack.morphism.messages.SlackBlockPlainText
 import org.latestbit.slack.morphism.views.SlackModalView
 
+/**
+ * A template to render Slack views with blocks
+ */
 trait SlackModalViewTemplate extends SlackBlocksTemplate {
   def titleText(): SlackBlockPlainText
   def submitText(): Option[SlackBlockPlainText] = None

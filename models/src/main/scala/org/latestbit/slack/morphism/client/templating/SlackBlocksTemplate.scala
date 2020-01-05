@@ -20,6 +20,9 @@ package org.latestbit.slack.morphism.client.templating
 
 import org.latestbit.slack.morphism.messages.SlackBlock
 
+/**
+ * A template to render Slack blocks
+ */
 trait SlackBlocksTemplate extends SlackBlocksTemplateDsl with SlackTextFormatters {
   def renderBlocks(): List[SlackBlock]
 }

@@ -35,7 +35,7 @@ import scala.concurrent._
 class SlackApiResponseScroller[IT, PT](
     initialLoader: () => Future[Either[SlackApiClientError, SlackApiScrollableResponse[IT, PT]]],
     batchLoader: PT => Future[Either[SlackApiClientError, SlackApiScrollableResponse[IT, PT]]]
-) extends SlackApiResponseSyncScroller.LazyScalaCollectionSupport[IT, PT] {
+) extends LazyScalaCollectionSupport[IT, PT] {
 
   /**
    * Read the initial data
@@ -83,5 +83,3 @@ class SlackApiResponseScroller[IT, PT](
     new SlackApiScrollableReactivePublisher( this, maxItems )
 
 }
-
-object SlackApiResponseScroller {}

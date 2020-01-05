@@ -20,30 +20,63 @@ package org.latestbit.slack.morphism.client.templating
 
 import java.time.Instant
 
+/**
+ * Slack mark down/field formatters
+ */
 trait SlackTextFormatters {
 
+  /**
+   * Format multi-line quoted text
+   * @param srcText source text to quote
+   * @return quoted text
+   */
   protected def formatSlackQuoteText( srcText: String ) = {
     s">${srcText.replace( "\n", "\n>" )}"
   }
 
+  /**
+   * Format Slack Channel Id
+   * @param channelId channel id
+   * @return formatted channel id
+   */
   protected def formatSlackChannelId( channelId: String ) = {
     s"<#${channelId}>"
   }
 
-  protected def formatSlackUserId( userId: String ) = {
-    s"<@${userId}>"
-  }
-
-  protected def formatSlackGroupId( groupId: String ) = {
-    s"<!subteam^${groupId}>"
-  }
-
+  /**
+   * Format multiple Slack Channel Ids
+   * @param ids channel ids
+   * @return formatted channel ids
+   */
   protected def formatSlackChannelIds( ids: Iterable[String] ) = {
     ids.map( formatSlackChannelId ).mkString( ", " )
   }
 
   /**
+   * Format Slack User Id
+   * @param userId user id
+   * @return formatted user id
+   */
+  protected def formatSlackUserId( userId: String ) = {
+    s"<@${userId}>"
+  }
+
+  /**
+   * Format Slack Group Id
+   * @param groupId group id
+   * @return formatted group id
+   */
+  protected def formatSlackGroupId( groupId: String ) = {
+    s"<!subteam^${groupId}>"
+  }
+
+  /**
+   * Formate Slack Date/Time
    * https://api.slack.com/reference/surfaces/formatting#date-formatting
+   * @param timestamp date time to format
+   * @param formatType Slack Date/Time formatter ([[SlackTextFormatters.SlackDateFormatType]]
+   * @param link an optional link on date/time
+   * @return formatted Slack Date/Time
    */
   protected def formatDate(
       timestamp: Instant,
@@ -57,6 +90,11 @@ trait SlackTextFormatters {
 }
 
 object SlackTextFormatters {
+
+  /**
+   * Defines all available Slack Date/Time formatters
+   * https://api.slack.com/reference/surfaces/formatting#date-formatting
+   */
   sealed trait SlackDateFormatType { val code: String }
 
   case object SlackDateNumFormatType extends SlackDateFormatType { override val code: String = "date_num" }
@@ -72,8 +110,6 @@ object SlackTextFormatters {
   case object SlackLongPrettyDateFormatType extends SlackDateFormatType {
     override val code: String = "date_long_pretty"
   }
-
   case object SlackTimeFormatType extends SlackDateFormatType { override val code: String = "time" }
   case object SlackTimeSecsFormatType extends SlackDateFormatType { override val code: String = "time_secs" }
-
 }
