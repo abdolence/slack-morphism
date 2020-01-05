@@ -1,7 +1,9 @@
 import java.time.format.DateTimeFormatter
 import java.time.{ ZoneOffset, ZonedDateTime }
-import microsites._
 
+import com.typesafe.sbt.SbtGit.GitKeys
+import com.typesafe.sbt.git.DefaultReadableGit
+import microsites._
 import sbt.Package.ManifestAttributes
 
 name := "slack-morphism-root"
@@ -190,8 +192,11 @@ lazy val docSettings = Seq(
     "gray-light" -> "#E3E2E3",
     "gray-lighter" -> "#F4F3F4",
     "white-color" -> "#FFFFFF"
-  )
+  ),
+  micrositeGithubToken := sys.env.get( "GITHUB_TOKEN" )
 )
+
+ThisBuild / GitKeys.gitReader := baseDirectory(base => new DefaultReadableGit( base ) ).value
 
 lazy val slackMorphismMicrosite = project
   .in( file( "site" ) )
