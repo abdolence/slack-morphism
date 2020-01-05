@@ -193,7 +193,8 @@ lazy val docSettings = Seq(
     "gray-lighter" -> "#F4F3F4",
     "white-color" -> "#FFFFFF"
   ),
-  micrositeGithubToken := sys.env.get( "GITHUB_TOKEN" )
+  micrositeGithubToken := sys.env.get( "GITHUB_TOKEN" ),
+  micrositeGitterChannel := false
 )
 
 ThisBuild / GitKeys.gitReader := baseDirectory(base => new DefaultReadableGit( base ) ).value
