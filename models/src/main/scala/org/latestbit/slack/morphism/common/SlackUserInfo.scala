@@ -18,10 +18,9 @@
 
 package org.latestbit.slack.morphism.common
 
-import io.circe._
-import io.circe.syntax._
-import io.circe.generic.semiauto._
-
+/**
+ * Slack User Info
+ */
 case class SlackUserInfo(
     id: String,
     team_id: Option[String] = None,
@@ -38,6 +37,9 @@ case class SlackUserInfo(
     flags: SlackUserFlags = SlackUserFlags()
 )
 
+/**
+ * Slack User Profile
+ */
 case class SlackUserProfile(
     id: Option[String] = None,
     avatar_hash: Option[String] = None,
@@ -52,6 +54,10 @@ case class SlackUserProfile(
     team: Option[String] = None
 )
 
+/**
+ * Slack User Info Flags
+ * @note This class was extracted for convenience and to avoid very big class definition of [[SlackUserInfo]]
+ */
 case class SlackUserFlags(
     is_admin: Option[Boolean] = None,
     is_owner: Option[Boolean] = None,
@@ -64,4 +70,7 @@ case class SlackUserFlags(
     has_2fa: Option[Boolean] = None
 )
 
+/**
+ * Slack Basic User Info
+ */
 case class SlackBasicUserInfo( id: String, team_id: Option[String] = None, username: Option[String] = None )

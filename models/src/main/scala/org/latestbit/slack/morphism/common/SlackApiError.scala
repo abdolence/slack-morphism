@@ -18,5 +18,8 @@
 
 package org.latestbit.slack.morphism.common
 
+/**
+ * Base type of all errors defined in Slack Morphism
+ */
 abstract class SlackApiError( message: String, cause: Option[Throwable] = None )
     extends Exception( message, cause.orNull )

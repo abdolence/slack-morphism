@@ -20,6 +20,9 @@ package org.latestbit.slack.morphism.common
 
 import org.latestbit.slack.morphism.messages.SlackMessage
 
+/**
+ * Slack Channel Information
+ */
 case class SlackChannelInfo(
     id: String,
     name: String,
@@ -34,9 +37,13 @@ case class SlackChannelInfo(
     num_members: Option[Long] = None,
     locale: Option[String] = None,
     flags: SlackChannelFlags = SlackChannelFlags(),
-    lastState: SlackChannelLastState = SlackChannelLastState()
+    lastState: SlackChannelCurrentState = SlackChannelCurrentState()
 )
 
+/**
+ * Slack Channel Flags
+ * @note This class was extracted for convenience and to avoid very big class definition of [[SlackChannelInfo]]
+ */
 case class SlackChannelFlags(
     is_channel: Option[Boolean] = None,
     is_group: Option[Boolean] = None,
@@ -51,7 +58,11 @@ case class SlackChannelFlags(
     is_user_deleted: Option[Boolean] = None
 )
 
-case class SlackChannelLastState(
+/**
+ * Slack Channel Current State
+ * @note This class was extracted for convenience and to avoid very big class definition of [[SlackChannelInfo]]
+ */
+case class SlackChannelCurrentState(
     last_read: Option[String] = None,
     latest: Option[SlackMessage] = None,
     unread_count: Option[Long] = None,
@@ -59,13 +70,20 @@ case class SlackChannelLastState(
     members: Option[List[String]] = None
 )
 
-case class SlackBasicChannelInfo(
-    id: String,
-    name: Option[String] = None
-)
-
 object SlackChannelInfo {
+
+  /**
+   * Auxiliary data type for channel topic and purpose
+   */
   case class SlackChannelDetails( value: String, creator: String, last_set: SlackDateTime )
   type SlackTopicInfo = SlackChannelDetails
   type SlackPurposeInfo = SlackChannelDetails
 }
+
+/**
+ * Basic Slack Channel information
+ */
+case class SlackBasicChannelInfo(
+    id: String,
+    name: Option[String] = None
+)

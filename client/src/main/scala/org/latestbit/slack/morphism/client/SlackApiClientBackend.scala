@@ -22,10 +22,17 @@ import sttp.client.{ NothingT, SttpBackend }
 
 import scala.concurrent.Future
 
+/**
+ * A trait defines requirement for STTP backend
+ */
 trait SlackApiClientBackend {
   protected implicit val sttpBackend: SlackApiClientBackend.SttpFutureBackendType
 }
 
 object SlackApiClientBackend {
+
+  /**
+   * Compatible STTP backend type alias
+   */
   type SttpFutureBackendType = SttpBackend[Future, Nothing, NothingT]
 }

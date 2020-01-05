@@ -96,13 +96,15 @@ package object codecs {
     implicit val encoderSlackChannelFlags: Encoder.AsObject[SlackChannelFlags] = deriveEncoder[SlackChannelFlags]
     implicit val decoderSlackChannelFlags: Decoder[SlackChannelFlags] = deriveDecoder[SlackChannelFlags]
 
-    implicit val encoderSlackChannelLastState: Encoder.AsObject[SlackChannelLastState] =
-      deriveEncoder[SlackChannelLastState]
-    implicit val decoderSlackChannelLastState: Decoder[SlackChannelLastState] = deriveDecoder[SlackChannelLastState]
+    implicit val encoderSlackChannelLastState: Encoder.AsObject[SlackChannelCurrentState] =
+      deriveEncoder[SlackChannelCurrentState]
+
+    implicit val decoderSlackChannelLastState: Decoder[SlackChannelCurrentState] =
+      deriveDecoder[SlackChannelCurrentState]
 
     def createSlackChannelInfoEncoder()(
         implicit flagsEncoder: Encoder.AsObject[SlackChannelFlags],
-        lastStateEncoder: Encoder.AsObject[SlackChannelLastState]
+        lastStateEncoder: Encoder.AsObject[SlackChannelCurrentState]
     ): Encoder.AsObject[SlackChannelInfo] = (model: SlackChannelInfo) => {
       JsonObject(
         "id" -> model.id.asJson,
@@ -137,7 +139,7 @@ package object codecs {
         num_members <- c.downField( "num_members" ).as[Option[Long]]
         locale <- c.downField( "locale" ).as[Option[String]]
         flags <- c.as[SlackChannelFlags]
-        lastState <- c.as[SlackChannelLastState]
+        lastState <- c.as[SlackChannelCurrentState]
       } yield SlackChannelInfo(
         id,
         name,

@@ -36,12 +36,20 @@ trait SlackApiToken {
 
 object SlackApiToken {
 
+  /**
+   * Convert scope defined as a str to set of permissions
+   * @param scopeAsStr scope as a str
+   * @return set of permissions
+   */
   def scopeToSet( scopeAsStr: String ): Set[String] = {
     Option( scopeAsStr )
       .map( _.split( ',' ).map( _.trim ).filterNot( _.isEmpty ).toSet )
       .getOrElse( Set() )
   }
 
+  /**
+   * Type names of tokens
+   */
   object TokenTypes {
     val BOT = "bot"
     val USER = "user"

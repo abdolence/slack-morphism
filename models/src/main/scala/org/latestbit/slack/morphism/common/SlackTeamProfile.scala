@@ -20,8 +20,14 @@ package org.latestbit.slack.morphism.common
 
 import io.circe.Json
 
+/**
+ * Slack Team profile with user defined fields
+ */
 case class SlackTeamProfile( fields: List[SlackTeamProfileField] )
 
+/**
+ * Slack Team profile user defined field
+ */
 case class SlackTeamProfileField(
     id: String,
     ordering: Int,

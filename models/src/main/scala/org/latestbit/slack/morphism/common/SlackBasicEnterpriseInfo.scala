@@ -18,4 +18,7 @@
 
 package org.latestbit.slack.morphism.common
 
+/**
+ * Basic information about enterprise
+ */
 case class SlackBasicEnterpriseInfo( id: String, name: Option[String] = None )
