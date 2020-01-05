@@ -190,7 +190,14 @@ lazy val docSettings = Seq(
   ),
   micrositeGithubToken := sys.env.get( "GITHUB_TOKEN" ),
   micrositeGitterChannel := false,
-  micrositeFooterText := None
+  micrositeFooterText := None,
+  micrositeFavicons := Seq(
+    MicrositeFavicon( "favicon-16x16.png", "16x16" ),
+    MicrositeFavicon( "favicon-32x32.png", "32x32" ),
+    MicrositeFavicon( "favicon-96x96.png", "96x96" ),
+    MicrositeFavicon( "favicon-128.png", "128x128" ),
+    MicrositeFavicon( "favicon-196x196.png", "196x196" )
+  )
 )
 
 ThisBuild / GitKeys.gitReader := baseDirectory(base => new DefaultReadableGit( base ) ).value
