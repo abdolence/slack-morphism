@@ -36,7 +36,6 @@ import scala.concurrent.{ ExecutionContext, Future }
 trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
 
   import SlackApiHttpProtocolSupport._
-  import SlackApiClientBackend._
 
   protected type SlackApiEmptyType = JsonObject
   protected val SLACK_EMPTY_REQUEST: SlackApiEmptyType = JsonObject()
