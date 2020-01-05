@@ -181,6 +181,7 @@ class SlackPushEventsRoute(
             }
           }
           case msg: SlackUserMessage => {
+            logger.info( s"Received a user message '${msg.text.getOrElse( "-" )}' in ${msg.channel.getOrElse( "-" )}" )
             val template = new SlackSampleMessageReplyTemplateExample( msg.text.getOrElse( "" ) )
             onSuccess(
               slackApiClient.chat
