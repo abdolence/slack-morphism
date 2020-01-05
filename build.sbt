@@ -170,6 +170,8 @@ lazy val slackMorphismExamples =
     )
     .dependsOn( slackMorphismClient )
 
+lazy val apiDocsDir = settingKey[String]( "Name of subdirectory for api docs" )
+
 lazy val docSettings = Seq(
   micrositeName := "Slack Morphism for Scala",
   micrositeUrl := "https://slack.abdolence.dev",
@@ -197,7 +199,9 @@ lazy val docSettings = Seq(
     MicrositeFavicon( "favicon-96x96.png", "96x96" ),
     MicrositeFavicon( "favicon-128.png", "128x128" ),
     MicrositeFavicon( "favicon-196x196.png", "196x196" )
-  )
+  ),
+  apiDocsDir := "api",
+  addMappingsToSiteDir( mappings in (ScalaUnidoc, packageDoc), apiDocsDir )
 )
 
 ThisBuild / GitKeys.gitReader := baseDirectory(base => new DefaultReadableGit( base ) ).value
