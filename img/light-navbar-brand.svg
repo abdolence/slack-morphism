@@ -55,10 +55,10 @@
      inkscape:window-width="1920"
      showgrid="false"
      inkscape:document-rotation="0"
-     inkscape:current-layer="layer3"
+     inkscape:current-layer="g179"
      inkscape:document-units="mm"
-     inkscape:cy="45.802678"
-     inkscape:cx="50.844767"
+     inkscape:cy="32.653772"
+     inkscape:cx="7.7105427"
      inkscape:zoom="7.919596"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
@@ -83,15 +83,7 @@
   <g
      inkscape:label="Layer 2"
      id="layer3"
-     inkscape:groupmode="layer">
-    <rect
-       y="-5.5511151e-17"
-       x="0"
-       height="9.5249996"
-       width="9.5249996"
-       id="rect3027"
-       style="display:inline;fill:#bf360c;fill-opacity:1;stroke:#ffffff;stroke-width:0.00922218;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:0.0184445, 0.0184445;stroke-dashoffset:0.00922218;paint-order:stroke fill markers" />
-  </g>
+     inkscape:groupmode="layer" />
   <g
      id="layer1"
      inkscape:groupmode="layer"
@@ -116,14 +108,14 @@
                  id="path163"
                  d="m 118.8,98.755 c -6.745,0 -12.255,-5.51 -12.255,-12.255 0,-6.745 5.51,-12.255 12.255,-12.255 6.745,0 12.255,5.51 12.255,12.255 v 12.255 z"
                  class="st1"
-                 style="fill:none;stroke:#ffffff;stroke-width:0.95;stroke-opacity:1" />
+                 style="fill:none;stroke:#bf360c;stroke-width:0.95;stroke-opacity:1" />
             </g>
             <g
                id="g179"
                transform="matrix(2.8630811,0,0,2.8630809,-337.08956,-391.42276)"
                style="opacity:1;stop-opacity:1">
               <path
-                 style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-opacity:1"
+                 style="fill:none;fill-opacity:1;stroke:#bf360c;stroke-opacity:1"
                  class="st3"
                  d="m 151.2,170.6 c 7.1,0 12.9,5.8 12.9,12.9 0,7.1 -5.8,12.9 -12.9,12.9 -7.1,0 -12.9,-5.8 -12.9,-12.9 v -12.9 z"
                  id="path175"
@@ -137,7 +129,7 @@
                id="g1673"
                transform="matrix(1.0015232,0,0,0.93934754,-6.1089448,-9.9668952)">
               <path
-                 style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.41777;stroke-opacity:1"
+                 style="fill:#bf360c;fill-opacity:1;stroke:none;stroke-width:0.41777;stroke-opacity:1"
                  inkscape:connector-curvature="0"
                  d="m -19.290081,152.25993 v 45.87066 c 0,-3.82257 93.508574,-11.46768 93.508574,-30.58044 v -45.87066 c 0,19.11277 -93.508574,26.75789 -93.508574,30.58044"
                  fill="url(#b)"
