@@ -1,0 +1,17 @@
+options:
+  - title: Intro
+    url: docs/index
+    menu_type: webapi
+    menu_section: webapi
+  - title: Web API
+    url: docs/web-api
+    menu_type: webapi
+    menu_section: webapi
+  - title: Events API
+    url: docs/events-api
+    menu_type: eventsapi
+    menu_section: eventsapi
+  - title: Blocks Templating
+    url: docs/blocks-templating
+    menu_type: blockstemplating
+    menu_section: blockstemplating
