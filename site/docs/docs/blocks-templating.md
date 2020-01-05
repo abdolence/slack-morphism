@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: Slack Events API
-section: "blockstemplating"
+permalink: docs/templating
 ---
 # Slack Blocks Templating DSL
 TBD

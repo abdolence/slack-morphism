@@ -10,3 +10,12 @@ features:
  - second: ["Events API", "Models for Slack Events."]
  - third: ["Blocks Templating", "Templating DSL for Slack Blocks."]
 ---
+### Overview
+TBD
+
+### Scala support
+- Scala v2.12+
+- Scala.js v0.6.28+
+
+### Licence
+Apache Software License (ASL)

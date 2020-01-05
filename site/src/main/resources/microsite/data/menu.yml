@@ -12,5 +12,5 @@ options:
     section: eventsapi
 
   - title: Blocks Templating
-    url: docs/blocks-templating
+    url: docs/templating
     section: blockstemplating

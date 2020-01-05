@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: Slack Web API
-section: "webapi"
+permalink: docs/web-api
 ---
 ## Slack Web API
 TBD

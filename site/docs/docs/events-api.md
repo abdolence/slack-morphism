@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: Slack Events API
-section: "eventsapi"
+permalink: docs/events-api
 ---
 ## Slack Events API
 TBD
