@@ -205,6 +205,7 @@ ThisBuild / GitKeys.gitReader := baseDirectory(base => new DefaultReadableGit( b
 lazy val slackMorphismMicrosite = project
   .in( file( "site" ) )
   .enablePlugins( MicrositesPlugin )
+  .enablePlugins( ScalaUnidocPlugin )
   .settings(
     name := "slack-morphism-microsite"
   )

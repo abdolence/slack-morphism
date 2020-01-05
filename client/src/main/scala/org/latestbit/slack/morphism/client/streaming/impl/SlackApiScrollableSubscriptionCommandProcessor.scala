@@ -116,8 +116,8 @@ class SlackApiScrollableSubscriptionCommandProcessor[IT, PT](
 
   }
 
-  def enqueueCommand( cmd: SlackApiScrollableSubscriptionCommand ) = {
-    Future {
+  def enqueueCommand( cmd: SlackApiScrollableSubscriptionCommand ): Unit = {
+    val _ = Future {
       cmd match {
         case RequestElements( n ) => {
           pumpNextBatch( n )
@@ -127,7 +127,7 @@ class SlackApiScrollableSubscriptionCommandProcessor[IT, PT](
   }
 
   def shutdown(): Unit = {
-    commandsExecutor.shutdownNow()
+    val _ = commandsExecutor.shutdownNow()
   }
 
 }
