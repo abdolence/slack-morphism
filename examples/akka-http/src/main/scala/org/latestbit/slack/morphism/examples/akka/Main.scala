@@ -94,7 +94,15 @@ object Main extends App with StrictLogging {
       opt[String]( "slack-redirect-url" ).abbr( "rurl" ).text( "Slack Redirect URL" ).action { ( v, c ) =>
         c.copy( slackAppConfig = c.slackAppConfig.copy( redirectUrl = Some( v ) ) )
       }
-
+      opt[String]( "slack-install-bot-scope" )
+        .abbr( "bot-scope" )
+        .text( "Slack OAuth Install Scope for a bot token" )
+        .action { ( v, c ) =>
+          c.copy( slackAppConfig = c.slackAppConfig.copy( botScope = v ) )
+        }
+      opt[String]( "sway-db-path" ).abbr( "dbpath" ).text( "Path to data for SwayDb" ).action { ( v, c ) =>
+        c.copy( databaseDir = v )
+      }
     }
   }
 
