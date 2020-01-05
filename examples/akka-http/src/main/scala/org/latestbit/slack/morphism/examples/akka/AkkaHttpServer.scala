@@ -113,6 +113,7 @@ object AkkaHttpServer extends StrictLogging {
         case Stop() => {
           serverState.foreach { state =>
             state.httpBinding.foreach { binding =>
+              logger.info( "Stopping http server" )
               binding.terminate( 5.seconds )
             }
             state.tokensDbRef ! SlackTokensDb.Close()

@@ -48,11 +48,6 @@ object Main extends App with StrictLogging {
   private def createActorSystem( start: ActorContext[Done] => Unit ) = {
     ActorSystem[Done](
       Behaviors.setup[Done] { ctx =>
-        addShutdownHook { () =>
-          logger.debug( "Terminating Akka system..." )
-          ctx.system.terminate()
-        }
-
         start( ctx )
 
         Behaviors.receiveMessage {
@@ -109,6 +104,12 @@ object Main extends App with StrictLogging {
         logger.debug( "Akka System is ready" )
         val httpServer = ctx.spawnAnonymous( AkkaHttpServer.run )
         httpServer ! AkkaHttpServer.Start( config )
+
+        addShutdownHook { () =>
+          httpServer ! AkkaHttpServer.Stop()
+          logger.debug( "Terminating Akka system..." )
+          ctx.system.terminate()
+        }
       }
       Await.result( actorSystem.whenTerminated, Duration.Inf )
     }
