@@ -31,6 +31,9 @@ trait SlackApiAppsClient extends SlackApiHttpProtocolSupport {
 
   object apps {
 
+    /**
+     * https://api.slack.com/methods/apps.uninstall
+     */
     def uninstall( req: SlackApiUninstallRequest )(
         implicit slackApiToken: SlackApiToken,
         ec: ExecutionContext
