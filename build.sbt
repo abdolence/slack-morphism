@@ -185,7 +185,7 @@ lazy val docSettings = Seq(
   micrositeTheme := "light",
   micrositePalette := Map(
     "brand-primary" -> "#bf360c",
-    "brand-secondary" -> "#aeea00",
+    "brand-secondary" -> "#37474f",
     "white-color" -> "#FFFFFF"
   ),
   micrositeGithubToken := sys.env.get( "GITHUB_TOKEN" ),
