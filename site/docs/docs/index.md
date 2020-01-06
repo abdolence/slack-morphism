@@ -44,3 +44,10 @@ or if you'd like to full-featured and ready to use Slack bot, which uses Akka Ht
 ```
 sbt new abdolence/slack-morphism-akka-http.g8
 ```
+Read more about this template [here](akka-http).
+
+## Limitations
+
+Slack Morphism intentionally doesn't provide:
+- RTM API (the usage of which is slowly declining in favour of Events API)
+- Legacy Web/Events API methods and models (like Slack Message attachments, which should be replaced with Slack Blocks)
