@@ -12,13 +12,13 @@ just to help you find errors at compile time.
 There is a [well-typed DSL](blocks-templating.md) for it to build your messages and views with Slack blocks safely. 
  
 ### Easy to use
-While Slack Morphism uses some of FP paradigms and avoid imperative style and mutable states internally, 
-its API doesn't expose to you anything that might make you learn advanced additional frameworks 
+While Slack Morphism uses some of FP paradigms and avoids imperative style and mutable states internally, 
+its API doesn't expose to you anything that might make you learn additional advanced frameworks 
 (like ZIO, cats-effects, etc).
-It provides you an API mostly based on Scala Future, Option, Either, etc.
+It provides you with a simple API mostly based on Scala Future, Option, Either, etc.
 
 ### Frameworks-agnostic
-Slack Morphism core library intentionally avoid dependencies to any additional Web Frameworks, so 
+Slack Morphism core library intentionally avoid dependencies to any additional Web-frameworks, so 
 you free to use any framework you're familiar with.
 Slack Morphism doesn't have any dependencies to any particular HTTP client library either 
 and uses [sttp library](https://github.com/softwaremill/sttp) to give you choice of options.
@@ -26,6 +26,11 @@ and uses [sttp library](https://github.com/softwaremill/sttp) to give you choice
 However, it would be an incomplete solution to provide you only core components, and for a quick start, 
 there is a [full-featured giter8 template and example](https://github.com/abdolence/slack-morphism-akka-http.g8) 
 of a Slack Bot built with Slack Morphism and Akka Http. 
+
+### Non-blocking and Reactive
+All of the Slack Morphism operation available in a non-blocking manner, and 
+some of Web methods (e.g. returning Slack channel history) also provided with a reactive Publisher,
+ so you can use it if you're familiar with Reactive Streams (and using related frameworks).
 
 ## Getting Started
 Add the following to your `build.sbt`:
@@ -37,5 +42,5 @@ libraryDependencies += "org.latestbit" %% "slack-morphism-client" % "1.0.0"
 or if you'd like to full-featured and ready to use Slack bot, which uses Akka Http, use this:
 
 ```
-sbt new abdolence/slack-morphism-akka-http
+sbt new abdolence/slack-morphism-akka-http.g8
 ```
