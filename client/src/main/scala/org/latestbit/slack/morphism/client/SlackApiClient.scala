@@ -41,5 +41,3 @@ class SlackApiClient()( implicit protected override val sttpBackend: SlackApiCli
     with SlackApiTeamClient
     with SlackApiUsersClient
     with SlackApiViewsClient {}
-
-object SlackApiClient {}
