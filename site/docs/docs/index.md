@@ -9,7 +9,7 @@ permalink: docs/
 Scala is a static-typed language, and Slack Morphism provides quite a lot of definitions of 
 most of the available methods and structures of Slack Web/Events API, 
 just to help you find errors at compile time.
-There is a [well-typed DSL](blocks-templating.md) for it to build your messages and views with Slack blocks safely. 
+There is a [well-typed DSL](templating) to build your messages and views with Slack blocks safely. 
  
 ### Easy to use
 While Slack Morphism uses some of FP paradigms and avoids imperative style and mutable states internally, 
