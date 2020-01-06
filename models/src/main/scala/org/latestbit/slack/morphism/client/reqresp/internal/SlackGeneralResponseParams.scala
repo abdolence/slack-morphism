@@ -18,13 +18,17 @@
 
 package org.latestbit.slack.morphism.client.reqresp.internal
 
+import org.latestbit.slack.morphism.common.SlackApiResponseMetadata
+
 /**
  * Slack low level system message params for error handling purposes.
  * https://api.slack.com/web
+ *
  * @note You shouldn't use directly this class
  */
 case class SlackGeneralResponseParams(
     ok: Boolean,
     error: Option[String] = None,
-    warning: Option[String] = None
+    warning: Option[String] = None,
+    response_metadata: Option[SlackApiResponseMetadata] = None
 )

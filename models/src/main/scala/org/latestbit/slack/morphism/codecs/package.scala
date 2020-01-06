@@ -300,6 +300,36 @@ package object codecs {
       }
     }
 
+    implicit val encoderSlackSectionBlockElement: Encoder.AsObject[SlackSectionBlockElement] =
+      JsonTaggedAdtCodec.createEncoder[SlackSectionBlockElement]( "type" )
+
+    implicit val decoderSlackSectionBlockElement: Decoder[SlackSectionBlockElement] =
+      JsonTaggedAdtCodec.createDecoder[SlackSectionBlockElement]( "type" )
+
+    implicit val encoderSlackContextBlockElement: Encoder.AsObject[SlackContextBlockElement] =
+      JsonTaggedAdtCodec.createEncoder[SlackContextBlockElement]( "type" )
+
+    implicit val decoderSlackContextBlockElement: Decoder[SlackContextBlockElement] =
+      JsonTaggedAdtCodec.createDecoder[SlackContextBlockElement]( "type" )
+
+    implicit val encoderSlackActionBlockElement: Encoder.AsObject[SlackActionBlockElement] =
+      JsonTaggedAdtCodec.createEncoder[SlackActionBlockElement]( "type" )
+
+    implicit val decoderSlackActionBlockElement: Decoder[SlackActionBlockElement] =
+      JsonTaggedAdtCodec.createDecoder[SlackActionBlockElement]( "type" )
+
+    implicit val encoderSlackInputBlockElement: Encoder.AsObject[SlackInputBlockElement] =
+      JsonTaggedAdtCodec.createEncoder[SlackInputBlockElement]( "type" )
+
+    implicit val decoderSlackInputBlockElement: Decoder[SlackInputBlockElement] =
+      JsonTaggedAdtCodec.createDecoder[SlackInputBlockElement]( "type" )
+
+    implicit val encoderSlackRichBlockElement: Encoder.AsObject[SlackRichBlockElement] =
+      JsonTaggedAdtCodec.createEncoder[SlackRichBlockElement]( "type" )
+
+    implicit val decoderSlackRichBlockElement: Decoder[SlackRichBlockElement] =
+      JsonTaggedAdtCodec.createDecoder[SlackRichBlockElement]( "type" )
+
     implicit val encoderSlackInputBlock: Encoder.AsObject[SlackInputBlock] = deriveEncoder[SlackInputBlock]
     implicit val decoderSlackInputBlock: Decoder[SlackInputBlock] = deriveDecoder[SlackInputBlock]
     implicit val encoderSlackSectionBlock: Encoder.AsObject[SlackSectionBlock] = deriveEncoder[SlackSectionBlock]

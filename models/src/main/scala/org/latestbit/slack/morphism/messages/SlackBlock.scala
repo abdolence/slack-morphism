@@ -39,7 +39,7 @@ case class SlackSectionBlock(
     text: SlackBlockText,
     override val block_id: Option[String] = None,
     fields: Option[List[SlackBlockText]] = None,
-    accessory: Option[SlackBlockElement] = None
+    accessory: Option[SlackSectionBlockElement] = None
 ) extends SlackBlock
 
 /**
@@ -63,15 +63,19 @@ case class SlackImageBlock(
  * https://api.slack.com/reference/block-kit/blocks#actions
  */
 @JsonAdt( "actions" )
-case class SlackActionsBlock( elements: NonEmptyList[SlackBlockElement], override val block_id: Option[String] = None )
-    extends SlackBlock
+case class SlackActionsBlock(
+    elements: NonEmptyList[SlackActionBlockElement],
+    override val block_id: Option[String] = None
+) extends SlackBlock
 
 /**
  * https://api.slack.com/reference/block-kit/blocks#context
  */
 @JsonAdt( "context" )
-case class SlackContextBlock( elements: NonEmptyList[SlackBlockElement], override val block_id: Option[String] = None )
-    extends SlackBlock
+case class SlackContextBlock(
+    elements: NonEmptyList[SlackContextBlockElement],
+    override val block_id: Option[String] = None
+) extends SlackBlock
 
 /**
  * https://api.slack.com/reference/block-kit/blocks#input
@@ -79,7 +83,7 @@ case class SlackContextBlock( elements: NonEmptyList[SlackBlockElement], overrid
 @JsonAdt( "input" )
 case class SlackInputBlock(
     label: SlackBlockPlainText,
-    element: SlackBlockElement,
+    element: SlackInputBlockElement,
     hint: Option[SlackBlockPlainText] = None,
     optional: Option[Boolean] = None,
     override val block_id: Option[String] = None
@@ -96,5 +100,5 @@ case class SlackFileBlock(
 ) extends SlackBlock
 
 @JsonAdt( "rich_text" )
-case class SlackRichTextBlock( elements: List[SlackBlockElement], override val block_id: Option[String] = None )
+case class SlackRichTextBlock( elements: List[SlackRichBlockElement], override val block_id: Option[String] = None )
     extends SlackBlock

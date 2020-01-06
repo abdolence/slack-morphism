@@ -54,9 +54,9 @@ trait SlackBlocksTemplateDsl extends SlackBlocksTemplateDslInternals {
   protected def optSectionField[T <: SlackBlockText]( condition: => Boolean )( field: => T ): SlackDslItemDef[T] =
     optElement( condition, field )
 
-  protected def blockElements(
-      defs: SlackDslItemDef[SlackBlockElement]*
-  ): NonEmptyList[SlackBlockElement] = NonEmptyList.fromListUnsafe( defs.toList.flatten )
+  protected def blockElements[T <: SlackBlockElement](
+      defs: SlackDslItemDef[T]*
+  ): NonEmptyList[T] = NonEmptyList.fromListUnsafe( defs.toList.flatten )
 
   protected def optBlockEl[T <: SlackBlockElement]( condition: => Boolean )( blockElement: => T ): SlackDslItemDef[T] =
     optElement( condition, blockElement )

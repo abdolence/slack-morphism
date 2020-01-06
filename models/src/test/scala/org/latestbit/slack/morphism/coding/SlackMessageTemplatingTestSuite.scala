@@ -59,7 +59,7 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
                   ),
                   accessory = image( "https://example.net/image.png" )
                 ),
-                contextBlock(
+                actionsBlock(
                   elements = blockElements(
                     button( text = plain"test button", action_id = "-" ),
                     button( text = plain"test button", action_id = "-" )
@@ -74,29 +74,37 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
                     )
                   )
                 ),
+                inputBlock(
+                  label = plain"Input",
+                  element = staticMenu(
+                    placeholder = plain"test",
+                    action_id = "-",
+                    options = choiceItems(
+                      choiceItem( text = plain"test-menu-item", value = "" ),
+                      optChoiceItem( testCond > 0 )( choiceItem( text = plain"test-menu-item2", value = "" ) )
+                    ),
+                    confirm = confirm(
+                      title = plain"Test title",
+                      text = md"Confirm this",
+                      confirm = plain"OK",
+                      deny = plain"Cancel"
+                    )
+                  )
+                ),
+                inputBlock(
+                  label = plain"Input",
+                  element = multiUsersListMenu(
+                    placeholder = plain"test",
+                    action_id = "-",
+                    initial_users = choiceStrItems(
+                      "test-user-1"
+                    )
+                  )
+                ),
                 contextBlock(
                   elements = blockElements(
-                    staticMenu(
-                      placeholder = plain"test",
-                      action_id = "-",
-                      options = choiceItems(
-                        choiceItem( text = plain"test-menu-item", value = "" ),
-                        optChoiceItem( testCond > 0 )( choiceItem( text = plain"test-menu-item2", value = "" ) )
-                      ),
-                      confirm = confirm(
-                        title = plain"Test title",
-                        text = md"Confirm this",
-                        confirm = plain"OK",
-                        deny = plain"Cancel"
-                      )
-                    ),
-                    multiUsersListMenu(
-                      placeholder = plain"test",
-                      action_id = "-",
-                      initial_users = choiceStrItems(
-                        "test-user-1"
-                      )
-                    )
+                    plain"Test",
+                    image( "https://example.net/image.png" )
                   )
                 )
               )

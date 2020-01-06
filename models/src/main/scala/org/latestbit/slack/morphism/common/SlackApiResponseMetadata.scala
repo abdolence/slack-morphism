@@ -25,5 +25,6 @@ package org.latestbit.slack.morphism.common
  */
 case class SlackApiResponseMetadata(
     next_cursor: Option[String] = None,
-    warnings: Option[Set[String]] = None
+    messages: Option[List[String]] = None,
+    warnings: Option[List[String]] = None
 )

@@ -89,12 +89,24 @@ class SlackInteractionEventsRoute(
     routeWithSlackApiToken( event.team.id ) { implicit slackApiToken =>
       event match {
         case blockActionEvent: SlackInteractionBlockActionEvent => {
-          logger.warn( s"Received a block action event: ${blockActionEvent}" )
+          logger.info( s"Received a block action event: ${blockActionEvent}" )
           showDummyModal( blockActionEvent.trigger_id )
         }
         case messageActionEvent: SlackInteractionMessageActionEvent => {
-          logger.warn( s"Received a message action event: ${messageActionEvent}" )
+          logger.info( s"Received a message action event: ${messageActionEvent}" )
           showDummyModal( messageActionEvent.trigger_id )
+        }
+        case actionSubmissionEvent: SlackInteractionViewSubmissionEvent => {
+          actionSubmissionEvent.view.stateParams.state.foreach { state =>
+            logger.info( s"Received action submission state: ${state}" )
+          }
+          complete(
+            StatusCodes.OK,
+            HttpEntity(
+              ContentTypes.`text/plain(UTF-8)`,
+              ""
+            )
+          )
         }
         case interactionEvent: SlackInteractionEvent => {
           logger.warn( s"We don't handle this interaction in this example: ${interactionEvent}" )

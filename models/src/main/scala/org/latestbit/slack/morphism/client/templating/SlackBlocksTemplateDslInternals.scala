@@ -44,16 +44,16 @@ trait SlackBlocksTemplateDslInternals {
   implicit final def slackBlockIterableToDef( block: => Iterable[SlackBlock] ) =
     SlackDslSomeIterableOfItem[SlackBlock](() => block )
 
-  implicit final def slackBlockElToDef( blockEl: => SlackBlockElement ) =
-    SlackDslSomeItem[SlackBlockElement](() => blockEl )
+  implicit final def slackBlockElToDef[T <: SlackBlockElement]( blockEl: => T ) =
+    SlackDslSomeItem[T](() => blockEl )
 
-  implicit final def slackBlockTextToDef( blockEl: => SlackBlockText ) =
-    SlackDslSomeItem[SlackBlockText](() => blockEl )
+  implicit final def slackBlockTextToDef[T <: SlackBlockText]( blockEl: => T ) =
+    SlackDslSomeItem[T](() => blockEl )
 
   implicit final def slackBlockOptionItemToDef( item: => SlackBlockOptionItem ) =
     SlackDslSomeItem[SlackBlockOptionItem](() => item )
 
-  implicit def slackBlockElementToOption( el: SlackBlockElement ): Option[SlackBlockElement] = Some( el )
+  implicit def slackBlockElementToOption[T <: SlackBlockElement]( el: T ): Option[T] = Some( el )
   implicit def slackBlockConfirmItemToOption( el: SlackBlockConfirmItem ): Option[SlackBlockConfirmItem] = Some( el )
   implicit def slackBlockNonEmptyListToOption[T]( els: NonEmptyList[T] ): Option[NonEmptyList[T]] = Some( els )
 

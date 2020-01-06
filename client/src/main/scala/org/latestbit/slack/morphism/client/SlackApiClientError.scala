@@ -64,17 +64,20 @@ case class SlackApiHttpError( uri: Uri, message: String, httpResponseBody: Optio
  * @param errorCode Slack error code
  * @param details error detail message
  * @param warning Slack warnings
+ * @param messages Slack error messages
  */
 case class SlackApiResponseError(
     uri: Uri,
     errorCode: String,
     details: Option[String] = None,
-    warning: Option[String] = None
+    warning: Option[String] = None,
+    messages: Option[List[String]] = None
 ) extends SlackApiClientError(
       uri = uri,
       message = s"""Slack API error response: ${errorCode}.
 			   |${details.map(text => s" Details: ${text}." ).getOrElse( "" )}
 			   |${warning.map(text => s" Warning: ${text}." ).getOrElse( "" )}
+               |${messages.map(msgs => s" Additional error messages: \n${msgs.mkString( "\n" )}" ).getOrElse( "" )}"
 			   |""".stripMargin
     )
 

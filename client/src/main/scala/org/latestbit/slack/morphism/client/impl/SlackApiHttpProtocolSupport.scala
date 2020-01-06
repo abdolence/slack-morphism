@@ -53,7 +53,8 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
       SlackApiResponseError(
         uri = uri,
         errorCode = errorCode,
-        warning = generalResponseParams.warning
+        warning = generalResponseParams.warning,
+        messages = generalResponseParams.response_metadata.flatMap( _.messages )
       )
     }
   }
