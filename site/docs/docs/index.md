@@ -1,5 +1,5 @@
 ---
-layout: docs
+layout: edocs
 title: Intro
 permalink: docs/
 ---

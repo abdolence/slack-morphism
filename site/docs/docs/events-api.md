@@ -1,5 +1,5 @@
 ---
-layout: docs
+layout: edocs
 title: Slack Events API
 permalink: docs/events-api
 ---
