@@ -29,6 +29,8 @@ trait AsyncSeqIteratorPosition[A, +P] {
  * Unlike standard Stream[]/LazyList[] from Scala, this implementation doesn't memorise previous values.
  * Unlike Future.sequence/fold we don't know beforehand how many async actions are coming
  *
+ * Look at [[AsyncSeqIterator.cons]] for details.
+ *
  * @note It is not possible to implement standard Iterator[] because of the sync nature of hasNext.
  *
  * @tparam I iterating over item type which has a some position
