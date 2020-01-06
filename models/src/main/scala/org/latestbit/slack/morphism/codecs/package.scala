@@ -48,6 +48,10 @@ import org.latestbit.slack.morphism.client.reqresp.test._
 import org.latestbit.slack.morphism.client.reqresp.users._
 import org.latestbit.slack.morphism.client.reqresp.views._
 
+/**
+ * This package contains implicit circe JSON encoders and decoders
+ * for all of the events and request/response models
+ */
 package object codecs {
 
   trait CirceCodecs {
@@ -429,6 +433,45 @@ package object codecs {
 
     implicit val decoderSlackBlockUsersListMenuElement: Decoder[SlackBlockUsersListMenuElement] =
       deriveDecoder[SlackBlockUsersListMenuElement]
+
+    implicit val encoderSlackBlockMultiStaticMenuElement: Encoder.AsObject[SlackBlockMultiStaticMenuElement] =
+      deriveEncoder[SlackBlockMultiStaticMenuElement]
+
+    implicit val decoderSlackBlockMultiStaticMenuElement: Decoder[SlackBlockMultiStaticMenuElement] =
+      deriveDecoder[SlackBlockMultiStaticMenuElement]
+
+    implicit val encoderSlackBlockMultiExternalMenuElement: Encoder.AsObject[SlackBlockMultiExternalMenuElement] =
+      deriveEncoder[SlackBlockMultiExternalMenuElement]
+
+    implicit val decoderSlackBlockMultiExternalMenuElement: Decoder[SlackBlockMultiExternalMenuElement] =
+      deriveDecoder[SlackBlockMultiExternalMenuElement]
+
+    implicit val encoderSlackBlockMultiUsersListMenuElement: Encoder.AsObject[SlackBlockMultiUsersListMenuElement] =
+      deriveEncoder[SlackBlockMultiUsersListMenuElement]
+
+    implicit val decoderSlackBlockMultiUsersListMenuElement: Decoder[SlackBlockMultiUsersListMenuElement] =
+      deriveDecoder[SlackBlockMultiUsersListMenuElement]
+
+    implicit val encoderSlackBlockMultiConversationListMenuElement
+        : Encoder.AsObject[SlackBlockMultiConversationListMenuElement] =
+      deriveEncoder[SlackBlockMultiConversationListMenuElement]
+
+    implicit val decoderSlackBlockMultiConversationListMenuElement
+        : Decoder[SlackBlockMultiConversationListMenuElement] =
+      deriveDecoder[SlackBlockMultiConversationListMenuElement]
+
+    implicit val encoderSlackBlockMultiChannelsListMenuElement
+        : Encoder.AsObject[SlackBlockMultiChannelsListMenuElement] =
+      deriveEncoder[SlackBlockMultiChannelsListMenuElement]
+
+    implicit val decoderSlackBlockMultiChannelsListMenuElement: Decoder[SlackBlockMultiChannelsListMenuElement] =
+      deriveDecoder[SlackBlockMultiChannelsListMenuElement]
+
+    implicit val encoderSlackBlockRadioButtonsElement: Encoder.AsObject[SlackBlockRadioButtonsElement] =
+      deriveEncoder[SlackBlockRadioButtonsElement]
+
+    implicit val decoderSlackBlockRadioButtonsElement: Decoder[SlackBlockRadioButtonsElement] =
+      deriveDecoder[SlackBlockRadioButtonsElement]
 
     implicit val encoderSlackBlockElement: Encoder[SlackBlockElement] =
       JsonTaggedAdtCodec.createEncoder[SlackBlockElement]( "type" )

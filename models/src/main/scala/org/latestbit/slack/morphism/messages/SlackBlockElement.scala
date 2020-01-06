@@ -27,9 +27,15 @@ import org.latestbit.circe.adt.codec._
  */
 sealed trait SlackBlockElement
 
+/**
+ * https://api.slack.com/reference/block-kit/block-elements#image
+ */
 @JsonAdt( "image" )
 case class SlackBlockImageElement( image_url: String, alt_text: Option[String] = None ) extends SlackBlockElement
 
+/**
+ * https://api.slack.com/reference/block-kit/block-elements#button
+ */
 @JsonAdt( "button" )
 case class SlackBlockButtonElement(
     text: SlackBlockText,
@@ -40,6 +46,9 @@ case class SlackBlockButtonElement(
     confirm: Option[SlackBlockConfirmItem] = None
 ) extends SlackBlockElement
 
+/**
+ * https://api.slack.com/reference/block-kit/block-elements#button
+ */
 case class SlackBlockConfirmItem(
     title: SlackBlockPlainText,
     text: SlackBlockText,
@@ -47,8 +56,15 @@ case class SlackBlockConfirmItem(
     deny: SlackBlockPlainText
 )
 
+/**
+ * https://api.slack.com/reference/block-kit/block-elements
+ */
+@JsonAdtPassThrough
 sealed trait SlackBlockMenuElement extends SlackBlockElement
 
+/**
+ * https://api.slack.com/reference/block-kit/block-elements#select
+ */
 @JsonAdt( "static_select" )
 case class SlackBlockStaticMenuElement(
     placeholder: SlackBlockPlainText,
@@ -59,6 +75,23 @@ case class SlackBlockStaticMenuElement(
     confirm: Option[SlackBlockConfirmItem] = None
 ) extends SlackBlockMenuElement
 
+/**
+ * https://api.slack.com/reference/block-kit/block-elements#multi_select
+ */
+@JsonAdt( "multi_static_select" )
+case class SlackBlockMultiStaticMenuElement(
+    placeholder: SlackBlockPlainText,
+    action_id: String,
+    options: Option[NonEmptyList[SlackBlockOptionItem]] = None,
+    option_groups: Option[NonEmptyList[SlackBlockOptionGroup]] = None,
+    initial_options: Option[List[SlackBlockOptionItem]] = None,
+    confirm: Option[SlackBlockConfirmItem] = None,
+    max_selected_items: Option[Long] = None
+) extends SlackBlockMenuElement
+
+/**
+ * https://api.slack.com/reference/block-kit/block-elements#external_select
+ */
 @JsonAdt( "external_select" )
 case class SlackBlockExternalMenuElement(
     placeholder: SlackBlockPlainText,
@@ -67,6 +100,21 @@ case class SlackBlockExternalMenuElement(
     confirm: Option[SlackBlockConfirmItem] = None
 ) extends SlackBlockMenuElement
 
+/**
+ * https://api.slack.com/reference/block-kit/block-elements#multi_external_select
+ */
+@JsonAdt( "multi_external_select" )
+case class SlackBlockMultiExternalMenuElement(
+    placeholder: SlackBlockPlainText,
+    action_id: String,
+    initial_options: Option[List[SlackBlockOptionItem]] = None,
+    confirm: Option[SlackBlockConfirmItem] = None,
+    max_selected_items: Option[Long] = None
+) extends SlackBlockMenuElement
+
+/**
+ * https://api.slack.com/reference/block-kit/block-elements#users_select
+ */
 @JsonAdt( "users_select" )
 case class SlackBlockUsersListMenuElement(
     placeholder: SlackBlockPlainText,
@@ -75,6 +123,21 @@ case class SlackBlockUsersListMenuElement(
     confirm: Option[SlackBlockConfirmItem] = None
 ) extends SlackBlockMenuElement
 
+/**
+ * https://api.slack.com/reference/block-kit/block-elements#multi_users_select
+ */
+@JsonAdt( "multi_users_select" )
+case class SlackBlockMultiUsersListMenuElement(
+    placeholder: SlackBlockPlainText,
+    action_id: String,
+    initial_users: Option[List[String]] = None,
+    confirm: Option[SlackBlockConfirmItem] = None,
+    max_selected_items: Option[Long] = None
+) extends SlackBlockMenuElement
+
+/**
+ * https://api.slack.com/reference/block-kit/block-elements#conversations_select
+ */
 @JsonAdt( "conversations_select" )
 case class SlackBlockConversationListMenuElement(
     placeholder: SlackBlockPlainText,
@@ -83,6 +146,21 @@ case class SlackBlockConversationListMenuElement(
     confirm: Option[SlackBlockConfirmItem] = None
 ) extends SlackBlockMenuElement
 
+/**
+ * https://api.slack.com/reference/block-kit/block-elements#multi_conversations_select
+ */
+@JsonAdt( "multi_conversations_select" )
+case class SlackBlockMultiConversationListMenuElement(
+    placeholder: SlackBlockPlainText,
+    action_id: String,
+    initial_conversations: Option[List[String]] = None,
+    confirm: Option[SlackBlockConfirmItem] = None,
+    max_selected_items: Option[Long] = None
+) extends SlackBlockMenuElement
+
+/**
+ * https://api.slack.com/reference/block-kit/block-elements#channels_select
+ */
 @JsonAdt( "channels_select" )
 case class SlackBlockChannelsListMenuElement(
     placeholder: SlackBlockPlainText,
@@ -91,6 +169,21 @@ case class SlackBlockChannelsListMenuElement(
     confirm: Option[SlackBlockConfirmItem] = None
 ) extends SlackBlockMenuElement
 
+/**
+ * https://api.slack.com/reference/block-kit/block-elements#multi_channels_select
+ */
+@JsonAdt( "multi_channels_select" )
+case class SlackBlockMultiChannelsListMenuElement(
+    placeholder: SlackBlockPlainText,
+    action_id: String,
+    initial_channels: Option[List[String]] = None,
+    confirm: Option[SlackBlockConfirmItem] = None,
+    max_selected_items: Option[Long] = None
+) extends SlackBlockMenuElement
+
+/**
+ * https://api.slack.com/reference/block-kit/block-elements#overflow
+ */
 @JsonAdt( "overflow" )
 case class SlackBlockOverflowMenuElement(
     action_id: String,
@@ -102,6 +195,9 @@ case class SlackBlockOptionItem( text: SlackBlockPlainText, value: String )
 
 case class SlackBlockOptionGroup( label: SlackBlockPlainText, options: List[SlackBlockOptionItem] )
 
+/**
+ * https://api.slack.com/reference/block-kit/block-elements#datepicker
+ */
 @JsonAdt( "datepicker" )
 case class SlackBlockDatePickerElement(
     action_id: String,
@@ -110,6 +206,9 @@ case class SlackBlockDatePickerElement(
     confirm: Option[SlackBlockConfirmItem] = None
 ) extends SlackBlockElement
 
+/**
+ * https://api.slack.com/reference/block-kit/block-elements#input
+ */
 @JsonAdt( "plain_text_input" )
 case class SlackBlockPlainInputElement(
     action_id: String,
@@ -118,6 +217,18 @@ case class SlackBlockPlainInputElement(
     multiline: Option[Boolean] = None,
     min_length: Option[Int] = None,
     max_length: Option[Long] = None
+) extends SlackBlockElement
+
+/**
+ * https://api.slack.com/reference/block-kit/block-elements#radio
+ */
+@JsonAdt( "radio_buttons" )
+case class SlackBlockRadioButtonsElement(
+    action_id: String,
+    placeholder: Option[SlackBlockPlainText] = None,
+    options: NonEmptyList[SlackBlockOptionItem],
+    initial_options: Option[List[SlackBlockOptionItem]] = None,
+    confirm: Option[SlackBlockConfirmItem] = None
 ) extends SlackBlockElement
 
 @JsonAdt( "rich_text_section" )
@@ -137,15 +248,24 @@ object SlackBlockTextTypes {
   final val PLAIN_TEXT = "plain_text"
 }
 
+/**
+ * https://api.slack.com/reference/block-kit/composition-objects#text
+ */
 @JsonAdtPassThrough
 sealed trait SlackBlockText extends SlackBlockElement
 
+/**
+ * 'plain_text' type of https://api.slack.com/reference/block-kit/composition-objects#text
+ */
 @JsonAdt( SlackBlockTextTypes.PLAIN_TEXT )
 case class SlackBlockPlainText(
     text: String,
     emoji: Option[Boolean] = None
 ) extends SlackBlockText
 
+/**
+ * 'mrkdwn' type of https://api.slack.com/reference/block-kit/composition-objects#text
+ */
 @JsonAdt( SlackBlockTextTypes.MARK_DOWN )
 case class SlackBlockMarkDownText(
     text: String,

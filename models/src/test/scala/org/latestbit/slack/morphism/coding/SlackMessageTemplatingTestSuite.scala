@@ -69,8 +69,8 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
                   text = md"Test 2",
                   accessory = overflowMenu(
                     action_id = "-",
-                    options = menuItems(
-                      menuItem( text = plain"test-menu-item", value = "" )
+                    options = choiceItems(
+                      choiceItem( text = plain"test-menu-item", value = "" )
                     )
                   )
                 ),
@@ -79,9 +79,9 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
                     staticMenu(
                       placeholder = plain"test",
                       action_id = "-",
-                      options = staticMenuItems(
-                        menuItem( text = plain"test-menu-item", value = "" ),
-                        optMenuItem( testCond > 0 )( menuItem( text = plain"test-menu-item2", value = "" ) )
+                      options = staticChoiceItems(
+                        choiceItem( text = plain"test-menu-item", value = "" ),
+                        optChoiceItem( testCond > 0 )( choiceItem( text = plain"test-menu-item2", value = "" ) )
                       ),
                       confirm = confirm(
                         title = plain"Test title",

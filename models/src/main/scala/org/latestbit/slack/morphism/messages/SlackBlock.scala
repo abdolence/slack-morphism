@@ -31,6 +31,9 @@ sealed trait SlackBlock {
   val block_id: Option[String]
 }
 
+/**
+ * https://api.slack.com/reference/block-kit/blocks#section
+ */
 @JsonAdt( "section" )
 case class SlackSectionBlock(
     text: SlackBlockText,
@@ -39,9 +42,15 @@ case class SlackSectionBlock(
     accessory: Option[SlackBlockElement] = None
 ) extends SlackBlock
 
+/**
+ * https://api.slack.com/reference/block-kit/blocks#divider
+ */
 @JsonAdt( "divider" )
 case class SlackDividerBlock( override val block_id: Option[String] = None ) extends SlackBlock
 
+/**
+ * https://api.slack.com/reference/block-kit/blocks#image
+ */
 @JsonAdt( "image" )
 case class SlackImageBlock(
     image_url: String,
@@ -50,14 +59,23 @@ case class SlackImageBlock(
     override val block_id: Option[String] = None
 ) extends SlackBlock
 
+/**
+ * https://api.slack.com/reference/block-kit/blocks#actions
+ */
 @JsonAdt( "actions" )
 case class SlackActionsBlock( elements: NonEmptyList[SlackBlockElement], override val block_id: Option[String] = None )
     extends SlackBlock
 
+/**
+ * https://api.slack.com/reference/block-kit/blocks#context
+ */
 @JsonAdt( "context" )
 case class SlackContextBlock( elements: NonEmptyList[SlackBlockElement], override val block_id: Option[String] = None )
     extends SlackBlock
 
+/**
+ * https://api.slack.com/reference/block-kit/blocks#input
+ */
 @JsonAdt( "input" )
 case class SlackInputBlock(
     label: SlackBlockPlainText,
@@ -67,6 +85,9 @@ case class SlackInputBlock(
     override val block_id: Option[String] = None
 ) extends SlackBlock
 
+/**
+ * https://api.slack.com/reference/block-kit/blocks#file
+ */
 @JsonAdt( "file" )
 case class SlackFileBlock(
     external_id: String,
