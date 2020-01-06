@@ -202,7 +202,8 @@ lazy val docSettings = Seq(
   ),
   apiDocsDir := "api",
   unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects( slackMorphismModels, slackMorphismClient ),
-  addMappingsToSiteDir( mappings in (ScalaUnidoc, packageDoc), apiDocsDir )
+  addMappingsToSiteDir( mappings in (ScalaUnidoc, packageDoc), apiDocsDir ),
+  micrositeAnalyticsToken := "UA-155371094-1"
 )
 
 ThisBuild / GitKeys.gitReader := baseDirectory(base => new DefaultReadableGit( base ) ).value
