@@ -90,6 +90,10 @@ case class SlackApiDecodingError(
     httpResponseBody: Option[String] = None
 ) extends SlackApiClientError( uri = uri, message = coderError.getMessage, cause = Some( coderError ) )
 
+/**
+ * Slack Wep API unexpected empty result has been received
+ * @param uri Web method URL
+ */
 case class SlackApiEmptyResultError( uri: Uri )
     extends SlackApiClientError(
       uri = uri,
