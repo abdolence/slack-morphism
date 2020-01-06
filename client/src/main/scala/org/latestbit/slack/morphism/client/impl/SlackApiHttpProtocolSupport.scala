@@ -222,6 +222,15 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
     )
   }
 
+  protected def handleSlackEmptyRes[RS]( replacement: => RS )( either: Either[SlackApiClientError, RS] ) = {
+    either.leftFlatMap {
+      case _: SlackApiEmptyResultError => {
+        Right( replacement )
+      }
+      case err: SlackApiClientError => err.asLeft
+    }
+  }
+
   object http {
 
     /**

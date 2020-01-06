@@ -35,6 +35,6 @@ case class SlackApiPostEventReply(
  * Response for posting event reply
  */
 case class SlackApiPostEventReplyResponse(
-    channel: String,
+    channel: Option[String] = None,
     message: Option[SlackMessage] = None
 )

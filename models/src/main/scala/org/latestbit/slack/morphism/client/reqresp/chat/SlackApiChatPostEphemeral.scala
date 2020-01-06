@@ -40,4 +40,4 @@ case class SlackApiChatPostEphemeralRequest(
 /**
  * Response of https://api.slack.com/methods/chat.postEphemeral
  */
-case class SlackApiChatPostEphemeralResponse( message_ts: String )
+case class SlackApiChatPostEphemeralResponse( message_ts: Option[String] = None )

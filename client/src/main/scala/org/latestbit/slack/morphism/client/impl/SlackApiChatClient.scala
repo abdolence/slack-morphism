@@ -18,7 +18,7 @@
 
 package org.latestbit.slack.morphism.client.impl
 
-import org.latestbit.slack.morphism.client._
+import org.latestbit.slack.morphism.client.{ SlackApiClientError, _ }
 import org.latestbit.slack.morphism.client.reqresp.chat._
 import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
 import sttp.client._
@@ -30,8 +30,6 @@ import scala.concurrent.{ ExecutionContext, Future }
  * Support for Slack Chat API methods
  */
 trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
-
-  import org.latestbit.slack.morphism.ext.SttpExt._
 
   object chat {
 
@@ -105,13 +103,15 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiChatPostEphemeralResponse]] = {
 
-      http.post[
-        SlackApiChatPostEphemeralRequest,
-        SlackApiChatPostEphemeralResponse
-      ](
-        "chat.postEphemeral",
-        req
-      )
+      http
+        .post[
+          SlackApiChatPostEphemeralRequest,
+          SlackApiChatPostEphemeralResponse
+        ](
+          "chat.postEphemeral",
+          req
+        )
+        .map( handleSlackEmptyRes( SlackApiChatPostEphemeralResponse() ) )
     }
 
     /**
@@ -142,7 +142,7 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
         absoluteUri = uri"${response_url}",
         request = createSlackHttpApiRequest(),
         body = reply
-      )
+      ).map( handleSlackEmptyRes( SlackApiPostEventReplyResponse() ) )
     }
 
     /**
