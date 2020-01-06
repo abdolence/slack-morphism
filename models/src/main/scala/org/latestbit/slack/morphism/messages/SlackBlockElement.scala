@@ -84,7 +84,7 @@ case class SlackBlockMultiStaticMenuElement(
     action_id: String,
     options: Option[NonEmptyList[SlackBlockOptionItem]] = None,
     option_groups: Option[NonEmptyList[SlackBlockOptionGroup]] = None,
-    initial_options: Option[List[SlackBlockOptionItem]] = None,
+    initial_options: Option[NonEmptyList[SlackBlockOptionItem]] = None,
     confirm: Option[SlackBlockConfirmItem] = None,
     max_selected_items: Option[Long] = None
 ) extends SlackBlockMenuElement
@@ -107,7 +107,7 @@ case class SlackBlockExternalMenuElement(
 case class SlackBlockMultiExternalMenuElement(
     placeholder: SlackBlockPlainText,
     action_id: String,
-    initial_options: Option[List[SlackBlockOptionItem]] = None,
+    initial_options: Option[NonEmptyList[SlackBlockOptionItem]] = None,
     confirm: Option[SlackBlockConfirmItem] = None,
     max_selected_items: Option[Long] = None
 ) extends SlackBlockMenuElement
@@ -130,7 +130,7 @@ case class SlackBlockUsersListMenuElement(
 case class SlackBlockMultiUsersListMenuElement(
     placeholder: SlackBlockPlainText,
     action_id: String,
-    initial_users: Option[List[String]] = None,
+    initial_users: Option[NonEmptyList[String]] = None,
     confirm: Option[SlackBlockConfirmItem] = None,
     max_selected_items: Option[Long] = None
 ) extends SlackBlockMenuElement
@@ -153,7 +153,7 @@ case class SlackBlockConversationListMenuElement(
 case class SlackBlockMultiConversationListMenuElement(
     placeholder: SlackBlockPlainText,
     action_id: String,
-    initial_conversations: Option[List[String]] = None,
+    initial_conversations: Option[NonEmptyList[String]] = None,
     confirm: Option[SlackBlockConfirmItem] = None,
     max_selected_items: Option[Long] = None
 ) extends SlackBlockMenuElement
@@ -176,7 +176,7 @@ case class SlackBlockChannelsListMenuElement(
 case class SlackBlockMultiChannelsListMenuElement(
     placeholder: SlackBlockPlainText,
     action_id: String,
-    initial_channels: Option[List[String]] = None,
+    initial_channels: Option[NonEmptyList[String]] = None,
     confirm: Option[SlackBlockConfirmItem] = None,
     max_selected_items: Option[Long] = None
 ) extends SlackBlockMenuElement
@@ -227,7 +227,7 @@ case class SlackBlockRadioButtonsElement(
     action_id: String,
     placeholder: Option[SlackBlockPlainText] = None,
     options: NonEmptyList[SlackBlockOptionItem],
-    initial_options: Option[List[SlackBlockOptionItem]] = None,
+    initial_options: Option[NonEmptyList[SlackBlockOptionItem]] = None,
     confirm: Option[SlackBlockConfirmItem] = None
 ) extends SlackBlockElement
 

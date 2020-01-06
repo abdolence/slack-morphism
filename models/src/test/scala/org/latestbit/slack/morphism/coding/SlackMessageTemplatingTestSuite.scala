@@ -79,7 +79,7 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
                     staticMenu(
                       placeholder = plain"test",
                       action_id = "-",
-                      options = staticChoiceItems(
+                      options = choiceItems(
                         choiceItem( text = plain"test-menu-item", value = "" ),
                         optChoiceItem( testCond > 0 )( choiceItem( text = plain"test-menu-item2", value = "" ) )
                       ),
@@ -88,6 +88,13 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
                         text = md"Confirm this",
                         confirm = plain"OK",
                         deny = plain"Cancel"
+                      )
+                    ),
+                    multiUsersListMenu(
+                      placeholder = plain"test",
+                      action_id = "-",
+                      initial_users = choiceStrItems(
+                        "test-user-1"
                       )
                     )
                   )

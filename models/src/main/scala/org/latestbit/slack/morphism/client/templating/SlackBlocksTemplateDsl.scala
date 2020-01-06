@@ -84,10 +84,8 @@ trait SlackBlocksTemplateDsl extends SlackBlocksTemplateDslInternals {
   protected def choiceItems( defs: SlackDslItemDef[SlackBlockOptionItem]* ): NonEmptyList[SlackBlockOptionItem] =
     NonEmptyList.fromListUnsafe( defs.toList.flatten )
 
-  protected def staticChoiceItems(
-      defs: SlackDslItemDef[SlackBlockOptionItem]*
-  ): Option[NonEmptyList[SlackBlockOptionItem]] =
-    Some( choiceItems( defs: _* ) )
+  protected def choiceStrItems( defs: String* ): NonEmptyList[String] =
+    NonEmptyList.fromListUnsafe( defs.toList )
 
   protected def optChoiceItem(
       condition: => Boolean
@@ -98,11 +96,6 @@ trait SlackBlocksTemplateDsl extends SlackBlocksTemplateDslInternals {
 
   protected def choiceGroups( defs: SlackDslItemDef[SlackBlockOptionGroup]* ): NonEmptyList[SlackBlockOptionGroup] =
     NonEmptyList.fromListUnsafe( defs.flatten.toList )
-
-  protected def staticChoiceGroups(
-      defs: SlackDslItemDef[SlackBlockOptionGroup]*
-  ): Option[NonEmptyList[SlackBlockOptionGroup]] =
-    Option( choiceGroups( defs: _* ) )
 
   protected def choiceGroup = SlackBlockOptionGroup
 

@@ -18,6 +18,7 @@
 
 package org.latestbit.slack.morphism.client.templating
 
+import cats.data.NonEmptyList
 import org.latestbit.slack.morphism.messages.{
   SlackBlock,
   SlackBlockConfirmItem,
@@ -54,6 +55,7 @@ trait SlackBlocksTemplateDslInternals {
 
   implicit def slackBlockElementToOption( el: SlackBlockElement ): Option[SlackBlockElement] = Some( el )
   implicit def slackBlockConfirmItemToOption( el: SlackBlockConfirmItem ): Option[SlackBlockConfirmItem] = Some( el )
+  implicit def slackBlockNonEmptyListToOption[T]( els: NonEmptyList[T] ): Option[NonEmptyList[T]] = Some( els )
 
   implicit def slackBlocksListToOption( blocks: List[SlackBlock] ): Option[List[SlackBlock]] = noneIfEmptyList( blocks )
 
