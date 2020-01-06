@@ -58,13 +58,13 @@ class SlackApiScrollableSubscriptionCommandProcessor[IT, PT](
                     lastItems = successResp.items
                     subscriptionLastResponse = successResp.getLatestPos.map( scrollableResponse.next )
                   }
-                  case Left( err ) => {
+                  case Left( _ ) => {
                     lastItems = List()
                     subscriptionLastResponse = None
                   }
                 }
               }
-              case Failure( err ) => {
+              case Failure( _ ) => {
                 subscriptionLastResponse = None
               }
             }
