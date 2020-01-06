@@ -227,6 +227,7 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
      * Make HTTP GET to Slack API
      * @param methodUri a relative method uri (like 'api.test')
      * @param params HTTP GET URL params
+     * @tparam RS expected response type
      * @return Decoded from JSON result
      */
     def get[RS]( methodUri: String, params: Map[String, Option[String]] = Map() )(
@@ -238,9 +239,11 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
     }
 
     /**
-     * Make HTTP GET to Slack API
+     * Make HTTP POST to Slack API
      * @param methodUri a relative method uri (like 'api.test')
      * @param req a request model to encode to JSON
+     * @tparam RQ request type
+     * @tparam RS expected response type
      * @return Decoded from JSON result
      */
     def post[RQ, RS]( methodUri: String, req: RQ )(
