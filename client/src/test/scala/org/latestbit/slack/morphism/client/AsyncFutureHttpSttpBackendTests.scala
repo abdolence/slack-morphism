@@ -20,7 +20,6 @@ package org.latestbit.slack.morphism.client
 
 import org.latestbit.slack.morphism.client.reqresp.test.SlackApiTestRequest
 import org.scalatest.flatspec.AsyncFlatSpec
-import sttp.client.asynchttpclient.cats.AsyncHttpClientCatsBackend
 import sttp.client.asynchttpclient.future.AsyncHttpClientFutureBackend
 
 class AsyncFutureHttpSttpBackendTests extends AsyncFlatSpec with SlackApiClientTestsSuiteSupport {

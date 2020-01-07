@@ -33,42 +33,47 @@ import scala.language.implicitConversions
 
 trait SlackBlocksTemplateDslInternals {
 
-  sealed trait SlackDslItemDef[+T]
-  case class SlackDslSomeItem[+T]( item: () => T ) extends SlackDslItemDef[T]
-  case class SlackDslSomeIterableOfItem[+T]( item: () => Iterable[T] ) extends SlackDslItemDef[T]
-  case object SlackDslNoneItem extends SlackDslItemDef[Nothing]
+  protected sealed trait SlackDslItemDef[+T]
+  protected case class SlackDslSomeItem[+T]( item: () => T ) extends SlackDslItemDef[T]
+  protected case class SlackDslSomeIterableOfItem[+T]( item: () => Iterable[T] ) extends SlackDslItemDef[T]
+  protected case object SlackDslNoneItem extends SlackDslItemDef[Nothing]
 
-  implicit final def slackBlockToDef( block: => SlackBlock ) =
+  protected implicit final def slackBlockToDef( block: => SlackBlock ) =
     SlackDslSomeItem[SlackBlock](() => block )
 
-  implicit final def slackBlockIterableToDef( block: => Iterable[SlackBlock] ) =
+  protected implicit final def slackBlockIterableToDef( block: => Iterable[SlackBlock] ) =
     SlackDslSomeIterableOfItem[SlackBlock](() => block )
 
-  implicit final def slackBlockElToDef[T <: SlackBlockElement]( blockEl: => T ) =
+  protected implicit final def slackBlockElToDef[T <: SlackBlockElement]( blockEl: => T ) =
     SlackDslSomeItem[T](() => blockEl )
 
-  implicit final def slackBlockTextToDef[T <: SlackBlockText]( blockEl: => T ) =
+  protected implicit final def slackBlockTextToDef[T <: SlackBlockText]( blockEl: => T ) =
     SlackDslSomeItem[T](() => blockEl )
 
-  implicit final def slackBlockOptionItemToDef( item: => SlackBlockChoiceItem ) =
+  protected implicit final def slackBlockOptionItemToDef( item: => SlackBlockChoiceItem ) =
     SlackDslSomeItem[SlackBlockChoiceItem](() => item )
 
-  implicit def slackBlockElementToOption[T <: SlackBlockElement]( el: T ): Option[T] = Some( el )
-  implicit def slackBlockConfirmItemToOption( el: SlackBlockConfirmItem ): Option[SlackBlockConfirmItem] = Some( el )
-  implicit def slackBlockNonEmptyListToOption[T]( els: NonEmptyList[T] ): Option[NonEmptyList[T]] = Some( els )
+  protected implicit def slackBlockElementToOption[T <: SlackBlockElement]( el: T ): Option[T] = Some( el )
 
-  implicit def slackBlocksListToOption( blocks: List[SlackBlock] ): Option[List[SlackBlock]] = noneIfEmptyList( blocks )
+  protected implicit def slackBlockConfirmItemToOption( el: SlackBlockConfirmItem ): Option[SlackBlockConfirmItem] =
+    Some( el )
 
-  implicit def slackDslItemDefToIterable[T]( itemDef: SlackDslItemDef[T] ): Iterable[T] = itemDef match {
+  protected implicit def slackBlockNonEmptyListToOption[T]( els: NonEmptyList[T] ): Option[NonEmptyList[T]] =
+    Some( els )
+
+  protected implicit def slackBlocksListToOption( blocks: List[SlackBlock] ): Option[List[SlackBlock]] =
+    noneIfEmptyList( blocks )
+
+  protected implicit def slackDslItemDefToIterable[T]( itemDef: SlackDslItemDef[T] ): Iterable[T] = itemDef match {
     case SlackDslSomeItem( item )            => List( item() ) // We can't use Iterable.single( item() ) in Scala 2.12
     case SlackDslSomeIterableOfItem( items ) => items()
     case SlackDslNoneItem                    => Iterable.empty
   }
 
-  implicit final def slackDslListInnerItemsToListItems[T]( items: => Iterable[Iterable[T]] ) =
+  protected implicit final def slackDslListInnerItemsToListItems[T]( items: => Iterable[Iterable[T]] ) =
     SlackDslSomeIterableOfItem[T](() => items.flatten )
 
-  implicit final class SlackTextInterpolators( private val sc: StringContext ) {
+  protected implicit final class SlackTextInterpolators( private val sc: StringContext ) {
 
     private def applySubs( subs: Seq[Any] ): String = {
       if (subs.nonEmpty)
