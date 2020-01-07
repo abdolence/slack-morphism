@@ -106,8 +106,8 @@
 
 <h3 id="choose-a-http-client-backend">Choose a HTTP client backend</h3>
 
-<p>You should choose <a href="sttp backend">https://sttp.readthedocs.io/en/latest/backends/summary.html</a> 
-which supports <code class="highlighter-rouge">scala.concurrent.Future</code> response:</p>
+<p>You should choose a <a href="https://sttp.readthedocs.io/en/latest/backends/summary.html">sttp backend</a> 
+that supports <code class="highlighter-rouge">scala.concurrent.Future</code> responses:</p>
 <ul>
   <li>AkkaHttpBackend</li>
   <li>OkHttpFutureBackend</li>
@@ -116,7 +116,7 @@ which supports <code class="highlighter-rouge">scala.concurrent.Future</code> re
 
 <p>Add a dependency of your choice to your <code class="highlighter-rouge">build.sbt</code>.</p>
 
-<p>For Akka Http it is:</p>
+<p>For Akka Http this is:</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"com.softwaremill.sttp.client" %% "akka-http-backend" % sttpVersion
 </code></pre></div></div>
 
