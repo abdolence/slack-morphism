@@ -177,7 +177,10 @@ If you all this correctly you should see something like this:</p>
 <ul>
   <li><code class="highlighter-rouge">Features → Event Subscriptions → Enable Events</code>
     <ul>
-      <li>Request URL: https://<your-ngrok-id>.ngrok.io/push</your-ngrok-id></li>
+      <li>Request URL:
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  https://&lt;your-ngrok-id&gt;.ngrok.io/push
+</code></pre></div>        </div>
+      </li>
       <li>Subscribe to bot events: <code class="highlighter-rouge">app_home_opened</code>, <code class="highlighter-rouge">message.im</code>, <code class="highlighter-rouge">message.channels</code></li>
       <li><strong>Save Changes</strong></li>
     </ul>
@@ -189,7 +192,10 @@ If you all this correctly you should see something like this:</p>
 <ul>
   <li><code class="highlighter-rouge">Features → OAuth &amp; Permissions</code>:
     <ul>
-      <li>Redirect URLs: https://<your-ngrok-id>.ngrok.io/auth/callback</your-ngrok-id></li>
+      <li>Redirect URLs:
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  https://&lt;your-ngrok-id&gt;.ngrok.io/auth/callback
+</code></pre></div>        </div>
+      </li>
       <li><strong>Save URLs</strong></li>
       <li>Check if <code class="highlighter-rouge">Scopes → Bot Token Scopes</code> contains all required scopes:
   <code class="highlighter-rouge">channels:history,chat:write,commands,im:history,im:read,im:write,team:read,users.profile:read,users:read</code>
@@ -198,7 +204,10 @@ If you all this correctly you should see something like this:</p>
   </li>
   <li><code class="highlighter-rouge">Features → Interactive Components</code>:
     <ul>
-      <li>Interactivity → Request URL: https://<your-ngrok-id>.ngrok.io/interaction</your-ngrok-id></li>
+      <li>Interactivity → Request URL:
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  https://&lt;your-ngrok-id&gt;.ngrok.io/interaction
+</code></pre></div>        </div>
+      </li>
     </ul>
   </li>
   <li><code class="highlighter-rouge">Features → Home</code>:
@@ -209,7 +218,10 @@ If you all this correctly you should see something like this:</p>
 </ul>
 
 <h3 id="install-a-bot-into-your-workspace-using-slack-oauth-v2">Install a bot into your workspace using Slack OAuth v2</h3>
-<p>Just follow to the http://localhost:8080/auth/install in your browser and allow the installation.</p>
+<p>Just follow to the</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/auth/install
+</code></pre></div></div>
+<p>in your browser and allow the installation.</p>
 
 <p>That’s it, you now have a working bot in your workspace written with Scala, Slack Morphism and Akka.
 Follow to the <code class="highlighter-rouge">Apps</code> section in your workspace. 
@@ -217,7 +229,7 @@ You should see your app with its <code class="highlighter-rouge">Home tab</code>
 or click on buttons on messages and views.</p>
 
 <h2 id="developer-overview">Developer Overview</h2>
-<p>Now it is probably time to open a bot in IDE to have deeper knowledge how it works:</p>
+<p>Now it is probably time to open a bot project in IDE to have deeper look how it works inside:</p>
 
 <ul>
   <li>Akka HTTP routes are located in <code class="highlighter-rouge">routes</code> subpackage, where you can find an auxiliary trait
@@ -231,7 +243,7 @@ and read tokens for workspace.</li>
 <p>For simplicity sake:</p>
 <ul>
   <li>This template uses an embedded database <a href="http://swaydb.io/">SwayDb</a> to store tokens. 
-   For production environments, you should consider to use more appropriate for you solutions.</li>
+   For production environments, you should consider to use more appropriate solutions for your case.</li>
   <li>This template doesn’t provide HTTPS configuration for Akka, which is described in detail <a href="https://doc.akka.io/docs/akka-http/current/server-side/server-https-support.html">here</a> 
    or use other HTTPS solutions (like reverse HTTP proxies).</li>
 </ul>
