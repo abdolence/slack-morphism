@@ -102,7 +102,7 @@
 		</div>
 		<div id="content" data-github-owner="abdolence" data-github-repo="slack-morphism">
 			<div class="content-wrapper">
-				<section><h2 id="slack-web-api">Slack Web API</h2>
+				<section><h1 id="slack-web-api-client">Slack Web API client</h1>
 
 <h3 id="choose-an-http-client-backend">Choose an HTTP client backend</h3>
 
@@ -181,7 +181,10 @@ is <code class="highlighter-rouge">slackApiClient.oauth.v2.access()</code> etc.<
 <p>The complete list of all of the implemented Web API methods is available <a href="/api/org/latestbit/slack/morphism/client/SlackApiClient.html">here</a>.</p>
 
 <h3 id="low-level-http-api-to-slack-web-api">Low-level HTTP API to Slack Web API</h3>
-<p>In case you didn’t find a method you need on the list above, there is <a href="/api/org/latestbit/slack/morphism/client/impl/SlackApiHttpProtocolSupport$http$.html">low-level</a> API for this case:</p>
+<p>In case you didn’t find a method you need on the list above, 
+or you need something different/undocumented/legacy, 
+there is a <a href="/api/org/latestbit/slack/morphism/client/impl/SlackApiHttpProtocolSupport$http$.html">low-level</a> 
+API for this scenario:</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client._</span>
 
@@ -204,10 +207,13 @@ is <code class="highlighter-rouge">slackApiClient.oauth.v2.access()</code> etc.<
     <span class="nc">YourRequest</span><span class="o">()</span>
 <span class="o">)</span>
 </code></pre></div></div>
+
 <hr />
+
 <p>Please, don’t hesitate to submit a PR with model updates if you find anything missing or find model inconsistency.
-This project is open to help each others, so any PRs are welcomed.
-—</p>
+This project is open to help each others, so any PRs are welcomed.</p>
+
+<hr />
 
 <h3 id="working-with-paginationbatching-results">Working with pagination/batching results</h3>
 <p>Some of the Web API methods defines cursors and <a href="https://api.slack.com/docs/pagination">pagination</a>, to give you an ability to load a lot of data
