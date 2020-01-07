@@ -30,9 +30,32 @@ ThisBuild / scalacOptions ++= Seq( "-feature" )
 
 ThisBuild / exportJars := true
 
-publishArtifact := false
+ThisBuild / exportJars := true
 
-publishTo := Some( Resolver.file( "Unused transient repository", file( "target/unusedrepo" ) ) )
+ThisBuild / publishMavenStyle := true
+
+ThisBuild / publishTo := {
+  val nexus = "https://oss.sonatype.org/"
+  if (isSnapshot.value)
+    Some( "snapshots" at nexus + "content/repositories/snapshots" )
+  else
+    Some( "releases" at nexus + "service/local/staging/deploy/maven2" )
+}
+
+ThisBuild / pomExtra := (
+  <scm>
+        <url>https://github.com/abdolence/slack-morphism</url>
+        <connection>scm:git:https://github.com/abdolence/slack-morphism</connection>
+        <developerConnection>scm:git:https://github.com/abdolence/slack-morphism</developerConnection>
+    </scm>
+        <developers>
+            <developer>
+                <id>abdolence</id>
+                <name>Abdulla Abdurakhmanov</name>
+                <url>https://abdolence.dev</url>
+            </developer>
+        </developers>
+)
 
 ThisBuild / resolvers ++= Seq(
   "Typesafe repository" at "https://repo.typesafe.com/typesafe/releases/",
