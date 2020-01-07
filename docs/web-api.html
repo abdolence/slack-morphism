@@ -66,7 +66,7 @@
 			<div class="sidebar-nav-item  "><a href="/docs/templating" title="Blocks Templating" class="">Blocks Templating</a>
 			</div>
 			 
-			<div class="sidebar-nav-item  "><a href="/docs/akka-http" title="Using with Akka HTTP" class="">Using with Akka HTTP</a>
+			<div class="sidebar-nav-item  "><a href="/docs/akka-http" title="Akka HTTP" class="">Akka HTTP</a>
 			</div>
 			
 		</div>
@@ -116,44 +116,35 @@ to all available of Slack Web API methods.</p>
 <h3 id="making-web-api-calls">Making Web API calls</h3>
 
 <p>To make calls to Slack Web API methods (except OAuth methods) you need a Slack token.
-For simple bots you can have it in your config files, or you can obtain tokens for workspaces 
+For simple bots you can have it in your config files, or you can obtain workspace tokens 
 using <a href="https://api.slack.com/docs/oauth">Slack OAuth</a>.</p>
 
 <p>There is an example implementation of Slack OAuth v2 in <a href="akka-http">Akka Http Example</a>.</p>
 
-<p>Slack Morphism requires implicit token specified as an instance of 
+<p>Slack Morphism requires an implicit token specified as an instance of 
 <a href="/api/org/latestbit/slack/morphism/client/SlackApiToken.html">SlackApiToken</a>:</p>
 
-<p>In an example below, we’re using a hardcoded Slack token, but <em>don’t do that for your production bots and apps</em>.
+<p>In the example below, we’re using a hardcoded Slack token, but <em>don’t do that for your production bots and apps</em>.
 You should securely and properly store all of Slack tokens.
 Look at <a href="https://api.slack.com/docs/oauth-safety">Slack recommendations</a>.</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client._</span>
+<span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client.reqresp.chat.SlackApiChatPostMessageRequest</span>
 
 <span class="k">import</span> <span class="nn">sttp.client.akkahttp.AkkaHttpBackend</span>
+
 <span class="k">implicit</span> <span class="k">val</span> <span class="nv">sttpBackend</span> <span class="k">=</span> <span class="nc">AkkaHttpBackend</span><span class="o">()</span>
-
-<span class="k">implicit</span> <span class="k">val</span> <span class="nv">slackApiToken</span> <span class="k">:</span> <span class="kt">SlackApiToken</span> <span class="o">=</span> <span class="nv">SlackApiToken</span><span class="o">.</span><span class="py">createFrom</span><span class="o">(</span>
-  <span class="nv">SlackApiToken</span><span class="o">.</span><span class="py">TokenTypes</span><span class="o">.</span><span class="py">BOT</span><span class="o">,</span>
-  <span class="s">"xoxb-89....."</span>
-<span class="o">)</span>
-
 <span class="k">val</span> <span class="nv">slackApiClient</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">SlackApiClient</span><span class="o">()</span>
 
-<span class="nc">SlackApiToken</span>
-      <span class="o">.</span><span class="py">createFrom</span><span class="o">(</span>
-        <span class="nv">SlackApiToken</span><span class="o">.</span><span class="py">TokenTypes</span><span class="o">.</span><span class="py">BOT</span><span class="o">,</span>
-        <span class="s">"xoxb-89....."</span>
-      <span class="o">)</span>
-      <span class="o">.</span><span class="py">foreach</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">slackApiToken</span><span class="k">:</span> <span class="kt">SlackApiToken</span> <span class="o">=&gt;</span>
-            <span class="nv">slackApiClient</span><span class="o">.</span><span class="py">chat</span>
-              <span class="o">.</span><span class="py">postMessage</span><span class="o">(</span>
-                <span class="nc">SlackApiChatPostMessageRequest</span><span class="o">(</span>
-                  <span class="n">channel</span> <span class="k">=</span> <span class="s">"#general"</span><span class="o">,</span>
-                  <span class="n">text</span> <span class="k">=</span> <span class="s">"Hello Slack"</span>
-                <span class="o">)</span>
-              <span class="o">)</span>
-      <span class="o">}</span>
+<span class="k">implicit</span> <span class="k">val</span> <span class="nv">slackApiToken</span><span class="k">:</span> <span class="kt">SlackApiToken</span> <span class="o">=</span> <span class="nc">SlackApiBotToken</span><span class="o">(</span><span class="s">"xoxb-89....."</span><span class="o">)</span>
+
+<span class="nv">slackApiClient</span><span class="o">.</span><span class="py">chat</span>
+  <span class="o">.</span><span class="py">postMessage</span><span class="o">(</span>
+    <span class="nc">SlackApiChatPostMessageRequest</span><span class="o">(</span>
+      <span class="n">channel</span> <span class="k">=</span> <span class="s">"#general"</span><span class="o">,</span>
+      <span class="n">text</span> <span class="k">=</span> <span class="s">"Hello Slack"</span>
+    <span class="o">)</span>
+  <span class="o">)</span> 
   
 </code></pre></div></div>
 <p>As you might noticed here, Slack Morphism API mimics Slack Web API method names, so that
@@ -166,7 +157,7 @@ is <code class="highlighter-rouge">slackApiClient.oauth.v2.access()</code> etc.<
 <h3 id="low-level-http-api-to-slack-web-api">Low-level HTTP API to Slack Web API</h3>
 <p>In case you didn’t find a method you need on the list above, there is <a href="/api/org/latestbit/slack/morphism/client/impl/SlackApiHttpProtocolSupport$http$.html">low-level</a> API for this case:</p>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">implicit</span> <span class="n">slackApiToken</span><span class="k">:</span> <span class="kt">SlackApiToken</span> <span class="o">=</span> <span class="o">...</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client._</span>
 
 <span class="c1">// Definition of your request and response as a case classes</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">YourRequest</span><span class="o">(...)</span>
@@ -178,16 +169,23 @@ is <code class="highlighter-rouge">slackApiClient.oauth.v2.access()</code> etc.<
 <span class="k">implicit</span> <span class="k">val</span> <span class="nv">yourRequestEncoder</span> <span class="k">=</span> <span class="n">deriveEncoder</span><span class="o">[</span><span class="kt">YourRequest</span><span class="o">]</span> 
 <span class="k">implicit</span> <span class="k">val</span> <span class="nv">yourResponseDecoder</span> <span class="k">=</span> <span class="n">deriveEncoder</span><span class="o">[</span><span class="kt">YourRequest</span><span class="o">]</span>
 
+<span class="c1">// Need init a token before making calls</span>
+<span class="k">implicit</span> <span class="n">slackApiToken</span><span class="k">:</span> <span class="kt">SlackApiToken</span> <span class="o">=</span> <span class="o">...</span>
+
 <span class="c1">// Make a call</span>
 <span class="nv">slackApiClient</span><span class="o">.</span><span class="py">http</span><span class="o">.</span><span class="py">post</span><span class="o">[</span><span class="kt">YourRequest</span>,<span class="kt">YourResponse</span><span class="o">](</span>
     <span class="n">methodUri</span> <span class="k">=</span> <span class="s">"some.someMethod"</span><span class="o">,</span> <span class="c1">// Slack relative Method URI </span>
     <span class="nc">YourRequest</span><span class="o">()</span>
 <span class="o">)</span>
 </code></pre></div></div>
+<hr />
+<p>Please, don’t hesitate to submit a PR with model updates if you find anything missing or find model inconsistency.
+This project is open to help each others, so any PRs are welcomed.
+—</p>
 
-<h3 id="working-with-paginationbatching">Working with pagination/batching</h3>
-<p>Some of the Web API methods defines cursors and pages to give you an ability to load a lot of data
-continually (using batching approach, making many requests).</p>
+<h3 id="working-with-paginationbatching-results">Working with pagination/batching results</h3>
+<p>Some of the Web API methods defines cursors and pagination, to give you an ability to load a lot of data
+continually (using batching and making many requests).</p>
 
 <p>Examples:</p>
 <ul>
@@ -203,9 +201,9 @@ all scrolling/batching requests for you.</p>
 <p>With this scroller you have the following choice:</p>
 
 <ul>
-  <li>Load data lazily, but synchronously data to a standard Scala lazy container: Stream[] (Scala 2.12) / LazyList[] (Scala 2.13+)</li>
-  <li>Load data lazily and asynchronously with Async Iterator (implemented by Slack Morphism)</li>
-  <li>Load data reactively with Publisher[] and use Reactive Streams</li>
+  <li>Load data lazily, but synchronously data to a standard Scala lazy container: Stream[] (for Scala 2.12) or <a href="https://www.scala-lang.org/api/current/scala/collection/immutable/LazyList.html">LazyList[]</a> (for Scala 2.13+)</li>
+  <li>Load data lazily and asynchronously with <a href="/api/org/latestbit/slack/morphism/concurrent/AsyncSeqIterator.html">AsyncSeqIterator</a></li>
+  <li>Load data reactively with <a href="https://www.reactive-streams.org/reactive-streams-1.0.3-javadoc/org/reactivestreams/Publisher.html">Publisher[]</a> and use Reactive Streams</li>
 </ul>
 
 <p>For example, for <a href="https://api.slack.com/methods/conversations.history">conversations.history</a> you can:</p>
@@ -229,11 +227,11 @@ all scrolling/batching requests for you.</p>
 
 </code></pre></div></div>
 
-<h4 id="folding-using-lazyasync-iterator">Folding Using Lazy/Async iterator</h4>
+<h4 id="folding-using-lazy-asyncseqiterator">Folding using lazy AsyncSeqIterator</h4>
 
 <p>Async iterator implements:</p>
 <ul>
-  <li><code class="highlighter-rouge">foldLeft</code> for accumulating batching results if you need it (the implementation doesn’t use memoization like Stream/LazyList)</li>
+  <li><code class="highlighter-rouge">foldLeft</code> for accumulating batching results if you need it (the implementation of AsyncSeqIterator doesn’t memoize like Stream/LazyList)</li>
   <li><code class="highlighter-rouge">map</code> to transform results</li>
   <li><code class="highlighter-rouge">foreach</code> to iterate with effects</li>
 </ul>
@@ -248,14 +246,16 @@ all scrolling/batching requests for you.</p>
   <span class="o">)</span>
   <span class="o">.</span><span class="py">toAsyncScroller</span><span class="o">()</span>
   <span class="o">.</span><span class="py">foldLeft</span><span class="o">(</span> <span class="nc">List</span><span class="o">[</span><span class="kt">SlackMessage</span><span class="o">]()</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// futureRes here is a batch result defined as Either[SlackApiClientError, List[SlackMessage]]</span>
     <span class="nf">case</span> <span class="o">(</span> <span class="n">wholeList</span><span class="o">,</span> <span class="n">futureRes</span> <span class="o">)</span> <span class="k">=&gt;</span>
-      <span class="nv">futureRes</span><span class="o">.</span><span class="py">map</span><span class="o">(</span> <span class="n">wholeList</span> <span class="o">++</span> <span class="k">_</span> <span class="o">).</span><span class="py">getOrElse</span><span class="o">(</span> <span class="n">wholeList</span> <span class="o">)</span> 
-    <span class="c1">// futureRes is Either[SlackApiClientError, List[SlackMessage]]</span>
+      <span class="nv">futureRes</span><span class="o">.</span><span class="py">map</span><span class="o">(</span> <span class="n">wholeList</span> <span class="o">++</span> <span class="k">_</span> <span class="o">).</span><span class="py">getOrElse</span><span class="o">(</span> <span class="n">wholeList</span> <span class="o">)</span>     
   <span class="o">}</span>
 </code></pre></div></div>
 
 <h4 id="create-a-reactive-publisher">Create a reactive Publisher[]</h4>
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">org.reactivestreams.Publisher</span>
+
+
 <span class="k">val</span> <span class="nv">publisher</span> <span class="k">:</span> <span class="kt">Publisher</span><span class="o">[</span><span class="kt">SlackMessage</span><span class="o">]</span> <span class="k">=</span> 
     <span class="nv">slackApiClient</span><span class="o">.</span><span class="py">conversations</span>
       <span class="o">.</span><span class="py">historyScroller</span><span class="o">(</span>
@@ -267,6 +267,15 @@ all scrolling/batching requests for you.</p>
 
 <span class="c1">// Now you can use it as any other publishers with your reactive frameworks (like Akka Streams, etc)</span>
 
+<span class="c1">// This is an example of Akka Streams</span>
+<span class="c1">// https://doc.akka.io/docs/akka/2.5.3/scala/stream/stream-integrations.html#integrating-with-reactive-streams</span>
+<span class="k">import</span> <span class="nn">akka.stream._</span>
+<span class="k">import</span> <span class="nn">akka.stream.scaladsl._</span>
+
+<span class="nc">Source</span>
+    <span class="o">.</span><span class="py">fromPublisher</span><span class="o">(</span><span class="n">publisher</span><span class="o">)</span>
+    <span class="o">.</span><span class="py">runForeach</span><span class="o">(</span><span class="n">msg</span> <span class="k">=&gt;</span> <span class="nf">println</span><span class="o">(</span><span class="n">msg</span><span class="o">))</span>
+
 </code></pre></div></div>
 
 <h4 id="avoid-boilerplate-making-consequent-non-blocking-client-requests-with-eithert">Avoid boilerplate making consequent non-blocking client requests with EitherT</h4>
@@ -276,7 +285,7 @@ all scrolling/batching requests for you.</p>
 <p>You might notice some boilerplate when you deal with consequent client requests 
 that returns <code class="highlighter-rouge">Future[Either[SlackApiClientError,SomeKindOfSlackResponse]]</code>.</p>
 
-<p>To deal with that, consider using an approach with <a href="https://typelevel.org/cats/datatypes/eithert.html">EitherT[]</a> from 
+<p>To solve this in a better way, consider using an approach with <a href="https://typelevel.org/cats/datatypes/eithert.html">EitherT[]</a> from 
 <a href="https://typelevel.org/cats/">Cats</a>, well described <a href="http://eed3si9n.com/herding-cats/stacking-future-and-either.html">here</a>.</p>
 
 <p>For example, this example shows two consequence Web API calls:

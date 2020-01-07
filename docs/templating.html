@@ -66,7 +66,7 @@
 			<div class="sidebar-nav-item active "><a href="/docs/templating" title="Blocks Templating" class="active">Blocks Templating</a>
 			</div>
 			 
-			<div class="sidebar-nav-item  "><a href="/docs/akka-http" title="Using with Akka HTTP" class="">Using with Akka HTTP</a>
+			<div class="sidebar-nav-item  "><a href="/docs/akka-http" title="Akka HTTP" class="">Akka HTTP</a>
 			</div>
 			
 		</div>
@@ -95,7 +95,87 @@
 				<section><h1 id="slack-blocks-templating-dsl">Slack Blocks Templating DSL</h1>
 <p>Simple to use and type-safe DSL for Slack Blocks.</p>
 
-<p>TBD</p>
+<h2 id="intro">Intro</h2>
+<p>Slack Blocks are visual components that can be stacked and arranged to create app layouts in messages and views. 
+Read <a href="https://api.slack.com/block-kit/building">official docs</a> for introduction to Slack Block Kit.</p>
+
+<p>Let’s take some very simple block example:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+	</span><span class="nl">"blocks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+		</span><span class="p">{</span><span class="w">
+			</span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"section"</span><span class="p">,</span><span class="w">
+			</span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+				</span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mrkdwn"</span><span class="p">,</span><span class="w">
+				</span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A message *with some bold text* and _some italicized text_."</span><span class="w">
+			</span><span class="p">}</span><span class="w">
+		</span><span class="p">}</span><span class="w">
+	</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<p>As you can see it just a JSON, let’s look at how it might look type-safe DSL with Slack Morphism Blocks DSL:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">blocks</span><span class="o">(</span>
+    <span class="nf">sectionBlock</span><span class="o">(</span>
+      <span class="n">text</span> <span class="k">=</span> <span class="n">md</span><span class="s">"A message *with some bold text* and _some italicized text_."</span>
+    <span class="o">)</span>
+<span class="o">)</span>
+</code></pre></div></div>
+
+<p>Slack Morphism Blocks DSL not just give you a function to create a JSON from this, but also provides 
+at compile time checking structure and formatting rules from Slack, so you can avoid many issues beforehand
+and use autocomplete in your IDE.</p>
+
+<p>Let’s look at another more complex example:</p>
+
+<p>Json:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+	</span><span class="nl">"blocks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+		</span><span class="p">{</span><span class="w">
+			</span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"section"</span><span class="p">,</span><span class="w">
+			</span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+				</span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mrkdwn"</span><span class="p">,</span><span class="w">
+				</span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;https://example.com|Overlook Hotel&gt; </span><span class="se">\n</span><span class="s2"> :star: </span><span class="se">\n</span><span class="s2"> Doors had too many axe holes, guest in room 237 was far too rowdy, whole place felt stuck in the 1920s."</span><span class="w">
+			</span><span class="p">},</span><span class="w">
+			</span><span class="nl">"accessory"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+				</span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image"</span><span class="p">,</span><span class="w">
+				</span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://is5-ssl.mzstatic.com/image/thumb/Purple3/v4/d3/72/5c/d3725c8f-c642-5d69-1904-aa36e4297885/source/256x256bb.jpg"</span><span class="p">,</span><span class="w">
+				</span><span class="nl">"alt_text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Haunted hotel image"</span><span class="w">
+			</span><span class="p">}</span><span class="w">
+		</span><span class="p">},</span><span class="w">
+		</span><span class="p">{</span><span class="w">
+			</span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"section"</span><span class="p">,</span><span class="w">
+			</span><span class="nl">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+				</span><span class="p">{</span><span class="w">
+					</span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mrkdwn"</span><span class="p">,</span><span class="w">
+					</span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*Average Rating*</span><span class="se">\n</span><span class="s2">1.0"</span><span class="w">
+				</span><span class="p">},</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mrkdwn"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*Updated*</span><span class="se">\n</span><span class="s2">&lt;!date^1578400713^{date_pretty}|07 Jan 2020 12:38:33 GMT&gt;"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+			</span><span class="p">]</span><span class="w">
+		</span><span class="p">}</span><span class="w">
+	</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>It would be in DSL like:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">blocks</span><span class="o">(</span>
+    <span class="nf">sectionBlock</span><span class="o">(</span>
+      <span class="n">text</span> <span class="k">=</span>
+        <span class="n">md</span><span class="s">"${formatUrl( "</span><span class="n">https</span><span class="o">://</span><span class="nv">example</span><span class="o">.</span><span class="py">com</span><span class="s">", "</span><span class="nc">Overlook</span> <span class="nc">Hotel</span><span class="s">" )}\n :star: \n Doors had too many axe holes, guest in room 237 was far too rowdy, whole place felt stuck in the 1920s."</span>
+    <span class="o">),</span>
+    <span class="nf">sectionBlock</span><span class="o">(</span>
+      <span class="n">fields</span> <span class="k">=</span>
+        <span class="nf">sectionFields</span><span class="o">(</span>
+          <span class="n">md</span><span class="s">"*Average Rating*\n1.0"</span><span class="o">,</span>
+            <span class="n">md</span><span class="s">"*Updated*\n${formatDate(Instant.now())}"</span>
+        <span class="o">)</span>
+    <span class="o">)</span>
+<span class="o">)</span>
+</code></pre></div></div>
 </section>
 			</div>
 		</div>
