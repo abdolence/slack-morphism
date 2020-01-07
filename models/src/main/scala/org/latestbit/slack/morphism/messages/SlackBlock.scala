@@ -40,7 +40,9 @@ case class SlackSectionBlock(
     fields: Option[List[SlackBlockText]] = None,
     accessory: Option[SlackSectionBlockElement] = None,
     override val block_id: Option[String] = None
-) extends SlackBlock
+) extends SlackBlock {
+  require( text.nonEmpty || fields.nonEmpty, "Either `text` or `fields` should be defined" )
+}
 
 /**
  * https://api.slack.com/reference/block-kit/blocks#divider

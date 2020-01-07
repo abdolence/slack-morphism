@@ -61,7 +61,7 @@ sealed trait SlackRichBlockElement extends SlackBlockElement
  * https://api.slack.com/reference/block-kit/block-elements#image
  */
 @JsonAdt( "image" )
-case class SlackBlockImageElement( image_url: String, alt_text: Option[String] = None )
+case class SlackBlockImageElement( image_url: String, alt_text: String )
     extends SlackBlockElement
     with SlackSectionBlockElement
     with SlackContextBlockElement
@@ -71,7 +71,7 @@ case class SlackBlockImageElement( image_url: String, alt_text: Option[String] =
  */
 @JsonAdt( "button" )
 case class SlackBlockButtonElement(
-    text: SlackBlockText,
+    text: SlackBlockPlainText,
     action_id: String,
     url: Option[String] = None,
     value: Option[String] = None,
@@ -110,7 +110,9 @@ case class SlackBlockStaticMenuElement(
     confirm: Option[SlackBlockConfirmItem] = None
 ) extends SlackBlockMenuElement
     with SlackSectionBlockElement
-    with SlackInputBlockElement
+    with SlackInputBlockElement {
+  require( options.nonEmpty || option_groups.nonEmpty, "Either `options` or `option_groups` should be defined" )
+}
 
 /**
  * https://api.slack.com/reference/block-kit/block-elements#multi_select
@@ -126,7 +128,9 @@ case class SlackBlockMultiStaticMenuElement(
     max_selected_items: Option[Long] = None
 ) extends SlackBlockMenuElement
     with SlackSectionBlockElement
-    with SlackInputBlockElement
+    with SlackInputBlockElement {
+  require( options.nonEmpty || option_groups.nonEmpty, "Either `options` or `option_groups` should be defined" )
+}
 
 /**
  * https://api.slack.com/reference/block-kit/block-elements#external_select

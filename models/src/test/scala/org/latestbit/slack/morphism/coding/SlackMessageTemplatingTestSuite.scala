@@ -59,7 +59,7 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
                     plain"Test 3",
                     optSectionField( testCond > 0 )( plain"Test 3" )
                   ),
-                  accessory = image( "https://example.net/image.png" )
+                  accessory = image( "https://example.net/image.png", alt_text = "test image" )
                 ),
                 actionsBlock(
                   elements = blockElements(
@@ -106,7 +106,7 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
                 contextBlock(
                   elements = blockElements(
                     plain"Test",
-                    image( "https://example.net/image.png" )
+                    image( "https://example.net/image.png", alt_text = "test image" )
                   )
                 )
               )
