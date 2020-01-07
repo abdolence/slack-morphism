@@ -1,0 +1,364 @@
+<html>
+<head><title>Slack Morphism for Scala: Slack Web API</title>
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta name="author" content="Abdulla Abdurakhmanov"/>
+	<meta name="description" content="Open Type-Safe Reactive Client with Blocks Templating for Slack"/>
+	<meta name="og:image" content="/img/poster.png"/>
+	<meta name="image" property="og:image" content="/img/poster.png"/>
+	<meta name="og:title" content="Slack Morphism for Scala: Slack Web API"/>
+	<meta name="title" property="og:title"
+	      content="Slack Morphism for Scala: Slack Web API"/>
+	<meta name="og:site_name" content="Slack Morphism for Scala"/>
+	<meta name="og:url" content="https://slack.abdolence.dev"/>
+	<meta name="og:type" content="website"/>
+	<meta name="og:description" content="Open Type-Safe Reactive Client with Blocks Templating for Slack"/>
+	<link rel="icon" type="image/png" href="/img/favicon.png"/>
+	<meta name="twitter:title" content="Slack Morphism for Scala: Slack Web API"/>
+	<meta name="twitter:image" content="https://slack.abdolence.dev/img/poster.png"/>
+	<meta name="twitter:description" content="Open Type-Safe Reactive Client with Blocks Templating for Slack"/>
+	<meta name="twitter:card" content="summary_large_image"/>
+	<link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png"/>
+	<link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png"/>
+	<link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png"/>
+	<link rel="icon" type="image/png" sizes="128x128" href="/img/favicon-128.png"/>
+	<link rel="icon" type="image/png" sizes="196x196" href="/img/favicon-196x196.png"/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+	<link rel="stylesheet" href="/highlight/styles/vs.css"/>
+	<link rel="stylesheet" href="/css/light-style.css"/>
+	<link rel="stylesheet" href="/css/override-light-style.css"/>
+	<script async="async">
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-155371094-1', 'auto');
+        ga('send', 'pageview');
+	</script>
+</head>
+<body class="docs">
+<div id="wrapper">
+	<div id="sidebar-wrapper">
+		<div id="sidebar-brand"><a href="/" class="brand">
+			<div class="brand-wrapper"></div>
+			<span>Slack Morphism for Scala</span></a>
+			<button id="main-toggle" class="sidebar-toggle"><span class="close"></span></button>
+		</div>
+		<div class="sidebar-nav"> 
+			<div class="sidebar-nav-item  "><a href="/docs/index" title="Intro" class="">Intro</a>
+			</div>
+			 
+			<div class="sidebar-nav-item active "><a href="/docs/web-api" title="Web API" class="active">Web API</a>
+			</div>
+			 
+			<div class="sidebar-nav-item  "><a href="/docs/events-api" title="Events API" class="">Events API</a>
+			</div>
+			 
+			<div class="sidebar-nav-item  "><a href="/docs/templating" title="Blocks Templating" class="">Blocks Templating</a>
+			</div>
+			 
+			<div class="sidebar-nav-item  "><a href="/docs/akka-http" title="Akka HTTP" class="">Akka HTTP</a>
+			</div>
+			
+		</div>
+	</div>
+	<div id="page-content-wrapper">
+		<div class="nav">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="action-menu pull-left clearfix"><a href="#menu-toggle" id="menu-toggle"><i
+								class="fa fa-bars" aria-hidden="true"></i></a></div>
+						<ul class="pull-right">
+							<li class="hidden-xs">
+								<a
+									href="https://github.com/abdolence/slack-morphism" target="_blank"
+									rel="noopener noreferrer"><i class="fa fa-github"></i> <span>GitHub</span>
+								</a>
+							</li>
+							<li id="gh-eyes-item" class="hidden-xs" style="display: none"><a
+									href="https://github.com/abdolence/slack-morphism" target="_blank"
+									rel="noopener noreferrer"><i class="fa fa-eye"></i><span>Watchers<span id="eyes"
+							                                                                               class="label label-default">--</span></span></a>
+							</li>
+							<li id="gh-stars-item" class="hidden-xs"  style="display: none"><a
+									href="https://github.com/abdolence/slack-morphism" target="_blank"
+									rel="noopener noreferrer"><i class="fa fa-star-o"></i><span>Stars<span id="stars"
+							                                                                               class="label label-default">--</span></span></a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="content" data-github-owner="abdolence" data-github-repo="slack-morphism">
+			<div class="content-wrapper">
+				<section><h1 id="slack-web-api-client">Slack Web API client</h1>
+
+<h3 id="choose-an-http-client-backend">Choose an HTTP client backend</h3>
+
+<p>You should choose a <a href="https://sttp.readthedocs.io/en/latest/backends/summary.html">sttp backend</a> 
+that supports <code class="highlighter-rouge">scala.concurrent.Future</code> responses:</p>
+<ul>
+  <li>AkkaHttpBackend</li>
+  <li>OkHttpFutureBackend</li>
+  <li>HttpClientFutureBackend</li>
+</ul>
+
+<p>Add a dependency of your choice to your <code class="highlighter-rouge">build.sbt</code>.</p>
+
+<p>For Akka Http this is:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"com.softwaremill.sttp.client" %% "akka-http-backend" % sttpVersion
+</code></pre></div></div>
+
+<h3 id="create-a-client-to-slack-web-api-methods">Create a client to Slack Web API methods</h3>
+
+<p><a href="/api/org/latestbit/slack/morphism/client/SlackApiClient.html">SlackApiClient</a> provides access 
+to all available of Slack Web API methods.</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Import Slack Morphism Client</span>
+<span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client._</span>
+
+<span class="c1">// Import STTP backend that supports async HTTP access via Future</span>
+<span class="c1">// We're using Akka Http for this example </span>
+<span class="k">import</span> <span class="nn">sttp.client.akkahttp.AkkaHttpBackend</span>
+
+<span class="c1">// Creating STTP backend</span>
+<span class="k">implicit</span> <span class="k">val</span> <span class="nv">sttpBackend</span> <span class="k">=</span> <span class="nc">AkkaHttpBackend</span><span class="o">()</span>
+
+<span class="c1">// Creating client instance</span>
+<span class="k">val</span> <span class="nv">slackApiClient</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">SlackApiClient</span><span class="o">()</span>
+</code></pre></div></div>
+
+<h3 id="making-web-api-calls">Making Web API calls</h3>
+
+<p>To make calls to Slack Web API methods (except OAuth methods) you need a Slack token.
+For simple bots you can have it in your config files, or you can obtain workspace tokens 
+using <a href="https://api.slack.com/docs/oauth">Slack OAuth</a>.</p>
+
+<p>There is an example implementation of Slack OAuth v2 in <a href="akka-http">Akka Http Example</a>.</p>
+
+<p>Slack Morphism requires an implicit token specified as an instance of 
+<a href="/api/org/latestbit/slack/morphism/client/SlackApiToken.html">SlackApiToken</a>:</p>
+
+<p>In the example below, we’re using a hardcoded Slack token, but <em>don’t do that for your production bots and apps</em>.
+You should securely and properly store all of Slack tokens.
+Look at <a href="https://api.slack.com/docs/oauth-safety">Slack recommendations</a>.</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client._</span>
+<span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client.reqresp.chat.SlackApiChatPostMessageRequest</span>
+
+<span class="k">import</span> <span class="nn">sttp.client.akkahttp.AkkaHttpBackend</span>
+
+<span class="k">implicit</span> <span class="k">val</span> <span class="nv">sttpBackend</span> <span class="k">=</span> <span class="nc">AkkaHttpBackend</span><span class="o">()</span>
+<span class="k">val</span> <span class="nv">slackApiClient</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">SlackApiClient</span><span class="o">()</span>
+
+<span class="k">implicit</span> <span class="k">val</span> <span class="nv">slackApiToken</span><span class="k">:</span> <span class="kt">SlackApiToken</span> <span class="o">=</span> <span class="nc">SlackApiBotToken</span><span class="o">(</span><span class="s">"xoxb-89....."</span><span class="o">)</span>
+
+<span class="nv">slackApiClient</span><span class="o">.</span><span class="py">chat</span>
+  <span class="o">.</span><span class="py">postMessage</span><span class="o">(</span>
+    <span class="nc">SlackApiChatPostMessageRequest</span><span class="o">(</span>
+      <span class="n">channel</span> <span class="k">=</span> <span class="s">"#general"</span><span class="o">,</span>
+      <span class="n">text</span> <span class="k">=</span> <span class="s">"Hello Slack"</span>
+    <span class="o">)</span>
+  <span class="o">)</span> 
+  
+</code></pre></div></div>
+<p>As you might noticed here, Slack Morphism API mimics Slack Web API method names, so that
+<a href="https://api.slack.com/methods/chat.postMessage">https://slack.com/api/chat.postMessage</a> 
+is <code class="highlighter-rouge">slackApiClient.chat.postMessage()</code>, or <a href="https://api.slack.com/methods/oauth.v2.access">https://api.slack.com/methods/oauth.v2.access</a> 
+is <code class="highlighter-rouge">slackApiClient.oauth.v2.access()</code> etc.</p>
+
+<p>The complete list of all of the implemented Web API methods is available <a href="/api/org/latestbit/slack/morphism/client/SlackApiClient.html">here</a>.</p>
+
+<h3 id="low-level-http-api-to-slack-web-api">Low-level HTTP API to Slack Web API</h3>
+<p>In case you didn’t find a method you need on the list above, 
+or you need something different/undocumented/legacy, 
+there is a <a href="/api/org/latestbit/slack/morphism/client/impl/SlackApiHttpProtocolSupport$http$.html">low-level</a> 
+API for this scenario:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client._</span>
+
+<span class="c1">// Definition of your request and response as a case classes</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">YourRequest</span><span class="o">(...)</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">YourResponse</span><span class="o">(...)</span>
+
+<span class="c1">// Definitions of JSON encoder/decoders</span>
+<span class="k">import</span> <span class="nn">io.circe.generic.semiauto._</span>
+
+<span class="k">implicit</span> <span class="k">val</span> <span class="nv">yourRequestEncoder</span> <span class="k">=</span> <span class="n">deriveEncoder</span><span class="o">[</span><span class="kt">YourRequest</span><span class="o">]</span> 
+<span class="k">implicit</span> <span class="k">val</span> <span class="nv">yourResponseDecoder</span> <span class="k">=</span> <span class="n">deriveEncoder</span><span class="o">[</span><span class="kt">YourRequest</span><span class="o">]</span>
+
+<span class="c1">// Need init a token before making calls</span>
+<span class="k">implicit</span> <span class="n">slackApiToken</span><span class="k">:</span> <span class="kt">SlackApiToken</span> <span class="o">=</span> <span class="o">...</span>
+
+<span class="c1">// Make a call</span>
+<span class="nv">slackApiClient</span><span class="o">.</span><span class="py">http</span><span class="o">.</span><span class="py">post</span><span class="o">[</span><span class="kt">YourRequest</span>,<span class="kt">YourResponse</span><span class="o">](</span>
+    <span class="n">methodUri</span> <span class="k">=</span> <span class="s">"some.someMethod"</span><span class="o">,</span> <span class="c1">// Slack relative Method URI </span>
+    <span class="nc">YourRequest</span><span class="o">()</span>
+<span class="o">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<p>Please, don’t hesitate to submit a PR with model updates if you find anything missing or find model inconsistency.
+This project is open to help each others, so any PRs are welcomed.</p>
+
+<hr />
+
+<h3 id="working-with-paginationbatching-results">Working with pagination/batching results</h3>
+<p>Some of the Web API methods defines cursors and <a href="https://api.slack.com/docs/pagination">pagination</a>, to give you an ability to load a lot of data
+continually (using batching and making many requests).</p>
+
+<p>Examples:</p>
+<ul>
+  <li><a href="https://api.slack.com/methods/conversations.history">conversations.history</a></li>
+  <li><a href="https://api.slack.com/methods/conversations.list">conversations.list</a></li>
+  <li><a href="https://api.slack.com/methods/users.list">users.list</a></li>
+  <li>…</li>
+</ul>
+
+<p>To help with those methods Slack Morphism provides a “scroller” implementation, which deal with 
+all scrolling/batching requests for you.</p>
+
+<p>With this scroller you have the following choice:</p>
+
+<ul>
+  <li>Load data lazily, but synchronously data to a standard Scala lazy container: Stream[] (for Scala 2.12) or <a href="https://www.scala-lang.org/api/current/scala/collection/immutable/LazyList.html">LazyList[]</a> (for Scala 2.13+)</li>
+  <li>Load data lazily and asynchronously with <a href="/api/org/latestbit/slack/morphism/concurrent/AsyncSeqIterator.html">AsyncSeqIterator</a></li>
+  <li>Load data reactively with <a href="https://www.reactive-streams.org/reactive-streams-1.0.3-javadoc/org/reactivestreams/Publisher.html">Publisher[]</a> and use Reactive Streams</li>
+</ul>
+
+<p>For example, for <a href="https://api.slack.com/methods/conversations.history">conversations.history</a> you can:</p>
+
+<h4 id="load-data-into-streamlazylist">Load data into Stream[]/LazyList[]</h4>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">// Synchronous approach (all batches would be loaded with blocking)</span>
+<span class="nv">slackApiClient</span><span class="o">.</span><span class="py">conversations</span>
+  <span class="o">.</span><span class="py">historyScroller</span><span class="o">(</span>
+    <span class="nc">SlackApiConversationsHistoryRequest</span><span class="o">(</span>
+      <span class="n">channel</span> <span class="k">=</span> <span class="s">"C222...."</span> <span class="c1">// some channel id</span>
+    <span class="o">)</span>
+  <span class="o">)</span>
+  <span class="o">.</span><span class="py">toSyncScroller</span><span class="o">(</span> <span class="mf">5.</span><span class="n">seconds</span> <span class="o">)</span>
+  <span class="o">.</span><span class="py">foreach</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="nc">Right</span><span class="o">(</span> <span class="n">results</span><span class="k">:</span> <span class="kt">LazyList</span><span class="o">[</span><span class="kt">SlackMessage</span><span class="o">]</span> <span class="o">)</span> <span class="k">=&gt;</span> <span class="o">{</span>
+      <span class="c1">// ... results are ready to scroll</span>
+    <span class="o">}</span>
+    <span class="k">case</span> <span class="nc">Left</span><span class="o">(</span> <span class="n">err</span> <span class="o">)</span> <span class="k">=&gt;</span> <span class="c1">// the first batch is failed here</span>
+  <span class="o">}</span>
+
+</code></pre></div></div>
+
+<h4 id="using-lazy-asyncseqiterator-to-scroll-data">Using lazy AsyncSeqIterator to scroll data</h4>
+
+<p>Async iterator implements:</p>
+<ul>
+  <li><code class="highlighter-rouge">foldLeft</code> for accumulating batching results if you need it (the implementation of AsyncSeqIterator doesn’t memoize like Stream/LazyList)</li>
+  <li><code class="highlighter-rouge">map</code> to transform results</li>
+  <li><code class="highlighter-rouge">foreach</code> to iterate with effects</li>
+</ul>
+
+<p>This is an example of using <code class="highlighter-rouge">foldLeft</code>:</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="nv">slackApiClient</span><span class="o">.</span><span class="py">conversations</span>
+  <span class="o">.</span><span class="py">historyScroller</span><span class="o">(</span>
+    <span class="nc">SlackApiConversationsHistoryRequest</span><span class="o">(</span>
+      <span class="n">channel</span> <span class="k">=</span> <span class="s">"C222...."</span> <span class="c1">// some channel id</span>
+    <span class="o">)</span>
+  <span class="o">)</span>
+  <span class="o">.</span><span class="py">toAsyncScroller</span><span class="o">()</span>
+  <span class="o">.</span><span class="py">foldLeft</span><span class="o">(</span> <span class="nc">List</span><span class="o">[</span><span class="kt">SlackMessage</span><span class="o">]()</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// futureRes here is a batch result defined as Either[SlackApiClientError, List[SlackMessage]]</span>
+    <span class="nf">case</span> <span class="o">(</span> <span class="n">wholeList</span><span class="o">,</span> <span class="n">futureRes</span> <span class="o">)</span> <span class="k">=&gt;</span>
+      <span class="nv">futureRes</span><span class="o">.</span><span class="py">map</span><span class="o">(</span> <span class="n">wholeList</span> <span class="o">++</span> <span class="k">_</span> <span class="o">).</span><span class="py">getOrElse</span><span class="o">(</span> <span class="n">wholeList</span> <span class="o">)</span>     
+  <span class="o">}</span>
+</code></pre></div></div>
+
+<h4 id="create-a-reactive-publisher">Create a reactive Publisher[]</h4>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">org.reactivestreams.Publisher</span>
+
+
+<span class="k">val</span> <span class="nv">publisher</span> <span class="k">:</span> <span class="kt">Publisher</span><span class="o">[</span><span class="kt">SlackMessage</span><span class="o">]</span> <span class="k">=</span> 
+    <span class="nv">slackApiClient</span><span class="o">.</span><span class="py">conversations</span>
+      <span class="o">.</span><span class="py">historyScroller</span><span class="o">(</span>
+        <span class="nc">SlackApiConversationsHistoryRequest</span><span class="o">(</span>
+          <span class="n">channel</span> <span class="k">=</span> <span class="s">"C222...."</span> <span class="c1">// some channel id</span>
+        <span class="o">)</span>
+      <span class="o">)</span>
+      <span class="o">.</span><span class="py">toPublisher</span><span class="o">()</span>
+
+<span class="c1">// Now you can use it as any other publishers with your reactive frameworks (like Akka Streams, etc)</span>
+
+<span class="c1">// This is an example of Akka Streams</span>
+<span class="c1">// https://doc.akka.io/docs/akka/2.5.3/scala/stream/stream-integrations.html#integrating-with-reactive-streams</span>
+<span class="k">import</span> <span class="nn">akka.stream._</span>
+<span class="k">import</span> <span class="nn">akka.stream.scaladsl._</span>
+
+<span class="nc">Source</span>
+    <span class="o">.</span><span class="py">fromPublisher</span><span class="o">(</span><span class="n">publisher</span><span class="o">)</span>
+    <span class="o">.</span><span class="py">runForeach</span><span class="o">(</span><span class="n">msg</span> <span class="k">=&gt;</span> <span class="nf">println</span><span class="o">(</span><span class="n">msg</span><span class="o">))</span>
+
+</code></pre></div></div>
+
+<h4 id="avoid-boilerplate-making-consequent-non-blocking-client-requests-with-eithert">Avoid boilerplate making consequent non-blocking client requests with EitherT</h4>
+
+<p>This is completely optional and just a recommendation for you.</p>
+
+<p>You might notice some boilerplate when you deal with consequent client requests 
+that returns <code class="highlighter-rouge">Future[Either[SlackApiClientError,SomeKindOfSlackResponse]]</code>.</p>
+
+<p>To solve this in a better way, consider using an approach with <a href="https://typelevel.org/cats/datatypes/eithert.html">EitherT[]</a> from 
+<a href="https://typelevel.org/cats/">Cats</a>, well described <a href="http://eed3si9n.com/herding-cats/stacking-future-and-either.html">here</a>.</p>
+
+<p>For example, this example shows two consequence Web API calls:
+We make a first async call, find some result in the first response, and 
+getting the response result of a next async call.</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">EitherT</span><span class="o">(</span> <span class="nv">slackApiClient</span><span class="o">.</span><span class="py">channels</span><span class="o">.</span><span class="py">list</span><span class="o">(</span> <span class="nc">SlackApiChannelsListRequest</span><span class="o">()</span> <span class="o">)</span> <span class="o">).</span><span class="py">flatMap</span> <span class="o">{</span> <span class="n">channelsResp</span> <span class="k">=&gt;</span>
+  <span class="nv">channelsResp</span><span class="o">.</span><span class="py">channels</span>
+    <span class="o">.</span><span class="py">find</span><span class="o">(</span> <span class="nv">_</span><span class="o">.</span><span class="py">flags</span><span class="o">.</span><span class="py">is_general</span><span class="o">.</span><span class="py">contains</span><span class="o">(</span> <span class="kc">true</span> <span class="o">)</span> <span class="o">)</span>
+    <span class="o">.</span><span class="py">map</span> <span class="o">{</span> <span class="n">generalChannel</span> <span class="k">=&gt;</span>
+      <span class="nc">EitherT</span><span class="o">(</span>
+        <span class="nv">slackApiClient</span><span class="o">.</span><span class="py">chat</span>
+          <span class="o">.</span><span class="py">postMessage</span><span class="o">(</span>
+            <span class="nc">SlackApiChatPostMessageRequest</span><span class="o">(</span>
+              <span class="n">channel</span> <span class="k">=</span> <span class="nv">generalChannel</span><span class="o">.</span><span class="py">id</span><span class="o">,</span>
+              <span class="n">text</span> <span class="k">=</span> <span class="s">"Hello"</span>
+            <span class="o">)</span>
+          <span class="o">)</span>
+      <span class="o">).</span><span class="py">map</span> <span class="o">{</span> <span class="n">resp</span> <span class="k">=&gt;</span>
+        <span class="nv">resp</span><span class="o">.</span><span class="py">ts</span><span class="o">.</span><span class="py">some</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="o">.</span><span class="py">getOrElse</span><span class="o">(</span>
+      <span class="nc">EitherT</span><span class="o">[</span><span class="kt">Future</span>, <span class="kt">SlackApiClientError</span>, <span class="kt">Option</span><span class="o">[</span><span class="kt">String</span><span class="o">]](</span>
+        <span class="nv">Future</span><span class="o">.</span><span class="py">successful</span><span class="o">(</span> <span class="nv">None</span><span class="o">.</span><span class="py">asRight</span> <span class="o">)</span>
+      <span class="o">)</span>
+    <span class="o">)</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>EitherT gives you the power to deal with those transformations and avoid boilerplate 
+without sacrificing error handling.</p>
+</section>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="/highlight/highlight.pack.js"></script>
+<script>hljs.configure({languages: ['scala', 'java', 'bash']});
+hljs.initHighlightingOnLoad();
+</script>
+<script src="/js/docs.js"></script>
+</body>
+</html>
