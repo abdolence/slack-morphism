@@ -18,6 +18,8 @@
 
 package org.latestbit.slack.morphism.coding
 
+import java.time.Instant
+
 import org.latestbit.slack.morphism.messages._
 import org.latestbit.slack.morphism.client.templating.{
   SlackBlocksTemplate,
@@ -112,6 +114,23 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
             blocks(
               blocks(
                 dividerBlock()
+              ),
+              blocks(
+                sectionBlock(
+                  text = md"A message *with some bold text* and _some italicized text_."
+                )
+              ),
+              blocks(
+                sectionBlock(
+                  text =
+                    md"${formatUrl( "https://example.com", "Overlook Hotel" )}\n :star: \n Doors had too many axe holes, guest in room 237 was far too rowdy, whole place felt stuck in the 1920s."
+                ),
+                sectionBlock(
+                  fields = sectionFields(
+                    md"*Average Rating*\n1.0",
+                    md"*Updated*\n${formatDate( Instant.now() )}"
+                  )
+                )
               )
             )
           )

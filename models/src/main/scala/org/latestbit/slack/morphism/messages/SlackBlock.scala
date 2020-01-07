@@ -36,10 +36,10 @@ sealed trait SlackBlock {
  */
 @JsonAdt( "section" )
 case class SlackSectionBlock(
-    text: SlackBlockText,
-    override val block_id: Option[String] = None,
+    text: Option[SlackBlockText] = None,
     fields: Option[List[SlackBlockText]] = None,
-    accessory: Option[SlackSectionBlockElement] = None
+    accessory: Option[SlackSectionBlockElement] = None,
+    override val block_id: Option[String] = None
 ) extends SlackBlock
 
 /**

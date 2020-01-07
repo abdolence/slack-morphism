@@ -28,45 +28,36 @@ val slackApiClient = new SlackApiClient()
 ### Making Web API calls
 
 To make calls to Slack Web API methods (except OAuth methods) you need a Slack token.
-For simple bots you can have it in your config files, or you can obtain tokens for workspaces 
+For simple bots you can have it in your config files, or you can obtain workspace tokens 
 using [Slack OAuth](https://api.slack.com/docs/oauth).
 
 There is an example implementation of Slack OAuth v2 in [Akka Http Example](akka-http).
 
-Slack Morphism requires implicit token specified as an instance of 
+Slack Morphism requires an implicit token specified as an instance of 
 [SlackApiToken](/api/org/latestbit/slack/morphism/client/SlackApiToken.html):
 
-In an example below, we're using a hardcoded Slack token, but *don't do that for your production bots and apps*.
+In the example below, we're using a hardcoded Slack token, but *don't do that for your production bots and apps*.
 You should securely and properly store all of Slack tokens.
 Look at [Slack recommendations](https://api.slack.com/docs/oauth-safety).
 
 ```scala
 import org.latestbit.slack.morphism.client._
+import org.latestbit.slack.morphism.client.reqresp.chat.SlackApiChatPostMessageRequest
 
 import sttp.client.akkahttp.AkkaHttpBackend
+
 implicit val sttpBackend = AkkaHttpBackend()
-
-implicit val slackApiToken : SlackApiToken = SlackApiToken.createFrom(
-  SlackApiToken.TokenTypes.BOT,
-  "xoxb-89....."
-)
-
 val slackApiClient = new SlackApiClient()
 
-SlackApiToken
-      .createFrom(
-        SlackApiToken.TokenTypes.BOT,
-        "xoxb-89....."
-      )
-      .foreach { implicit slackApiToken: SlackApiToken =>
-            slackApiClient.chat
-              .postMessage(
-                SlackApiChatPostMessageRequest(
-                  channel = "#general",
-                  text = "Hello Slack"
-                )
-              )
-      }
+implicit val slackApiToken: SlackApiToken = SlackApiBotToken("xoxb-89.....")
+
+slackApiClient.chat
+  .postMessage(
+    SlackApiChatPostMessageRequest(
+      channel = "#general",
+      text = "Hello Slack"
+    )
+  ) 
   
 ```
 As you might noticed here, Slack Morphism API mimics Slack Web API method names, so that
@@ -80,7 +71,7 @@ The complete list of all of the implemented Web API methods is available [here](
 In case you didn't find a method you need on the list above, there is [low-level](/api/org/latestbit/slack/morphism/client/impl/SlackApiHttpProtocolSupport$http$.html) API for this case:
 
 ```scala
-implicit slackApiToken: SlackApiToken = ...
+import org.latestbit.slack.morphism.client._
 
 // Definition of your request and response as a case classes
 case class YourRequest(...)
@@ -92,16 +83,23 @@ import io.circe.generic.semiauto._
 implicit val yourRequestEncoder = deriveEncoder[YourRequest] 
 implicit val yourResponseDecoder = deriveEncoder[YourRequest]
 
+// Need init a token before making calls
+implicit slackApiToken: SlackApiToken = ...
+
 // Make a call
 slackApiClient.http.post[YourRequest,YourResponse](
     methodUri = "some.someMethod", // Slack relative Method URI 
     YourRequest()
 )
-``` 
+```
+---
+Please, don't hesitate to submit a PR with model updates if you find anything missing or find model inconsistency.
+This project is open to help each others, so any PRs are welcomed.
+---
 
-### Working with pagination/batching
-Some of the Web API methods defines cursors and pages to give you an ability to load a lot of data
-continually (using batching approach, making many requests).
+### Working with pagination/batching results
+Some of the Web API methods defines cursors and pagination, to give you an ability to load a lot of data
+continually (using batching and making many requests).
 
 Examples:
 * [conversations.history](https://api.slack.com/methods/conversations.history)
@@ -114,9 +112,9 @@ all scrolling/batching requests for you.
 
 With this scroller you have the following choice:
 
-* Load data lazily, but synchronously data to a standard Scala lazy container: Stream[] (Scala 2.12) / LazyList[] (Scala 2.13+)
-* Load data lazily and asynchronously with Async Iterator (implemented by Slack Morphism)
-* Load data reactively with Publisher[] and use Reactive Streams  
+* Load data lazily, but synchronously data to a standard Scala lazy container: Stream[] (for Scala 2.12) or [LazyList[]](https://www.scala-lang.org/api/current/scala/collection/immutable/LazyList.html) (for Scala 2.13+)
+* Load data lazily and asynchronously with [AsyncSeqIterator](/api/org/latestbit/slack/morphism/concurrent/AsyncSeqIterator.html)
+* Load data reactively with [Publisher[]](https://www.reactive-streams.org/reactive-streams-1.0.3-javadoc/org/reactivestreams/Publisher.html) and use Reactive Streams   
 
 For example, for [conversations.history](https://api.slack.com/methods/conversations.history) you can:
 
@@ -140,10 +138,10 @@ slackApiClient.conversations
 
 ```
 
-#### Folding Using Lazy/Async iterator
+#### Folding using lazy AsyncSeqIterator
 
 Async iterator implements:
-* `foldLeft` for accumulating batching results if you need it (the implementation doesn't use memoization like Stream/LazyList)
+* `foldLeft` for accumulating batching results if you need it (the implementation of AsyncSeqIterator doesn't memoize like Stream/LazyList)
 * `map` to transform results
 * `foreach` to iterate with effects
 
@@ -158,14 +156,16 @@ slackApiClient.conversations
   )
   .toAsyncScroller()
   .foldLeft( List[SlackMessage]() ) {
+    // futureRes here is a batch result defined as Either[SlackApiClientError, List[SlackMessage]]
     case ( wholeList, futureRes ) =>
-      futureRes.map( wholeList ++ _ ).getOrElse( wholeList ) 
-    // futureRes is Either[SlackApiClientError, List[SlackMessage]]
+      futureRes.map( wholeList ++ _ ).getOrElse( wholeList )     
   }
 ```
 
 #### Create a reactive Publisher[]
 ```scala
+import org.reactivestreams.Publisher
+
 
 val publisher : Publisher[SlackMessage] = 
     slackApiClient.conversations
@@ -178,6 +178,15 @@ val publisher : Publisher[SlackMessage] =
 
 // Now you can use it as any other publishers with your reactive frameworks (like Akka Streams, etc)
 
+// This is an example of Akka Streams
+// https://doc.akka.io/docs/akka/2.5.3/scala/stream/stream-integrations.html#integrating-with-reactive-streams
+import akka.stream._
+import akka.stream.scaladsl._
+
+Source
+    .fromPublisher(publisher)
+    .runForeach(msg => println(msg))
+
 ```
 
 #### Avoid boilerplate making consequent non-blocking client requests with EitherT
@@ -187,7 +196,7 @@ This is completely optional and just a recommendation for you.
 You might notice some boilerplate when you deal with consequent client requests 
 that returns `Future[Either[SlackApiClientError,SomeKindOfSlackResponse]]`.
 
-To deal with that, consider using an approach with [EitherT[]](https://typelevel.org/cats/datatypes/eithert.html) from 
+To solve this in a better way, consider using an approach with [EitherT[]](https://typelevel.org/cats/datatypes/eithert.html) from 
 [Cats](https://typelevel.org/cats/), well described [here](http://eed3si9n.com/herding-cats/stacking-future-and-either.html).
 
 For example, this example shows two consequence Web API calls:

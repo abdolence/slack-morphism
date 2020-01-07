@@ -71,20 +71,30 @@ trait SlackTextFormatters {
   }
 
   /**
-   * Formate Slack Date/Time
+   * Format Slack Date/Time
    * https://api.slack.com/reference/surfaces/formatting#date-formatting
    * @param timestamp date time to format
-   * @param formatType Slack Date/Time formatter ([[SlackTextFormatters.SlackDateFormatType]]
+   * @param token_string provide a formatting for your timestamp, using plain text along with special Slack tokens
    * @param link an optional link on date/time
    * @return formatted Slack Date/Time
    */
   protected def formatDate(
       timestamp: Instant,
-      formatType: SlackTextFormatters.SlackDateFormatType = SlackTextFormatters.SlackPrettyDateFormatType,
+      token_string: String = SlackTextFormatters.SlackDateTimeFormats.DEFAULT,
       link: Option[String] = None
   ): String = {
     val linkPart = link.map(value => s"^${value}" ).getOrElse( "" )
-    s"<!date^${timestamp.getEpochSecond}^{${formatType.code}}${linkPart}|${timestamp.toString}>"
+    s"<!date^${timestamp.getEpochSecond}^${token_string}${linkPart}|${timestamp.toString}>"
+  }
+
+  /**
+   * Format a Slack URL on some text
+   * @param url URL
+   * @param text text
+   * @return formatted url
+   */
+  protected def formatUrl( url: String, text: String ) = {
+    s"<${url}|${text}>"
   }
 
 }
@@ -92,24 +102,20 @@ trait SlackTextFormatters {
 object SlackTextFormatters {
 
   /**
-   * Defines all available Slack Date/Time formatters
+   * Defines default Slack Date/Time formats from:
    * https://api.slack.com/reference/surfaces/formatting#date-formatting
    */
-  sealed trait SlackDateFormatType { val code: String }
+  object SlackDateTimeFormats {
+    final val DATE_NUM = "{date_num}"
+    final val DATE = "{date}"
+    final val DATE_SHORT = "{date_short}"
+    final val DATE_LONG = "{date_long}"
+    final val DATE_PRETTY = "{date_pretty}"
+    final val DATE_SHORT_PRETTY = "{date_short_pretty}"
+    final val DATE_LONG_PRETTY = "{date_long_pretty}"
+    final val TIME = "{time}"
+    final val TIME_SECS = "{time_secs}"
 
-  case object SlackDateNumFormatType extends SlackDateFormatType { override val code: String = "date_num" }
-  case object SlackCommonDateFormatType extends SlackDateFormatType { override val code: String = "date" }
-  case object SlackShortDateFormatType extends SlackDateFormatType { override val code: String = "date_short" }
-  case object SlackLongDateFormatType extends SlackDateFormatType { override val code: String = "date_long" }
-  case object SlackPrettyDateFormatType extends SlackDateFormatType { override val code: String = "date_pretty" }
-
-  case object SlackShortPrettyDateFormatType extends SlackDateFormatType {
-    override val code: String = "date_short_pretty"
+    final val DEFAULT = DATE_PRETTY
   }
-
-  case object SlackLongPrettyDateFormatType extends SlackDateFormatType {
-    override val code: String = "date_long_pretty"
-  }
-  case object SlackTimeFormatType extends SlackDateFormatType { override val code: String = "time" }
-  case object SlackTimeSecsFormatType extends SlackDateFormatType { override val code: String = "time_secs" }
 }

@@ -37,7 +37,7 @@ class SlackWelcomeMessageTemplateExample( userId: String ) extends SlackMessageT
       contextBlock(
         blockElements(
           md"This is an example of block message",
-          md"Current time is: ${formatDate( Instant.now(), SlackTextFormatters.SlackLongPrettyDateFormatType )}"
+          md"Current time is: ${formatDate( Instant.now(), SlackTextFormatters.SlackDateTimeFormats.DATE_LONG_PRETTY )}"
         )
       ),
       dividerBlock(),
