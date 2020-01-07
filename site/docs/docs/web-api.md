@@ -5,7 +5,7 @@ permalink: docs/web-api
 ---
 ## Slack Web API
 
-### Choose a HTTP client backend
+### Choose an HTTP client backend
 
 You should choose a [sttp backend](https://sttp.readthedocs.io/en/latest/backends/summary.html) 
 that supports `scala.concurrent.Future` responses:
