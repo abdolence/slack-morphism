@@ -382,27 +382,29 @@ package object codecs {
       deriveEncoder[SlackBlockRichTextList]
     implicit val decoderSlackBlockRichTextList: Decoder[SlackBlockRichTextList] = deriveDecoder[SlackBlockRichTextList]
 
-    implicit val encoderSlackBlockOptionItem: Encoder.AsObject[SlackBlockOptionItem] =
-      deriveEncoder[SlackBlockOptionItem]
-    implicit val decoderSlackBlockOptionItem: Decoder[SlackBlockOptionItem] = deriveDecoder[SlackBlockOptionItem]
+    implicit val encoderSlackBlockOptionItem: Encoder.AsObject[SlackBlockChoiceItem] =
+      deriveEncoder[SlackBlockChoiceItem]
+    implicit val decoderSlackBlockOptionItem: Decoder[SlackBlockChoiceItem] = deriveDecoder[SlackBlockChoiceItem]
 
     implicit val encoderSlackBlockOptionGroup: Encoder.AsObject[SlackBlockOptionGroup] =
       deriveEncoder[SlackBlockOptionGroup]
     implicit val decoderSlackBlockOptionGroup: Decoder[SlackBlockOptionGroup] = deriveDecoder[SlackBlockOptionGroup]
 
-    implicit val encoderSlackBlockMenuElement: Encoder.AsObject[SlackBlockMenuElement] =
-      deriveEncoder[SlackBlockMenuElement]
-    implicit val decoderSlackBlockMenuElement: Decoder[SlackBlockMenuElement] = deriveDecoder[SlackBlockMenuElement]
+    implicit val encoderSlackBlockSelectElement: Encoder.AsObject[SlackBlockSelectElement] =
+      deriveEncoder[SlackBlockSelectElement]
+
+    implicit val decoderSlackBlockSelectElement: Decoder[SlackBlockSelectElement] =
+      deriveDecoder[SlackBlockSelectElement]
 
     implicit val encoderSlackBlockImageElement: Encoder.AsObject[SlackBlockImageElement] =
       deriveEncoder[SlackBlockImageElement]
     implicit val decoderSlackBlockImageElement: Decoder[SlackBlockImageElement] = deriveDecoder[SlackBlockImageElement]
 
-    implicit val encoderSlackBlockStaticMenuElement: Encoder.AsObject[SlackBlockStaticMenuElement] =
-      deriveEncoder[SlackBlockStaticMenuElement]
+    implicit val encoderSlackBlockStaticSelectElement: Encoder.AsObject[SlackBlockStaticSelectElement] =
+      deriveEncoder[SlackBlockStaticSelectElement]
 
-    implicit val decoderSlackBlockStaticMenuElement: Decoder[SlackBlockStaticMenuElement] =
-      deriveDecoder[SlackBlockStaticMenuElement]
+    implicit val decoderSlackBlockStaticSelectElement: Decoder[SlackBlockStaticSelectElement] =
+      deriveDecoder[SlackBlockStaticSelectElement]
 
     implicit val encoderSlackBlockRichTextSection: Encoder.AsObject[SlackBlockRichTextSection] =
       deriveEncoder[SlackBlockRichTextSection]
@@ -416,17 +418,18 @@ package object codecs {
     implicit val decoderSlackBlockRichTextPreformatted: Decoder[SlackBlockRichTextPreformatted] =
       deriveDecoder[SlackBlockRichTextPreformatted]
 
-    implicit val encoderSlackBlockConversationListMenuElement: Encoder.AsObject[SlackBlockConversationListMenuElement] =
-      deriveEncoder[SlackBlockConversationListMenuElement]
+    implicit val encoderSlackBlockConversationListSelectElement
+        : Encoder.AsObject[SlackBlockConversationListSelectElement] =
+      deriveEncoder[SlackBlockConversationListSelectElement]
 
-    implicit val decoderSlackBlockConversationListMenuElement: Decoder[SlackBlockConversationListMenuElement] =
-      deriveDecoder[SlackBlockConversationListMenuElement]
+    implicit val decoderSlackBlockConversationListSelectElement: Decoder[SlackBlockConversationListSelectElement] =
+      deriveDecoder[SlackBlockConversationListSelectElement]
 
-    implicit val encoderSlackBlockChannelsListMenuElement: Encoder.AsObject[SlackBlockChannelsListMenuElement] =
-      deriveEncoder[SlackBlockChannelsListMenuElement]
+    implicit val encoderSlackBlockChannelsListSelectElement: Encoder.AsObject[SlackBlockChannelsListSelectElement] =
+      deriveEncoder[SlackBlockChannelsListSelectElement]
 
-    implicit val decoderSlackBlockChannelsListMenuElement: Decoder[SlackBlockChannelsListMenuElement] =
-      deriveDecoder[SlackBlockChannelsListMenuElement]
+    implicit val decoderSlackBlockChannelsListSelectElement: Decoder[SlackBlockChannelsListSelectElement] =
+      deriveDecoder[SlackBlockChannelsListSelectElement]
 
     implicit val encoderSlackBlockRichTextQuote: Encoder.AsObject[SlackBlockRichTextQuote] =
       deriveEncoder[SlackBlockRichTextQuote]
@@ -434,17 +437,17 @@ package object codecs {
     implicit val decoderSlackBlockRichTextQuote: Decoder[SlackBlockRichTextQuote] =
       deriveDecoder[SlackBlockRichTextQuote]
 
-    implicit val encoderSlackBlockExternalMenuElement: Encoder.AsObject[SlackBlockExternalMenuElement] =
-      deriveEncoder[SlackBlockExternalMenuElement]
+    implicit val encoderSlackBlockExternalSelectElement: Encoder.AsObject[SlackBlockExternalSelectElement] =
+      deriveEncoder[SlackBlockExternalSelectElement]
 
-    implicit val decoderSlackBlockExternalMenuElement: Decoder[SlackBlockExternalMenuElement] =
-      deriveDecoder[SlackBlockExternalMenuElement]
+    implicit val decoderSlackBlockExternalSelectElement: Decoder[SlackBlockExternalSelectElement] =
+      deriveDecoder[SlackBlockExternalSelectElement]
 
-    implicit val encoderSlackBlockOverflowMenuElement: Encoder.AsObject[SlackBlockOverflowMenuElement] =
-      deriveEncoder[SlackBlockOverflowMenuElement]
+    implicit val encoderSlackBlockOverflowSelectElement: Encoder.AsObject[SlackBlockOverflowElement] =
+      deriveEncoder[SlackBlockOverflowElement]
 
-    implicit val decoderSlackBlockOverflowMenuElement: Decoder[SlackBlockOverflowMenuElement] =
-      deriveDecoder[SlackBlockOverflowMenuElement]
+    implicit val decoderSlackBlockOverflowSelectElement: Decoder[SlackBlockOverflowElement] =
+      deriveDecoder[SlackBlockOverflowElement]
 
     implicit val encoderSlackBlockPlainInputElement: Encoder.AsObject[SlackBlockPlainInputElement] =
       deriveEncoder[SlackBlockPlainInputElement]
@@ -458,44 +461,44 @@ package object codecs {
     implicit val decoderSlackBlockDatePickerElement: Decoder[SlackBlockDatePickerElement] =
       deriveDecoder[SlackBlockDatePickerElement]
 
-    implicit val encoderSlackBlockUsersListMenuElement: Encoder.AsObject[SlackBlockUsersListMenuElement] =
-      deriveEncoder[SlackBlockUsersListMenuElement]
+    implicit val encoderSlackBlockUsersListSelectElement: Encoder.AsObject[SlackBlockUsersListSelectElement] =
+      deriveEncoder[SlackBlockUsersListSelectElement]
 
-    implicit val decoderSlackBlockUsersListMenuElement: Decoder[SlackBlockUsersListMenuElement] =
-      deriveDecoder[SlackBlockUsersListMenuElement]
+    implicit val decoderSlackBlockUsersListSelectElement: Decoder[SlackBlockUsersListSelectElement] =
+      deriveDecoder[SlackBlockUsersListSelectElement]
 
-    implicit val encoderSlackBlockMultiStaticMenuElement: Encoder.AsObject[SlackBlockMultiStaticMenuElement] =
-      deriveEncoder[SlackBlockMultiStaticMenuElement]
+    implicit val encoderSlackBlockMultiStaticSelectElement: Encoder.AsObject[SlackBlockMultiStaticSelectElement] =
+      deriveEncoder[SlackBlockMultiStaticSelectElement]
 
-    implicit val decoderSlackBlockMultiStaticMenuElement: Decoder[SlackBlockMultiStaticMenuElement] =
-      deriveDecoder[SlackBlockMultiStaticMenuElement]
+    implicit val decoderSlackBlockMultiStaticSelectElement: Decoder[SlackBlockMultiStaticSelectElement] =
+      deriveDecoder[SlackBlockMultiStaticSelectElement]
 
-    implicit val encoderSlackBlockMultiExternalMenuElement: Encoder.AsObject[SlackBlockMultiExternalMenuElement] =
-      deriveEncoder[SlackBlockMultiExternalMenuElement]
+    implicit val encoderSlackBlockMultiExternalSelectElement: Encoder.AsObject[SlackBlockMultiExternalSelectElement] =
+      deriveEncoder[SlackBlockMultiExternalSelectElement]
 
-    implicit val decoderSlackBlockMultiExternalMenuElement: Decoder[SlackBlockMultiExternalMenuElement] =
-      deriveDecoder[SlackBlockMultiExternalMenuElement]
+    implicit val decoderSlackBlockMultiExternalSelectElement: Decoder[SlackBlockMultiExternalSelectElement] =
+      deriveDecoder[SlackBlockMultiExternalSelectElement]
 
-    implicit val encoderSlackBlockMultiUsersListMenuElement: Encoder.AsObject[SlackBlockMultiUsersListMenuElement] =
-      deriveEncoder[SlackBlockMultiUsersListMenuElement]
+    implicit val encoderSlackBlockMultiUsersListSelectElement: Encoder.AsObject[SlackBlockMultiUsersListSelectElement] =
+      deriveEncoder[SlackBlockMultiUsersListSelectElement]
 
-    implicit val decoderSlackBlockMultiUsersListMenuElement: Decoder[SlackBlockMultiUsersListMenuElement] =
-      deriveDecoder[SlackBlockMultiUsersListMenuElement]
+    implicit val decoderSlackBlockMultiUsersListSelectElement: Decoder[SlackBlockMultiUsersListSelectElement] =
+      deriveDecoder[SlackBlockMultiUsersListSelectElement]
 
-    implicit val encoderSlackBlockMultiConversationListMenuElement
-        : Encoder.AsObject[SlackBlockMultiConversationListMenuElement] =
-      deriveEncoder[SlackBlockMultiConversationListMenuElement]
+    implicit val encoderSlackBlockMultiConversationListSelectElement
+        : Encoder.AsObject[SlackBlockMultiConversationListSelectElement] =
+      deriveEncoder[SlackBlockMultiConversationListSelectElement]
 
-    implicit val decoderSlackBlockMultiConversationListMenuElement
-        : Decoder[SlackBlockMultiConversationListMenuElement] =
-      deriveDecoder[SlackBlockMultiConversationListMenuElement]
+    implicit val decoderSlackBlockMultiConversationListSelectElement
+        : Decoder[SlackBlockMultiConversationListSelectElement] =
+      deriveDecoder[SlackBlockMultiConversationListSelectElement]
 
-    implicit val encoderSlackBlockMultiChannelsListMenuElement
-        : Encoder.AsObject[SlackBlockMultiChannelsListMenuElement] =
-      deriveEncoder[SlackBlockMultiChannelsListMenuElement]
+    implicit val encoderSlackBlockMultiChannelsListSelectElement
+        : Encoder.AsObject[SlackBlockMultiChannelsListSelectElement] =
+      deriveEncoder[SlackBlockMultiChannelsListSelectElement]
 
-    implicit val decoderSlackBlockMultiChannelsListMenuElement: Decoder[SlackBlockMultiChannelsListMenuElement] =
-      deriveDecoder[SlackBlockMultiChannelsListMenuElement]
+    implicit val decoderSlackBlockMultiChannelsListSelectElement: Decoder[SlackBlockMultiChannelsListSelectElement] =
+      deriveDecoder[SlackBlockMultiChannelsListSelectElement]
 
     implicit val encoderSlackBlockRadioButtonsElement: Encoder.AsObject[SlackBlockRadioButtonsElement] =
       deriveEncoder[SlackBlockRadioButtonsElement]

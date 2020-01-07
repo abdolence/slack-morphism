@@ -99,6 +99,9 @@ trait SlackTextFormatters {
 
 }
 
+/**
+ * Slack mark down/field formatters
+ */
 object SlackTextFormatters {
 
   /**

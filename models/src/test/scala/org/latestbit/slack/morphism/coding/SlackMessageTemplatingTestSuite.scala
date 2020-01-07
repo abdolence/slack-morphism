@@ -69,7 +69,7 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
                 ),
                 sectionBlock(
                   text = md"Test 2",
-                  accessory = overflowMenu(
+                  accessory = overflow(
                     action_id = "-",
                     options = choiceItems(
                       choiceItem( text = plain"test-menu-item", value = "" )
@@ -78,7 +78,7 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
                 ),
                 inputBlock(
                   label = plain"Input",
-                  element = staticMenu(
+                  element = staticSelect(
                     placeholder = plain"test",
                     action_id = "-",
                     options = choiceItems(
@@ -95,7 +95,7 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
                 ),
                 inputBlock(
                   label = plain"Input",
-                  element = multiUsersListMenu(
+                  element = multiUsersSelect(
                     placeholder = plain"test",
                     action_id = "-",
                     initial_users = choiceStrItems(
@@ -129,6 +129,11 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
                   fields = sectionFields(
                     md"*Average Rating*\n1.0",
                     md"*Updated*\n${formatDate( Instant.now() )}"
+                  )
+                ),
+                contextBlock(
+                  blockElements(
+                    md"*Author:* T. M. Schwartz"
                   )
                 )
               )

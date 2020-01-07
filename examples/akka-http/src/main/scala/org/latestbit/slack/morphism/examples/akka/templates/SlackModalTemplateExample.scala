@@ -32,7 +32,7 @@ class SlackModalTemplateExample() extends SlackModalViewTemplate {
     blocks(
       sectionBlock(
         text = md"Just a dummy window here, sorry",
-        accessory = multiStaticMenu(
+        accessory = multiStaticSelect(
           placeholder = plain"With a dummy menu",
           action_id = "-",
           options = choiceItems(

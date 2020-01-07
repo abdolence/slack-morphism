@@ -20,7 +20,7 @@ package org.latestbit.slack.morphism.examples.akka.templates
 
 import java.time.Instant
 
-import org.latestbit.slack.morphism.client.templating.{ SlackBlocksTemplate, SlackMessageTemplate, SlackTextFormatters }
+import org.latestbit.slack.morphism.client.templating.{ SlackMessageTemplate, SlackTextFormatters }
 import org.latestbit.slack.morphism.messages.SlackBlock
 
 class SlackWelcomeMessageTemplateExample( userId: String ) extends SlackMessageTemplate {

@@ -65,23 +65,23 @@ trait SlackBlocksTemplateDsl extends SlackBlocksTemplateDslInternals {
   protected def image = SlackBlockImageElement
   protected def datePicker = SlackBlockDatePickerElement
 
-  protected def overflowMenu = SlackBlockOverflowMenuElement
+  protected def overflow = SlackBlockOverflowElement
 
-  protected def usersListMenu = SlackBlockUsersListMenuElement
-  protected def conversationsListMenu = SlackBlockConversationListMenuElement
-  protected def channelsListMenu = SlackBlockChannelsListMenuElement
-  protected def staticMenu = SlackBlockStaticMenuElement
-  protected def externalMenu = SlackBlockExternalMenuElement
+  protected def usersSelect = SlackBlockUsersListSelectElement
+  protected def conversationsSelect = SlackBlockConversationListSelectElement
+  protected def channelsSelect = SlackBlockChannelsListSelectElement
+  protected def staticSelect = SlackBlockStaticSelectElement
+  protected def externalSelect = SlackBlockExternalSelectElement
 
-  protected def multiUsersListMenu = SlackBlockMultiUsersListMenuElement
-  protected def multiConversationsListMenu = SlackBlockMultiConversationListMenuElement
-  protected def multiChannelsListMenu = SlackBlockMultiChannelsListMenuElement
-  protected def multiStaticMenu = SlackBlockMultiStaticMenuElement
-  protected def multiExternalMenu = SlackBlockMultiExternalMenuElement
+  protected def multiUsersSelect = SlackBlockMultiUsersListSelectElement
+  protected def multiConversationsSelect = SlackBlockMultiConversationListSelectElement
+  protected def multiChannelsSelect = SlackBlockMultiChannelsListSelectElement
+  protected def multiStaticSelect = SlackBlockMultiStaticSelectElement
+  protected def multiExternalSelect = SlackBlockMultiExternalSelectElement
 
   protected def radioButtons = SlackBlockRadioButtonsElement
 
-  protected def choiceItems( defs: SlackDslItemDef[SlackBlockOptionItem]* ): NonEmptyList[SlackBlockOptionItem] =
+  protected def choiceItems( defs: SlackDslItemDef[SlackBlockChoiceItem]* ): NonEmptyList[SlackBlockChoiceItem] =
     NonEmptyList.fromListUnsafe( defs.toList.flatten )
 
   protected def choiceStrItems( defs: String* ): NonEmptyList[String] =
@@ -89,10 +89,10 @@ trait SlackBlocksTemplateDsl extends SlackBlocksTemplateDslInternals {
 
   protected def optChoiceItem(
       condition: => Boolean
-  )( item: => SlackBlockOptionItem ): SlackDslItemDef[SlackBlockOptionItem] =
+  )( item: => SlackBlockChoiceItem ): SlackDslItemDef[SlackBlockChoiceItem] =
     optElement( condition, item )
 
-  protected def choiceItem = SlackBlockOptionItem
+  protected def choiceItem = SlackBlockChoiceItem
 
   protected def choiceGroups( defs: SlackDslItemDef[SlackBlockOptionGroup]* ): NonEmptyList[SlackBlockOptionGroup] =
     NonEmptyList.fromListUnsafe( defs.flatten.toList )

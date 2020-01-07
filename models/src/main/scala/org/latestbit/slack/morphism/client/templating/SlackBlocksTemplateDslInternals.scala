@@ -24,7 +24,7 @@ import org.latestbit.slack.morphism.messages.{
   SlackBlockConfirmItem,
   SlackBlockElement,
   SlackBlockMarkDownText,
-  SlackBlockOptionItem,
+  SlackBlockChoiceItem,
   SlackBlockPlainText,
   SlackBlockText
 }
@@ -50,8 +50,8 @@ trait SlackBlocksTemplateDslInternals {
   implicit final def slackBlockTextToDef[T <: SlackBlockText]( blockEl: => T ) =
     SlackDslSomeItem[T](() => blockEl )
 
-  implicit final def slackBlockOptionItemToDef( item: => SlackBlockOptionItem ) =
-    SlackDslSomeItem[SlackBlockOptionItem](() => item )
+  implicit final def slackBlockOptionItemToDef( item: => SlackBlockChoiceItem ) =
+    SlackDslSomeItem[SlackBlockChoiceItem](() => item )
 
   implicit def slackBlockElementToOption[T <: SlackBlockElement]( el: T ): Option[T] = Some( el )
   implicit def slackBlockConfirmItemToOption( el: SlackBlockConfirmItem ): Option[SlackBlockConfirmItem] = Some( el )

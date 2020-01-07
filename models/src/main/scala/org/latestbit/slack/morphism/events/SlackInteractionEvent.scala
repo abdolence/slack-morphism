@@ -22,7 +22,7 @@ import io.circe._
 import io.circe.generic.semiauto._
 import org.latestbit.circe.adt.codec._
 import org.latestbit.slack.morphism.common._
-import org.latestbit.slack.morphism.messages.{ SlackBlockOptionItem, SlackBlockText }
+import org.latestbit.slack.morphism.messages.{ SlackBlockChoiceItem, SlackBlockText }
 import org.latestbit.slack.morphism.views.{ SlackStatefulView, SlackView }
 
 /**
@@ -119,6 +119,6 @@ case class SlackInteractionActionInfo(
     block_id: Option[String] = None,
     text: Option[SlackBlockText] = None,
     value: Option[String] = None,
-    selected_option: Option[SlackBlockOptionItem] = None,
+    selected_option: Option[SlackBlockChoiceItem] = None,
     action_ts: Option[String] = None
 )
