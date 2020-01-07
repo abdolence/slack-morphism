@@ -14,3 +14,7 @@ options:
   - title: Blocks Templating
     url: docs/templating
     section: blockstemplating
+
+  - title: Using with Akka HTTP
+    url: docs/akka-http
+    section: akkahttp
