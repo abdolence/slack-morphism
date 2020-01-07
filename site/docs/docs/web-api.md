@@ -138,14 +138,14 @@ slackApiClient.conversations
 
 ```
 
-#### Folding using lazy AsyncSeqIterator
+#### Using lazy AsyncSeqIterator to scroll data
 
 Async iterator implements:
 * `foldLeft` for accumulating batching results if you need it (the implementation of AsyncSeqIterator doesn't memoize like Stream/LazyList)
 * `map` to transform results
 * `foreach` to iterate with effects
 
-This is an example with `foldLeft`:
+This is an example of using `foldLeft`:
 ```scala
 
 slackApiClient.conversations
