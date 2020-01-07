@@ -34,14 +34,14 @@ We will use OAuth v2/granular permissions/scopes, so:
     * `users:read`
     * `team:read`
     * `channels:history`
-    * `chat:write:bot`
+    * `chat:write:bot` (it might be also `chat:write` after upgrade to Granular Scopes, careful with this one)
     * `users.profile:read`
   
 ![sbt-example-command](https://slack.abdolence.dev/img/create-bot-token-scopes.png)
 
 So, the who list would be 
 `channels:history,chat:write,commands,im:history,im:read,im:write,team:read,users.profile:read,users:read`
-
+and we will use this line further.
 
 ### Create your own bot with sbt
 
