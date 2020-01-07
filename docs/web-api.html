@@ -65,6 +65,9 @@
 			 
 			<div class="sidebar-nav-item  "><a href="/docs/templating" title="Blocks Templating" class="">Blocks Templating</a>
 			</div>
+			 
+			<div class="sidebar-nav-item  "><a href="/docs/akka-http" title="Using with Akka HTTP" class="">Using with Akka HTTP</a>
+			</div>
 			
 		</div>
 	</div>
@@ -121,8 +124,8 @@ using <a href="https://api.slack.com/docs/oauth">Slack OAuth</a>.</p>
 <p>Slack Morphism requires implicit token specified as an instance of 
 <a href="/api/org/latestbit/slack/morphism/client/SlackApiToken.html">SlackApiToken</a>:</p>
 
-<p>In examples below, we’re using a hardcoded Slack token, 
-<em>Don’t do that for your production ready bots and apps</em> - you should safely and properly store all of Slack tokens.*
+<p>In an example below, we’re using a hardcoded Slack token, but <em>don’t do that for your production bots and apps</em>.
+You should securely and properly store all of Slack tokens.
 Look at <a href="https://api.slack.com/docs/oauth-safety">Slack recommendations</a>.</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client._</span>
@@ -259,17 +262,17 @@ all scrolling/batching requests for you.</p>
 
 <h4 id="avoid-boilerplate-making-consequent-non-blocking-client-requests-with-eithert">Avoid boilerplate making consequent non-blocking client requests with EitherT</h4>
 
-<p>This is optional and mostly recommendations.
-You might notice some boilerplate when you deal with consequent client requests 
+<p>This is completely optional and just a recommendation for you.</p>
+
+<p>You might notice some boilerplate when you deal with consequent client requests 
 that returns <code class="highlighter-rouge">Future[Either[SlackApiClientError,SomeKindOfSlackResponse]]</code>.</p>
 
-<p>To deal with that, consider using an approach with <a href="https://typelevel.org/cats/datatypes/eithert.html">EitherT[]</a>, 
-well described <a href="http://eed3si9n.com/herding-cats/stacking-future-and-either.html">here</a> from 
-<a href="https://typelevel.org/cats/">Cats</a></p>
+<p>To deal with that, consider using an approach with <a href="https://typelevel.org/cats/datatypes/eithert.html">EitherT[]</a> from 
+<a href="https://typelevel.org/cats/">Cats</a>, well described <a href="http://eed3si9n.com/herding-cats/stacking-future-and-either.html">here</a>.</p>
 
-<p>For example, this example provides shows two consequence Web API calls:
-We make the first async call, find some result in the first response, and 
-getting a response result of a next call.</p>
+<p>For example, this example shows two consequence Web API calls:
+We make a first async call, find some result in the first response, and 
+getting the response result of a next async call.</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">EitherT</span><span class="o">(</span> <span class="nv">slackApiClient</span><span class="o">.</span><span class="py">channels</span><span class="o">.</span><span class="py">list</span><span class="o">(</span> <span class="nc">SlackApiChannelsListRequest</span><span class="o">()</span> <span class="o">)</span> <span class="o">).</span><span class="py">flatMap</span> <span class="o">{</span> <span class="n">channelsResp</span> <span class="k">=&gt;</span>
   <span class="nv">channelsResp</span><span class="o">.</span><span class="py">channels</span>

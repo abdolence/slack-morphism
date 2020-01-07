@@ -65,6 +65,9 @@
 			 
 			<div class="sidebar-nav-item  "><a href="/docs/templating" title="Blocks Templating" class="">Blocks Templating</a>
 			</div>
+			 
+			<div class="sidebar-nav-item  "><a href="/docs/akka-http" title="Using with Akka HTTP" class="">Using with Akka HTTP</a>
+			</div>
 			
 		</div>
 	</div>
@@ -89,12 +92,76 @@
 		</div>
 		<div id="content" data-github-owner="abdolence" data-github-repo="slack-morphism">
 			<div class="content-wrapper">
-				<section><h2 id="slack-events-api">Slack Events API</h2>
-<p>TBD</p>
+				<section><h1 id="slack-events-api">Slack Events API</h1>
+
+<p>To help you implement <a href="https://api.slack.com/events-api">Slack Events API</a> listener, Slack Morphism provides you:</p>
 
 <ul>
-<li>Test</li>
+  <li>Well-typed events model and ready to use JSON encoder/decoders</li>
+  <li>Slack events signature verifier, to verify requests from Slack with confidence using your signing secret</li>
+  <li>Additional Web API client methods to post replies to events back</li>
 </ul>
+
+<p>Because Slack Morphism is a Web-framework agnostic, you are free to choose any you’re familiar with.</p>
+
+<p>However, to simplify understanding and show how to use it, Slack Morphism provides 
+<a href="akka-http">a full-featured bot for Akka HTTP</a>, which implements Events API with OAuth.</p>
+
+<h2 id="slack-events-api-model">Slack Events API Model</h2>
+
+<p>There are following types of Events</p>
+
+<ul>
+  <li><a href="/api/org/latestbit/slack/morphism/events/SlackPushEvent.html">SlackPushEvent</a> for all push events (like incoming messages, opening tabs, installing/uninstalling app, etc)</li>
+  <li><a href="/api/org/latestbit/slack/morphism/events/SlackInteractionEvent.html">SlackInteractionEvent</a> for all interaction events from Slack (actions on messages and views)</li>
+</ul>
+
+<p>JSON encoders and decoders for <a href="http://circe.io/">Circe</a> available either using</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import org.latestbit.slack.morphism.codecs.implicits._
+
+</code></pre></div></div>
+<p>or using a trait:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>trait MyHttpRoutesSupport extends org.latestbit.slack.morphism.codecs.CirceCodecs {
+  ...
+}
+</code></pre></div></div>
+
+<p>and you can decode all of the Slack Events like:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">decode</span><span class="o">[</span><span class="kt">SlackInteractionEvent</span><span class="o">](</span> <span class="n">requestBody</span> <span class="o">)</span> <span class="k">match</span> <span class="o">{</span>
+      <span class="k">case</span> <span class="nc">Right</span><span class="o">(</span> <span class="n">event</span> <span class="o">)</span> <span class="k">=&gt;</span> <span class="c1">// ...</span>
+      <span class="k">case</span> <span class="nc">Left</span><span class="o">(</span> <span class="n">ex</span> <span class="o">)</span> <span class="k">=&gt;</span> <span class="o">{</span>
+        <span class="nv">logger</span><span class="o">.</span><span class="py">error</span><span class="o">(</span> <span class="n">s</span><span class="s">"Can't decode push event from Slack: ${ex.toString}\n${requestBody}"</span> <span class="o">)</span>
+        <span class="nf">complete</span><span class="o">(</span> <span class="nv">StatusCodes</span><span class="o">.</span><span class="py">BadRequest</span> <span class="o">)</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="slack-events-signature-verifier">Slack events signature verifier</h2>
+
+<p>To verify requests from Slack using your signing secret, there is <a href="/api/org/latestbit/slack/morphism/events/signature/SlackEventSignatureVerifier.html">SlackEventSignatureVerifier</a>, 
+which provides you <code class="highlighter-rouge">verify()</code>:</p>
+
+<p>To verify event request you need:</p>
+<ul>
+  <li>A complete HTTP request body</li>
+  <li>The following HTTP header values from request:
+    <ul>
+      <li>SlackEventSignatureVerifier.HttpHeaderNames.SIGNED_TIMESTAMP</li>
+      <li>SlackEventSignatureVerifier.HttpHeaderNames.SIGNED_HASH</li>
+    </ul>
+  </li>
+  <li>Your signing secret from your Slack app profile</li>
+</ul>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="nv">signatureVerifier</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">SlackEventSignatureVerifier</span><span class="o">()</span>
+
+<span class="n">signatureVerifier</span><span class="o">.</span>
+    <span class="nf">verify</span><span class="o">(</span><span class="nv">config</span><span class="o">.</span><span class="py">signingSecret</span><span class="o">,</span> <span class="n">receivedSignedHash</span><span class="o">,</span> <span class="n">receivedSignedTimestamp</span><span class="o">,</span> <span class="n">requestBody</span><span class="o">)</span> <span class="k">match</span> <span class="o">{</span>
+        <span class="k">case</span> <span class="nc">Right</span><span class="o">(</span><span class="n">success</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="c1">// the signature is verified</span>
+        <span class="k">case</span> <span class="nc">Left</span><span class="o">(</span><span class="n">err</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="c1">// absent or wrong signature    </span>
+    <span class="o">}</span>
+</code></pre></div></div>
 </section>
 			</div>
 		</div>
