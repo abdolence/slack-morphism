@@ -98,7 +98,7 @@ This project is open to help each others, so any PRs are welcomed.
 ---
 
 ### Working with pagination/batching results
-Some of the Web API methods defines cursors and pagination, to give you an ability to load a lot of data
+Some of the Web API methods defines cursors and [pagination](https://api.slack.com/docs/pagination), to give you an ability to load a lot of data
 continually (using batching and making many requests).
 
 Examples:
