@@ -36,8 +36,8 @@ There is an example implementation of Slack OAuth v2 in [Akka Http Example](akka
 Slack Morphism requires implicit token specified as an instance of 
 [SlackApiToken](/api/org/latestbit/slack/morphism/client/SlackApiToken.html):
 
-In examples below, we're using a hardcoded Slack token, 
-*Don't do that for your production ready bots and apps* - you should safely and properly store all of Slack tokens.*
+In an example below, we're using a hardcoded Slack token, but *don't do that for your production bots and apps*.
+You should securely and properly store all of Slack tokens.
 Look at [Slack recommendations](https://api.slack.com/docs/oauth-safety).
 
 ```scala
@@ -175,7 +175,8 @@ slackApiClient.conversations
 
 #### Avoid boilerplate making consequent non-blocking client requests with EitherT
 
-This is optional and mostly recommendations.
+This is completely optional and just a recommendation for you.
+
 You might notice some boilerplate when you deal with consequent client requests 
 that returns `Future[Either[SlackApiClientError,SomeKindOfSlackResponse]]`.
 
@@ -183,9 +184,9 @@ To deal with that, consider using an approach with [EitherT[]](https://typelevel
 well described [here](http://eed3si9n.com/herding-cats/stacking-future-and-either.html) from 
 [Cats](https://typelevel.org/cats/)
 
-For example, this example provides shows two consequence Web API calls:
-We make the first async call, find some result in the first response, and 
-getting a response result of a next call. 
+For example, this example shows two consequence Web API calls:
+We make a first async call, find some result in the first response, and 
+getting the response result of a next async call. 
 
 ```scala
 EitherT( slackApiClient.channels.list( SlackApiChannelsListRequest() ) ).flatMap { channelsResp =>
