@@ -141,6 +141,13 @@ slackApiClient.conversations
 ```
 
 #### Folding Using Lazy/Async iterator
+
+Async iterator implements:
+* `foldLeft` for accumulating batching results if you need it (the implementation doesn't use memoization like Stream/LazyList)
+* `map` to transform results
+* `foreach` to iterate with effects
+
+This is an example with `foldLeft`:
 ```scala
 
 slackApiClient.conversations
@@ -160,16 +167,16 @@ slackApiClient.conversations
 #### Create a reactive Publisher[]
 ```scala
 
-val Publisher[SlackMessage] = 
-slackApiClient.conversations
-  .historyScroller(
-    SlackApiConversationsHistoryRequest(
-      channel = "C222...." // some channel id
-    )
-  )
-  .toPublisher()
+val publisher : Publisher[SlackMessage] = 
+    slackApiClient.conversations
+      .historyScroller(
+        SlackApiConversationsHistoryRequest(
+          channel = "C222...." // some channel id
+        )
+      )
+      .toPublisher()
 
-// use it with your reactive frameworks (like Akka Streams, etc)
+// Now you can use it as any other publishers with your reactive frameworks (like Akka Streams, etc)
 
 ```
 
