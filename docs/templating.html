@@ -102,18 +102,18 @@ Read <a href="https://api.slack.com/block-kit/building">official docs</a> for in
 <p>Let’s take some very simple block example:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-	</span><span class="nl">"blocks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-		</span><span class="p">{</span><span class="w">
-			</span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"section"</span><span class="p">,</span><span class="w">
-			</span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-				</span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mrkdwn"</span><span class="p">,</span><span class="w">
-				</span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A message *with some bold text* and _some italicized text_."</span><span class="w">
-			</span><span class="p">}</span><span class="w">
-		</span><span class="p">}</span><span class="w">
-	</span><span class="p">]</span><span class="w">
+  </span><span class="nl">"blocks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"section"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mrkdwn"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A message *with some bold text* and _some italicized text_."</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
-<p>As you can see it just a JSON, let’s look at how it might look type-safe DSL with Slack Morphism Blocks DSL:</p>
+<p>Now, let’s look at how it might look with type-safe Scala code using Slack Morphism Blocks DSL:</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">blocks</span><span class="o">(</span>
     <span class="nf">sectionBlock</span><span class="o">(</span>
@@ -130,42 +130,42 @@ using Scala language abilities and <a href="https://en.wikipedia.org/wiki/Design
 
 <p>Json:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-	</span><span class="nl">"blocks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-		</span><span class="p">{</span><span class="w">
-			</span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"section"</span><span class="p">,</span><span class="w">
-			</span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-				</span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mrkdwn"</span><span class="p">,</span><span class="w">
-				</span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;https://example.com|Overlook Hotel&gt; </span><span class="se">\n</span><span class="s2"> :star: </span><span class="se">\n</span><span class="s2"> Doors had too many axe holes, guest in room 237 was far too rowdy, whole place felt stuck in the 1920s."</span><span class="w">
-			</span><span class="p">},</span><span class="w">
-			</span><span class="nl">"accessory"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-				</span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image"</span><span class="p">,</span><span class="w">
-				</span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://is5-ssl.mzstatic.com/image/thumb/Purple3/v4/d3/72/5c/d3725c8f-c642-5d69-1904-aa36e4297885/source/256x256bb.jpg"</span><span class="p">,</span><span class="w">
-				</span><span class="nl">"alt_text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Haunted hotel image"</span><span class="w">
-			</span><span class="p">}</span><span class="w">
-		</span><span class="p">},</span><span class="w">
-		</span><span class="p">{</span><span class="w">
-			</span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"section"</span><span class="p">,</span><span class="w">
-			</span><span class="nl">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-				</span><span class="p">{</span><span class="w">
-					</span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mrkdwn"</span><span class="p">,</span><span class="w">
-					</span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*Average Rating*</span><span class="se">\n</span><span class="s2">1.0"</span><span class="w">
-				</span><span class="p">},</span><span class="w">
-                </span><span class="p">{</span><span class="w">
-                    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mrkdwn"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*Updated*</span><span class="se">\n</span><span class="s2">&lt;!date^1578400713^{date_pretty}|07 Jan 2020 12:38:33 GMT&gt;"</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-			</span><span class="p">]</span><span class="w">
-		</span><span class="p">},</span><span class="w">
-		</span><span class="p">{</span><span class="w">
-			</span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"context"</span><span class="p">,</span><span class="w">
-			</span><span class="nl">"elements"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-				</span><span class="p">{</span><span class="w">
-					</span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mrkdwn"</span><span class="p">,</span><span class="w">
-					</span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*Author:* T. M. Schwartz"</span><span class="w">
-				</span><span class="p">}</span><span class="w">
-			</span><span class="p">]</span><span class="w">
-		</span><span class="p">}</span><span class="w">
-	</span><span class="p">]</span><span class="w">
+  </span><span class="nl">"blocks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"section"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mrkdwn"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;https://example.com|Overlook Hotel&gt; </span><span class="se">\n</span><span class="s2"> :star: </span><span class="se">\n</span><span class="s2"> Doors had too many axe holes, guest in room 237 was far too rowdy, whole place felt stuck in the 1920s."</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"accessory"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://is5-ssl.mzstatic.com/image/thumb/Purple3/v4/d3/72/5c/d3725c8f-c642-5d69-1904-aa36e4297885/source/256x256bb.jpg"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"alt_text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Haunted hotel image"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"section"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mrkdwn"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*Average Rating*</span><span class="se">\n</span><span class="s2">1.0"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mrkdwn"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*Updated*</span><span class="se">\n</span><span class="s2">&lt;!date^1578400713^{date_pretty}|07 Jan 2020 12:38:33 GMT&gt;"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"context"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"elements"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mrkdwn"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*Author:* T. M. Schwartz"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -222,7 +222,7 @@ using Scala language abilities and <a href="https://en.wikipedia.org/wiki/Design
       <li><code class="highlighter-rouge">multiChannelsListSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#multi_channels_select">“multi_channels_select”</a></li>
       <li><code class="highlighter-rouge">multiStaticSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#multi_select">“multi_static_select”</a></li>
       <li><code class="highlighter-rouge">multiExternalSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#multi_external_select">“multi_external_select”</a></li>
-      <li><code class="highlighter-rouge">radioButtons</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#radio_buttons">“radio_buttons”</a></li>
+      <li><code class="highlighter-rouge">radioButtons</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#radio">“radio_buttons”</a></li>
     </ul>
   </li>
   <li><code class="highlighter-rouge">choiceItems</code> : items for selects, overflow and radio buttons
@@ -266,16 +266,15 @@ depends on some user defined condition:</p>
 <p>You can use them in Scala as:</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Conditional item of overflow menu:</span>
-    <span class="nf">sectionBlock</span><span class="o">(</span>
-      <span class="n">text</span> <span class="k">=</span> <span class="n">md</span><span class="s">"Test 2"</span><span class="o">,</span>
-      <span class="n">accessory</span> <span class="k">=</span> <span class="nf">overflow</span><span class="o">(</span>
-        <span class="n">action_id</span> <span class="k">=</span> <span class="s">"-"</span><span class="o">,</span>
-        <span class="n">options</span> <span class="k">=</span> <span class="nf">choiceItems</span><span class="o">(</span>
-          <span class="nf">choiceItem</span><span class="o">(</span> <span class="n">text</span> <span class="k">=</span> <span class="n">plain</span><span class="s">"test-menu-item"</span><span class="o">,</span> <span class="n">value</span> <span class="k">=</span> <span class="s">""</span> <span class="o">),</span>
-          <span class="nf">optChoiceItem</span><span class="o">(</span> <span class="n">someUserParam</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">)</span> <span class="o">(</span> <span class="nf">choiceItem</span><span class="o">(</span> <span class="n">text</span> <span class="k">=</span> <span class="n">plain</span><span class="s">"conditional-menu-item"</span><span class="o">,</span> <span class="n">value</span> <span class="k">=</span> <span class="s">""</span> <span class="o">)</span> <span class="o">)</span>
-        <span class="o">)</span>
-      <span class="o">)</span>
+<span class="nf">sectionBlock</span><span class="o">(</span>
+  <span class="n">text</span> <span class="k">=</span> <span class="n">md</span><span class="s">"Test 2"</span><span class="o">,</span>
+  <span class="n">accessory</span> <span class="k">=</span> <span class="nf">overflow</span><span class="o">(</span>
+    <span class="n">action_id</span> <span class="k">=</span> <span class="s">"-"</span><span class="o">,</span>
+    <span class="n">options</span> <span class="k">=</span> <span class="nf">choiceItems</span><span class="o">(</span>
+      <span class="nf">choiceItem</span><span class="o">(</span> <span class="n">text</span> <span class="k">=</span> <span class="n">plain</span><span class="s">"test-menu-item"</span><span class="o">,</span> <span class="n">value</span> <span class="k">=</span> <span class="s">""</span> <span class="o">),</span>
+      <span class="nf">optChoiceItem</span><span class="o">(</span> <span class="n">someUserParam</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">)</span> <span class="o">(</span> <span class="nf">choiceItem</span><span class="o">(</span> <span class="n">text</span> <span class="k">=</span> <span class="n">plain</span><span class="s">"conditional-menu-item"</span><span class="o">,</span> <span class="n">value</span> <span class="k">=</span> <span class="s">""</span> <span class="o">)</span> <span class="o">)</span>
     <span class="o">)</span>
+  <span class="o">)</span>
 <span class="o">)</span>
 </code></pre></div></div>
 
@@ -330,59 +329,55 @@ depends on some user defined condition:</p>
   <li><code class="highlighter-rouge">SlackMessageTemplate</code> - to build a message template</li>
 </ul>
 
-<ol>
-  <li>Define your template in a specialised class like this:
-```scala</li>
-</ol>
+<h4 id="define-a-block-template-in-a-specialised-class-like-this">Define a block template in a specialised class like this:</h4>
 
-<p>import java.time.Instant</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">java.time.Instant</span>
 
-<p>import org.latestbit.slack.morphism.client.templating._
-import org.latestbit.slack.morphism.messages.SlackBlock</p>
+<span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client.templating._</span>
+<span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.messages.SlackBlock</span>
 
-<p>class SlackWelcomeMessageTemplateExample( userId: String ) extends SlackMessageTemplate {</p>
+<span class="k">class</span> <span class="nc">MyWelcomeMessageTemplateExample</span><span class="o">(</span> <span class="n">userId</span><span class="k">:</span> <span class="kt">String</span> <span class="o">)</span> <span class="k">extends</span> <span class="nc">SlackMessageTemplate</span> <span class="o">{</span>
 
-<p>// All Slack messages also should provide simple plain textual representation
- // So this is required 
-  override def renderPlainText(): String =
-    s”Hey ${formatSlackUserId( userId )}”</p>
+ <span class="c1">// All Slack messages also should provide simple plain textual representation</span>
+ <span class="c1">// So this is required </span>
+  <span class="k">override</span> <span class="k">def</span> <span class="nf">renderPlainText</span><span class="o">()</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span>
+    <span class="n">s</span><span class="s">"Hey ${formatSlackUserId( userId )}"</span>
 
-<p>// Blocks for our messages using DSL 
-  override def renderBlocks(): Option[List[SlackBlock]] =
-    blocks(
-      sectionBlock(
-        text = md”Hey ${formatSlackUserId( userId )}”
-      ),
-      dividerBlock(),
-      contextBlock(
-        blockElements(
-          md”This is an example of block message”,
-          md”Current time is: ${formatDate( Instant.now(), SlackTextFormatters.SlackDateTimeFormats.DATE_LONG_PRETTY )}”
-        )
-      ),
-      dividerBlock(),
-      imageBlock( image_url = “https://www.gstatic.com/webp/gallery3/2_webp_ll.png”, alt_text = “Test Image” ),
-      actionsBlock(
-        blockElements(
-          button( text = plain”Simple”, action_id = “simple-message-button” )
-        )
-      )
-    )</p>
+  <span class="c1">// Blocks for our messages using DSL </span>
+  <span class="k">override</span> <span class="k">def</span> <span class="nf">renderBlocks</span><span class="o">()</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">SlackBlock</span><span class="o">]]</span> <span class="k">=</span>
+    <span class="nf">blocks</span><span class="o">(</span>
+      <span class="nf">sectionBlock</span><span class="o">(</span>
+        <span class="n">text</span> <span class="k">=</span> <span class="n">md</span><span class="s">"Hey ${formatSlackUserId( userId )}"</span>
+      <span class="o">),</span>
+      <span class="nf">dividerBlock</span><span class="o">(),</span>
+      <span class="nf">contextBlock</span><span class="o">(</span>
+        <span class="nf">blockElements</span><span class="o">(</span>
+          <span class="n">md</span><span class="s">"This is an example of block message"</span><span class="o">,</span>
+          <span class="n">md</span><span class="s">"Current time is: ${formatDate( Instant.now(), SlackTextFormatters.SlackDateTimeFormats.DATE_LONG_PRETTY )}"</span>
+        <span class="o">)</span>
+      <span class="o">),</span>
+      <span class="nf">dividerBlock</span><span class="o">(),</span>
+      <span class="nf">imageBlock</span><span class="o">(</span> <span class="n">image_url</span> <span class="k">=</span> <span class="s">"https://www.gstatic.com/webp/gallery3/2_webp_ll.png"</span><span class="o">,</span> <span class="n">alt_text</span> <span class="k">=</span> <span class="s">"Test Image"</span> <span class="o">),</span>
+      <span class="nf">actionsBlock</span><span class="o">(</span>
+        <span class="nf">blockElements</span><span class="o">(</span>
+          <span class="nf">button</span><span class="o">(</span> <span class="n">text</span> <span class="k">=</span> <span class="n">plain</span><span class="s">"Simple"</span><span class="o">,</span> <span class="n">action_id</span> <span class="k">=</span> <span class="s">"simple-message-button"</span> <span class="o">)</span>
+        <span class="o">)</span>
+      <span class="o">)</span>
+    <span class="o">)</span>
+<span class="o">}</span>
+</code></pre></div></div>
 
-<p>}</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-2. Use them in your application code like this:
+<h4 id="use-them-in-your-application-code-like-this">Use them in your application code like this:</h4>
 
-```scala
-val template = new SlackWelcomeMessageTemplateExample( userId )
-slackApiClient.chat
-.postMessage(
-  SlackApiChatPostMessageRequest(
-    channel = channelId,
-    text = template.renderPlainText(),
-    blocks = template.renderBlocks()
-  )
-)
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="nv">template</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">MyWelcomeMessageTemplateExample</span><span class="o">(</span> <span class="n">userId</span> <span class="o">)</span>
+<span class="nv">slackApiClient</span><span class="o">.</span><span class="py">chat</span>
+<span class="o">.</span><span class="py">postMessage</span><span class="o">(</span>
+  <span class="nc">SlackApiChatPostMessageRequest</span><span class="o">(</span>
+    <span class="n">channel</span> <span class="k">=</span> <span class="n">channelId</span><span class="o">,</span>
+    <span class="n">text</span> <span class="k">=</span> <span class="nv">template</span><span class="o">.</span><span class="py">renderPlainText</span><span class="o">(),</span>
+    <span class="n">blocks</span> <span class="k">=</span> <span class="nv">template</span><span class="o">.</span><span class="py">renderBlocks</span><span class="o">()</span>
+  <span class="o">)</span>
+<span class="o">)</span>
 </code></pre></div></div>
 
 <h3 id="dsl-slack-text-formatters">DSL Slack text formatters</h3>

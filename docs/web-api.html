@@ -227,7 +227,7 @@ all scrolling/batching requests for you.</p>
 
 </code></pre></div></div>
 
-<h4 id="folding-using-lazy-asyncseqiterator">Folding using lazy AsyncSeqIterator</h4>
+<h4 id="using-lazy-asyncseqiterator-to-scroll-data">Using lazy AsyncSeqIterator to scroll data</h4>
 
 <p>Async iterator implements:</p>
 <ul>
@@ -236,7 +236,7 @@ all scrolling/batching requests for you.</p>
   <li><code class="highlighter-rouge">foreach</code> to iterate with effects</li>
 </ul>
 
-<p>This is an example with <code class="highlighter-rouge">foldLeft</code>:</p>
+<p>This is an example of using <code class="highlighter-rouge">foldLeft</code>:</p>
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="nv">slackApiClient</span><span class="o">.</span><span class="py">conversations</span>
   <span class="o">.</span><span class="py">historyScroller</span><span class="o">(</span>
