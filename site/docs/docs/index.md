@@ -6,15 +6,14 @@ permalink: docs/
 # Intro and motivations
 
 ### Type-safety
-Scala is a static-typed language, and Slack Morphism provides quite a lot of definitions of 
-most of the available methods and structures of Slack Web/Events API, 
-just to help you find errors at compile time.
-There is a [well-typed DSL](templating) to build your messages and views with Slack blocks safely. 
+Scala is a static-typed language, and Slack Morphism provides methods and models definitions most of 
+the available methods and structures of Slack Web/Events API.
+There is a [well-typed DSL](Blocks DSL) to build your messages and views with Slack blocks safely as well. 
  
 ### Easy to use
 While Slack Morphism uses some of FP paradigms and avoids imperative style and mutable states internally, 
 its API doesn't expose to you anything that might make you learn additional advanced frameworks 
-(like ZIO, cats-effects, etc).
+(like ZIO, cats-effects, and others).
 It provides you with a simple API mostly based on Scala Future, Option, Either, etc.
 
 ### Frameworks-agnostic

@@ -8,7 +8,7 @@ import sbt.Package.ManifestAttributes
 
 name := "slack-morphism-root"
 
-ThisBuild / version := "1.0.0"
+ThisBuild / version := "1.0.1-SNAPSHOT"
 
 ThisBuild / description := "Open Type-Safe Reactive Client with Blocks Templating for Slack"
 
@@ -140,7 +140,8 @@ val baseDependencies =
       "org.reactivestreams" % "reactive-streams-tck" % reactiveStreamsVersion,
       "org.scalatestplus" %% "scalatestplus-scalacheck" % scalaTestPlusCheck,
       "org.scalatestplus" %% "testng-6-7" % scalaTestPlusTestNG,
-      "com.github.alexarchambault" %% "scalacheck-shapeless_1.14" % scalaCheckShapeless
+      "com.github.alexarchambault" %% "scalacheck-shapeless_1.14" % scalaCheckShapeless,
+      "com.softwaremill.sttp.client" %% "async-http-client-backend-future" % sttpVersion
     ).map( _ % "test" )
 
 //addCompilerPlugin( "org.scalamacros" %% "paradise" % "2.1.1" cross CrossVersion.full )

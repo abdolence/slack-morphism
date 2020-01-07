@@ -7,6 +7,6 @@ technologies:
  - second: ["Scala", "This library is completely written in Scala and provides Scala API"]
 features:
  - first: ["Web API", "A framework-agnostic access to Slack Web API from Scala.", "/docs/web-api"]
- - second: ["Events API", "Ready to use model for Slack Events API.", "/docs/events-api"]
- - third: ["Blocks Templating", "Simple and type-safe DSL for Slack Blocks for your rich messages and views.", "/docs/templating"]
+ - second: ["Events API", "Ready to use models for Slack Events API.", "/docs/events-api"]
+ - third: ["Blocks Templating", "Simple and type-safe DSL for Slack Blocks to build your rich messages and views.", "/docs/templating"]
 ---
