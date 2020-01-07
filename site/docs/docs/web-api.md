@@ -180,9 +180,8 @@ This is completely optional and just a recommendation for you.
 You might notice some boilerplate when you deal with consequent client requests 
 that returns `Future[Either[SlackApiClientError,SomeKindOfSlackResponse]]`.
 
-To deal with that, consider using an approach with [EitherT[]](https://typelevel.org/cats/datatypes/eithert.html), 
-well described [here](http://eed3si9n.com/herding-cats/stacking-future-and-either.html) from 
-[Cats](https://typelevel.org/cats/)
+To deal with that, consider using an approach with [EitherT[]](https://typelevel.org/cats/datatypes/eithert.html) from 
+[Cats](https://typelevel.org/cats/), well described [here](http://eed3si9n.com/herding-cats/stacking-future-and-either.html).
 
 For example, this example shows two consequence Web API calls:
 We make a first async call, find some result in the first response, and 
