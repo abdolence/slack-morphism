@@ -83,7 +83,10 @@ is `slackApiClient.oauth.v2.access()` etc.
 The complete list of all of the implemented Web API methods is available [here](/api/org/latestbit/slack/morphism/client/SlackApiClient.html).
 
 ### Low-level HTTP API to Slack Web API
-In case you didn't find a method you need on the list above, there is [low-level](/api/org/latestbit/slack/morphism/client/impl/SlackApiHttpProtocolSupport$http$.html) API for this case:
+In case you didn't find a method you need on the list above, 
+or you need something different/undocumented/legacy, 
+there is a [low-level](/api/org/latestbit/slack/morphism/client/impl/SlackApiHttpProtocolSupport$http$.html) 
+API for this scenario:
 
 ```scala
 import org.latestbit.slack.morphism.client._
@@ -107,9 +110,12 @@ slackApiClient.http.post[YourRequest,YourResponse](
     YourRequest()
 )
 ```
+
 ---
+
 Please, don't hesitate to submit a PR with model updates if you find anything missing or find model inconsistency.
 This project is open to help each others, so any PRs are welcomed.
+
 ---
 
 ### Working with pagination/batching results
