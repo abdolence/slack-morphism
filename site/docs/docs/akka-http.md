@@ -69,21 +69,30 @@ If you all this correctly you should see something like this:
 ### Fill in profile parameters in your Slack app profile
 
 * `Features → Event Subscriptions → Enable Events`
-    * Request URL: https://<your-ngrok-id>.ngrok.io/push
+    * Request URL: 
+        ```
+        https://<your-ngrok-id>.ngrok.io/push
+        ```
     * Subscribe to bot events: `app_home_opened`, `message.im`, `message.channels`
     * **Save Changes**
     
 ![sbt-example-command](https://slack.abdolence.dev/img/event-subscriptions.png)
 
 * `Features → OAuth & Permissions`:
-    * Redirect URLs: https://<your-ngrok-id>.ngrok.io/auth/callback
+    * Redirect URLs: 
+        ```
+        https://<your-ngrok-id>.ngrok.io/auth/callback
+        ```
     * **Save URLs**
     * Check if `Scopes → Bot Token Scopes` contains all required scopes:
         `channels:history,chat:write,commands,im:history,im:read,im:write,team:read,users.profile:read,users:read`
       (occasionally Slack lose something in this list after upgrading to Granular Scopes)  
 
 * `Features → Interactive Components`:
-    * Interactivity → Request URL: https://<your-ngrok-id>.ngrok.io/interaction
+    * Interactivity → Request URL:
+    ```
+    https://<your-ngrok-id>.ngrok.io/interaction
+    ```     
 
 * `Features → Home`:
     * Click on **Sign Up**
