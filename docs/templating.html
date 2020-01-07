@@ -122,9 +122,9 @@ Read <a href="https://api.slack.com/block-kit/building">official docs</a> for in
 <span class="o">)</span>
 </code></pre></div></div>
 
-<p>Slack Morphism Blocks DSL not just give you a function to create a JSON from this, but also provides 
-at compile time checking structure and formatting rules from Slack, so you can avoid many issues beforehand
-and use autocomplete in your IDE.</p>
+<p>Slack Morphism Blocks DSL not just give you a DSL and function to create a JSON from this, but also provides 
+both compile time and run time checking for structure and formatting rules for Slack Blocks, 
+using Scala language abilities and <a href="https://en.wikipedia.org/wiki/Design_by_contract">Design by cntract (DbC)</a> principles.</p>
 
 <p>Let’s look at another more complex example:</p>
 
@@ -160,7 +160,7 @@ and use autocomplete in your IDE.</p>
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>It would be in DSL like:</p>
+<p>It would be using DSL defined as:</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">blocks</span><span class="o">(</span>
     <span class="nf">sectionBlock</span><span class="o">(</span>
