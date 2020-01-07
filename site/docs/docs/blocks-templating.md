@@ -164,16 +164,15 @@ You can use them in Scala as:
 
 ```scala
 // Conditional item of overflow menu:
-    sectionBlock(
-      text = md"Test 2",
-      accessory = overflow(
-        action_id = "-",
-        options = choiceItems(
-          choiceItem( text = plain"test-menu-item", value = "" ),
-          optChoiceItem( someUserParam > 0 ) ( choiceItem( text = plain"conditional-menu-item", value = "" ) )
-        )
-      )
+sectionBlock(
+  text = md"Test 2",
+  accessory = overflow(
+    action_id = "-",
+    options = choiceItems(
+      choiceItem( text = plain"test-menu-item", value = "" ),
+      optChoiceItem( someUserParam > 0 ) ( choiceItem( text = plain"conditional-menu-item", value = "" ) )
     )
+  )
 )
 ```
 
