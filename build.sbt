@@ -168,6 +168,7 @@ lazy val slackMorphismExamples =
         "io.swaydb" %% "swaydb" % swayDbVersion
       )
     )
+    .settings( noPublishSettings )
     .dependsOn( slackMorphismClient )
 
 lazy val apiDocsDir = settingKey[String]( "Name of subdirectory for api docs" )
