@@ -18,12 +18,14 @@
 
 package org.latestbit.slack.morphism.client
 
+import java.util.concurrent.{ Executors, TimeUnit }
+
 import org.latestbit.slack.morphism.concurrent.AsyncSeqIterator
 import org.scalacheck._
 import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-import scala.concurrent.Future
+import scala.concurrent.{ ExecutionContext, Future }
 
 class AsyncSeqIteratorTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenPropertyChecks {
 
@@ -91,6 +93,28 @@ class AsyncSeqIteratorTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenProp
             x.contains( s"next: ${idx + 1}".toUpperCase )
         } )
       }
+  }
+
+  "AsyncIterator" should "provide a foreach function" in {
+    var testEffect: List[String] = List()
+    val testExecutor = Executors.newSingleThreadExecutor()
+    val testExecutorContext = ExecutionContext.fromExecutor( testExecutor )
+    iterator.foreach { testIterRes =>
+      testEffect = testEffect :+ testIterRes
+      if (testIterRes == "last") {
+        testExecutor.shutdown()
+      }
+    }( testExecutorContext )
+
+    testExecutor.awaitTermination( 60, TimeUnit.SECONDS )
+
+    assert( testEffect.nonEmpty )
+    assert( testEffect.headOption.contains( "initial" ) )
+    assert( testEffect.lastOption.contains( "last" ) )
+    assert( testEffect.drop( 1 ).dropRight( 1 ).zipWithIndex.forall {
+      case ( x, idx ) =>
+        x.contains( s"next: ${idx + 1}" )
+    } )
   }
 
 }

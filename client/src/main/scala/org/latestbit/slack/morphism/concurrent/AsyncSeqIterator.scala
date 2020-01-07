@@ -68,6 +68,17 @@ trait AsyncSeqIterator[+I, +A] {
       f: A => B
   ): AsyncSeqIterator[I, B]
 
+  def foreach[U]( f: A => U )( implicit ec: ExecutionContext ): Unit = {
+    value().foreach { currentValue =>
+      f( currentValue )
+      next().foreach {
+        case Some( nextIter ) => {
+          nextIter.foreach( f )
+        }
+        case _ =>
+      }
+    }
+  }
 }
 
 /**
