@@ -25,7 +25,7 @@ Let's take some very simple block example:
   ]
 }
 ```
-As you can see it just a JSON, let's look at how it might look type-safe DSL with Slack Morphism Blocks DSL:
+Now, let's look at how it might look with type-safe Scala code using Slack Morphism Blocks DSL:
 
 ```scala
 blocks(
@@ -132,7 +132,7 @@ Available DSL terms:
     * `multiChannelsListSelect` : ["multi_channels_select"](https://api.slack.com/reference/block-kit/block-elements#multi_channels_select)
     * `multiStaticSelect` : ["multi_static_select"](https://api.slack.com/reference/block-kit/block-elements#multi_select)
     * `multiExternalSelect` : ["multi_external_select"](https://api.slack.com/reference/block-kit/block-elements#multi_external_select)
-    * `radioButtons` : ["radio_buttons"](https://api.slack.com/reference/block-kit/block-elements#radio_buttons)
+    * `radioButtons` : ["radio_buttons"](https://api.slack.com/reference/block-kit/block-elements#radio)
 * `choiceItems` : items for selects, overflow and radio buttons
     * `choiceItem` : [option object](https://api.slack.com/reference/block-kit/composition-objects#option)
 * `choiceStrItems` : items for strings for users/conversations/channels selects    
@@ -228,15 +228,15 @@ There are traits in `org.latestbit.slack.morphism.client.templating` to help you
 * `SlackModalViewTemplate` - to build a modal view template
 * `SlackMessageTemplate` - to build a message template
 
-1. Define your template in a specialised class like this:
-```scala
+#### Define a block template in a specialised class like this:
 
+```scala
 import java.time.Instant
 
 import org.latestbit.slack.morphism.client.templating._
 import org.latestbit.slack.morphism.messages.SlackBlock
 
-class SlackWelcomeMessageTemplateExample( userId: String ) extends SlackMessageTemplate {
+class MyWelcomeMessageTemplateExample( userId: String ) extends SlackMessageTemplate {
 
  // All Slack messages also should provide simple plain textual representation
  // So this is required 
@@ -264,14 +264,13 @@ class SlackWelcomeMessageTemplateExample( userId: String ) extends SlackMessageT
         )
       )
     )
-
 }
 ```
 
-2. Use them in your application code like this:
+#### Use them in your application code like this:
 
 ```scala
-val template = new SlackWelcomeMessageTemplateExample( userId )
+val template = new MyWelcomeMessageTemplateExample( userId )
 slackApiClient.chat
 .postMessage(
   SlackApiChatPostMessageRequest(
