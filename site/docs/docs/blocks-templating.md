@@ -221,7 +221,7 @@ blocks (
 ```
 
 
-### Rendering blocks to messages and views
+### Render templates to messages and views
 
 There are traits in `org.latestbit.slack.morphism.client.templating` to help you build your own templates:
 * `SlackBlocksTemplate` - to build a general blocks template (like a home tab)
@@ -266,6 +266,7 @@ class MyWelcomeMessageTemplateExample( userId: String ) extends SlackMessageTemp
     )
 }
 ```
+More examples are available [here](https://github.com/abdolence/slack-morphism/tree/master/examples/akka-http/src/main/scala/org/latestbit/slack/morphism/examples/akka/templates).
 
 #### Use them in your application code like this:
 
