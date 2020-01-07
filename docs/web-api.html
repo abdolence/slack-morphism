@@ -104,7 +104,23 @@
 			<div class="content-wrapper">
 				<section><h2 id="slack-web-api">Slack Web API</h2>
 
-<h3 id="creating-client-to-slack-web-api-methods">Creating client to Slack Web API methods</h3>
+<h3 id="choose-a-http-client-backend">Choose a HTTP client backend</h3>
+
+<p>You should choose <a href="sttp backend">https://sttp.readthedocs.io/en/latest/backends/summary.html</a> 
+which supports <code class="highlighter-rouge">scala.concurrent.Future</code> response:</p>
+<ul>
+  <li>AkkaHttpBackend</li>
+  <li>OkHttpFutureBackend</li>
+  <li>HttpClientFutureBackend</li>
+</ul>
+
+<p>Add a dependency of your choice to your <code class="highlighter-rouge">build.sbt</code>.</p>
+
+<p>For Akka Http it is:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"com.softwaremill.sttp.client" %% "akka-http-backend" % sttpVersion
+</code></pre></div></div>
+
+<h3 id="create-a-client-to-slack-web-api-methods">Create a client to Slack Web API methods</h3>
 
 <p><a href="/api/org/latestbit/slack/morphism/client/SlackApiClient.html">SlackApiClient</a> provides access 
 to all available of Slack Web API methods.</p>
