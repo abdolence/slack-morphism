@@ -88,8 +88,8 @@ If you all this correctly you should see something like this:
         `channels:history,chat:write,commands,im:history,im:read,im:write,team:read,users.profile:read,users:read`
       (occasionally Slack lose something in this list after upgrading to Granular Scopes)  
 
-* `Features → Interactive Components`:
-    * Interactivity → Request URL:
+* `Features → Interactive Components → Interactivity`:
+    * Request URL:
     ```
     https://<your-ngrok-id>.ngrok.io/interaction
     ```     
@@ -109,7 +109,7 @@ Follow to the `Apps` section in your workspace.
 You should see your app with its `Home tab` and try to send a message to it, 
 or click on buttons on messages and views.
 
-## Developer Overview
+## The code structure overview
 Now it is probably time to open a bot project in IDE to have deeper look how it works inside:
 
 * Akka HTTP routes are located in `routes` subpackage, where you can find an auxiliary trait
