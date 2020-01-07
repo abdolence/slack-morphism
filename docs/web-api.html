@@ -230,6 +230,15 @@ all scrolling/batching requests for you.</p>
 </code></pre></div></div>
 
 <h4 id="folding-using-lazyasync-iterator">Folding Using Lazy/Async iterator</h4>
+
+<p>Async iterator implements:</p>
+<ul>
+  <li><code class="highlighter-rouge">foldLeft</code> for accumulating batching results if you need it (the implementation doesn’t use memoization like Stream/LazyList)</li>
+  <li><code class="highlighter-rouge">map</code> to transform results</li>
+  <li><code class="highlighter-rouge">foreach</code> to iterate with effects</li>
+</ul>
+
+<p>This is an example with <code class="highlighter-rouge">foldLeft</code>:</p>
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="nv">slackApiClient</span><span class="o">.</span><span class="py">conversations</span>
   <span class="o">.</span><span class="py">historyScroller</span><span class="o">(</span>
@@ -247,16 +256,16 @@ all scrolling/batching requests for you.</p>
 
 <h4 id="create-a-reactive-publisher">Create a reactive Publisher[]</h4>
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-<span class="k">val</span> <span class="nv">Publisher</span><span class="o">[</span><span class="kt">SlackMessage</span><span class="o">]</span> <span class="k">=</span> 
-<span class="nv">slackApiClient</span><span class="o">.</span><span class="py">conversations</span>
-  <span class="o">.</span><span class="py">historyScroller</span><span class="o">(</span>
-    <span class="nc">SlackApiConversationsHistoryRequest</span><span class="o">(</span>
-      <span class="n">channel</span> <span class="k">=</span> <span class="s">"C222...."</span> <span class="c1">// some channel id</span>
-    <span class="o">)</span>
-  <span class="o">)</span>
-  <span class="o">.</span><span class="py">toPublisher</span><span class="o">()</span>
+<span class="k">val</span> <span class="nv">publisher</span> <span class="k">:</span> <span class="kt">Publisher</span><span class="o">[</span><span class="kt">SlackMessage</span><span class="o">]</span> <span class="k">=</span> 
+    <span class="nv">slackApiClient</span><span class="o">.</span><span class="py">conversations</span>
+      <span class="o">.</span><span class="py">historyScroller</span><span class="o">(</span>
+        <span class="nc">SlackApiConversationsHistoryRequest</span><span class="o">(</span>
+          <span class="n">channel</span> <span class="k">=</span> <span class="s">"C222...."</span> <span class="c1">// some channel id</span>
+        <span class="o">)</span>
+      <span class="o">)</span>
+      <span class="o">.</span><span class="py">toPublisher</span><span class="o">()</span>
 
-<span class="c1">// use it with your reactive frameworks (like Akka Streams, etc)</span>
+<span class="c1">// Now you can use it as any other publishers with your reactive frameworks (like Akka Streams, etc)</span>
 
 </code></pre></div></div>
 
