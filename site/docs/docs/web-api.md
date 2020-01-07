@@ -7,15 +7,15 @@ permalink: docs/web-api
 
 ### Choose a HTTP client backend
 
-You should choose [https://sttp.readthedocs.io/en/latest/backends/summary.html](sttp backend) 
-which supports `scala.concurrent.Future` response:
+You should choose a [sttp backend](https://sttp.readthedocs.io/en/latest/backends/summary.html) 
+that supports `scala.concurrent.Future` responses:
 * AkkaHttpBackend
 * OkHttpFutureBackend
 * HttpClientFutureBackend
 
 Add a dependency of your choice to your `build.sbt`.
 
-For Akka Http it is:
+For Akka Http this is:
 ```
 "com.softwaremill.sttp.client" %% "akka-http-backend" % sttpVersion
 ```
