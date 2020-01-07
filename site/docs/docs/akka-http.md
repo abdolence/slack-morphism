@@ -98,7 +98,11 @@ If you all this correctly you should see something like this:
     * Click on **Sign Up**
     
 ### Install a bot into your workspace using Slack OAuth v2
-Just follow to the http://localhost:8080/auth/install in your browser and allow the installation.
+Just follow to the 
+```
+http://localhost:8080/auth/install
+```
+in your browser and allow the installation.
 
 That's it, you now have a working bot in your workspace written with Scala, Slack Morphism and Akka.
 Follow to the `Apps` section in your workspace. 
@@ -106,7 +110,7 @@ You should see your app with its `Home tab` and try to send a message to it,
 or click on buttons on messages and views.
 
 ## Developer Overview
-Now it is probably time to open a bot in IDE to have deeper knowledge how it works:
+Now it is probably time to open a bot project in IDE to have deeper look how it works inside:
 
 * Akka HTTP routes are located in `routes` subpackage, where you can find an auxiliary trait
 `AkkaHttpServerRoutesSupport` that helps you to verify Slack Events signature 
@@ -117,7 +121,7 @@ and read tokens for workspace.
 
 For simplicity sake:
    * This template uses an embedded database [SwayDb](http://swaydb.io/) to store tokens. 
-   For production environments, you should consider to use more appropriate for you solutions.
+   For production environments, you should consider to use more appropriate solutions for your case.
    * This template doesn't provide HTTPS configuration for Akka, which is described in detail [here](https://doc.akka.io/docs/akka-http/current/server-side/server-https-support.html) 
    or use other HTTPS solutions (like reverse HTTP proxies).
    
