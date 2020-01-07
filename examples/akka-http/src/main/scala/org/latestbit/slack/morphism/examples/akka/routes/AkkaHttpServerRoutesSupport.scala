@@ -98,7 +98,7 @@ trait AkkaHttpServerRoutesSupport extends org.latestbit.slack.morphism.codecs.Ci
         SlackApiToken.createFrom(
           tokenType = lastToken.tokenType,
           tokenValue = lastToken.tokenValue,
-          scope = lastToken.scope
+          scope = Some( lastToken.scope )
         )
       }
     } )

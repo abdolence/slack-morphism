@@ -32,7 +32,7 @@ import io.circe.generic.auto._
 
 trait SlackApiClientTestsSuiteSupport {
 
-  protected implicit val testApiUserToken = SlackApiUserToken( "test-token", "test-scope" )
+  protected implicit val testApiUserToken = SlackApiUserToken( "test-token", Some( "test-scope" ) )
 
   protected def createResponseStub[RQ, RS](
       response: RS

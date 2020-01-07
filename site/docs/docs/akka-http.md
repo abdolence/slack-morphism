@@ -1,5 +1,5 @@
 ---
 layout: edocs
 title: Akka Http Example
-permalink: docs/
+permalink: docs/akka-http
 ---

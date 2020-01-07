@@ -18,19 +18,34 @@
 
 package org.latestbit.slack.morphism.client
 
+import java.time.Instant
 import java.util.Base64
 
+import cats.data.EitherT
 import io.circe.{ Encoder, JsonObject }
-import io.circe.generic.auto._
 import io.circe.syntax._
+import org.latestbit.slack.morphism.codecs.implicits._
+import org.latestbit.slack.morphism.client.reqresp.channels.{
+  SlackApiChannelsListRequest,
+  SlackApiChannelsListResponse
+}
+import org.latestbit.slack.morphism.client.reqresp.chat.{
+  SlackApiChatPostMessageRequest,
+  SlackApiChatPostMessageResponse
+}
+import org.latestbit.slack.morphism.client.reqresp.conversations.SlackApiConversationsHistoryRequest
 import org.latestbit.slack.morphism.client.reqresp.test._
+import org.latestbit.slack.morphism.common._
+import org.latestbit.slack.morphism.events.SlackUserMessage
+import org.latestbit.slack.morphism.messages.SlackMessage
 import org.scalatest.flatspec.AsyncFlatSpec
 import sttp.client._
 import sttp.client.testing.SttpBackendStub
-import sttp.model.{ Header, HeaderNames, Headers, MediaType, StatusCode }
+import sttp.model._
 
 import scala.collection.immutable.Seq
 import scala.concurrent.Future
+import scala.concurrent.duration._
 
 class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuiteSupport {
 
@@ -76,6 +91,116 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
       case Left( ex: SlackApiResponseError ) => assert( ex.errorCode === "slack-test-error" )
       case Left( ex )                        => fail( ex )
     }
+  }
+
+  it should "able to make some basic API calls" in {
+    import cats.implicits._
+
+    implicit val testingBackend =
+      SttpBackendStub.asynchronousFuture
+        .whenRequestMatches( _.uri.path.contains( "channels.list" ) )
+        .thenRespondWrapped(
+          createResponseStub(
+            SlackApiChannelsListResponse(
+              channels = List(
+                SlackChannelInfo(
+                  id = "channel-id",
+                  name = "general",
+                  flags = SlackChannelFlags(
+                    is_general = Some( true )
+                  ),
+                  created = Instant.now()
+                )
+              )
+            )
+          )
+        )
+        .whenRequestMatches( _.uri.path.contains( "chat.postMessage" ) )
+        .thenRespondWrapped(
+          createResponseStub(
+            SlackApiChatPostMessageResponse(
+              ts = "message-ts",
+              message = SlackUserMessage(
+                ts = "message-ts",
+                user = "user-id"
+              )
+            )
+          )
+        )
+
+    val slackApiClient = new SlackApiClient()
+
+    SlackApiToken
+      .createFrom(
+        SlackApiToken.TokenTypes.BOT,
+        "xoxb-89....."
+      )
+      .foreach { implicit slackApiToken: SlackApiToken =>
+        EitherT( slackApiClient.channels.list( SlackApiChannelsListRequest() ) ).flatMap { channelsResp =>
+          channelsResp.channels
+            .find( _.flags.is_general.contains( true ) )
+            .map { generalChannel =>
+              EitherT(
+                slackApiClient.chat
+                  .postMessage(
+                    SlackApiChatPostMessageRequest(
+                      channel = generalChannel.id,
+                      text = "Hello"
+                    )
+                  )
+              ).map { resp =>
+                resp.ts.some
+              }
+            }
+            .getOrElse(
+              EitherT[Future, SlackApiClientError, Option[String]](
+                Future.successful( None.asRight )
+              )
+            )
+        }
+      }
+
+    SlackApiToken
+      .createFrom(
+        SlackApiToken.TokenTypes.BOT,
+        "xoxb-89....."
+      )
+      .map { implicit slackApiToken: SlackApiToken =>
+        slackApiClient.channels
+          .list( SlackApiChannelsListRequest() )
+          .flatMap {
+            case Right( channelListResp ) => {
+              channelListResp.channels
+                .find( _.flags.is_general.contains( true ) )
+                .map { generalChannel =>
+                  slackApiClient.chat
+                    .postMessage(
+                      SlackApiChatPostMessageRequest(
+                        channel = generalChannel.id,
+                        text = "Hello"
+                      )
+                    )
+                    .map( _.map( Option.apply ) )
+                }
+                .getOrElse(
+                  Future.successful( Right( None ) )
+                )
+            }
+            case Left( err ) => {
+              Future.successful( Left( err ) )
+            }
+          }
+          .map {
+            case Right( Some( res ) ) => {
+              assert( res.ts == "message-ts" )
+
+            }
+            case Right( _ )  => fail()
+            case Left( err ) => fail( err )
+          }
+      }
+      .getOrElse( fail( "No token" ) )
+
   }
 
 }

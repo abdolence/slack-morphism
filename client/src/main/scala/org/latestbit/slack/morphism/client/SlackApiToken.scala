@@ -41,8 +41,8 @@ object SlackApiToken {
    * @param scopeAsStr scope as a str
    * @return set of permissions
    */
-  def scopeToSet( scopeAsStr: String ): Set[String] = {
-    Option( scopeAsStr )
+  def scopeToSet( scopeAsStr: Option[String] ): Set[String] = {
+    scopeAsStr
       .map( _.split( ',' ).map( _.trim ).filterNot( _.isEmpty ).toSet )
       .getOrElse( Set() )
   }
@@ -62,7 +62,7 @@ object SlackApiToken {
    * @param scope a token scope
    * @return an API token instance for Slack API client
    */
-  def createFrom( tokenType: String, tokenValue: String, scope: String ): Option[SlackApiToken] = {
+  def createFrom( tokenType: String, tokenValue: String, scope: Option[String] = None ): Option[SlackApiToken] = {
     tokenType match {
       case TokenTypes.BOT  => Some( SlackApiBotToken( tokenValue, scope ) )
       case TokenTypes.USER => Some( SlackApiUserToken( tokenValue, scope ) )
@@ -76,7 +76,7 @@ object SlackApiToken {
  * @param value token value
  * @param scope token scope in a string form
  */
-case class SlackApiUserToken( override val value: String, scope: String ) extends SlackApiToken {
+case class SlackApiUserToken( override val value: String, scope: Option[String] = None ) extends SlackApiToken {
   override val scopeSet: Set[String] = SlackApiToken.scopeToSet( scope )
 }
 
@@ -85,6 +85,6 @@ case class SlackApiUserToken( override val value: String, scope: String ) extend
  * @param value token value
  * @param scope token scope in a string form
  */
-case class SlackApiBotToken( override val value: String, scope: String ) extends SlackApiToken {
+case class SlackApiBotToken( override val value: String, scope: Option[String] = None ) extends SlackApiToken {
   override val scopeSet: Set[String] = SlackApiToken.scopeToSet( scope )
 }

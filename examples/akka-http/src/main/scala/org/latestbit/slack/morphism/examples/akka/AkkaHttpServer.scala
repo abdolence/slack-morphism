@@ -27,7 +27,7 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
 import akka.stream.typed.scaladsl._
 import com.typesafe.scalalogging._
-import org.latestbit.slack.morphism.client.{ SlackApiClient, SlackApiClientBackend }
+import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.examples.akka.db.SlackTokensDb
 import org.latestbit.slack.morphism.examples.akka.routes._
 import sttp.client.akkahttp.AkkaHttpBackend
