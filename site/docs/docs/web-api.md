@@ -3,7 +3,7 @@ layout: edocs
 title: Slack Web API
 permalink: docs/web-api
 ---
-## Slack Web API
+# Slack Web API client
 
 ### Choose an HTTP client backend
 
