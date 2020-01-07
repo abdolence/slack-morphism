@@ -14,15 +14,15 @@ Let's take some very simple block example:
 
 ```json
 {
-	"blocks": [
-		{
-			"type": "section",
-			"text": {
-				"type": "mrkdwn",
-				"text": "A message *with some bold text* and _some italicized text_."
-			}
-		}
-	]
+  "blocks": [
+      {
+        "type": "section",
+        "text": {
+            "type": "mrkdwn",
+            "text": "A message *with some bold text* and _some italicized text_."
+        }
+      }
+  ]
 }
 ```
 As you can see it just a JSON, let's look at how it might look type-safe DSL with Slack Morphism Blocks DSL:
@@ -44,42 +44,42 @@ Let's look at another more complex example:
 Json:
 ```json
 {
-	"blocks": [
-		{
-			"type": "section",
-			"text": {
-				"type": "mrkdwn",
-				"text": "<https://example.com|Overlook Hotel> \n :star: \n Doors had too many axe holes, guest in room 237 was far too rowdy, whole place felt stuck in the 1920s."
-			},
-			"accessory": {
-				"type": "image",
-				"image_url": "https://is5-ssl.mzstatic.com/image/thumb/Purple3/v4/d3/72/5c/d3725c8f-c642-5d69-1904-aa36e4297885/source/256x256bb.jpg",
-				"alt_text": "Haunted hotel image"
-			}
-		},
-		{
-			"type": "section",
-			"fields": [
-				{
-					"type": "mrkdwn",
-					"text": "*Average Rating*\n1.0"
-				},
-                {
-                    "type": "mrkdwn",
-                    "text": "*Updated*\n<!date^1578400713^{date_pretty}|07 Jan 2020 12:38:33 GMT>"
-                }
-			]
-		},
-		{
-			"type": "context",
-			"elements": [
-				{
-					"type": "mrkdwn",
-					"text": "*Author:* T. M. Schwartz"
-				}
-			]
-		}
-	]
+  "blocks": [
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "<https://example.com|Overlook Hotel> \n :star: \n Doors had too many axe holes, guest in room 237 was far too rowdy, whole place felt stuck in the 1920s."
+      },
+      "accessory": {
+        "type": "image",
+        "image_url": "https://is5-ssl.mzstatic.com/image/thumb/Purple3/v4/d3/72/5c/d3725c8f-c642-5d69-1904-aa36e4297885/source/256x256bb.jpg",
+        "alt_text": "Haunted hotel image"
+      }
+    },
+    {
+      "type": "section",
+      "fields": [
+        {
+          "type": "mrkdwn",
+          "text": "*Average Rating*\n1.0"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*Updated*\n<!date^1578400713^{date_pretty}|07 Jan 2020 12:38:33 GMT>"
+        }
+      ]
+    },
+    {
+      "type": "context",
+      "elements": [
+        {
+          "type": "mrkdwn",
+          "text": "*Author:* T. M. Schwartz"
+        }
+      ]
+    }
+  ]
 }
 ```
 
