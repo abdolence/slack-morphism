@@ -37,7 +37,7 @@ blocks(
 
 Slack Morphism Blocks DSL not just give you a DSL and function to create a JSON from this, but also provides 
 both compile time and run time checking for structure and formatting rules for Slack Blocks, 
-using Scala language abilities and [Design by cntract (DbC)](https://en.wikipedia.org/wiki/Design_by_contract) principles.
+using Scala language features and [Design by contract (DbC)](https://en.wikipedia.org/wiki/Design_by_contract) principles.
 
 Let's look at another more complex example:
 
