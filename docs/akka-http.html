@@ -1,5 +1,5 @@
 <html>
-<head><title>Slack Morphism for Scala: Intro</title>
+<head><title>Slack Morphism for Scala: Akka Http Example</title>
 	<meta charset="utf-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -7,15 +7,15 @@
 	<meta name="description" content="Open Type-Safe Reactive Client with Blocks Templating for Slack"/>
 	<meta name="og:image" content="/img/poster.png"/>
 	<meta name="image" property="og:image" content="/img/poster.png"/>
-	<meta name="og:title" content="Slack Morphism for Scala: Intro"/>
+	<meta name="og:title" content="Slack Morphism for Scala: Akka Http Example"/>
 	<meta name="title" property="og:title"
-	      content="Slack Morphism for Scala: Intro"/>
+	      content="Slack Morphism for Scala: Akka Http Example"/>
 	<meta name="og:site_name" content="Slack Morphism for Scala"/>
 	<meta name="og:url" content="https://slack.abdolence.dev"/>
 	<meta name="og:type" content="website"/>
 	<meta name="og:description" content="Open Type-Safe Reactive Client with Blocks Templating for Slack"/>
 	<link rel="icon" type="image/png" href="/img/favicon.png"/>
-	<meta name="twitter:title" content="Slack Morphism for Scala: Intro"/>
+	<meta name="twitter:title" content="Slack Morphism for Scala: Akka Http Example"/>
 	<meta name="twitter:image" content="https://slack.abdolence.dev/img/poster.png"/>
 	<meta name="twitter:description" content="Open Type-Safe Reactive Client with Blocks Templating for Slack"/>
 	<meta name="twitter:card" content="summary_large_image"/>
@@ -89,54 +89,7 @@
 		</div>
 		<div id="content" data-github-owner="abdolence" data-github-repo="slack-morphism">
 			<div class="content-wrapper">
-				<section><h1 id="intro-and-motivations">Intro and motivations</h1>
-
-<h3 id="type-safety">Type-safety</h3>
-<p>Scala is a static-typed language, and Slack Morphism provides quite a lot of definitions of 
-most of the available methods and structures of Slack Web/Events API, 
-just to help you find errors at compile time.
-There is a <a href="templating">well-typed DSL</a> to build your messages and views with Slack blocks safely.</p>
-
-<h3 id="easy-to-use">Easy to use</h3>
-<p>While Slack Morphism uses some of FP paradigms and avoids imperative style and mutable states internally, 
-its API doesn’t expose to you anything that might make you learn additional advanced frameworks 
-(like ZIO, cats-effects, etc).
-It provides you with a simple API mostly based on Scala Future, Option, Either, etc.</p>
-
-<h3 id="frameworks-agnostic">Frameworks-agnostic</h3>
-<p>Slack Morphism core library intentionally avoid dependencies to any additional Web-frameworks, so 
-you free to use any framework you’re familiar with.
-Slack Morphism doesn’t have any dependencies to any particular HTTP client library either 
-and uses <a href="https://github.com/softwaremill/sttp">sttp library</a> to give you choice of options.</p>
-
-<p>However, it would be an incomplete solution to provide you only core components, and for a quick start, 
-there is a <a href="https://github.com/abdolence/slack-morphism-akka-http.g8">full-featured giter8 template and example</a> 
-of a Slack Bot built with Slack Morphism and Akka Http.</p>
-
-<h3 id="non-blocking-and-reactive">Non-blocking and Reactive</h3>
-<p>All of the Slack Morphism operation available in a non-blocking manner, and 
-some of Web methods (e.g. returning Slack channel history) also provided with a reactive Publisher,
- so you can use it if you’re familiar with Reactive Streams (and using related frameworks).</p>
-
-<h2 id="getting-started">Getting Started</h2>
-<p>Add the following to your <code class="highlighter-rouge">build.sbt</code>:</p>
-
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.latestbit"</span> <span class="o">%%</span> <span class="s">"slack-morphism-client"</span> <span class="o">%</span> <span class="s">"1.0.0"</span>
-</code></pre></div></div>
-
-<p>or if you’d like to full-featured and ready to use Slack bot, which uses Akka Http, use this:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sbt new abdolence/slack-morphism-akka-http.g8
-</code></pre></div></div>
-<p>Read more about this template <a href="akka-http">here</a>.</p>
-
-<h2 id="limitations">Limitations</h2>
-
-<p>Slack Morphism intentionally doesn’t provide:</p>
-<ul>
-  <li>RTM API (the usage of which is slowly declining in favour of Events API)</li>
-  <li>Legacy Web/Events API methods and models (like Slack Message attachments, which should be replaced with Slack Blocks)</li>
-</ul>
+				<section>
 </section>
 			</div>
 		</div>
