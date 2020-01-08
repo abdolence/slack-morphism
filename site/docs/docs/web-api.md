@@ -66,8 +66,7 @@ val slackApiClient = new SlackApiClient()
 
 implicit val slackApiToken: SlackApiToken = SlackApiBotToken("xoxb-89.....")
 
-slackApiClient.chat
-  .postMessage(
+slackApiClient.chat.postMessage(
     SlackApiChatPostMessageRequest(
       channel = "#general",
       text = "Hello Slack"
