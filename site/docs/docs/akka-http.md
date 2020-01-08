@@ -121,7 +121,7 @@ and read tokens for workspace.
 
 For simplicity sake:
    * This template uses an embedded database [SwayDb](http://swaydb.io/) to store tokens. 
-   For production environments, you should consider to use more appropriate solutions for your case.
+   For production environments, you should consider to use more appropriate solutions for your case.   
    * This template doesn't provide HTTPS configuration for Akka, which is described in detail [here](https://doc.akka.io/docs/akka-http/current/server-side/server-https-support.html) 
-   or use other HTTPS solutions (like reverse HTTP proxies).
+   or you should consider other HTTPS solutions (like reverse HTTP proxies).
    
