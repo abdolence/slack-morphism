@@ -164,8 +164,7 @@ Look at <a href="https://api.slack.com/docs/oauth-safety">Slack recommendations<
 
 <span class="k">implicit</span> <span class="k">val</span> <span class="nv">slackApiToken</span><span class="k">:</span> <span class="kt">SlackApiToken</span> <span class="o">=</span> <span class="nc">SlackApiBotToken</span><span class="o">(</span><span class="s">"xoxb-89....."</span><span class="o">)</span>
 
-<span class="nv">slackApiClient</span><span class="o">.</span><span class="py">chat</span>
-  <span class="o">.</span><span class="py">postMessage</span><span class="o">(</span>
+<span class="nv">slackApiClient</span><span class="o">.</span><span class="py">chat</span><span class="o">.</span><span class="py">postMessage</span><span class="o">(</span>
     <span class="nc">SlackApiChatPostMessageRequest</span><span class="o">(</span>
       <span class="n">channel</span> <span class="k">=</span> <span class="s">"#general"</span><span class="o">,</span>
       <span class="n">text</span> <span class="k">=</span> <span class="s">"Hello Slack"</span>
