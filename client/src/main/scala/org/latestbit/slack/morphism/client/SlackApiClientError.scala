@@ -26,6 +26,8 @@ import sttp.model.Uri
 
 /**
  * Slack Web API error
+ * @group ErrorDefs
+ *
  * @param uri Web method URL
  * @param message error message
  * @param cause original cause
@@ -35,6 +37,8 @@ sealed abstract class SlackApiClientError( uri: Uri, message: String, cause: Opt
 
 /**
  * System/unexpected Slack Web API error
+ * @group ErrorDefs
+ *
  * @param uri Web method URL
  * @param cause original cause
  */
@@ -43,6 +47,8 @@ case class SlackApiSystemError( uri: Uri, cause: Throwable )
 
 /**
  * Slack Web API network/connection error
+ * @group ErrorDefs
+ *
  * @param uri Web method URL
  * @param cause original cause
  */
@@ -51,6 +57,8 @@ case class SlackApiConnectionError( uri: Uri, cause: IOException )
 
 /**
  * Slack Web API HTTP protocol error
+ * @group ErrorDefs
+ *
  * @param uri Web method URL
  * @param message error message
  * @param httpResponseBody HTTP response body
@@ -60,6 +68,8 @@ case class SlackApiHttpError( uri: Uri, message: String, httpResponseBody: Optio
 
 /**
  * Slack Web API protocol error
+ * @group ErrorDefs
+ *
  * @param uri Web method URL
  * @param errorCode Slack error code
  * @param details error detail message
@@ -83,6 +93,8 @@ case class SlackApiResponseError(
 
 /**
  * Slack Web API JSON decoding error
+ * @group ErrorDefs
+ *
  * @param uri Web method URL
  * @param coderError JSON decoder error
  * @param httpResponseBody HTTP response body
@@ -95,6 +107,8 @@ case class SlackApiDecodingError(
 
 /**
  * Slack Wep API unexpected empty result has been received
+ * @group ErrorDefs
+ *
  * @param uri Web method URL
  */
 case class SlackApiEmptyResultError( uri: Uri )

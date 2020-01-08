@@ -152,16 +152,22 @@ lazy val noPublishSettings = Seq(
   publishArtifact := false
 )
 
+lazy val scalaDocSettings = Seq(
+  scalacOptions in (Compile, doc) := Seq( "-groups", "-skip-packages", "sttp.client" )
+)
+
 lazy val slackMorphismRoot = project
   .in( file( "." ) )
   .aggregate( slackMorphismModels, slackMorphismClient, slackMorphismExamples )
   .settings( noPublishSettings )
 
 lazy val slackMorphismModels =
-  (project in file( "models" )).settings(
-    name := "slack-morphism-models",
-    libraryDependencies ++= baseDependencies ++ Seq()
-  )
+  (project in file( "models" ))
+    .settings(
+      name := "slack-morphism-models",
+      libraryDependencies ++= baseDependencies ++ Seq()
+    )
+    .settings( scalaDocSettings )
 
 lazy val slackMorphismClient =
   (project in file( "client" ))
@@ -173,6 +179,7 @@ lazy val slackMorphismClient =
         "org.reactivestreams" % "reactive-streams" % reactiveStreamsVersion
       )
     )
+    .settings( scalaDocSettings )
     .dependsOn( slackMorphismModels )
 
 lazy val slackMorphismExamples =
@@ -243,4 +250,5 @@ lazy val slackMorphismMicrosite = project
   .settings( docSettings )
   .settings( noPublishSettings )
   .settings( docSettings )
+  .settings( scalaDocSettings )
   .dependsOn( slackMorphismModels, slackMorphismClient, slackMorphismExamples )
