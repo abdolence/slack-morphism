@@ -2,12 +2,12 @@
 	font-size: 20px;
 }
 
-.ext-hidden-mobile {
+#navigation .navbar-wrapper .navigation-menu li.ext-hidden-mobile {
 
 }
 
 @media (max-width: 768px) {
-	.ext-hidden-mobile {
+	#navigation .navbar-wrapper .navigation-menu li.ext-hidden-mobile {
 		display: none;
 	}
 }
