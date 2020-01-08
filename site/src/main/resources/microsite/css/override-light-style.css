@@ -1,3 +1,13 @@
 #masthead .masthead-button {
 	font-size: 20px;
 }
+
+.ext-hidden-mobile {
+
+}
+
+@media (max-width: 768px) {
+	.ext-hidden-mobile {
+		display: none;
+	}
+}
