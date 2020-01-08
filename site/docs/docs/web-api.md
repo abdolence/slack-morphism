@@ -37,7 +37,7 @@ import sttp.client.akkahttp.AkkaHttpBackend
 implicit val sttpBackend = AkkaHttpBackend()
 
 // Creating client instance
-val slackApiClient = new SlackApiClient()
+val client = new SlackApiClient()
 ```
 
 ### Making Web API calls
@@ -51,7 +51,8 @@ There is an example implementation of Slack OAuth v2 in [Akka Http Example](akka
 Slack Morphism requires an implicit token specified as an instance of 
 [SlackApiToken](/api/org/latestbit/slack/morphism/client/SlackApiToken.html):
 
-In the example below, we're using a hardcoded Slack token, but *don't do that for your production bots and apps*.
+In the example below, we're using a hardcoded Slack token, 
+but *don't do that for your production bots and apps*. 
 You should securely and properly store all of Slack tokens.
 Look at [Slack recommendations](https://api.slack.com/docs/oauth-safety).
 
@@ -62,11 +63,12 @@ import org.latestbit.slack.morphism.client.reqresp.chat.SlackApiChatPostMessageR
 import sttp.client.akkahttp.AkkaHttpBackend
 
 implicit val sttpBackend = AkkaHttpBackend()
-val slackApiClient = new SlackApiClient()
+
+val client = new SlackApiClient()
 
 implicit val slackApiToken: SlackApiToken = SlackApiBotToken("xoxb-89.....")
 
-slackApiClient.chat.postMessage(
+client.chat.postMessage(
     SlackApiChatPostMessageRequest(
       channel = "#general",
       text = "Hello Slack"
@@ -76,8 +78,8 @@ slackApiClient.chat.postMessage(
 ```
 As you might noticed here, Slack Morphism API mimics Slack Web API method names, so that
 [https://slack.com/api/chat.postMessage](https://api.slack.com/methods/chat.postMessage) 
-is `slackApiClient.chat.postMessage()`, or [https://api.slack.com/methods/oauth.v2.access](https://api.slack.com/methods/oauth.v2.access) 
-is `slackApiClient.oauth.v2.access()` etc.
+is `client.chat.postMessage(...)`, or [https://api.slack.com/methods/oauth.v2.access](https://api.slack.com/methods/oauth.v2.access) 
+is `client.oauth.v2.access(...)` etc.
 
 The complete list of all of the implemented Web API methods is available [here](/api/org/latestbit/slack/morphism/client/SlackApiClient.html).
 
@@ -104,7 +106,7 @@ implicit val yourResponseDecoder = deriveEncoder[YourRequest]
 implicit slackApiToken: SlackApiToken = ...
 
 // Make a call
-slackApiClient.http.post[YourRequest,YourResponse](
+client.http.post[YourRequest,YourResponse](
     methodUri = "some.someMethod", // Slack relative Method URI 
     YourRequest()
 )
@@ -142,8 +144,7 @@ For example, for [conversations.history](https://api.slack.com/methods/conversat
 ```scala
 
 // Synchronous approach (all batches would be loaded with blocking)
-slackApiClient.conversations
-  .historyScroller(
+client.conversations.historyScroller(
     SlackApiConversationsHistoryRequest(
       channel = "C222...." // some channel id
     )
@@ -168,8 +169,7 @@ Async iterator implements:
 This is an example of using `foldLeft`:
 ```scala
 
-slackApiClient.conversations
-  .historyScroller(
+client.conversations.historyScroller(
     SlackApiConversationsHistoryRequest(
       channel = "C222...." // some channel id
     )
@@ -188,8 +188,7 @@ import org.reactivestreams.Publisher
 
 
 val publisher : Publisher[SlackMessage] = 
-    slackApiClient.conversations
-      .historyScroller(
+    client.conversations.historyScroller(
         SlackApiConversationsHistoryRequest(
           channel = "C222...." // some channel id
         )
@@ -224,13 +223,12 @@ We make a first async call, find some result in the first response, and
 getting the response result of a next async call. 
 
 ```scala
-EitherT( slackApiClient.channels.list( SlackApiChannelsListRequest() ) ).flatMap { channelsResp =>
+EitherT( client.channels.list( SlackApiChannelsListRequest() ) ).flatMap { channelsResp =>
   channelsResp.channels
     .find( _.flags.is_general.contains( true ) )
     .map { generalChannel =>
       EitherT(
-        slackApiClient.chat
-          .postMessage(
+        client.chat.postMessage(
             SlackApiChatPostMessageRequest(
               channel = generalChannel.id,
               text = "Hello"
