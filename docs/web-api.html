@@ -136,7 +136,7 @@ to all available of Slack Web API methods.</p>
 <span class="k">implicit</span> <span class="k">val</span> <span class="nv">sttpBackend</span> <span class="k">=</span> <span class="nc">AkkaHttpBackend</span><span class="o">()</span>
 
 <span class="c1">// Creating client instance</span>
-<span class="k">val</span> <span class="nv">slackApiClient</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">SlackApiClient</span><span class="o">()</span>
+<span class="k">val</span> <span class="nv">client</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">SlackApiClient</span><span class="o">()</span>
 </code></pre></div></div>
 
 <h3 id="making-web-api-calls">Making Web API calls</h3>
@@ -150,7 +150,8 @@ using <a href="https://api.slack.com/docs/oauth">Slack OAuth</a>.</p>
 <p>Slack Morphism requires an implicit token specified as an instance of 
 <a href="/api/org/latestbit/slack/morphism/client/SlackApiToken.html">SlackApiToken</a>:</p>
 
-<p>In the example below, we’re using a hardcoded Slack token, but <em>don’t do that for your production bots and apps</em>.
+<p>In the example below, we’re using a hardcoded Slack token, 
+but <em>don’t do that for your production bots and apps</em>. 
 You should securely and properly store all of Slack tokens.
 Look at <a href="https://api.slack.com/docs/oauth-safety">Slack recommendations</a>.</p>
 
@@ -160,11 +161,12 @@ Look at <a href="https://api.slack.com/docs/oauth-safety">Slack recommendations<
 <span class="k">import</span> <span class="nn">sttp.client.akkahttp.AkkaHttpBackend</span>
 
 <span class="k">implicit</span> <span class="k">val</span> <span class="nv">sttpBackend</span> <span class="k">=</span> <span class="nc">AkkaHttpBackend</span><span class="o">()</span>
-<span class="k">val</span> <span class="nv">slackApiClient</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">SlackApiClient</span><span class="o">()</span>
+
+<span class="k">val</span> <span class="nv">client</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">SlackApiClient</span><span class="o">()</span>
 
 <span class="k">implicit</span> <span class="k">val</span> <span class="nv">slackApiToken</span><span class="k">:</span> <span class="kt">SlackApiToken</span> <span class="o">=</span> <span class="nc">SlackApiBotToken</span><span class="o">(</span><span class="s">"xoxb-89....."</span><span class="o">)</span>
 
-<span class="nv">slackApiClient</span><span class="o">.</span><span class="py">chat</span><span class="o">.</span><span class="py">postMessage</span><span class="o">(</span>
+<span class="nv">client</span><span class="o">.</span><span class="py">chat</span><span class="o">.</span><span class="py">postMessage</span><span class="o">(</span>
     <span class="nc">SlackApiChatPostMessageRequest</span><span class="o">(</span>
       <span class="n">channel</span> <span class="k">=</span> <span class="s">"#general"</span><span class="o">,</span>
       <span class="n">text</span> <span class="k">=</span> <span class="s">"Hello Slack"</span>
@@ -174,8 +176,8 @@ Look at <a href="https://api.slack.com/docs/oauth-safety">Slack recommendations<
 </code></pre></div></div>
 <p>As you might noticed here, Slack Morphism API mimics Slack Web API method names, so that
 <a href="https://api.slack.com/methods/chat.postMessage">https://slack.com/api/chat.postMessage</a> 
-is <code class="highlighter-rouge">slackApiClient.chat.postMessage()</code>, or <a href="https://api.slack.com/methods/oauth.v2.access">https://api.slack.com/methods/oauth.v2.access</a> 
-is <code class="highlighter-rouge">slackApiClient.oauth.v2.access()</code> etc.</p>
+is <code class="highlighter-rouge">client.chat.postMessage(...)</code>, or <a href="https://api.slack.com/methods/oauth.v2.access">https://api.slack.com/methods/oauth.v2.access</a> 
+is <code class="highlighter-rouge">client.oauth.v2.access(...)</code> etc.</p>
 
 <p>The complete list of all of the implemented Web API methods is available <a href="/api/org/latestbit/slack/morphism/client/SlackApiClient.html">here</a>.</p>
 
@@ -201,7 +203,7 @@ API for this scenario:</p>
 <span class="k">implicit</span> <span class="n">slackApiToken</span><span class="k">:</span> <span class="kt">SlackApiToken</span> <span class="o">=</span> <span class="o">...</span>
 
 <span class="c1">// Make a call</span>
-<span class="nv">slackApiClient</span><span class="o">.</span><span class="py">http</span><span class="o">.</span><span class="py">post</span><span class="o">[</span><span class="kt">YourRequest</span>,<span class="kt">YourResponse</span><span class="o">](</span>
+<span class="nv">client</span><span class="o">.</span><span class="py">http</span><span class="o">.</span><span class="py">post</span><span class="o">[</span><span class="kt">YourRequest</span>,<span class="kt">YourResponse</span><span class="o">](</span>
     <span class="n">methodUri</span> <span class="k">=</span> <span class="s">"some.someMethod"</span><span class="o">,</span> <span class="c1">// Slack relative Method URI </span>
     <span class="nc">YourRequest</span><span class="o">()</span>
 <span class="o">)</span>
@@ -242,8 +244,7 @@ all scrolling/batching requests for you.</p>
 <h4 id="load-data-into-streamlazylist">Load data into Stream[]/LazyList[]</h4>
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="c1">// Synchronous approach (all batches would be loaded with blocking)</span>
-<span class="nv">slackApiClient</span><span class="o">.</span><span class="py">conversations</span>
-  <span class="o">.</span><span class="py">historyScroller</span><span class="o">(</span>
+<span class="nv">client</span><span class="o">.</span><span class="py">conversations</span><span class="o">.</span><span class="py">historyScroller</span><span class="o">(</span>
     <span class="nc">SlackApiConversationsHistoryRequest</span><span class="o">(</span>
       <span class="n">channel</span> <span class="k">=</span> <span class="s">"C222...."</span> <span class="c1">// some channel id</span>
     <span class="o">)</span>
@@ -269,8 +270,7 @@ all scrolling/batching requests for you.</p>
 
 <p>This is an example of using <code class="highlighter-rouge">foldLeft</code>:</p>
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-<span class="nv">slackApiClient</span><span class="o">.</span><span class="py">conversations</span>
-  <span class="o">.</span><span class="py">historyScroller</span><span class="o">(</span>
+<span class="nv">client</span><span class="o">.</span><span class="py">conversations</span><span class="o">.</span><span class="py">historyScroller</span><span class="o">(</span>
     <span class="nc">SlackApiConversationsHistoryRequest</span><span class="o">(</span>
       <span class="n">channel</span> <span class="k">=</span> <span class="s">"C222...."</span> <span class="c1">// some channel id</span>
     <span class="o">)</span>
@@ -288,8 +288,7 @@ all scrolling/batching requests for you.</p>
 
 
 <span class="k">val</span> <span class="nv">publisher</span> <span class="k">:</span> <span class="kt">Publisher</span><span class="o">[</span><span class="kt">SlackMessage</span><span class="o">]</span> <span class="k">=</span> 
-    <span class="nv">slackApiClient</span><span class="o">.</span><span class="py">conversations</span>
-      <span class="o">.</span><span class="py">historyScroller</span><span class="o">(</span>
+    <span class="nv">client</span><span class="o">.</span><span class="py">conversations</span><span class="o">.</span><span class="py">historyScroller</span><span class="o">(</span>
         <span class="nc">SlackApiConversationsHistoryRequest</span><span class="o">(</span>
           <span class="n">channel</span> <span class="k">=</span> <span class="s">"C222...."</span> <span class="c1">// some channel id</span>
         <span class="o">)</span>
@@ -323,13 +322,12 @@ that returns <code class="highlighter-rouge">Future[Either[SlackApiClientError,S
 We make a first async call, find some result in the first response, and 
 getting the response result of a next async call.</p>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">EitherT</span><span class="o">(</span> <span class="nv">slackApiClient</span><span class="o">.</span><span class="py">channels</span><span class="o">.</span><span class="py">list</span><span class="o">(</span> <span class="nc">SlackApiChannelsListRequest</span><span class="o">()</span> <span class="o">)</span> <span class="o">).</span><span class="py">flatMap</span> <span class="o">{</span> <span class="n">channelsResp</span> <span class="k">=&gt;</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">EitherT</span><span class="o">(</span> <span class="nv">client</span><span class="o">.</span><span class="py">channels</span><span class="o">.</span><span class="py">list</span><span class="o">(</span> <span class="nc">SlackApiChannelsListRequest</span><span class="o">()</span> <span class="o">)</span> <span class="o">).</span><span class="py">flatMap</span> <span class="o">{</span> <span class="n">channelsResp</span> <span class="k">=&gt;</span>
   <span class="nv">channelsResp</span><span class="o">.</span><span class="py">channels</span>
     <span class="o">.</span><span class="py">find</span><span class="o">(</span> <span class="nv">_</span><span class="o">.</span><span class="py">flags</span><span class="o">.</span><span class="py">is_general</span><span class="o">.</span><span class="py">contains</span><span class="o">(</span> <span class="kc">true</span> <span class="o">)</span> <span class="o">)</span>
     <span class="o">.</span><span class="py">map</span> <span class="o">{</span> <span class="n">generalChannel</span> <span class="k">=&gt;</span>
       <span class="nc">EitherT</span><span class="o">(</span>
-        <span class="nv">slackApiClient</span><span class="o">.</span><span class="py">chat</span>
-          <span class="o">.</span><span class="py">postMessage</span><span class="o">(</span>
+        <span class="nv">client</span><span class="o">.</span><span class="py">chat</span><span class="o">.</span><span class="py">postMessage</span><span class="o">(</span>
             <span class="nc">SlackApiChatPostMessageRequest</span><span class="o">(</span>
               <span class="n">channel</span> <span class="k">=</span> <span class="nv">generalChannel</span><span class="o">.</span><span class="py">id</span><span class="o">,</span>
               <span class="n">text</span> <span class="k">=</span> <span class="s">"Hello"</span>
