@@ -285,5 +285,5 @@ slackApiClient.chat
 ### DSL Slack text formatters
 
 You might noticed `formatDate` and `formatUrl` before.
-They all defined in a trait [SlackTextFormatters](/org/latestbit/slack/morphism/client/templating/SlackTextFormatters.html)
-and available for DSL templates without additional imports.
+They all defined in a trait [SlackTextFormatters](/api/org/latestbit/slack/morphism/client/templating/SlackTextFormatters.html)
+ (enable protected members in scaladoc filters to able to see them), and available for DSL templates without additional imports.
