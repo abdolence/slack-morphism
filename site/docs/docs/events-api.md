@@ -64,7 +64,12 @@ To verify event request you need:
 val signatureVerifier = new SlackEventSignatureVerifier()
 
 signatureVerifier.
-    verify(config.signingSecret, receivedSignedHash, receivedSignedTimestamp, requestBody) match {
+    verify(
+        config.signingSecret, 
+        receivedSignedHash, 
+        receivedSignedTimestamp, 
+        requestBody
+    ) match {
         case Right(success) => // the signature is verified
         case Left(err) => // absent or wrong signature    
     }

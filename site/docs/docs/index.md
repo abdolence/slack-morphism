@@ -27,8 +27,8 @@ there is a [full-featured giter8 template and example](https://github.com/abdole
 of a Slack Bot built with Slack Morphism and Akka Http. 
 
 ### Non-blocking and Reactive
-All of the Slack Morphism operation available in a non-blocking manner, and 
-some of Web methods (e.g. returning Slack channel history) also provided with a reactive Publisher,
+All of the Slack Morphism API methods available in a non-blocking manner, and 
+some them (e.g. returning Slack channel history) also provided support for a reactive Publisher,
  so you can use it if you're familiar with Reactive Streams (and using related frameworks).
 
 ## Getting Started
