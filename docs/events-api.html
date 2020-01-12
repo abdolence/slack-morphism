@@ -167,7 +167,12 @@ which provides you <code class="highlighter-rouge">verify()</code>:</p>
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="nv">signatureVerifier</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">SlackEventSignatureVerifier</span><span class="o">()</span>
 
 <span class="n">signatureVerifier</span><span class="o">.</span>
-    <span class="nf">verify</span><span class="o">(</span><span class="nv">config</span><span class="o">.</span><span class="py">signingSecret</span><span class="o">,</span> <span class="n">receivedSignedHash</span><span class="o">,</span> <span class="n">receivedSignedTimestamp</span><span class="o">,</span> <span class="n">requestBody</span><span class="o">)</span> <span class="k">match</span> <span class="o">{</span>
+    <span class="nf">verify</span><span class="o">(</span>
+        <span class="nv">config</span><span class="o">.</span><span class="py">signingSecret</span><span class="o">,</span> 
+        <span class="n">receivedSignedHash</span><span class="o">,</span> 
+        <span class="n">receivedSignedTimestamp</span><span class="o">,</span> 
+        <span class="n">requestBody</span>
+    <span class="o">)</span> <span class="k">match</span> <span class="o">{</span>
         <span class="k">case</span> <span class="nc">Right</span><span class="o">(</span><span class="n">success</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="c1">// the signature is verified</span>
         <span class="k">case</span> <span class="nc">Left</span><span class="o">(</span><span class="n">err</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="c1">// absent or wrong signature    </span>
     <span class="o">}</span>
