@@ -1,0 +1,411 @@
+<html>
+<head><title>Slack Morphism for Scala: Slack Events API</title>
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta name="author" content="Abdulla Abdurakhmanov"/>
+	<meta name="description" content="Open Type-Safe Reactive Client with Blocks Templating for Slack"/>
+	<meta name="og:image" content="/img/poster.png"/>
+	<meta name="image" property="og:image" content="/img/poster.png"/>
+	<meta name="og:title" content="Slack Morphism for Scala: Slack Events API"/>
+	<meta name="title" property="og:title"
+	      content="Slack Morphism for Scala: Slack Events API"/>
+	<meta name="og:site_name" content="Slack Morphism for Scala"/>
+	<meta name="og:url" content="https://slack.abdolence.dev"/>
+	<meta name="og:type" content="website"/>
+	<meta name="og:description" content="Open Type-Safe Reactive Client with Blocks Templating for Slack"/>
+	<link rel="icon" type="image/png" href="/img/favicon.png"/>
+	<meta name="twitter:title" content="Slack Morphism for Scala: Slack Events API"/>
+	<meta name="twitter:image" content="https://slack.abdolence.dev/img/poster.png"/>
+	<meta name="twitter:description" content="Open Type-Safe Reactive Client with Blocks Templating for Slack"/>
+	<meta name="twitter:card" content="summary_large_image"/>
+	<link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png"/>
+	<link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png"/>
+	<link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png"/>
+	<link rel="icon" type="image/png" sizes="128x128" href="/img/favicon-128.png"/>
+	<link rel="icon" type="image/png" sizes="196x196" href="/img/favicon-196x196.png"/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+	<link rel="stylesheet" href="/highlight/styles/vs.css"/>
+	<link rel="stylesheet" href="/css/light-style.css"/>
+	<link rel="stylesheet" href="/css/override-light-style.css"/>
+	<script async="async">
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-155371094-1', 'auto');
+        ga('send', 'pageview');
+	</script>
+</head>
+<body class="docs">
+<div id="wrapper">
+	<div id="sidebar-wrapper">
+		<div id="sidebar-brand"><a href="/" class="brand">
+			<div class="brand-wrapper"></div>
+			<span>Slack Morphism for Scala</span></a>
+			<button id="main-toggle" class="sidebar-toggle"><span class="close"></span></button>
+		</div>
+		<div class="sidebar-nav"> 
+			<div class="sidebar-nav-item  "><a href="/docs/index" title="Intro" class="">Intro</a>
+			</div>
+			 
+			<div class="sidebar-nav-item  "><a href="/docs/web-api" title="Web API" class="">Web API</a>
+			</div>
+			 
+			<div class="sidebar-nav-item  "><a href="/docs/events-api" title="Events API" class="">Events API</a>
+			</div>
+			 
+			<div class="sidebar-nav-item active "><a href="/docs/templating" title="Blocks Templating" class="active">Blocks Templating</a>
+			</div>
+			 
+			<div class="sidebar-nav-item  "><a href="/docs/akka-http" title="Akka HTTP" class="">Akka HTTP</a>
+			</div>
+			
+		</div>
+	</div>
+	<div id="page-content-wrapper">
+		<div class="nav">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="action-menu pull-left clearfix"><a href="#menu-toggle" id="menu-toggle"><i
+								class="fa fa-bars" aria-hidden="true"></i></a></div>
+						<ul class="pull-right">
+							<li class="hidden-xs">
+								<a
+									href="https://github.com/abdolence/slack-morphism" target="_blank"
+									rel="noopener noreferrer"><i class="fa fa-github"></i> <span>GitHub</span>
+								</a>
+							</li>
+							<li id="gh-eyes-item" class="hidden-xs" style="display: none"><a
+									href="https://github.com/abdolence/slack-morphism" target="_blank"
+									rel="noopener noreferrer"><i class="fa fa-eye"></i><span>Watchers<span id="eyes"
+							                                                                               class="label label-default">--</span></span></a>
+							</li>
+							<li id="gh-stars-item" class="hidden-xs"  style="display: none"><a
+									href="https://github.com/abdolence/slack-morphism" target="_blank"
+									rel="noopener noreferrer"><i class="fa fa-star-o"></i><span>Stars<span id="stars"
+							                                                                               class="label label-default">--</span></span></a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="content" data-github-owner="abdolence" data-github-repo="slack-morphism">
+			<div class="content-wrapper">
+				<section><h1 id="slack-blocks-templating-dsl">Slack Blocks Templating DSL</h1>
+<p>Simple to use and type-safe DSL for Slack Blocks.</p>
+
+<h2 id="intro">Intro</h2>
+<p>Slack Blocks are visual components that can be stacked and arranged to create app layouts in messages and views. 
+Read <a href="https://api.slack.com/block-kit/building">official docs</a> for introduction to Slack Block Kit.</p>
+
+<p>Let’s take some very simple block example:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"blocks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"section"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mrkdwn"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A message *with some bold text* and _some italicized text_."</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<p>Now, let’s look at how it might look with type-safe Scala code using Slack Morphism Blocks DSL:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">blocks</span><span class="o">(</span>
+    <span class="nf">sectionBlock</span><span class="o">(</span>
+      <span class="n">text</span> <span class="k">=</span> <span class="n">md</span><span class="s">"A message *with some bold text* and _some italicized text_."</span>
+    <span class="o">)</span>
+<span class="o">)</span>
+</code></pre></div></div>
+
+<p>Slack Morphism Blocks DSL not just give you a DSL and function to create a JSON from this, but also provides 
+both compile time and run time checking for structure and formatting rules for Slack Blocks, 
+using Scala language features and <a href="https://en.wikipedia.org/wiki/Design_by_contract">Design by contract (DbC)</a> principles.</p>
+
+<p>Let’s look at another more complex example:</p>
+
+<p>Json:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"blocks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"section"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mrkdwn"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;https://example.com|Overlook Hotel&gt; </span><span class="se">\n</span><span class="s2"> :star: </span><span class="se">\n</span><span class="s2"> Doors had too many axe holes, guest in room 237 was far too rowdy, whole place felt stuck in the 1920s."</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"accessory"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://is5-ssl.mzstatic.com/image/thumb/Purple3/v4/d3/72/5c/d3725c8f-c642-5d69-1904-aa36e4297885/source/256x256bb.jpg"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"alt_text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Haunted hotel image"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"section"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mrkdwn"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*Average Rating*</span><span class="se">\n</span><span class="s2">1.0"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mrkdwn"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*Updated*</span><span class="se">\n</span><span class="s2">&lt;!date^1578400713^{date_pretty}|07 Jan 2020 12:38:33 GMT&gt;"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"context"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"elements"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mrkdwn"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*Author:* T. M. Schwartz"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>It would be using DSL defined as:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">blocks</span><span class="o">(</span>
+    <span class="nf">sectionBlock</span><span class="o">(</span>
+      <span class="n">text</span> <span class="k">=</span>
+        <span class="n">md</span><span class="s">"${formatUrl( "</span><span class="n">https</span><span class="o">://</span><span class="nv">example</span><span class="o">.</span><span class="py">com</span><span class="s">", "</span><span class="nc">Overlook</span> <span class="nc">Hotel</span><span class="s">" )}\n :star: \n Doors had too many axe holes, guest in room 237 was far too rowdy, whole place felt stuck in the 1920s."</span>
+    <span class="o">),</span>
+    <span class="nf">sectionBlock</span><span class="o">(</span>
+      <span class="n">fields</span> <span class="k">=</span>
+        <span class="nf">sectionFields</span><span class="o">(</span>
+          <span class="n">md</span><span class="s">"*Average Rating*\n1.0"</span><span class="o">,</span>
+          <span class="n">md</span><span class="s">"*Updated*\n${formatDate(Instant.now())}"</span>
+        <span class="o">)</span>
+    <span class="o">),</span>
+    <span class="nf">contextBlock</span><span class="o">(</span>
+        <span class="nf">blockElements</span><span class="o">(</span>
+            <span class="n">md</span><span class="s">"*Author:* T. M. Schwartz"</span>
+        <span class="o">)</span>
+    <span class="o">)</span>
+<span class="o">)</span>
+</code></pre></div></div>
+
+<h3 id="text-object-formatting">Text object formatting</h3>
+
+<p>There are specialised DSL string interpolators:</p>
+<ul>
+  <li><code class="highlighter-rouge">md"Mark down Text"</code> : creates Slack <code class="highlighter-rouge">mrkdwn</code> text object</li>
+  <li><code class="highlighter-rouge">plain"Plain text"</code>  : creates Slack <code class="highlighter-rouge">plain</code> text object</li>
+</ul>
+
+<h2 id="dsl-reference">DSL reference</h2>
+
+<p>Available DSL terms:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">blocks</code> : list of blocks from
+    <ul>
+      <li><code class="highlighter-rouge">sectionBlock</code> : <a href="https://api.slack.com/reference/block-kit/blocks#section">“section”</a></li>
+      <li><code class="highlighter-rouge">dividerBlock</code> : <a href="https://api.slack.com/reference/block-kit/blocks#divider">“divider”</a></li>
+      <li><code class="highlighter-rouge">inputBlock</code> : <a href="https://api.slack.com/reference/block-kit/blocks#input">“input”</a></li>
+      <li><code class="highlighter-rouge">contextBlock</code> : <a href="https://api.slack.com/reference/block-kit/blocks#context">“context”</a></li>
+      <li><code class="highlighter-rouge">fileBlock</code> : <a href="https://api.slack.com/reference/block-kit/blocks#file">“file”</a></li>
+      <li><code class="highlighter-rouge">actionsBlock</code> : <a href="https://api.slack.com/reference/block-kit/blocks#actions">“actions”</a></li>
+      <li><code class="highlighter-rouge">imageBlock</code> : <a href="https://api.slack.com/reference/block-kit/blocks#image">“image”</a></li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">blockElements</code> : list of elements of block (not all blocks support all these elements, it would be checked at the compile time):
+    <ul>
+      <li><code class="highlighter-rouge">button</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#button">“button”</a></li>
+      <li><code class="highlighter-rouge">image</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#image">“image”</a></li>
+      <li><code class="highlighter-rouge">datePicker</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#datepicker">“datepicker”</a></li>
+      <li><code class="highlighter-rouge">overflow</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#overflow">“overflow”</a></li>
+      <li><code class="highlighter-rouge">usersListSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#datepicker">“users_select”</a></li>
+      <li><code class="highlighter-rouge">conversationsListSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#conversations_select">“conversations_select”</a></li>
+      <li><code class="highlighter-rouge">channelsListSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#channels_select">“channels_select”</a></li>
+      <li><code class="highlighter-rouge">staticSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#select">“static_select”</a></li>
+      <li><code class="highlighter-rouge">externalSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#external_select">“external_select”</a></li>
+      <li><code class="highlighter-rouge">multiUsersListSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#multi_users_select">“multi_users_select”</a></li>
+      <li><code class="highlighter-rouge">multiConversationsListSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#multi_conversations_select">“multi_conversations_select”</a></li>
+      <li><code class="highlighter-rouge">multiChannelsListSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#multi_channels_select">“multi_channels_select”</a></li>
+      <li><code class="highlighter-rouge">multiStaticSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#multi_select">“multi_static_select”</a></li>
+      <li><code class="highlighter-rouge">multiExternalSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#multi_external_select">“multi_external_select”</a></li>
+      <li><code class="highlighter-rouge">radioButtons</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#radio">“radio_buttons”</a></li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">choiceItems</code> : items for selects, overflow and radio buttons
+    <ul>
+      <li><code class="highlighter-rouge">choiceItem</code> : <a href="https://api.slack.com/reference/block-kit/composition-objects#option">option object</a></li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">choiceStrItems</code> : items for strings for users/conversations/channels selects</li>
+  <li><code class="highlighter-rouge">choiceGroups</code> : items for selects
+    <ul>
+      <li><code class="highlighter-rouge">choiceGroup</code> : <a href="https://api.slack.com/reference/block-kit/composition-objects#option_group">option group</a></li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">confirm</code> : <a href="https://api.slack.com/reference/block-kit/composition-objects#confirm">confirm object</a></li>
+</ul>
+
+<h3 id="optional-blocks-and-elements">Optional blocks and elements</h3>
+
+<p>There are very useful DSL terms to provide an optional block, element, field or a choice item 
+depends on some user defined condition (a predicate):</p>
+
+<ul>
+  <li><code class="highlighter-rouge">optBlocks</code></li>
+  <li><code class="highlighter-rouge">optBlock</code></li>
+  <li><code class="highlighter-rouge">optBlockEl</code></li>
+  <li><code class="highlighter-rouge">optSectionField</code></li>
+  <li><code class="highlighter-rouge">optChoiceItem</code></li>
+  <li><code class="highlighter-rouge">optChoiceGroup</code></li>
+</ul>
+
+<p>They all lazily evaluated second parameter, so it might be useful as well.</p>
+
+<p>You can use them in Scala as:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Conditional item of overflow menu:</span>
+<span class="nf">sectionBlock</span><span class="o">(</span>
+  <span class="n">text</span> <span class="k">=</span> <span class="n">md</span><span class="s">"Test 2"</span><span class="o">,</span>
+  <span class="n">accessory</span> <span class="k">=</span> <span class="nf">overflow</span><span class="o">(</span>
+    <span class="n">action_id</span> <span class="k">=</span> <span class="s">"-"</span><span class="o">,</span>
+    <span class="n">options</span> <span class="k">=</span> <span class="nf">choiceItems</span><span class="o">(</span>
+      <span class="nf">choiceItem</span><span class="o">(</span> <span class="n">text</span> <span class="k">=</span> <span class="n">plain</span><span class="s">"test-menu-item"</span><span class="o">,</span> <span class="n">value</span> <span class="k">=</span> <span class="s">""</span> <span class="o">),</span>
+      <span class="nf">optChoiceItem</span><span class="o">(</span> <span class="n">someUserParam</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">)</span> <span class="o">(</span> <span class="nf">choiceItem</span><span class="o">(</span> <span class="n">text</span> <span class="k">=</span> <span class="n">plain</span><span class="s">"conditional-menu-item"</span><span class="o">,</span> <span class="n">value</span> <span class="k">=</span> <span class="s">""</span> <span class="o">)</span> <span class="o">)</span>
+    <span class="o">)</span>
+  <span class="o">)</span>
+<span class="o">)</span>
+</code></pre></div></div>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Conditional group of blocks example</span>
+<span class="nf">optBlocks</span><span class="o">(</span>
+    <span class="n">someParam</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="c1">// any condition returns boolean</span>
+<span class="o">)</span> <span class="o">(</span>
+    <span class="nf">sectionBlock</span><span class="o">(</span>
+      <span class="n">text</span> <span class="k">=</span>
+        <span class="n">md</span><span class="s">"${formatUrl( "</span><span class="n">https</span><span class="o">://</span><span class="nv">example</span><span class="o">.</span><span class="py">com</span><span class="s">", "</span><span class="nc">Overlook</span> <span class="nc">Hotel</span><span class="s">" )}\n :star: \n Doors had too many axe holes, guest in room 237 was far too rowdy, whole place felt stuck in the 1920s."</span>
+    <span class="o">),</span>
+    <span class="nf">contextBlock</span><span class="o">(</span>
+        <span class="nf">blockElements</span><span class="o">(</span>
+            <span class="n">md</span><span class="s">"*Author:* T. M. Schwartz"</span>
+        <span class="o">)</span>
+    <span class="o">)</span>
+<span class="o">)</span>
+</code></pre></div></div>
+
+<h3 id="nested-blocks">Nested blocks</h3>
+<p><code class="highlighter-rouge">blocks</code> might contain other <code class="highlighter-rouge">blocks</code> including optional blocks:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">blocks</span> <span class="o">(</span>
+    <span class="nf">optBlocks</span><span class="o">(</span> <span class="nv">latestNews</span><span class="o">.</span><span class="py">nonEmpty</span> <span class="o">)(</span>
+        <span class="nf">sectionBlock</span><span class="o">(</span>
+          <span class="n">text</span> <span class="k">=</span> <span class="n">md</span><span class="s">"*Latest news:*"</span>
+        <span class="o">),</span>
+        <span class="nf">dividerBlock</span><span class="o">(),</span>
+        <span class="nv">latestNews</span><span class="o">.</span><span class="py">map</span> <span class="o">{</span> <span class="n">news</span> <span class="k">=&gt;</span>
+          <span class="nf">blocks</span><span class="o">(</span>
+            <span class="nf">sectionBlock</span><span class="o">(</span>
+              <span class="n">text</span> <span class="k">=</span> <span class="n">md</span><span class="s">" • *${news.title}*\n${formatSlackQuoteText( news.body )}"</span>
+            <span class="o">),</span>
+            <span class="nf">contextBlock</span><span class="o">(</span>
+              <span class="nf">blockElements</span><span class="o">(</span>
+                <span class="n">md</span><span class="s">"*Published*"</span><span class="o">,</span>
+                <span class="n">md</span><span class="s">"${formatDate( news.published )}"</span>
+              <span class="o">)</span>
+            <span class="o">)</span>
+          <span class="o">)</span>
+        <span class="o">}</span>
+    <span class="o">)</span>
+<span class="o">)</span>
+</code></pre></div></div>
+
+<h3 id="render-templates-to-messages-and-views">Render templates to messages and views</h3>
+
+<p>There are traits in <code class="highlighter-rouge">org.latestbit.slack.morphism.client.templating</code> to help you build your own templates:</p>
+<ul>
+  <li><code class="highlighter-rouge">SlackBlocksTemplate</code> - to build a general blocks template (like a home tab)</li>
+  <li><code class="highlighter-rouge">SlackModalViewTemplate</code> - to build a modal view template</li>
+  <li><code class="highlighter-rouge">SlackMessageTemplate</code> - to build a message template</li>
+</ul>
+
+<h4 id="define-a-block-template-in-a-specialised-class-like-this">Define a block template in a specialised class like this:</h4>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">java.time.Instant</span>
+
+<span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client.templating._</span>
+<span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.messages.SlackBlock</span>
+
+<span class="k">class</span> <span class="nc">MyWelcomeMessageTemplateExample</span><span class="o">(</span> <span class="n">userId</span><span class="k">:</span> <span class="kt">String</span> <span class="o">)</span> <span class="k">extends</span> <span class="nc">SlackMessageTemplate</span> <span class="o">{</span>
+
+ <span class="c1">// All Slack messages also should provide simple plain textual representation</span>
+ <span class="c1">// So this is required </span>
+  <span class="k">override</span> <span class="k">def</span> <span class="nf">renderPlainText</span><span class="o">()</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span>
+    <span class="n">s</span><span class="s">"Hey ${formatSlackUserId( userId )}"</span>
+
+  <span class="c1">// Blocks for our messages using DSL </span>
+  <span class="k">override</span> <span class="k">def</span> <span class="nf">renderBlocks</span><span class="o">()</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">SlackBlock</span><span class="o">]]</span> <span class="k">=</span>
+    <span class="nf">blocks</span><span class="o">(</span>
+      <span class="nf">sectionBlock</span><span class="o">(</span>
+        <span class="n">text</span> <span class="k">=</span> <span class="n">md</span><span class="s">"Hey ${formatSlackUserId( userId )}"</span>
+      <span class="o">),</span>
+      <span class="nf">dividerBlock</span><span class="o">(),</span>
+      <span class="nf">contextBlock</span><span class="o">(</span>
+        <span class="nf">blockElements</span><span class="o">(</span>
+          <span class="n">md</span><span class="s">"This is an example of block message"</span><span class="o">,</span>
+          <span class="n">md</span><span class="s">"Current time is: ${formatDate( Instant.now(), SlackTextFormatters.SlackDateTimeFormats.DATE_LONG_PRETTY )}"</span>
+        <span class="o">)</span>
+      <span class="o">),</span>
+      <span class="nf">dividerBlock</span><span class="o">(),</span>
+      <span class="nf">imageBlock</span><span class="o">(</span> <span class="n">image_url</span> <span class="k">=</span> <span class="s">"https://www.gstatic.com/webp/gallery3/2_webp_ll.png"</span><span class="o">,</span> <span class="n">alt_text</span> <span class="k">=</span> <span class="s">"Test Image"</span> <span class="o">),</span>
+      <span class="nf">actionsBlock</span><span class="o">(</span>
+        <span class="nf">blockElements</span><span class="o">(</span>
+          <span class="nf">button</span><span class="o">(</span> <span class="n">text</span> <span class="k">=</span> <span class="n">plain</span><span class="s">"Simple"</span><span class="o">,</span> <span class="n">action_id</span> <span class="k">=</span> <span class="s">"simple-message-button"</span> <span class="o">)</span>
+        <span class="o">)</span>
+      <span class="o">)</span>
+    <span class="o">)</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>More examples are available <a href="https://github.com/abdolence/slack-morphism/tree/master/examples/akka-http/src/main/scala/org/latestbit/slack/morphism/examples/akka/templates">here</a>.</p>
+
+<h4 id="use-them-in-your-application-code-like-this">Use them in your application code like this:</h4>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="nv">template</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">MyWelcomeMessageTemplateExample</span><span class="o">(</span> <span class="n">userId</span> <span class="o">)</span>
+<span class="nv">slackApiClient</span><span class="o">.</span><span class="py">chat</span>
+<span class="o">.</span><span class="py">postMessage</span><span class="o">(</span>
+  <span class="nc">SlackApiChatPostMessageRequest</span><span class="o">(</span>
+    <span class="n">channel</span> <span class="k">=</span> <span class="n">channelId</span><span class="o">,</span>
+    <span class="n">text</span> <span class="k">=</span> <span class="nv">template</span><span class="o">.</span><span class="py">renderPlainText</span><span class="o">(),</span>
+    <span class="n">blocks</span> <span class="k">=</span> <span class="nv">template</span><span class="o">.</span><span class="py">renderBlocks</span><span class="o">()</span>
+  <span class="o">)</span>
+<span class="o">)</span>
+</code></pre></div></div>
+
+<h3 id="dsl-slack-text-formatters">DSL Slack text formatters</h3>
+
+<p>You might noticed <code class="highlighter-rouge">formatDate</code> and <code class="highlighter-rouge">formatUrl</code> before.
+They all defined in a trait <a href="/api/org/latestbit/slack/morphism/client/templating/SlackTextFormatters.html">SlackTextFormatters</a>
+ (enable protected members in scaladoc filters to able to see them), and available for DSL templates without additional imports.</p>
+</section>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="/highlight/highlight.pack.js"></script>
+<script>hljs.configure({languages: ['scala', 'java', 'bash']});
+hljs.initHighlightingOnLoad();
+</script>
+<script src="/js/docs.js"></script>
+</body>
+</html>
