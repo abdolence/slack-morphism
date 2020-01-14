@@ -105,6 +105,15 @@ blocks(
     )
 )
 ```
+
+
+### Text object formatting
+
+There are specialised DSL string interpolators:
+* `md"Mark down Text"` : creates Slack `mrkdwn` text object 
+* `plain"Plain text"`  : creates Slack `plain` text object
+
+
 ## DSL reference
 
 Available DSL terms:
@@ -140,16 +149,10 @@ Available DSL terms:
     * `choiceGroup` : [option group](https://api.slack.com/reference/block-kit/composition-objects#option_group)
 * `confirm` : [confirm object](https://api.slack.com/reference/block-kit/composition-objects#confirm)
 
-### Text object formatting
-
-There are specialised DSL string interpolators:
-* `md"Mark down Text"` : creates Slack `mrkdwn` text object 
-* `plain"Plain text"`  : creates Slack `plain` text object
-
-### Option blocks and elements
+### Optional blocks and elements
 
 There are very useful DSL terms to provide an optional block, element, field or a choice item 
-depends on some user defined condition:
+depends on some user defined condition (a predicate):
 
 * `optBlocks`
 * `optBlock`
