@@ -200,6 +200,15 @@ using Scala language features and <a href="https://en.wikipedia.org/wiki/Design_
     <span class="o">)</span>
 <span class="o">)</span>
 </code></pre></div></div>
+
+<h3 id="text-object-formatting">Text object formatting</h3>
+
+<p>There are specialised DSL string interpolators:</p>
+<ul>
+  <li><code class="highlighter-rouge">md"Mark down Text"</code> : creates Slack <code class="highlighter-rouge">mrkdwn</code> text object</li>
+  <li><code class="highlighter-rouge">plain"Plain text"</code>  : creates Slack <code class="highlighter-rouge">plain</code> text object</li>
+</ul>
+
 <h2 id="dsl-reference">DSL reference</h2>
 
 <p>Available DSL terms:</p>
@@ -249,18 +258,10 @@ using Scala language features and <a href="https://en.wikipedia.org/wiki/Design_
   <li><code class="highlighter-rouge">confirm</code> : <a href="https://api.slack.com/reference/block-kit/composition-objects#confirm">confirm object</a></li>
 </ul>
 
-<h3 id="text-object-formatting">Text object formatting</h3>
-
-<p>There are specialised DSL string interpolators:</p>
-<ul>
-  <li><code class="highlighter-rouge">md"Mark down Text"</code> : creates Slack <code class="highlighter-rouge">mrkdwn</code> text object</li>
-  <li><code class="highlighter-rouge">plain"Plain text"</code>  : creates Slack <code class="highlighter-rouge">plain</code> text object</li>
-</ul>
-
-<h3 id="option-blocks-and-elements">Option blocks and elements</h3>
+<h3 id="optional-blocks-and-elements">Optional blocks and elements</h3>
 
 <p>There are very useful DSL terms to provide an optional block, element, field or a choice item 
-depends on some user defined condition:</p>
+depends on some user defined condition (a predicate):</p>
 
 <ul>
   <li><code class="highlighter-rouge">optBlocks</code></li>
