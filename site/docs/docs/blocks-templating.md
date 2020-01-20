@@ -137,8 +137,9 @@ sectionBlock(
   accessory = overflow(
     action_id = "-",
     options = choiceItems(
-      choiceItem( text = plain"test-menu-item", value = "" ),
-      optChoiceItem( someUserParam > 0 ) ( choiceItem( text = plain"conditional-menu-item", value = "" ) )
+      choiceItem( text = plain"test-menu-item 1", value = "1" ),
+      choiceItem( text = plain"test-menu-item 2", value = "2" ),
+      optChoiceItem( someUserParam > 0 ) ( choiceItem( text = plain"conditional-menu-item 3", value = "3" ) )
     )
   )
 )
