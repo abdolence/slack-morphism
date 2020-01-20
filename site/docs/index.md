@@ -1,6 +1,6 @@
 ---
 layout: ehomeFeatures
-title:  "Type-Safe Reactive Client with Blocks Templating"
+title:  "Type-Safe Slack Client for Scala with Blocks Templating DSL"
 section: "home"
 technologies:
  - first:  ["Slack", "This is a Slack client to Web and Events API"]
