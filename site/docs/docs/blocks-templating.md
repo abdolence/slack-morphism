@@ -113,42 +113,6 @@ There are specialised DSL string interpolators:
 * `md"Mark down Text"` : creates Slack `mrkdwn` text object 
 * `plain"Plain text"`  : creates Slack `plain` text object
 
-
-## DSL reference
-
-Available DSL terms:
-
-* `blocks` : list of blocks from
-    * `sectionBlock` : ["section"](https://api.slack.com/reference/block-kit/blocks#section)
-    * `dividerBlock` : ["divider"](https://api.slack.com/reference/block-kit/blocks#divider)
-    * `inputBlock` : ["input"](https://api.slack.com/reference/block-kit/blocks#input)
-    * `contextBlock` : ["context"](https://api.slack.com/reference/block-kit/blocks#context)
-    * `fileBlock` : ["file"](https://api.slack.com/reference/block-kit/blocks#file)
-    * `actionsBlock` : ["actions"](https://api.slack.com/reference/block-kit/blocks#actions)
-    * `imageBlock` : ["image"](https://api.slack.com/reference/block-kit/blocks#image)
-* `blockElements` : list of elements of block (not all blocks support all these elements, it would be checked at the compile time):
-    * `button` : ["button"](https://api.slack.com/reference/block-kit/block-elements#button)
-    * `image` : ["image"](https://api.slack.com/reference/block-kit/block-elements#image)
-    * `datePicker` : ["datepicker"](https://api.slack.com/reference/block-kit/block-elements#datepicker)
-    * `overflow` : ["overflow"](https://api.slack.com/reference/block-kit/block-elements#overflow)
-    * `usersListSelect` : ["users_select"](https://api.slack.com/reference/block-kit/block-elements#datepicker)
-    * `conversationsListSelect` : ["conversations_select"](https://api.slack.com/reference/block-kit/block-elements#conversations_select)
-    * `channelsListSelect` : ["channels_select"](https://api.slack.com/reference/block-kit/block-elements#channels_select)
-    * `staticSelect` : ["static_select"](https://api.slack.com/reference/block-kit/block-elements#select)
-    * `externalSelect` : ["external_select"](https://api.slack.com/reference/block-kit/block-elements#external_select)
-    * `multiUsersListSelect` : ["multi_users_select"](https://api.slack.com/reference/block-kit/block-elements#multi_users_select)
-    * `multiConversationsListSelect` : ["multi_conversations_select"](https://api.slack.com/reference/block-kit/block-elements#multi_conversations_select)
-    * `multiChannelsListSelect` : ["multi_channels_select"](https://api.slack.com/reference/block-kit/block-elements#multi_channels_select)
-    * `multiStaticSelect` : ["multi_static_select"](https://api.slack.com/reference/block-kit/block-elements#multi_select)
-    * `multiExternalSelect` : ["multi_external_select"](https://api.slack.com/reference/block-kit/block-elements#multi_external_select)
-    * `radioButtons` : ["radio_buttons"](https://api.slack.com/reference/block-kit/block-elements#radio)
-* `choiceItems` : items for selects, overflow and radio buttons
-    * `choiceItem` : [option object](https://api.slack.com/reference/block-kit/composition-objects#option)
-* `choiceStrItems` : items for strings for users/conversations/channels selects    
-* `choiceGroups` : items for selects
-    * `choiceGroup` : [option group](https://api.slack.com/reference/block-kit/composition-objects#option_group)
-* `confirm` : [confirm object](https://api.slack.com/reference/block-kit/composition-objects#confirm)
-
 ### Optional blocks and elements
 
 There are very useful DSL terms to provide an optional block, element, field or a choice item 
@@ -285,8 +249,43 @@ slackApiClient.chat
 )
 ```
 
+## DSL reference
+Available DSL terms:
+
+* `blocks` : list of blocks from
+    * `sectionBlock` : ["section"](https://api.slack.com/reference/block-kit/blocks#section)
+    * `dividerBlock` : ["divider"](https://api.slack.com/reference/block-kit/blocks#divider)
+    * `inputBlock` : ["input"](https://api.slack.com/reference/block-kit/blocks#input)
+    * `contextBlock` : ["context"](https://api.slack.com/reference/block-kit/blocks#context)
+    * `fileBlock` : ["file"](https://api.slack.com/reference/block-kit/blocks#file)
+    * `actionsBlock` : ["actions"](https://api.slack.com/reference/block-kit/blocks#actions)
+    * `imageBlock` : ["image"](https://api.slack.com/reference/block-kit/blocks#image)
+* `blockElements` : list of elements of block (not all blocks support all these elements, it would be checked at the compile time):
+    * `button` : ["button"](https://api.slack.com/reference/block-kit/block-elements#button)
+    * `image` : ["image"](https://api.slack.com/reference/block-kit/block-elements#image)
+    * `datePicker` : ["datepicker"](https://api.slack.com/reference/block-kit/block-elements#datepicker)
+    * `overflow` : ["overflow"](https://api.slack.com/reference/block-kit/block-elements#overflow)
+    * `usersListSelect` : ["users_select"](https://api.slack.com/reference/block-kit/block-elements#datepicker)
+    * `conversationsListSelect` : ["conversations_select"](https://api.slack.com/reference/block-kit/block-elements#conversations_select)
+    * `channelsListSelect` : ["channels_select"](https://api.slack.com/reference/block-kit/block-elements#channels_select)
+    * `staticSelect` : ["static_select"](https://api.slack.com/reference/block-kit/block-elements#select)
+    * `externalSelect` : ["external_select"](https://api.slack.com/reference/block-kit/block-elements#external_select)
+    * `multiUsersListSelect` : ["multi_users_select"](https://api.slack.com/reference/block-kit/block-elements#multi_users_select)
+    * `multiConversationsListSelect` : ["multi_conversations_select"](https://api.slack.com/reference/block-kit/block-elements#multi_conversations_select)
+    * `multiChannelsListSelect` : ["multi_channels_select"](https://api.slack.com/reference/block-kit/block-elements#multi_channels_select)
+    * `multiStaticSelect` : ["multi_static_select"](https://api.slack.com/reference/block-kit/block-elements#multi_select)
+    * `multiExternalSelect` : ["multi_external_select"](https://api.slack.com/reference/block-kit/block-elements#multi_external_select)
+    * `radioButtons` : ["radio_buttons"](https://api.slack.com/reference/block-kit/block-elements#radio)
+* `choiceItems` : items for selects, overflow and radio buttons
+    * `choiceItem` : [option object](https://api.slack.com/reference/block-kit/composition-objects#option)
+* `choiceStrItems` : items for strings for users/conversations/channels selects    
+* `choiceGroups` : items for selects
+    * `choiceGroup` : [option group](https://api.slack.com/reference/block-kit/composition-objects#option_group)
+* `confirm` : [confirm object](https://api.slack.com/reference/block-kit/composition-objects#confirm)
+
 ### DSL Slack text formatters
 
 You might noticed `formatDate` and `formatUrl` before.
 They all defined in a trait [SlackTextFormatters](/api/org/latestbit/slack/morphism/client/templating/SlackTextFormatters.html)
  (enable protected members in scaladoc filters to able to see them), and available for DSL templates without additional imports.
+
