@@ -209,55 +209,6 @@ using Scala language features and <a href="https://en.wikipedia.org/wiki/Design_
   <li><code class="highlighter-rouge">plain"Plain text"</code>  : creates Slack <code class="highlighter-rouge">plain</code> text object</li>
 </ul>
 
-<h2 id="dsl-reference">DSL reference</h2>
-
-<p>Available DSL terms:</p>
-
-<ul>
-  <li><code class="highlighter-rouge">blocks</code> : list of blocks from
-    <ul>
-      <li><code class="highlighter-rouge">sectionBlock</code> : <a href="https://api.slack.com/reference/block-kit/blocks#section">“section”</a></li>
-      <li><code class="highlighter-rouge">dividerBlock</code> : <a href="https://api.slack.com/reference/block-kit/blocks#divider">“divider”</a></li>
-      <li><code class="highlighter-rouge">inputBlock</code> : <a href="https://api.slack.com/reference/block-kit/blocks#input">“input”</a></li>
-      <li><code class="highlighter-rouge">contextBlock</code> : <a href="https://api.slack.com/reference/block-kit/blocks#context">“context”</a></li>
-      <li><code class="highlighter-rouge">fileBlock</code> : <a href="https://api.slack.com/reference/block-kit/blocks#file">“file”</a></li>
-      <li><code class="highlighter-rouge">actionsBlock</code> : <a href="https://api.slack.com/reference/block-kit/blocks#actions">“actions”</a></li>
-      <li><code class="highlighter-rouge">imageBlock</code> : <a href="https://api.slack.com/reference/block-kit/blocks#image">“image”</a></li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">blockElements</code> : list of elements of block (not all blocks support all these elements, it would be checked at the compile time):
-    <ul>
-      <li><code class="highlighter-rouge">button</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#button">“button”</a></li>
-      <li><code class="highlighter-rouge">image</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#image">“image”</a></li>
-      <li><code class="highlighter-rouge">datePicker</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#datepicker">“datepicker”</a></li>
-      <li><code class="highlighter-rouge">overflow</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#overflow">“overflow”</a></li>
-      <li><code class="highlighter-rouge">usersListSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#datepicker">“users_select”</a></li>
-      <li><code class="highlighter-rouge">conversationsListSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#conversations_select">“conversations_select”</a></li>
-      <li><code class="highlighter-rouge">channelsListSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#channels_select">“channels_select”</a></li>
-      <li><code class="highlighter-rouge">staticSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#select">“static_select”</a></li>
-      <li><code class="highlighter-rouge">externalSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#external_select">“external_select”</a></li>
-      <li><code class="highlighter-rouge">multiUsersListSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#multi_users_select">“multi_users_select”</a></li>
-      <li><code class="highlighter-rouge">multiConversationsListSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#multi_conversations_select">“multi_conversations_select”</a></li>
-      <li><code class="highlighter-rouge">multiChannelsListSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#multi_channels_select">“multi_channels_select”</a></li>
-      <li><code class="highlighter-rouge">multiStaticSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#multi_select">“multi_static_select”</a></li>
-      <li><code class="highlighter-rouge">multiExternalSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#multi_external_select">“multi_external_select”</a></li>
-      <li><code class="highlighter-rouge">radioButtons</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#radio">“radio_buttons”</a></li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">choiceItems</code> : items for selects, overflow and radio buttons
-    <ul>
-      <li><code class="highlighter-rouge">choiceItem</code> : <a href="https://api.slack.com/reference/block-kit/composition-objects#option">option object</a></li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">choiceStrItems</code> : items for strings for users/conversations/channels selects</li>
-  <li><code class="highlighter-rouge">choiceGroups</code> : items for selects
-    <ul>
-      <li><code class="highlighter-rouge">choiceGroup</code> : <a href="https://api.slack.com/reference/block-kit/composition-objects#option_group">option group</a></li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">confirm</code> : <a href="https://api.slack.com/reference/block-kit/composition-objects#confirm">confirm object</a></li>
-</ul>
-
 <h3 id="optional-blocks-and-elements">Optional blocks and elements</h3>
 
 <p>There are very useful DSL terms to provide an optional block, element, field or a choice item 
@@ -392,11 +343,60 @@ depends on some user defined condition (a predicate):</p>
 <span class="o">)</span>
 </code></pre></div></div>
 
+<h2 id="dsl-reference">DSL reference</h2>
+<p>Available DSL terms:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">blocks</code> : list of blocks from
+    <ul>
+      <li><code class="highlighter-rouge">sectionBlock</code> : <a href="https://api.slack.com/reference/block-kit/blocks#section">“section”</a></li>
+      <li><code class="highlighter-rouge">dividerBlock</code> : <a href="https://api.slack.com/reference/block-kit/blocks#divider">“divider”</a></li>
+      <li><code class="highlighter-rouge">inputBlock</code> : <a href="https://api.slack.com/reference/block-kit/blocks#input">“input”</a></li>
+      <li><code class="highlighter-rouge">contextBlock</code> : <a href="https://api.slack.com/reference/block-kit/blocks#context">“context”</a></li>
+      <li><code class="highlighter-rouge">fileBlock</code> : <a href="https://api.slack.com/reference/block-kit/blocks#file">“file”</a></li>
+      <li><code class="highlighter-rouge">actionsBlock</code> : <a href="https://api.slack.com/reference/block-kit/blocks#actions">“actions”</a></li>
+      <li><code class="highlighter-rouge">imageBlock</code> : <a href="https://api.slack.com/reference/block-kit/blocks#image">“image”</a></li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">blockElements</code> : list of elements of block (not all blocks support all these elements, it would be checked at the compile time):
+    <ul>
+      <li><code class="highlighter-rouge">button</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#button">“button”</a></li>
+      <li><code class="highlighter-rouge">image</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#image">“image”</a></li>
+      <li><code class="highlighter-rouge">datePicker</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#datepicker">“datepicker”</a></li>
+      <li><code class="highlighter-rouge">overflow</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#overflow">“overflow”</a></li>
+      <li><code class="highlighter-rouge">usersListSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#datepicker">“users_select”</a></li>
+      <li><code class="highlighter-rouge">conversationsListSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#conversations_select">“conversations_select”</a></li>
+      <li><code class="highlighter-rouge">channelsListSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#channels_select">“channels_select”</a></li>
+      <li><code class="highlighter-rouge">staticSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#select">“static_select”</a></li>
+      <li><code class="highlighter-rouge">externalSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#external_select">“external_select”</a></li>
+      <li><code class="highlighter-rouge">multiUsersListSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#multi_users_select">“multi_users_select”</a></li>
+      <li><code class="highlighter-rouge">multiConversationsListSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#multi_conversations_select">“multi_conversations_select”</a></li>
+      <li><code class="highlighter-rouge">multiChannelsListSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#multi_channels_select">“multi_channels_select”</a></li>
+      <li><code class="highlighter-rouge">multiStaticSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#multi_select">“multi_static_select”</a></li>
+      <li><code class="highlighter-rouge">multiExternalSelect</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#multi_external_select">“multi_external_select”</a></li>
+      <li><code class="highlighter-rouge">radioButtons</code> : <a href="https://api.slack.com/reference/block-kit/block-elements#radio">“radio_buttons”</a></li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">choiceItems</code> : items for selects, overflow and radio buttons
+    <ul>
+      <li><code class="highlighter-rouge">choiceItem</code> : <a href="https://api.slack.com/reference/block-kit/composition-objects#option">option object</a></li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">choiceStrItems</code> : items for strings for users/conversations/channels selects</li>
+  <li><code class="highlighter-rouge">choiceGroups</code> : items for selects
+    <ul>
+      <li><code class="highlighter-rouge">choiceGroup</code> : <a href="https://api.slack.com/reference/block-kit/composition-objects#option_group">option group</a></li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">confirm</code> : <a href="https://api.slack.com/reference/block-kit/composition-objects#confirm">confirm object</a></li>
+</ul>
+
 <h3 id="dsl-slack-text-formatters">DSL Slack text formatters</h3>
 
 <p>You might noticed <code class="highlighter-rouge">formatDate</code> and <code class="highlighter-rouge">formatUrl</code> before.
 They all defined in a trait <a href="/api/org/latestbit/slack/morphism/client/templating/SlackTextFormatters.html">SlackTextFormatters</a>
  (enable protected members in scaladoc filters to able to see them), and available for DSL templates without additional imports.</p>
+
 </section>
 			</div>
 		</div>
