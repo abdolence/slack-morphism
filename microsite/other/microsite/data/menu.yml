@@ -1,0 +1,20 @@
+options:
+  - title: Intro
+    url: docs/index
+    section: intro
+
+  - title: Web API
+    url: docs/web-api
+    section: webapi
+
+  - title: Events API
+    url: docs/events-api
+    section: eventsapi
+
+  - title: Blocks Templating
+    url: docs/templating
+    section: blockstemplating
+
+  - title: Akka HTTP
+    url: docs/akka-http
+    section: akkahttp
