@@ -252,7 +252,6 @@ lazy val slackMorphismMicrosite = project
   .settings(
     name := "slack-morphism-microsite"
   )
-  .settings( docSettings )
   .settings( noPublishSettings )
   .settings( docSettings )
   .settings( scalaDocSettings )
