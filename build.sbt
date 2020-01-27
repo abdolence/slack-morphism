@@ -236,7 +236,11 @@ lazy val docSettings = Seq(
   unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects( slackMorphismModels, slackMorphismClient ),
   addMappingsToSiteDir( mappings in (ScalaUnidoc, packageDoc), apiDocsDir ),
   micrositeAnalyticsToken := "UA-155371094-1",
-  includeFilter in makeSite := (includeFilter in makeSite).value || "*.txt" || "*.xml"
+  includeFilter in makeSite := (includeFilter in makeSite).value || "*.txt" || "*.xml",
+  mappings in makeSite ++= Seq(
+    (resourceDirectory in Compile).value / "microsite" / "robots.txt" -> "robots.txt",
+    (resourceDirectory in Compile).value / "microsite" / "sitemap.xml" -> "sitemap.xml"
+  )
 )
 
 ThisBuild / GitKeys.gitReader := baseDirectory(base => new DefaultReadableGit( base ) ).value
