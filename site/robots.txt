@@ -1,0 +1,4 @@
+User-agent: *
+Sitemap: https://slack.abdolence.dev/sitemap.xml
+Host: https://slack.abdolence.dev
+Disallow: /api/*
