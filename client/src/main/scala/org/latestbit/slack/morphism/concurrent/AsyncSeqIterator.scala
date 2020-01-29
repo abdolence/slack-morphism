@@ -26,6 +26,7 @@ import scala.concurrent.{ ExecutionContext, Future }
  * Unlike Future.sequence/fold we don't know beforehand how many async actions are coming
  *
  * Async iterator implements:
+ *
  * - [[AsyncSeqIterator#foldLeft]] for accumulating batching results
  *
  * - [[AsyncSeqIterator#map]] to transform batch results
