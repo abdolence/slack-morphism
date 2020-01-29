@@ -15,11 +15,11 @@ Unlike Future.sequence/fold we don't know beforehand how many async actions are 
  <span class="kw">def</span> nextItem( position: <span class="std">Int</span> ): Future[MyItem] = {
    <span class="kw">if</span> (position &lt; <span class="num">10</span>) {
      Future.successful(
-       MyItem( s<span class="lit">"next: ${position}"</span>, <span class="std">Some</span>( position + <span class="num">1</span> ) )
+       MyItem( <span class="lit">"next"</span>, <span class="std">Some</span>( position + <span class="num">1</span> ) )
      )
    } <span class="kw">else</span> {
      Future.successful(
-       MyItem( s<span class="lit">"last"</span>, <span class="std">None</span> )
+       MyItem( <span class="lit">"last"</span>, <span class="std">None</span> )
      )
    }
  }
