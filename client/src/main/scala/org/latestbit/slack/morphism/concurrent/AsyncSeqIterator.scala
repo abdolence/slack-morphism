@@ -46,11 +46,11 @@ import scala.concurrent.{ ExecutionContext, Future }
  *   def nextItem( position: Int ): Future[MyItem] = {
  *     if (position < 10) {
  *       Future.successful(
- *         MyItem( s"next: ${position}", Some( position + 1 ) )
+ *         MyItem( "next", Some( position + 1 ) )
  *       )
  *     } else {
  *       Future.successful(
- *         MyItem( s"last", None )
+ *         MyItem( "last", None )
  *       )
  *     }
  *   }
