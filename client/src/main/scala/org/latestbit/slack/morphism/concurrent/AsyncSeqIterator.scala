@@ -77,16 +77,33 @@ import scala.concurrent.{ ExecutionContext, Future }
  */
 trait AsyncSeqIterator[+I, +A] {
 
+  /**
+   * Future of current item
+   */
   def item()(
       implicit ec: ExecutionContext
   ): Future[I]
 
+  /**
+   * Future of value of item
+   */
   def value()(
       implicit ec: ExecutionContext
   ): Future[A]
 
+  /**
+   * Future next iterator if it exists (depends on current item and its position/state)
+   */
   def next()( implicit ec: ExecutionContext ): Future[Option[AsyncSeqIterator[I, A]]]
 
+  /**
+   * Iterate and fold (combining) values into the user specified structure and given function `f`
+   *
+   * @param initial initial value
+   * @param f folding function
+   * @param ec execution context
+   * @return a folded value
+   */
   def foldLeft[B](
       initial: B
   )( f: ( B, A ) => B )( implicit ec: ExecutionContext ): Future[B] = {
@@ -103,10 +120,23 @@ trait AsyncSeqIterator[+I, +A] {
     }
   }
 
+  /**
+   * Mapping value of items using the given function `f`
+   *
+   * @param f a mapping function
+   * @return a function result for value
+   */
   def map[B](
       f: A => B
   ): AsyncSeqIterator[I, B]
 
+  /**
+   * Apply the given function `f` to each element of this linear sequence
+   * (while respecting the order of the elements).
+   *
+   * @param f a function to apply
+   * @param ec execution context
+   */
   def foreach[U]( f: A => U )( implicit ec: ExecutionContext ): Unit = {
     value().foreach { currentValue =>
       f( currentValue )
