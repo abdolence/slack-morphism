@@ -27,7 +27,9 @@ import scala.concurrent.{ ExecutionContext, Future }
  *
  * Async iterator implements:
  * - [[AsyncSeqIterator#foldLeft]] for accumulating batching results
+ *
  * - [[AsyncSeqIterator#map]] to transform batch results
+ *
  * - [[AsyncSeqIterator#foreach]] to iterate with effects
  *
  * For example:
