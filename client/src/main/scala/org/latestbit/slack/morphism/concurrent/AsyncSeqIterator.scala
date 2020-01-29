@@ -20,19 +20,55 @@ package org.latestbit.slack.morphism.concurrent
 
 import scala.concurrent.{ ExecutionContext, Future }
 
-trait AsyncSeqIteratorPosition[A, +P] {
-  def getPos( item: A ): Option[P]
-}
-
 /**
  * Async iterator is able to provide infinite async computed values lazily iterating over some function
  * Unlike standard Stream[]/LazyList[] from Scala, this implementation doesn't memorise previous values.
  * Unlike Future.sequence/fold we don't know beforehand how many async actions are coming
  *
+ * Async iterator implements:
+ * [[AsyncSeqIterator#foldLeft]] for accumulating batching results
+ * [[AsyncSeqIterator#map]] to transform batch results
+ * [[AsyncSeqIterator#foreach]] to iterate with effects
+ *
+ * For example:
+ *
+ * {{{
+ *
+ *   case class MyItem( value: String, cursor: Option[Int] )
+ *
+ *   def initialItem(): Future[MyItem] = Future.successful(
+ *     MyItem( "initial", Some( 1 ) )
+ *   )
+ *
+ *   def nextItem( position: Int ): Future[MyItem] = {
+ *     if (position < 10) {
+ *       Future.successful(
+ *         MyItem( s"next: ${position}", Some( position + 1 ) )
+ *       )
+ *     } else {
+ *       Future.successful(
+ *         MyItem( s"last", None )
+ *       )
+ *     }
+ *   }
+ *
+ *   val iterator = AsyncSeqIterator.cons[MyItem, String, Int](
+ *     initial = initialItem(),
+ *     toValue = _.value,
+ *     getPos = _.cursor,
+ *     producer = nextItem
+ *   )
+ *
+ *  iterator
+ *      .foldLeft( List[String]() ) {
+ *         case ( all, itemValue ) =>
+ *           all :+ itemValue
+ *       }
+ * }}}
+ *
  * Look at [[AsyncSeqIterator.cons]] for details.
  *
  * @note It is not possible to implement standard Iterator[] because of the sync nature of hasNext.
- *
  * @tparam I iterating over item type which has a some position
  * @tparam A extracted value type (extracted from I)
  */
