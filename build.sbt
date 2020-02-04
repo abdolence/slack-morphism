@@ -142,7 +142,10 @@ val baseDependencies =
       "org.scalatestplus" %% "testng-6-7" % scalaTestPlusTestNG,
       "com.github.alexarchambault" %% "scalacheck-shapeless_1.14" % scalaCheckShapeless,
       "com.softwaremill.sttp.client" %% "async-http-client-backend-future" % sttpVersion
-    ).map( _ % "test" )
+    ).map( _ % "test" ) ++
+    Seq(
+      compilerPlugin( "org.typelevel" % "kind-projector" % "0.11.0" cross CrossVersion.full )
+    )
 
 //addCompilerPlugin( "org.scalamacros" %% "paradise" % "2.1.1" cross CrossVersion.full )
 

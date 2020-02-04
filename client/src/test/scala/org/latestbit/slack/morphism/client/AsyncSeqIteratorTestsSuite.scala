@@ -20,6 +20,8 @@ package org.latestbit.slack.morphism.client
 
 import java.util.concurrent.{ Executors, TimeUnit }
 
+import cats.implicits._
+
 import org.latestbit.slack.morphism.concurrent.AsyncSeqIterator
 import org.scalacheck._
 import org.scalatest.flatspec.AsyncFlatSpec
@@ -115,6 +117,20 @@ class AsyncSeqIteratorTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenProp
       case ( x, idx ) =>
         x.contains( s"next: ${idx + 1}" )
     } )
+  }
+
+  "AsyncIterator" should "provide a cats Functor instance" in {
+    iterator
+      .fmap( _.toUpperCase )
+      .fproduct( _.length )
+      .foldLeft( List[String]() ) {
+        case ( all, ( itemValue, _ ) ) =>
+          all :+ itemValue
+      }
+      .map { xs =>
+        assert( xs.nonEmpty )
+        assert( xs.headOption.contains( "initial".toUpperCase ) )
+      }
   }
 
 }

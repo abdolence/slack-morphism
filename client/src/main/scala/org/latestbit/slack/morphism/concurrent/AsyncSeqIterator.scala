@@ -18,7 +18,11 @@
 
 package org.latestbit.slack.morphism.concurrent
 
+import cats.Functor
+
 import scala.concurrent.{ ExecutionContext, Future }
+
+import scala.language.implicitConversions
 
 /**
  * Async iterator is able to provide infinite async computed values lazily iterating over some function
@@ -213,6 +217,13 @@ object AsyncSeqIterator {
         }
 
       }
+    }
+  }
+
+  implicit def asyncSeqIteratorInstances[I]: Functor[AsyncSeqIterator[I, *]] = new Functor[AsyncSeqIterator[I, *]] {
+
+    override def map[A, B]( fa: AsyncSeqIterator[I, A] )( f: A => B ): AsyncSeqIterator[I, B] = {
+      fa.map( f )
     }
   }
 
