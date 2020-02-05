@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Abdulla Abdurakhmanov (abdulla@latestbit.com)
+ * Copyright 2020 Abdulla Abdurakhmanov (abdulla@latestbit.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,16 @@
  *
  */
 
-package org.latestbit.slack.morphism.client
+package org.latestbit.slack.morphism.concurrent
 
 import java.util.concurrent.{ Executors, TimeUnit }
 
 import cats.implicits._
-import org.latestbit.slack.morphism.concurrent.AsyncSeqIterator
 import org.scalacheck._
 import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent._
 
 class AsyncSeqIteratorTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenPropertyChecks {
 
