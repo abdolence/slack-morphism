@@ -83,8 +83,8 @@ object SlackEventSignatureVerifier {
    * Slack Events API HTTP header names with values to verify signature
    */
   object HttpHeaderNames {
-    val SIGNED_HASH = "X-Slack-Signature"
-    val SIGNED_TIMESTAMP = "X-Slack-Request-Timestamp"
+    val SIGNED_HASH = "x-slack-signature"
+    val SIGNED_TIMESTAMP = "x-slack-request-timestamp"
   }
 
 }
