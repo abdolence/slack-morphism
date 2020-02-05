@@ -31,10 +31,27 @@ import scala.util.Try
 class SlackEventSignatureVerifier() {
   import SlackEventSignatureVerifier._
 
-  private def signDataWithKeySecret( mac: Mac, signingSecret: String, dataToSign: String ): Array[Byte] = {
+  private def signStrWithKeySecret( mac: Mac, signingSecret: String, dataToSign: String ): Array[Byte] = {
     val secretKeySpec = new SecretKeySpec( signingSecret.getBytes(), mac.getAlgorithm )
     mac.init( secretKeySpec )
     mac.doFinal( dataToSign.getBytes )
+  }
+
+  private[signature] def signData(
+      signingSecret: String,
+      timestamp: String,
+      body: String
+  ): Either[SlackSignatureCryptoInitError, String] = {
+    Try( Mac.getInstance( SIGNING_ALGORITHM ) ).toEither
+      .flatMap { mac =>
+        val dataToSign = s"v0:${timestamp}:${body}"
+        Try( signStrWithKeySecret( mac, signingSecret, dataToSign ) ).toEither.map { signedBytes =>
+          s"v0=${signedBytes.toHexString()}"
+        }
+      }
+      .leftMap { ex =>
+        SlackSignatureCryptoInitError( ex )
+      }
   }
 
   /**
@@ -51,24 +68,16 @@ class SlackEventSignatureVerifier() {
       timestamp: String,
       body: String
   ): Either[SlackSignatureVerificationError, SlackSignatureVerificationSuccess] = {
-    Try( Mac.getInstance( SIGNING_ALGORITHM ) ).toEither
-      .flatMap { mac =>
-        val dataToSign = s"v0:${timestamp}:${body}"
-        Try( signDataWithKeySecret( mac, signingSecret, dataToSign ) ).toEither.flatMap { signedBytes =>
-          val generatedHash = s"v0=${signedBytes.toHexString()}"
-          if (generatedHash != receivedHash) {
-            SlackSignatureWrongSignatureError(
-              receivedHash = receivedHash,
-              generatedHash = generatedHash,
-              timestamp = timestamp
-            ).asLeft
-          } else
-            SlackSignatureVerificationSuccess().asRight
-        }
-      }
-      .leftMap { ex =>
-        SlackSignatureCryptoInitError( ex )
-      }
+    signData( signingSecret, timestamp, body ).flatMap { generatedHash =>
+      if (generatedHash != receivedHash) {
+        SlackSignatureWrongSignatureError(
+          receivedHash = receivedHash,
+          generatedHash = generatedHash,
+          timestamp = timestamp
+        ).asLeft
+      } else
+        SlackSignatureVerificationSuccess().asRight
+    }
   }
 }
 
