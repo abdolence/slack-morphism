@@ -145,6 +145,7 @@ object AsyncSeqIterator {
      * @param toValue function to extract value from a provided item
      * @param getPos function to extract the current state or position of current item. When a returned position is None than the whole sequence is completely finished
      * @param producer generator of next item based on a state/position in previous item
+     * @tparam F async/effect monad kind (for example standard scala.concurrent.Future)
      * @tparam I item type
      * @tparam A value type
      * @tparam P state/position type
