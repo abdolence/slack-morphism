@@ -31,9 +31,43 @@ class SlackEventSignatureVerifierTests extends AnyFlatSpec with ScalaCheckDriven
   implicitly[Arbitrary[TestSigEvent]]
 
   val signatureVerifier = new SlackEventSignatureVerifier()
+
+  signatureVerifier.verify(
+    "",
+    "",
+    "ds",
+    "ds"
+  ) match {
+    case Right( res )                             => fail( res.toString() )
+    case Left( _: SlackSignatureCryptoInitError ) => succeed
+    case Left( err )                              => fail( err )
+  }
+
   val secret = Gen.hexStr.retryUntil( _.length > 3 ).sample.orNull
 
   assert( secret !== null )
+
+  signatureVerifier.verify(
+    secret,
+    "",
+    "ds",
+    "ds"
+  ) match {
+    case Right( res )                                 => fail( res.toString() )
+    case Left( _: SlackSignatureWrongSignatureError ) => succeed
+    case Left( err )                                  => fail( err )
+  }
+
+  signatureVerifier.verify(
+    secret,
+    "some-hash-data",
+    "ds",
+    "ds"
+  ) match {
+    case Right( res )                                 => fail( res.toString() )
+    case Left( _: SlackSignatureWrongSignatureError ) => succeed
+    case Left( err )                                  => fail( err )
+  }
 
   forAll { ev: TestSigEvent =>
     signatureVerifier.signData( secret, ev.ts, ev.body ) match {
