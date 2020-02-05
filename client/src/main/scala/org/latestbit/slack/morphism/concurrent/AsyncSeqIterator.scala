@@ -19,10 +19,7 @@
 package org.latestbit.slack.morphism.concurrent
 
 import cats._
-import cats.syntax._
-import cats.implicits._
-
-import scala.concurrent.{ ExecutionContext, Future }
+import org.latestbit.slack.morphism.concurrent.impl.AsyncSeqIteratorImpl
 
 import scala.language.implicitConversions
 
@@ -156,67 +153,17 @@ object AsyncSeqIterator {
         toValue: I => A,
         getPos: I => Option[P],
         producer: P => F[I]
-    ): AsyncSeqIterator[F, I, A] = {
-      new AsyncSeqIterator[F, I, A] {
-        private lazy val computed: F[I] = initial
-
-        override def item(): F[I] = computed
-
-        override def value(): F[A] = computed.map( toValue )
-
-        override def next(): F[Option[AsyncSeqIterator[F, I, A]]] = {
-          computed.map { computedValue =>
-            getPos( computedValue ).map { pos =>
-              cons(
-                producer( pos ),
-                toValue,
-                getPos,
-                producer
-              )
-            }
-          }
-        }
-
-        override def map[B]( f: A => B ): AsyncSeqIterator[F, I, B] = {
-          cons(
-            initial,
-            toValue.andThen( f ),
-            getPos,
-            producer
-          )
-        }
-
-        override def foldLeft[B]( initial: B )( f: ( B, A ) => B ): F[B] = {
-          value().flatMap { currentValue =>
-            val folded = f( initial, currentValue )
-            next().flatMap {
-              case Some( nextIterator ) => {
-                nextIterator.foldLeft( folded )( f )
-              }
-              case _ => {
-                Monad[F].pure( folded )
-              }
-            }
-          }
-        }
-
-        override def foreach[U]( f: A => U ): Unit = {
-          value().flatMap { currentValue =>
-            f( currentValue )
-            next().map {
-              case Some( nextIter ) => {
-                nextIter.foreach( f )
-              }
-              case _ => ()
-            }
-          }
-          ()
-        }
-
-      }
-    }
+    ): AsyncSeqIterator[F, I, A] = new AsyncSeqIteratorImpl[F, I, A, P](
+      initial,
+      toValue,
+      getPos,
+      producer
+    )
   }
 
+  /**
+   * Support of Cats type classes instances for AsyncSeqIterator
+   */
   implicit def asyncSeqIteratorInstances[F[_], I]: Functor[AsyncSeqIterator[F, I, *]] =
     new Functor[AsyncSeqIterator[F, I, *]] {
 
