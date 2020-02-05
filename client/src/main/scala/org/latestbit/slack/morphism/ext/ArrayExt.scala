@@ -34,14 +34,14 @@ object ArrayExt {
     override def toByte( value: Byte ): Byte = value
   }
 
-  implicit def extraOps[T : ArrayBytesSupport]( array: Array[T] ) = ArrayExtensions( array )
+  implicit def extraOps[T]( array: Array[T] ) = ArrayExtensions( array )
 
-  case class ArrayExtensions[T : ArrayBytesSupport]( array: Array[T] ) {
+  case class ArrayExtensions[T]( array: Array[T] ) {
 
     /**
      * Convert an array to hex string
      */
-    @inline final def toHexString( lowerCased: Boolean = true ): String = {
+    @inline final def toHexString( lowerCased: Boolean = true )( implicit abEv: ArrayBytesSupport[T] ): String = {
       val outputArrayLen = array.length << 1
       val outputArray = new Array[Char]( outputArrayLen )
 
@@ -53,7 +53,7 @@ object ArrayExt {
 
       array.indices.zip( outputArray.indices.by( 2 ) ).foreach {
         case ( i, j ) =>
-          val currentByte = implicitly[ArrayBytesSupport[T]].toByte( array( i ) )
+          val currentByte = abEv.toByte( array( i ) )
           outputArray( j ) = currentDigits( (0xF0 & currentByte) >>> 4 )
           outputArray( j + 1 ) = currentDigits( 0x0F & currentByte )
       }
