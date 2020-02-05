@@ -18,7 +18,9 @@
 
 package org.latestbit.slack.morphism.concurrent
 
-import cats.Functor
+import cats._
+import cats.syntax._
+import cats.implicits._
 
 import scala.concurrent.{ ExecutionContext, Future }
 
@@ -104,7 +106,7 @@ trait AsyncSeqIterator[F[_], I, A] {
    */
   def foldLeft[B](
       initial: B
-  )( f: ( B, A ) => B ): Future[B]
+  )( f: ( B, A ) => B ): F[B]
 
   /**
    * Mapping value of items using the given function `f`
@@ -148,20 +150,20 @@ object AsyncSeqIterator {
      * @tparam P state/position type
      * @return an async iterator instance
      */
-    def apply[I, A, P](
-        initial: => Future[I],
+    def apply[F[_] : Monad, I, A, P](
+        initial: => F[I],
         toValue: I => A,
         getPos: I => Option[P],
-        producer: P => Future[I]
-    )( implicit ec: ExecutionContext ): AsyncSeqIterator[Future, I, A] = {
-      new AsyncSeqIterator[Future, I, A] {
-        private lazy val computed: Future[I] = initial
+        producer: P => F[I]
+    ): AsyncSeqIterator[F, I, A] = {
+      new AsyncSeqIterator[F, I, A] {
+        private lazy val computed: F[I] = initial
 
-        override def item(): Future[I] = computed
+        override def item(): F[I] = computed
 
-        override def value(): Future[A] = computed.map( toValue )
+        override def value(): F[A] = computed.map( toValue )
 
-        override def next(): Future[Option[AsyncSeqIterator[Future, I, A]]] = {
+        override def next(): F[Option[AsyncSeqIterator[F, I, A]]] = {
           computed.map { computedValue =>
             getPos( computedValue ).map { pos =>
               cons(
@@ -174,7 +176,7 @@ object AsyncSeqIterator {
           }
         }
 
-        override def map[B]( f: A => B ): AsyncSeqIterator[Future, I, B] = {
+        override def map[B]( f: A => B ): AsyncSeqIterator[F, I, B] = {
           cons(
             initial,
             toValue.andThen( f ),
@@ -183,7 +185,7 @@ object AsyncSeqIterator {
           )
         }
 
-        override def foldLeft[B]( initial: B )( f: ( B, A ) => B ): Future[B] = {
+        override def foldLeft[B]( initial: B )( f: ( B, A ) => B ): F[B] = {
           value().flatMap { currentValue =>
             val folded = f( initial, currentValue )
             next().flatMap {
@@ -191,22 +193,23 @@ object AsyncSeqIterator {
                 nextIterator.foldLeft( folded )( f )
               }
               case _ => {
-                Future.successful( folded )
+                Monad[F].pure( folded )
               }
             }
           }
         }
 
         override def foreach[U]( f: A => U ): Unit = {
-          value().foreach { currentValue =>
+          value().flatMap { currentValue =>
             f( currentValue )
-            next().foreach {
+            next().map {
               case Some( nextIter ) => {
                 nextIter.foreach( f )
               }
-              case _ =>
+              case _ => ()
             }
           }
+          ()
         }
 
       }

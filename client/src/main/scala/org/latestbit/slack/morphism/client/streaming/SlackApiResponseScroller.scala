@@ -25,6 +25,8 @@ import org.reactivestreams.Publisher
 
 import scala.concurrent._
 
+import cats.implicits._
+
 /**
  * Support for batch loading remote data
  * @param initialLoader a function to initial request for data

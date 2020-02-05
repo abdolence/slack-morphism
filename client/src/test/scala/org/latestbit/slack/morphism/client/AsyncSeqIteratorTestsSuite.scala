@@ -21,7 +21,7 @@ package org.latestbit.slack.morphism.client
 import java.util.concurrent.{ Executors, TimeUnit }
 
 import cats.implicits._
-
+import cats.instances.FutureInstances
 import org.latestbit.slack.morphism.concurrent.AsyncSeqIterator
 import org.scalacheck._
 import org.scalatest.flatspec.AsyncFlatSpec
@@ -56,12 +56,12 @@ class AsyncSeqIteratorTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenProp
   }
 
   def createIterator()( implicit ec: ExecutionContext ): AsyncSeqIterator[Future, MyItem, String] = {
-    AsyncSeqIterator.cons[MyItem, String, Int](
+    AsyncSeqIterator.cons[Future, MyItem, String, Int](
       initial = initialItem(),
       toValue = _.value,
       getPos = _.cursor,
       producer = nextItem
-    )( ec )
+    )( catsStdInstancesForFuture( ec ) )
   }
 
   "iterating over generated async results" should "be in correct order" in {
