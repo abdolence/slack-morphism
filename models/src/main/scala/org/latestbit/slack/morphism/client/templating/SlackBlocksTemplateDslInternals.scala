@@ -88,12 +88,14 @@ trait SlackBlocksTemplateDslInternals {
       )
     }
 
-    def md( subs: Any* ): SlackBlockMarkDownText = {
+    def markdown( subs: Any* ): SlackBlockMarkDownText = {
       SlackBlockMarkDownText(
         text = applySubs( subs )
       )
     }
 
+    def md( subs: Any* ) = markdown( subs: _* )
+    def pt( subs: Any* ) = plain( subs: _* )
   }
 
   private[templating] def noneIfEmptyList[T]( xs: => List[T] ): Option[List[T]] = xs match {
