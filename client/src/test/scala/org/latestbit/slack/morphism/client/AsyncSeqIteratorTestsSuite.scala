@@ -21,7 +21,6 @@ package org.latestbit.slack.morphism.client
 import java.util.concurrent.{ Executors, TimeUnit }
 
 import cats.implicits._
-import cats.instances.FutureInstances
 import org.latestbit.slack.morphism.concurrent.AsyncSeqIterator
 import org.scalacheck._
 import org.scalatest.flatspec.AsyncFlatSpec
