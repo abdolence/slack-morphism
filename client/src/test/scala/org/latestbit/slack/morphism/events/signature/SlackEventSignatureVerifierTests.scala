@@ -38,7 +38,7 @@ class SlackEventSignatureVerifierTests extends AnyFlatSpec with ScalaCheckDriven
     "ds",
     "ds"
   ) match {
-    case Right( res )                             => fail( res.toString() )
+    case Right( _ )                               => fail()
     case Left( _: SlackSignatureCryptoInitError ) => succeed
     case Left( err )                              => fail( err )
   }
@@ -53,7 +53,7 @@ class SlackEventSignatureVerifierTests extends AnyFlatSpec with ScalaCheckDriven
     "ds",
     "ds"
   ) match {
-    case Right( res )                                 => fail( res.toString() )
+    case Right( _ )                                   => fail()
     case Left( _: SlackSignatureWrongSignatureError ) => succeed
     case Left( err )                                  => fail( err )
   }
@@ -64,7 +64,7 @@ class SlackEventSignatureVerifierTests extends AnyFlatSpec with ScalaCheckDriven
     "ds",
     "ds"
   ) match {
-    case Right( res )                                 => fail( res.toString() )
+    case Right( _ )                                   => fail()
     case Left( _: SlackSignatureWrongSignatureError ) => succeed
     case Left( err )                                  => fail( err )
   }
