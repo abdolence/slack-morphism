@@ -59,7 +59,7 @@ import scala.language.implicitConversions
  *     }
  *   }
  *
- *   val iterator = AsyncSeqIterator.cons[MyItem, String, Int](
+ *   val iterator = AsyncSeqIterator.cons[Future,MyItem, String, Int](
  *     initial = initialItem(),
  *     toValue = _.value,
  *     getPos = _.cursor,
@@ -74,53 +74,37 @@ import scala.language.implicitConversions
  * }}}
  *
  * @note It is not possible to implement standard Iterator[] because of the sync nature of hasNext.
+ * @tparam F async/effect monad kind (for example standard scala.concurrent.Future)
  * @tparam I iterating over item type which has a some position
  * @tparam A extracted value type (extracted from I)
  */
-trait AsyncSeqIterator[+I, +A] {
+trait AsyncSeqIterator[F[_], I, A] {
 
   /**
    * Future of current item
    */
-  def item()(
-      implicit ec: ExecutionContext
-  ): Future[I]
+  def item(): F[I]
 
   /**
    * Future of value of item
    */
-  def value()(
-      implicit ec: ExecutionContext
-  ): Future[A]
+  def value(): F[A]
 
   /**
    * Future next iterator if it exists (depends on current item and its position/state)
    */
-  def next()( implicit ec: ExecutionContext ): Future[Option[AsyncSeqIterator[I, A]]]
+  def next(): F[Option[AsyncSeqIterator[F, I, A]]]
 
   /**
    * Iterate and fold (combining) values into the user specified structure and given function `f`
    *
    * @param initial initial value
    * @param f folding function
-   * @param ec execution context
    * @return a folded value
    */
   def foldLeft[B](
       initial: B
-  )( f: ( B, A ) => B )( implicit ec: ExecutionContext ): Future[B] = {
-    value().flatMap { currentValue =>
-      val folded = f( initial, currentValue )
-      next().flatMap {
-        case Some( nextIterator ) => {
-          nextIterator.foldLeft( folded )( f )
-        }
-        case _ => {
-          Future.successful( folded )
-        }
-      }
-    }
-  }
+  )( f: ( B, A ) => B ): Future[B]
 
   /**
    * Mapping value of items using the given function `f`
@@ -130,26 +114,15 @@ trait AsyncSeqIterator[+I, +A] {
    */
   def map[B](
       f: A => B
-  ): AsyncSeqIterator[I, B]
+  ): AsyncSeqIterator[F, I, B]
 
   /**
    * Apply the given function `f` to each element of this linear sequence
    * (while respecting the order of the elements).
    *
    * @param f a function to apply
-   * @param ec execution context
    */
-  def foreach[U]( f: A => U )( implicit ec: ExecutionContext ): Unit = {
-    value().foreach { currentValue =>
-      f( currentValue )
-      next().foreach {
-        case Some( nextIter ) => {
-          nextIter.foreach( f )
-        }
-        case _ =>
-      }
-    }
-  }
+  def foreach[U]( f: A => U ): Unit
 }
 
 /**
@@ -180,21 +153,15 @@ object AsyncSeqIterator {
         toValue: I => A,
         getPos: I => Option[P],
         producer: P => Future[I]
-    ): AsyncSeqIterator[I, A] = {
-      new AsyncSeqIterator[I, A] {
+    )( implicit ec: ExecutionContext ): AsyncSeqIterator[Future, I, A] = {
+      new AsyncSeqIterator[Future, I, A] {
         private lazy val computed: Future[I] = initial
 
-        override def item()(
-            implicit ec: ExecutionContext
-        ): Future[I] = computed
+        override def item(): Future[I] = computed
 
-        override def value()(
-            implicit ec: ExecutionContext
-        ): Future[A] = computed.map( toValue )
+        override def value(): Future[A] = computed.map( toValue )
 
-        override def next()(
-            implicit ec: ExecutionContext
-        ): Future[Option[AsyncSeqIterator[I, A]]] = {
+        override def next(): Future[Option[AsyncSeqIterator[Future, I, A]]] = {
           computed.map { computedValue =>
             getPos( computedValue ).map { pos =>
               cons(
@@ -207,7 +174,7 @@ object AsyncSeqIterator {
           }
         }
 
-        override def map[B]( f: A => B ): AsyncSeqIterator[I, B] = {
+        override def map[B]( f: A => B ): AsyncSeqIterator[Future, I, B] = {
           cons(
             initial,
             toValue.andThen( f ),
@@ -216,15 +183,42 @@ object AsyncSeqIterator {
           )
         }
 
+        override def foldLeft[B]( initial: B )( f: ( B, A ) => B ): Future[B] = {
+          value().flatMap { currentValue =>
+            val folded = f( initial, currentValue )
+            next().flatMap {
+              case Some( nextIterator ) => {
+                nextIterator.foldLeft( folded )( f )
+              }
+              case _ => {
+                Future.successful( folded )
+              }
+            }
+          }
+        }
+
+        override def foreach[U]( f: A => U ): Unit = {
+          value().foreach { currentValue =>
+            f( currentValue )
+            next().foreach {
+              case Some( nextIter ) => {
+                nextIter.foreach( f )
+              }
+              case _ =>
+            }
+          }
+        }
+
       }
     }
   }
 
-  implicit def asyncSeqIteratorInstances[I]: Functor[AsyncSeqIterator[I, *]] = new Functor[AsyncSeqIterator[I, *]] {
+  implicit def asyncSeqIteratorInstances[F[_], I]: Functor[AsyncSeqIterator[F, I, *]] =
+    new Functor[AsyncSeqIterator[F, I, *]] {
 
-    override def map[A, B]( fa: AsyncSeqIterator[I, A] )( f: A => B ): AsyncSeqIterator[I, B] = {
-      fa.map( f )
+      override def map[A, B]( fa: AsyncSeqIterator[F, I, A] )( f: A => B ): AsyncSeqIterator[F, I, B] = {
+        fa.map( f )
+      }
     }
-  }
 
 }

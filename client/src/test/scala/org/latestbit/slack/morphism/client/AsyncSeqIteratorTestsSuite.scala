@@ -55,15 +55,17 @@ class AsyncSeqIteratorTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenProp
     }
   }
 
-  val iterator = AsyncSeqIterator.cons[MyItem, String, Int](
-    initial = initialItem(),
-    toValue = _.value,
-    getPos = _.cursor,
-    producer = nextItem
-  )
+  def createIterator()( implicit ec: ExecutionContext ): AsyncSeqIterator[Future, MyItem, String] = {
+    AsyncSeqIterator.cons[MyItem, String, Int](
+      initial = initialItem(),
+      toValue = _.value,
+      getPos = _.cursor,
+      producer = nextItem
+    )( ec )
+  }
 
   "iterating over generated async results" should "be in correct order" in {
-    iterator
+    createIterator()
       .foldLeft( List[String]() ) {
         case ( all, itemValue ) =>
           all :+ itemValue
@@ -80,7 +82,7 @@ class AsyncSeqIteratorTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenProp
   }
 
   "AsyncIterator" should "provide a map function" in {
-    iterator
+    createIterator()
       .map( _.toUpperCase )
       .foldLeft( List[String]() ) {
         case ( all, itemValue ) =>
@@ -101,12 +103,12 @@ class AsyncSeqIteratorTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenProp
     var testEffect: List[String] = List()
     val testExecutor = Executors.newSingleThreadExecutor()
     val testExecutorContext = ExecutionContext.fromExecutor( testExecutor )
-    iterator.foreach { testIterRes =>
+    createIterator()( testExecutorContext ).foreach { testIterRes =>
       testEffect = testEffect :+ testIterRes
       if (testIterRes == "last") {
         testExecutor.shutdown()
       }
-    }( testExecutorContext )
+    }
 
     testExecutor.awaitTermination( 60, TimeUnit.SECONDS )
 
@@ -120,7 +122,7 @@ class AsyncSeqIteratorTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenProp
   }
 
   "AsyncIterator" should "provide a cats Functor instance" in {
-    iterator
+    createIterator()
       .fmap( _.toUpperCase )
       .fproduct( _.length )
       .foldLeft( List[String]() ) {
