@@ -23,9 +23,7 @@ import scala.language.implicitConversions
 
 object SttpExt {
 
-  implicit def extraOps( uri: Uri ) = UriExtensions( uri )
-
-  case class UriExtensions( uri: Uri ) {
+  implicit class UriExtensions( val uri: Uri ) extends AnyVal {
 
     /**
      * Adds the given parameter with an optional value to the query if it is present.

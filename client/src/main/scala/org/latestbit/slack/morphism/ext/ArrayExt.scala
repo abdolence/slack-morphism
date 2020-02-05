@@ -34,9 +34,7 @@ object ArrayExt {
     override def toByte( value: Byte ): Byte = value
   }
 
-  implicit def extraOps[T]( array: Array[T] ) = ArrayExtensions( array )
-
-  case class ArrayExtensions[T]( array: Array[T] ) {
+  implicit class ArrayExtensions[T]( val array: Array[T] ) extends AnyVal {
 
     /**
      * Convert an array to hex string
