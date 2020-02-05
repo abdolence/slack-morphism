@@ -97,7 +97,7 @@ class AsyncSeqIteratorTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenProp
       }
   }
 
-  "AsyncIterator" should "provide a foreach function" in {
+  it should "provide a foreach function" in {
     var testEffect: List[String] = List()
     val testExecutor = Executors.newSingleThreadExecutor()
     val testExecutorContext = ExecutionContext.fromExecutor( testExecutor )
@@ -119,7 +119,7 @@ class AsyncSeqIteratorTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenProp
     } )
   }
 
-  "AsyncIterator" should "provide a cats Functor instance" in {
+  it should "provide a cats Functor instance" in {
     createIterator()
       .fmap( _.toUpperCase )
       .fproduct( _.length )
