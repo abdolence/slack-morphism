@@ -28,7 +28,6 @@ import org.latestbit.slack.morphism.codecs.implicits._
  * Support for Slack OAuth (v1/v2) API methods
  */
 trait SlackApiOAuthClient extends SlackApiHttpProtocolSupport { self: SlackApiClient =>
-  import org.latestbit.slack.morphism.ext.SttpExt._
 
   object oauth {
 
