@@ -42,7 +42,7 @@ class SlackSampleMessageReplyTemplateExample( replyToMessage: String ) extends S
       ),
       actionsBlock(
         blockElements(
-          button( text = plain"Simple", action_id = "simple-message-button" )
+          button( text = pt"Simple", action_id = "simple-message-button" )
         )
       )
     )

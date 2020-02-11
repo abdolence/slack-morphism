@@ -23,33 +23,33 @@ import org.latestbit.slack.morphism.messages._
 
 class SlackModalTemplateExample() extends SlackModalViewTemplate {
 
-  override def titleText(): SlackBlockPlainText = plain"Test Modal"
+  override def titleText(): SlackBlockPlainText = pt"Test Modal"
 
-  override def submitText(): Option[SlackBlockPlainText] = Some( plain"Submit" )
-  override def closeText(): Option[SlackBlockPlainText] = Some( plain"Cancel" )
+  override def submitText(): Option[SlackBlockPlainText] = Some( pt"Submit" )
+  override def closeText(): Option[SlackBlockPlainText] = Some( pt"Cancel" )
 
   override def renderBlocks(): List[SlackBlock] =
     blocks(
       sectionBlock(
         text = md"Just a dummy window here, sorry",
         accessory = multiStaticSelect(
-          placeholder = plain"With a dummy menu",
+          placeholder = pt"With a dummy menu",
           action_id = "-",
           options = choiceItems(
-            choiceItem( text = plain"First Option", value = "1" ),
-            choiceItem( text = plain"Second Option", value = "2" ),
-            choiceItem( text = plain"Third Option", value = "3" )
+            choiceItem( text = pt"First Option", value = "1" ),
+            choiceItem( text = pt"Second Option", value = "2" ),
+            choiceItem( text = pt"Third Option", value = "3" )
           )
         )
       ),
       inputBlock(
-        label = plain"Dummy radio",
+        label = pt"Dummy radio",
         element = radioButtons(
           action_id = "-",
           options = choiceItems(
-            choiceItem( text = plain"Radio 1", value = "1" ),
-            choiceItem( text = plain"Radio 2", value = "2" ),
-            choiceItem( text = plain"Radio 3", value = "3" )
+            choiceItem( text = pt"Radio 1", value = "1" ),
+            choiceItem( text = pt"Radio 2", value = "2" ),
+            choiceItem( text = pt"Radio 3", value = "3" )
           )
         )
       )

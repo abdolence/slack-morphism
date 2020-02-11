@@ -44,7 +44,7 @@ class SlackHomeTabBlocksTemplateExample( latestNews: List[SlackHomeNewsItem], us
         imageBlock( image_url = "https://www.gstatic.com/webp/gallery/4.png", alt_text = "Test Image" ),
         actionsBlock(
           blockElements(
-            button( text = plain"Simple", action_id = "simple-home-button" )
+            button( text = pt"Simple", action_id = "simple-home-button" )
           )
         )
       ),

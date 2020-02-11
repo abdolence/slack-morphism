@@ -44,7 +44,7 @@ class SlackWelcomeMessageTemplateExample( userId: String ) extends SlackMessageT
       imageBlock( image_url = "https://www.gstatic.com/webp/gallery3/2_webp_ll.png", alt_text = "Test Image" ),
       actionsBlock(
         blockElements(
-          button( text = plain"Simple", action_id = "simple-message-button" )
+          button( text = pt"Simple", action_id = "simple-message-button" )
         )
       )
     )
