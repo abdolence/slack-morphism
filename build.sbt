@@ -97,10 +97,10 @@ ThisBuild / packageOptions := Seq(
 )
 
 val catsVersion = "2.0.0"
-val circeVersion = "0.12.3"
+val circeVersion = "0.13.0"
 val scalaCollectionsCompatVersion = "2.1.3"
 val sttpVersion = "2.0.0-RC9"
-val circeAdtCodecVersion = "0.6.3"
+val circeAdtCodecVersion = "0.7.0"
 val reactiveStreamsVersion = "1.0.3"
 
 // For tests
