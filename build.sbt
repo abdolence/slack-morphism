@@ -243,7 +243,8 @@ lazy val docSettings = Seq(
   mappings in makeSite ++= Seq(
     (resourceDirectory in Compile).value / "microsite" / "robots.txt" -> "robots.txt",
     (resourceDirectory in Compile).value / "microsite" / "sitemap.xml" -> "sitemap.xml"
-  )
+  ),
+  libraryDependencies ++= baseDependencies
 )
 
 ThisBuild / GitKeys.gitReader := baseDirectory(base => new DefaultReadableGit( base ) ).value
