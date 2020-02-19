@@ -119,6 +119,9 @@ val scalaLoggingVersion = "3.9.2"
 val scoptVersion = "3.7.1"
 val swayDbVersion = "0.11"
 
+// Compiler plugins
+val kindProjectorVer = "0.11.0"
+
 val baseDependencies =
   Seq(
     "org.typelevel" %% "cats-core"
@@ -144,7 +147,7 @@ val baseDependencies =
       "com.softwaremill.sttp.client" %% "async-http-client-backend-future" % sttpVersion
     ).map( _ % "test" ) ++
     Seq(
-      compilerPlugin( "org.typelevel" % "kind-projector" % "0.11.0" cross CrossVersion.full )
+      compilerPlugin( "org.typelevel" % "kind-projector" % kindProjectorVer cross CrossVersion.full )
     )
 
 //addCompilerPlugin( "org.scalamacros" %% "paradise" % "2.1.1" cross CrossVersion.full )
@@ -259,3 +262,5 @@ lazy val slackMorphismMicrosite = project
   .settings( docSettings )
   .settings( scalaDocSettings )
   .dependsOn( slackMorphismModels, slackMorphismClient, slackMorphismExamples )
+
+addCommandAlias( "publishAllDocs", ";slackMorphismMicrosite/publishMicrosite" )
