@@ -6,8 +6,8 @@ permalink: docs/
 # Intro and motivations
 
 ### Type-safety
-Scala is a static-typed language, and Slack Morphism provides methods and models definitions most of 
-the available methods and structures of Slack Web/Events API.
+Scala is a static-typed language, and Slack Morphism provides methods and models definitions for most of 
+the methods and structures of Slack Web/Events API.
 There is a [well-typed DSL](Blocks DSL) to build your messages and views with Slack blocks safely as well. 
  
 ### Easy to use
@@ -28,8 +28,8 @@ of a Slack Bot built with Slack Morphism and Akka Http.
 
 ### Non-blocking and Reactive
 All of the Slack Morphism API methods available in a non-blocking manner, and 
-some them (e.g. returning Slack channel history) also provided support for a reactive Publisher,
- so you can use it if you're familiar with Reactive Streams (and using related frameworks).
+some of them (e.g. returning Slack channel history) also have support for a reactive Publisher,
+ if you're familiar with Reactive Streams (and using related frameworks).
 
 ## Getting Started
 Add the following to your `build.sbt`:

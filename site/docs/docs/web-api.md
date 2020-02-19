@@ -7,7 +7,7 @@ permalink: docs/web-api
 
 ### Choose an HTTP client backend
 
-You should choose a [sttp backend](https://sttp.readthedocs.io/en/latest/backends/summary.html) 
+You have to choose a [sttp backend](https://sttp.readthedocs.io/en/latest/backends/summary.html) 
 that supports `scala.concurrent.Future` responses:
 * AkkaHttpBackend
 * OkHttpFutureBackend

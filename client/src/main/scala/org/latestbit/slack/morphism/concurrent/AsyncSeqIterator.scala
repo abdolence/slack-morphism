@@ -24,7 +24,7 @@ import org.latestbit.slack.morphism.concurrent.impl.AsyncSeqIteratorImpl
 import scala.language.implicitConversions
 
 /**
- * Async iterator is able to provide infinite async computed values lazily iterating over some function
+ * Provides infinite and async computation results lazily iterating over some user defined function
  * Unlike standard Stream[]/LazyList[] from Scala, this implementation doesn't memorise previous values.
  * Unlike Future.sequence/fold we don't know beforehand how many async actions are coming
  *
