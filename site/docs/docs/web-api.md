@@ -134,7 +134,7 @@ all scrolling/batching requests for you.
 
 With this scroller you have the following choice:
 
-* Load data lazily, but synchronously data to a standard Scala lazy container: Stream[] (for Scala 2.12) or [LazyList[]](https://www.scala-lang.org/api/current/scala/collection/immutable/LazyList.html) (for Scala 2.13+)
+* Load data lazily, but synchronously into a standard Scala lazy container: Stream[] (for Scala 2.12) or [LazyList[]](https://www.scala-lang.org/api/current/scala/collection/immutable/LazyList.html) (for Scala 2.13+)
 * Load data lazily and asynchronously with [AsyncSeqIterator](/api/org/latestbit/slack/morphism/concurrent/AsyncSeqIterator.html)
 * Load data reactively with [Publisher[]](https://www.reactive-streams.org/reactive-streams-1.0.3-javadoc/org/reactivestreams/Publisher.html) and use Reactive Streams   
 
