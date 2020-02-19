@@ -103,10 +103,10 @@ def priorTo2_13( scalaVersion: String ): Boolean =
     case _                                  => false
   }
 
-val catsVersion = "2.0.0"
+val catsVersion = "2.1.0"
 val circeVersion = "0.13.0"
 val scalaCollectionsCompatVersion = "2.1.3"
-val sttpVersion = "2.0.0-RC9"
+val sttpVersion = "2.0.0-RC11"
 val circeAdtCodecVersion = "0.7.0"
 val reactiveStreamsVersion = "1.0.3"
 
@@ -212,9 +212,15 @@ lazy val slackMorphismExamples =
         "ch.qos.logback" % "logback-classic" % logbackVersion,
         "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion,
         "de.heikoseeberger" %% "akka-http-circe" % akkaHttpCirceVersion
-          excludeAll (ExclusionRule( organization = "com.typesafe.akka" ) ),
+          excludeAll (
+            ExclusionRule( organization = "com.typesafe.akka" ),
+            ExclusionRule( organization = "io.circe" )
+        ),
         "com.softwaremill.sttp.client" %% "akka-http-backend" % sttpVersion,
         "io.swaydb" %% "swaydb" % swayDbVersion
+          excludeAll (
+            ExclusionRule( organization = "org.scala-lang.modules" )
+          )
       )
     )
     .settings( noPublishSettings )
