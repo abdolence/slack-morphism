@@ -67,6 +67,7 @@ ThisBuild / scalacOptions ++= Seq(
   "-deprecation",
   "-unchecked",
   "-feature",
+  "-language:existentials",
   "-language:higherKinds",
   "-Ywarn-dead-code",
   "-Ywarn-numeric-widen",
@@ -95,6 +96,12 @@ ThisBuild / packageOptions := Seq(
     )
   )
 )
+
+def priorTo2_13( scalaVersion: String ): Boolean =
+  CrossVersion.partialVersion( scalaVersion ) match {
+    case Some( ( 2, minor ) ) if minor < 13 => true
+    case _                                  => false
+  }
 
 val catsVersion = "2.0.0"
 val circeVersion = "0.13.0"
@@ -145,12 +152,7 @@ val baseDependencies =
       "org.scalatestplus" %% "testng-6-7" % scalaTestPlusTestNG,
       "com.github.alexarchambault" %% "scalacheck-shapeless_1.14" % scalaCheckShapeless,
       "com.softwaremill.sttp.client" %% "async-http-client-backend-future" % sttpVersion
-    ).map( _ % "test" ) ++
-    Seq(
-      compilerPlugin( "org.typelevel" % "kind-projector" % kindProjectorVer cross CrossVersion.full )
-    )
-
-//addCompilerPlugin( "org.scalamacros" %% "paradise" % "2.1.1" cross CrossVersion.full )
+    ).map( _ % "test" )
 
 lazy val noPublishSettings = Seq(
   publish := {},
@@ -159,7 +161,15 @@ lazy val noPublishSettings = Seq(
 )
 
 lazy val scalaDocSettings = Seq(
-  scalacOptions in (Compile, doc) := Seq( "-groups", "-skip-packages", "sttp.client" )
+  scalacOptions in (Compile, doc) ++= Seq( "-groups", "-skip-packages", "sttp.client" ) ++
+    (if (priorTo2_13( scalaVersion.value ))
+       Seq( "-Yno-adapted-args" )
+     else
+       Seq( "-Ymacro-annotations" ))
+)
+
+lazy val compilerPluginSettings = Seq(
+  addCompilerPlugin( "org.typelevel" % "kind-projector" % kindProjectorVer cross CrossVersion.full )
 )
 
 lazy val slackMorphismRoot = project
@@ -174,6 +184,7 @@ lazy val slackMorphismModels =
       libraryDependencies ++= baseDependencies ++ Seq()
     )
     .settings( scalaDocSettings )
+    .settings( compilerPluginSettings )
 
 lazy val slackMorphismClient =
   (project in file( "client" ))
@@ -186,6 +197,7 @@ lazy val slackMorphismClient =
       )
     )
     .settings( scalaDocSettings )
+    .settings( compilerPluginSettings )
     .dependsOn( slackMorphismModels )
 
 lazy val slackMorphismExamples =
@@ -206,6 +218,7 @@ lazy val slackMorphismExamples =
       )
     )
     .settings( noPublishSettings )
+    .settings( compilerPluginSettings )
     .dependsOn( slackMorphismClient )
 
 lazy val apiDocsDir = settingKey[String]( "Name of subdirectory for api docs" )
@@ -251,16 +264,19 @@ lazy val docSettings = Seq(
 
 ThisBuild / GitKeys.gitReader := baseDirectory(base => new DefaultReadableGit( base ) ).value
 
+addCompilerPlugin( "org.typelevel" % "kind-projector" % kindProjectorVer cross CrossVersion.full )
+
 lazy val slackMorphismMicrosite = project
   .in( file( "site" ) )
-  .enablePlugins( MicrositesPlugin )
-  .enablePlugins( ScalaUnidocPlugin )
   .settings(
     name := "slack-morphism-microsite"
   )
   .settings( noPublishSettings )
+  .settings( compilerPluginSettings )
   .settings( docSettings )
   .settings( scalaDocSettings )
+  .enablePlugins( MicrositesPlugin )
+  .enablePlugins( ScalaUnidocPlugin )
   .dependsOn( slackMorphismModels, slackMorphismClient, slackMorphismExamples )
 
 addCommandAlias( "publishAllDocs", ";slackMorphismMicrosite/publishMicrosite" )
