@@ -29,9 +29,9 @@ class SlackApiScrollableReactivePublisher[IT, PT](
 )( implicit ec: ExecutionContext )
     extends Publisher[IT] {
 
-  private class SlackApiScrollableSubscription( subscriber: Subscriber[_ >: IT] ) extends Subscription {
+  private final class SlackApiScrollableSubscription( subscriber: Subscriber[_ >: IT] ) extends Subscription {
 
-    val commandsProcessor = new SlackApiScrollableSubscriptionCommandProcessor[IT, PT](
+    private val commandsProcessor = new SlackApiScrollableSubscriptionCommandProcessor[IT, PT](
       subscriber,
       scrollableResponse,
       maxItems
@@ -56,9 +56,15 @@ class SlackApiScrollableReactivePublisher[IT, PT](
     override def cancel(): Unit = {
       commandsProcessor.shutdown()
     }
+
+    private[impl] def start(): Unit = {
+      commandsProcessor.start()
+    }
   }
 
   override def subscribe( subscriber: Subscriber[_ >: IT] ): Unit = {
-    subscriber.onSubscribe( new SlackApiScrollableSubscription( subscriber ) )
+    val subscription = new SlackApiScrollableSubscription( subscriber )
+    subscriber.onSubscribe( subscription )
+    subscription.start()
   }
 }

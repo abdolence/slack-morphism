@@ -40,6 +40,8 @@ class SlackApiScrollableSubscriptionCommandProcessor[IT, PT](
   @volatile private var subscriptionLastResponse = Option( scrollableResponse.first() )
   @volatile private var lastItems: Iterable[IT] = List.empty
   @volatile private var sent: Long = 0
+  @volatile private var started: Boolean = false
+  @volatile private var prestartCommandBuffer: List[SlackApiScrollableSubscriptionCommand] = List()
 
   private def nextBatch()(
       implicit ec: ExecutionContext
@@ -117,13 +119,24 @@ class SlackApiScrollableSubscriptionCommandProcessor[IT, PT](
   }
 
   def enqueueCommand( cmd: SlackApiScrollableSubscriptionCommand ): Unit = {
-    val _ = Future {
-      cmd match {
-        case RequestElements( n ) => {
-          pumpNextBatch( n )
+    if (started) {
+      val _ = Future {
+        cmd match {
+          case RequestElements( n ) => {
+            pumpNextBatch( n )
+          }
         }
+      }( commandsExecutorContext )
+    } else {
+      synchronized {
+        prestartCommandBuffer = prestartCommandBuffer :+ cmd
       }
-    }( commandsExecutorContext )
+    }
+  }
+
+  def start(): Unit = {
+    started = true
+    prestartCommandBuffer.foreach( enqueueCommand )
   }
 
   def shutdown(): Unit = {
