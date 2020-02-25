@@ -35,7 +35,7 @@ some of them (e.g. returning Slack channel history) also have support for a reac
 Add the following to your `build.sbt`:
 
 ```scala
-libraryDependencies += "org.latestbit" %% "slack-morphism-client" % "1.0.0"
+libraryDependencies += "org.latestbit" %% "slack-morphism-client" % "1.0.1"
 ```
 
 or if you'd like to full-featured and ready to use Slack bot, which uses Akka Http, use this:

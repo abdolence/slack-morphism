@@ -112,7 +112,7 @@ blocks(
 
 There are specialised DSL string interpolators:
 * `md"Mark down Text"` : creates Slack `mrkdwn` text object 
-* `plain"Plain text"`  : creates Slack `plain` text object
+* `pt"Plain text"`  : creates Slack `plain` text object
 
 ### Optional blocks and elements
 
@@ -137,9 +137,9 @@ sectionBlock(
   accessory = overflow(
     action_id = "-",
     options = choiceItems(
-      choiceItem( text = plain"test-menu-item 1", value = "1" ),
-      choiceItem( text = plain"test-menu-item 2", value = "2" ),
-      optChoiceItem( someUserParam > 0 ) ( choiceItem( text = plain"conditional-menu-item 3", value = "3" ) )
+      choiceItem( text = pt"test-menu-item 1", value = "1" ),
+      choiceItem( text = pt"test-menu-item 2", value = "2" ),
+      optChoiceItem( someUserParam > 0 ) ( choiceItem( text = pt"conditional-menu-item 3", value = "3" ) )
     )
   )
 )
@@ -229,7 +229,7 @@ class MyWelcomeMessageTemplateExample( userId: String ) extends SlackMessageTemp
       imageBlock( image_url = "https://www.gstatic.com/webp/gallery3/2_webp_ll.png", alt_text = "Test Image" ),
       actionsBlock(
         blockElements(
-          button( text = plain"Simple", action_id = "simple-message-button" )
+          button( text = pt"Simple", action_id = "simple-message-button" )
         )
       )
     )
