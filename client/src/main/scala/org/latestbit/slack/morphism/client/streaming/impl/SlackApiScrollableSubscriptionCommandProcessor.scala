@@ -18,8 +18,6 @@
 
 package org.latestbit.slack.morphism.client.streaming.impl
 
-import java.util.concurrent.Executors
-
 import org.latestbit.slack.morphism.client.SlackApiClientError
 import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
 import org.reactivestreams.Subscriber
@@ -34,14 +32,12 @@ class SlackApiScrollableSubscriptionCommandProcessor[IT, PT](
 ) {
   import SlackApiScrollableSubscriptionCommandProcessor._
 
-  private val commandsExecutor = Executors.newSingleThreadExecutor()
-  private val commandsExecutorContext = ExecutionContext.fromExecutor( commandsExecutor )
-
   @volatile private var subscriptionLastResponse = Option( scrollableResponse.first() )
   @volatile private var lastItems: Iterable[IT] = List.empty
   @volatile private var sent: Long = 0
   @volatile private var started: Boolean = false
-  @volatile private var prestartCommandBuffer: List[SlackApiScrollableSubscriptionCommand] = List()
+  @volatile private var active: Boolean = false
+  @volatile private var commandBuffer: Vector[SlackApiScrollableSubscriptionCommand] = Vector()
 
   private def nextBatch()(
       implicit ec: ExecutionContext
@@ -78,13 +74,14 @@ class SlackApiScrollableSubscriptionCommandProcessor[IT, PT](
       )
   }
 
-  private def pumpNextBatch( reqN: Long ): Unit = {
+  private def pumpNextBatch( reqN: Long )(
+      implicit ec: ExecutionContext
+  ): Unit = {
     if (reqN > 0) {
-      implicit val ec = commandsExecutorContext
       nextBatch() onComplete {
         case Success( response ) => {
           val n = maxItems.filter( _ < sent + reqN ).map( _ - sent ).getOrElse( reqN )
-          if (n > 0) {
+          if (n > 0 && started) {
             response match {
               case Right( items ) if items.isEmpty => {
                 subscriber.onComplete()
@@ -104,6 +101,24 @@ class SlackApiScrollableSubscriptionCommandProcessor[IT, PT](
                   case _ => {
                     if (toSend.size < n)
                       pumpNextBatch( n - toSend.size )
+                    else {
+                      var hasCmd: Option[SlackApiScrollableSubscriptionCommand] = None
+                      synchronized {
+                        commandBuffer.headOption match {
+                          case Some( cmd ) => {
+                            hasCmd = Some( cmd )
+                            commandBuffer = commandBuffer.drop( 1 )
+                          }
+                          case _ => {
+                            active = false
+                          }
+                        }
+                      }
+
+                      if (hasCmd.nonEmpty) {
+                        hasCmd.foreach( executeCommand )
+                      }
+                    }
                   }
                 }
 
@@ -118,29 +133,74 @@ class SlackApiScrollableSubscriptionCommandProcessor[IT, PT](
 
   }
 
-  def enqueueCommand( cmd: SlackApiScrollableSubscriptionCommand ): Unit = {
-    if (started) {
-      val _ = Future {
-        cmd match {
-          case RequestElements( n ) => {
-            pumpNextBatch( n )
-          }
-        }
-      }( commandsExecutorContext )
-    } else {
-      synchronized {
-        prestartCommandBuffer = prestartCommandBuffer :+ cmd
+  private def executeCommand( cmd: SlackApiScrollableSubscriptionCommand )(
+      implicit ec: ExecutionContext
+  ): Unit = {
+    cmd match {
+      case RequestElements( n ) => {
+        pumpNextBatch( n )
       }
     }
   }
 
-  def start(): Unit = {
-    started = true
-    prestartCommandBuffer.foreach( enqueueCommand )
+  def enqueueCommand( cmd: SlackApiScrollableSubscriptionCommand )(
+      implicit ec: ExecutionContext
+  ): Unit = {
+    var needThread = false
+
+    synchronized {
+      if (!active && started) {
+        needThread = true
+        active = true
+      } else {
+        commandBuffer = commandBuffer :+ cmd
+      }
+    }
+
+    if (needThread) {
+      val _ = Future {
+        executeCommand( cmd )
+      }
+    }
+
+  }
+
+  def start()(
+      implicit ec: ExecutionContext
+  ): Unit = {
+
+    var hasCmd: Option[SlackApiScrollableSubscriptionCommand] = None
+    synchronized {
+      commandBuffer.headOption match {
+        case Some( cmd ) => {
+          hasCmd = Some( cmd )
+          commandBuffer = commandBuffer.drop( 1 )
+        }
+        case _ => None
+      }
+    }
+
+    if (hasCmd.nonEmpty) {
+      synchronized {
+        active = true
+        started = true
+      }
+
+      hasCmd.foreach { cmd =>
+        Future {
+          executeCommand( cmd )
+        }
+      }
+    } else {
+      started = true
+    }
   }
 
   def shutdown(): Unit = {
-    val _ = commandsExecutor.shutdownNow()
+    synchronized {
+      started = false
+      commandBuffer = Vector()
+    }
   }
 
 }
