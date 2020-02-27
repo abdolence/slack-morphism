@@ -8,7 +8,7 @@ import sbt.Package.ManifestAttributes
 
 name := "slack-morphism-root"
 
-ThisBuild / version := "1.0.2"
+ThisBuild / version := "1.0.3"
 
 ThisBuild / description := "Open Type-Safe Reactive Client with Blocks Templating for Slack"
 
@@ -106,7 +106,7 @@ def priorTo2_13( scalaVersion: String ): Boolean =
 val catsVersion = "2.1.0"
 val circeVersion = "0.13.0"
 val scalaCollectionsCompatVersion = "2.1.3"
-val sttpVersion = "2.0.0-RC11"
+val sttpVersion = "2.0.0"
 val circeAdtCodecVersion = "0.7.0"
 val reactiveStreamsVersion = "1.0.3"
 
