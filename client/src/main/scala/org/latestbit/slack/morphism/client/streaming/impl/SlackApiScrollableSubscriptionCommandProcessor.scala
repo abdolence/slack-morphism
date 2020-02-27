@@ -18,12 +18,15 @@
 
 package org.latestbit.slack.morphism.client.streaming.impl
 
+import java.util.concurrent.locks.ReentrantLock
+
 import org.latestbit.slack.morphism.client.SlackApiClientError
 import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
+import org.latestbit.slack.morphism.concurrent.UniqueLockMonitor
 import org.reactivestreams.Subscriber
 
 import scala.concurrent.{ ExecutionContext, Future }
-import scala.util.{ Failure, Success }
+import scala.util.{ Failure, Success, Using }
 
 class SlackApiScrollableSubscriptionCommandProcessor[IT, PT](
     subscriber: Subscriber[_ >: IT],
@@ -38,6 +41,8 @@ class SlackApiScrollableSubscriptionCommandProcessor[IT, PT](
   @volatile private var started: Boolean = false
   @volatile private var active: Boolean = false
   @volatile private var commandBuffer: Vector[SlackApiScrollableSubscriptionCommand] = Vector()
+
+  private val statusLock = new ReentrantLock()
 
   private def nextBatch()(
       implicit ec: ExecutionContext
@@ -102,21 +107,17 @@ class SlackApiScrollableSubscriptionCommandProcessor[IT, PT](
                     if (toSend.size < n)
                       pumpNextBatch( n - toSend.size )
                     else {
-                      var hasCmd: Option[SlackApiScrollableSubscriptionCommand] = None
-                      synchronized {
+                      Using( UniqueLockMonitor.lockAndMonitor( statusLock ) ) { monitor =>
                         commandBuffer.headOption match {
                           case Some( cmd ) => {
-                            hasCmd = Some( cmd )
                             commandBuffer = commandBuffer.drop( 1 )
+                            monitor.unlock()
+                            executeCommand( cmd )
                           }
                           case _ => {
                             active = false
                           }
                         }
-                      }
-
-                      if (hasCmd.nonEmpty) {
-                        hasCmd.foreach( executeCommand )
                       }
                     }
                   }
@@ -146,20 +147,16 @@ class SlackApiScrollableSubscriptionCommandProcessor[IT, PT](
   def enqueueCommand( cmd: SlackApiScrollableSubscriptionCommand )(
       implicit ec: ExecutionContext
   ): Unit = {
-    var needThread = false
 
-    synchronized {
+    val _ = Using( UniqueLockMonitor.lockAndMonitor( statusLock ) ) { monitor =>
       if (!active && started) {
-        needThread = true
         active = true
+        monitor.unlock()
+        val _ = Future {
+          executeCommand( cmd )
+        }
       } else {
         commandBuffer = commandBuffer :+ cmd
-      }
-    }
-
-    if (needThread) {
-      val _ = Future {
-        executeCommand( cmd )
       }
     }
 
@@ -168,36 +165,24 @@ class SlackApiScrollableSubscriptionCommandProcessor[IT, PT](
   def start()(
       implicit ec: ExecutionContext
   ): Unit = {
-
-    var hasCmd: Option[SlackApiScrollableSubscriptionCommand] = None
-    synchronized {
+    val _ = Using( UniqueLockMonitor.lockAndMonitor( statusLock ) ) { monitor =>
       commandBuffer.headOption match {
         case Some( cmd ) => {
-          hasCmd = Some( cmd )
           commandBuffer = commandBuffer.drop( 1 )
+          active = true
+          started = true
+          monitor.unlock()
+          Future {
+            executeCommand( cmd )
+          }
         }
-        case _ => None
+        case _ => started = true
       }
-    }
-
-    if (hasCmd.nonEmpty) {
-      synchronized {
-        active = true
-        started = true
-      }
-
-      hasCmd.foreach { cmd =>
-        Future {
-          executeCommand( cmd )
-        }
-      }
-    } else {
-      started = true
     }
   }
 
   def shutdown(): Unit = {
-    synchronized {
+    val _ = Using( UniqueLockMonitor.lockAndMonitor( statusLock ) ) { _ =>
       started = false
       commandBuffer = Vector()
     }

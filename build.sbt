@@ -8,7 +8,7 @@ import sbt.Package.ManifestAttributes
 
 name := "slack-morphism-root"
 
-ThisBuild / version := "1.0.1"
+ThisBuild / version := "1.0.2"
 
 ThisBuild / description := "Open Type-Safe Reactive Client with Blocks Templating for Slack"
 
@@ -116,6 +116,7 @@ val scalaCheckVersion = "1.14.3"
 val scalaTestPlusCheck = "3.1.0.0-RC2"
 val scalaTestPlusTestNG = "3.1.0.0" // for reactive publisher tck testing
 val scalaCheckShapeless = "1.2.3"
+val scalaMockVersion = "4.4.0"
 
 // For full-featured examples we use additional libs like akka-http
 val akkaVersion = "2.5.27"
@@ -128,6 +129,9 @@ val swayDbVersion = "0.11"
 
 // Compiler plugins
 val kindProjectorVer = "0.11.0"
+
+// Compatibility libs for Scala < 2.13
+val bigwheelUtilBackports = "2.1"
 
 val baseDependencies =
   Seq(
@@ -145,6 +149,7 @@ val baseDependencies =
       "org.scalactic" %% "scalactic" % scalaTestVersion,
       "org.scalatest" %% "scalatest" % scalaTestVersion,
       "org.scalacheck" %% "scalacheck" % scalaCheckVersion,
+      "org.scalamock" %% "scalamock" % scalaMockVersion,
       "org.typelevel" %% "cats-laws" % catsVersion,
       "org.typelevel" %% "cats-testkit" % catsVersion,
       "org.reactivestreams" % "reactive-streams-tck" % reactiveStreamsVersion,
@@ -190,11 +195,13 @@ lazy val slackMorphismClient =
   (project in file( "client" ))
     .settings(
       name := "slack-morphism-client",
-      libraryDependencies ++= baseDependencies ++ Seq(
+      libraryDependencies ++= (baseDependencies ++ Seq(
         "com.softwaremill.sttp.client" %% "core" % sttpVersion,
         "org.scala-lang.modules" %% "scala-collection-compat" % scalaCollectionsCompatVersion,
         "org.reactivestreams" % "reactive-streams" % reactiveStreamsVersion
-      )
+      ) ++ (if (priorTo2_13( scalaVersion.value ))
+              Seq( "com.github.bigwheel" %% "util-backports" % bigwheelUtilBackports )
+            else Seq()))
     )
     .settings( scalaDocSettings )
     .settings( compilerPluginSettings )
