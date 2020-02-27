@@ -61,36 +61,40 @@ final class UniqueLockMonitor private ( private var monitorOnLock: Lock, private
     extends AutoCloseable {
 
   /**
-   * Lock it if it hasn't been locked already
+   * Lock manually.
+   * Consequent multiple locks aren't allowed to avoid mistakes and sharing monitor instances.
+   *
    * @return the same instance
    */
   def lock(): UniqueLockMonitor = {
-    require( monitorOnLock != null )
-    if (!isLocked) {
-      monitorOnLock.lock()
-      isLocked = true
-    }
+    require( monitorOnLock != null, "Monitor has been released" )
+    require( !isLocked, "Monitor has been already locked" )
+    monitorOnLock.lock()
+    isLocked = true
     this
   }
 
   /**
-   * Unlock it if it hasn't been unlocked already
+   * Unlock manually.
+   * Consequent multiple unlocks aren't allowed to avoid mistakes and sharing monitor instances.
+   *
    * @return the same instance
    */
   def unlock(): UniqueLockMonitor = {
-    require( monitorOnLock != null )
-    if (isLocked) {
-      monitorOnLock.unlock()
-      isLocked = false
-    }
+    require( monitorOnLock != null, "Monitor has been released" )
+    require( isLocked, "Monitor has been already unlocked" )
+    monitorOnLock.unlock()
+    isLocked = false
     this
   }
 
   /**
-   * Release/take a lock from monitor, so it wouldn't be unlocked automatically in close
+   * Release/take a lock from monitor, so it wouldn't be unlocked automatically in close.
+   * You can't use lock/unlock after releasing a monitor.
+   *
    */
   def release(): Lock = {
-    require( monitorOnLock != null )
+    require( monitorOnLock != null, "Monitor has been already released" )
     isLocked = false
     val result = monitorOnLock
     monitorOnLock = null
@@ -98,11 +102,12 @@ final class UniqueLockMonitor private ( private var monitorOnLock: Lock, private
   }
 
   /**
-   * Auto close (unlock) if it hasn't been released or unlocked already
+   * Auto close (unlock) if it hasn't been released or unlocked already.
    */
   override def close(): Unit = {
-    if (monitorOnLock != null)
+    if (monitorOnLock != null && isLocked) {
       unlock()
+    }
     ()
   }
 
@@ -111,14 +116,16 @@ final class UniqueLockMonitor private ( private var monitorOnLock: Lock, private
 object UniqueLockMonitor {
 
   /**
-   * Lock and monitor the user specified lock resource
+   * Lock and monitor the user specified lock resource.
+   *
    * @param lock user lock implementation
    * @return monitor instance
    */
   def lockAndMonitor( lock: Lock ) = monitor( lock, isLocked = false ).lock()
 
   /**
-   * Monitor the specified user lock
+   * Monitor the specified user lock.
+   *
    * @param lock a user lock
    * @param isLocked current state of lock
    * @return monitor instance

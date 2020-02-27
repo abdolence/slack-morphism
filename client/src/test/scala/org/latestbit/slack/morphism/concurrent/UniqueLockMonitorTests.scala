@@ -35,16 +35,20 @@ class UniqueLockMonitorTests extends AnyFunSuite with MockFactory {
 
   test( "create a monitor and unlock manually" ) {
     val lockMock = mock[Lock]
-    (lockMock.lock _).expects().once()
-    (lockMock.unlock _).expects().once()
+    inSequence(
+      (lockMock.lock _).expects().once(),
+      (lockMock.unlock _).expects().once()
+    )
     val monitor = UniqueLockMonitor.lockAndMonitor( lockMock )
     monitor.unlock()
   }
 
   test( "create a monitor and unlock automatically with try-with-resources" ) {
     val lockMock = mock[Lock]
-    (lockMock.lock _).expects().once()
-    (lockMock.unlock _).expects().once()
+    inSequence(
+      (lockMock.lock _).expects().once(),
+      (lockMock.unlock _).expects().once()
+    )
     Using.resource( UniqueLockMonitor.lockAndMonitor( lockMock ) ) { monitor =>
       assert( monitor != null )
     }
@@ -59,15 +63,20 @@ class UniqueLockMonitorTests extends AnyFunSuite with MockFactory {
     }
   }
 
-  test( "create a monitor and lock/unlock manually many times" ) {
+  test( "create a monitor and trying to lock/unlock manually many times fails" ) {
     val lockMock = mock[Lock]
-    (lockMock.lock _).expects().once()
-    (lockMock.unlock _).expects().once()
+    inSequence(
+      (lockMock.lock _).expects().once(),
+      (lockMock.unlock _).expects().once()
+    )
     Using.resource( UniqueLockMonitor.lockAndMonitor( lockMock ) ) { monitor =>
-      monitor.lock()
-      monitor.lock()
+      assertThrows[IllegalArgumentException] {
+        monitor.lock()
+      }
       monitor.unlock()
-      monitor.unlock()
+      assertThrows[IllegalArgumentException] {
+        monitor.unlock()
+      }
     }
   }
 
