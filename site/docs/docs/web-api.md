@@ -33,16 +33,16 @@ import org.latestbit.slack.morphism.client._
 // We're using Akka Http for this example 
 import sttp.client.akkahttp.AkkaHttpBackend
 
-// Creating STTP backend
+// Creating an STTP backend
 implicit val sttpBackend = AkkaHttpBackend()
 
-// Creating client instance
+// Creating a client instance
 val client = new SlackApiClient()
 ```
 
 ### Making Web API calls
 
-To make calls to Slack Web API methods (except OAuth methods) you need a Slack token.
+To make calls to Slack Web API methods (except for OAuth methods, Incoming Webhooks and event replies) you need a Slack token.
 For simple bots you can have it in your config files, or you can obtain workspace tokens 
 using [Slack OAuth](https://api.slack.com/docs/oauth).
 
@@ -121,7 +121,7 @@ This project is open to help each other, so any PRs are welcomed.
 
 ### Working with pagination/batching results
 Some Web API methods defines cursors and [pagination](https://api.slack.com/docs/pagination), to give you an ability to load a lot of data
-continually (using batching and making many requests).
+continually (using batching and continually making many requests).
 
 Examples:
 * [conversations.history](https://api.slack.com/methods/conversations.history)
