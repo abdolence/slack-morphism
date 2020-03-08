@@ -1595,6 +1595,12 @@ package object codecs {
       deriveEncoder[SlackOAuthV1BotToken]
     implicit val decoderSlackOAuthV1BotToken: Decoder[SlackOAuthV1BotToken] = deriveDecoder[SlackOAuthV1BotToken]
 
+    implicit val encoderSlackOAuthIncomingWebHook: Encoder.AsObject[SlackOAuthIncomingWebHook] =
+      deriveEncoder[SlackOAuthIncomingWebHook]
+
+    implicit val decoderSlackOAuthIncomingWebHook: Decoder[SlackOAuthIncomingWebHook] =
+      deriveDecoder[SlackOAuthIncomingWebHook]
+
     implicit val encoderSlackOAuthV1AccessTokenResponse: Encoder.AsObject[SlackOAuthV1AccessTokenResponse] =
       deriveEncoder[SlackOAuthV1AccessTokenResponse]
 
