@@ -132,16 +132,16 @@ to all available of Slack Web API methods.</p>
 <span class="c1">// We're using Akka Http for this example </span>
 <span class="k">import</span> <span class="nn">sttp.client.akkahttp.AkkaHttpBackend</span>
 
-<span class="c1">// Creating STTP backend</span>
+<span class="c1">// Creating an STTP backend</span>
 <span class="k">implicit</span> <span class="k">val</span> <span class="nv">sttpBackend</span> <span class="k">=</span> <span class="nc">AkkaHttpBackend</span><span class="o">()</span>
 
-<span class="c1">// Creating client instance</span>
+<span class="c1">// Creating a client instance</span>
 <span class="k">val</span> <span class="nv">client</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">SlackApiClient</span><span class="o">()</span>
 </code></pre></div></div>
 
 <h3 id="making-web-api-calls">Making Web API calls</h3>
 
-<p>To make calls to Slack Web API methods (except OAuth methods) you need a Slack token.
+<p>To make calls to Slack Web API methods (except for OAuth methods, Incoming Webhooks and event replies) you need a Slack token.
 For simple bots you can have it in your config files, or you can obtain workspace tokens 
 using <a href="https://api.slack.com/docs/oauth">Slack OAuth</a>.</p>
 
@@ -218,7 +218,7 @@ This project is open to help each other, so any PRs are welcomed.</p>
 
 <h3 id="working-with-paginationbatching-results">Working with pagination/batching results</h3>
 <p>Some Web API methods defines cursors and <a href="https://api.slack.com/docs/pagination">pagination</a>, to give you an ability to load a lot of data
-continually (using batching and making many requests).</p>
+continually (using batching and continually making many requests).</p>
 
 <p>Examples:</p>
 <ul>
