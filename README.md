@@ -7,7 +7,6 @@ Please follow to the official website: [https://slack.abdolence.dev](https://sla
 
 ### Scala support
 - Scala v2.12+
-- Scala.js v0.6.28+
 
 ### Licence
 Apache Software License (ASL)
