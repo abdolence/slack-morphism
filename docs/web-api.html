@@ -212,12 +212,12 @@ API for this scenario:</p>
 <hr />
 
 <p>Please, don’t hesitate to submit a PR with model updates if you find anything missing or find model inconsistency.
-This project is open to help each others, so any PRs are welcomed.</p>
+This project is open to help each other, so any PRs are welcomed.</p>
 
 <hr />
 
 <h3 id="working-with-paginationbatching-results">Working with pagination/batching results</h3>
-<p>Some of the Web API methods defines cursors and <a href="https://api.slack.com/docs/pagination">pagination</a>, to give you an ability to load a lot of data
+<p>Some Web API methods defines cursors and <a href="https://api.slack.com/docs/pagination">pagination</a>, to give you an ability to load a lot of data
 continually (using batching and making many requests).</p>
 
 <p>Examples:</p>
@@ -346,8 +346,7 @@ The Webhook URL could be gather either from OAuth responses or from your Slack a
 
 <p>This is completely optional and just a recommendation for you.</p>
 
-<p>You might notice some boilerplate when you deal with consequent client requests 
-that returns <code class="highlighter-rouge">Future[Either[SlackApiClientError,SomeKindOfSlackResponse]]</code>.</p>
+<p>You might notice some boilerplate when you deal with consequent client requests that returns <code class="highlighter-rouge">Future[ Either[ SlackApiClientError,SomeKindOfSlackResponse ] ]</code>.</p>
 
 <p>To solve this in a better way, consider using an approach with <a href="https://typelevel.org/cats/datatypes/eithert.html">EitherT[]</a> from 
 <a href="https://typelevel.org/cats/">Cats</a>, well described <a href="http://eed3si9n.com/herding-cats/stacking-future-and-either.html">here</a>.</p>
