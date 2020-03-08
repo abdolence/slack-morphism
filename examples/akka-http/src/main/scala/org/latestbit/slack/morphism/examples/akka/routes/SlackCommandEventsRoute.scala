@@ -77,38 +77,37 @@ class SlackCommandEventsRoute(
                 response_url,
                 trigger_id
                 ) =>
-              routeWithSlackApiToken( team_id ) { implicit slackApiToken =>
-                // Sending additional reply using response_url
-                val commandReply = new SlackSampleMessageReplyTemplateExample(
-                  text.getOrElse( "" )
-                )
+              // Sending additional reply using response_url
+              val commandReply = new SlackSampleMessageReplyTemplateExample(
+                text.getOrElse( "" )
+              )
 
-                slackApiClient.chat
-                  .postEventReply(
-                    response_url = response_url,
-                    SlackApiPostEventReply(
-                      text = commandReply.renderPlainText(),
-                      blocks = commandReply.renderBlocks(),
-                      response_type = Some( SlackResponseTypes.EPHEMERAL )
-                    )
-                  )
-                  .foreach {
-                    case Right( resp ) => {
-                      logger.info( s"Sent a reply message: ${resp}" )
-
-                    }
-                    case Left( err ) => {
-                      logger.error( s"Unable to sent a reply message: ", err )
-                    }
-                  }
-
-                // Sending work in progress message
-                completeWithJson(
+              slackApiClient.chat
+                .postEventReply(
+                  response_url = response_url,
                   SlackApiPostEventReply(
-                    text = "Working on it..."
+                    text = commandReply.renderPlainText(),
+                    blocks = commandReply.renderBlocks(),
+                    response_type = Some( SlackResponseTypes.EPHEMERAL )
                   )
                 )
-              }
+                .foreach {
+                  case Right( resp ) => {
+                    logger.info( s"Sent a reply message: ${resp}" )
+
+                  }
+                  case Left( err ) => {
+                    logger.error( s"Unable to sent a reply message: ", err )
+                  }
+                }
+
+              // Sending work in progress message
+              completeWithJson(
+                SlackApiPostEventReply(
+                  text = "Working on it..."
+                )
+              )
+
           }
         }
       }
