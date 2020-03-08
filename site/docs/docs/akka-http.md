@@ -21,7 +21,7 @@ Run `ngrok` on a port 8080:
 ```
 ngrok http 8080
 ```
-We will need the HTTPS URL from it further, so don't close it and open second terminal.
+We will need the HTTPS URL from it further, so don't close it and open a second terminal.
 
 ### Create a Slack app if you don't have any
 Just follow at [Slack dev website](https://api.slack.com/apps) and create an app profile.

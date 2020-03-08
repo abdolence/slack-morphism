@@ -115,12 +115,12 @@ client.http.post[YourRequest,YourResponse](
 ---
 
 Please, don't hesitate to submit a PR with model updates if you find anything missing or find model inconsistency.
-This project is open to help each others, so any PRs are welcomed.
+This project is open to help each other, so any PRs are welcomed.
 
 ---
 
 ### Working with pagination/batching results
-Some of the Web API methods defines cursors and [pagination](https://api.slack.com/docs/pagination), to give you an ability to load a lot of data
+Some Web API methods defines cursors and [pagination](https://api.slack.com/docs/pagination), to give you an ability to load a lot of data
 continually (using batching and making many requests).
 
 Examples:
@@ -248,8 +248,7 @@ The Webhook URL could be gather either from OAuth responses or from your Slack a
 
 This is completely optional and just a recommendation for you.
 
-You might notice some boilerplate when you deal with consequent client requests 
-that returns `Future[Either[SlackApiClientError,SomeKindOfSlackResponse]]`.
+You might notice some boilerplate when you deal with consequent client requests that returns `Future[ Either[ SlackApiClientError,SomeKindOfSlackResponse ] ]`.
 
 To solve this in a better way, consider using an approach with [EitherT[]](https://typelevel.org/cats/datatypes/eithert.html) from 
 [Cats](https://typelevel.org/cats/), well described [here](http://eed3si9n.com/herding-cats/stacking-future-and-either.html).

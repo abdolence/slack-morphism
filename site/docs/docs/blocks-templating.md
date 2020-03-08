@@ -126,7 +126,7 @@ depends on some user defined condition (a predicate):
 * `optChoiceItem`
 * `optChoiceGroup`  
 
-They all lazily evaluated second parameter, so it might be useful as well.
+They all lazily evaluated a second parameter, so it might be useful as well.
 
 You can use them in Scala as:
 
