@@ -25,7 +25,7 @@ import akka.http.scaladsl.server._
 import akka.stream.typed.scaladsl.ActorMaterializer
 import com.typesafe.scalalogging._
 import io.circe.parser._
-import org.latestbit.slack.morphism.client.reqresp.chat.SlackApiPostEventReply
+import org.latestbit.slack.morphism.client.reqresp.chat.{ SlackApiPostEventReply, SlackApiPostWebHookRequest }
 import org.latestbit.slack.morphism.client.reqresp.views.SlackApiViewsOpenRequest
 import org.latestbit.slack.morphism.client.{ SlackApiClient, SlackApiToken }
 import org.latestbit.slack.morphism.common.SlackResponseTypes
@@ -87,7 +87,7 @@ class SlackCommandEventsRoute(
                   .postEventReply(
                     response_url = response_url,
                     SlackApiPostEventReply(
-                      commandReply.renderPlainText(),
+                      text = commandReply.renderPlainText(),
                       blocks = commandReply.renderBlocks(),
                       response_type = Some( SlackResponseTypes.EPHEMERAL )
                     )

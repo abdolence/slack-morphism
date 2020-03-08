@@ -68,8 +68,7 @@ trait SlackApiOAuthClient extends SlackApiHttpProtocolSupport { self: SlackApiCl
           code: String,
           redirectUri: Option[String] = None
       )(
-          implicit
-          ec: ExecutionContext
+          implicit ec: ExecutionContext
       ): Future[Either[SlackApiClientError, SlackOAuthV2AccessTokenResponse]] = {
 
         sendSlackRequest[SlackOAuthV2AccessTokenResponse](
