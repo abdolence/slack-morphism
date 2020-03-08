@@ -32,7 +32,8 @@ case class SlackOAuthV2AccessTokenResponse(
     app_id: String,
     team: SlackTeamInfo,
     enterprise: Option[SlackBasicEnterpriseInfo] = None,
-    authed_user: SlackOAuthV2AuthedUser
+    authed_user: SlackOAuthV2AuthedUser,
+    incoming_webhook: Option[SlackOAuthIncomingWebHook] = None
 )
 
 /**

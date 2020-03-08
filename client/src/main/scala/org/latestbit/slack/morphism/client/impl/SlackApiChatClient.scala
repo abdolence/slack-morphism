@@ -134,15 +134,25 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
      * @param reply reply to an event
      */
     def postEventReply( response_url: String, reply: SlackApiPostEventReply )(
-        implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
+        implicit ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiPostEventReplyResponse]] = {
 
-      protectedSlackHttpApiPost[SlackApiPostEventReply, SlackApiPostEventReplyResponse](
-        absoluteUri = uri"${response_url}",
-        request = createSlackHttpApiRequest(),
-        body = reply
+      sendSlackRequest[SlackApiPostEventReplyResponse](
+        encodePostBody( createSlackHttpApiRequest(), reply ).post( uri"${response_url}" )
       ).map( handleSlackEmptyRes( SlackApiPostEventReplyResponse() ) )
+    }
+
+    /**
+     * Post a webhook message using webhook url
+     * @param url a url from a Slack OAuth response or from a Slack app profile configuration
+     * @param req a webhook request message params
+     */
+    def postWebhookMessage( url: String, req: SlackApiPostWebHookRequest )(
+        implicit ec: ExecutionContext
+    ): Future[Either[SlackApiClientError, SlackApiPostWebHookResponse]] = {
+      sendSlackRequest[SlackApiPostWebHookResponse](
+        encodePostBody( createSlackHttpApiRequest(), req ).post( uri"${url}" )
+      ).map( handleSlackEmptyRes( SlackApiPostWebHookResponse() ) )
     }
 
     /**

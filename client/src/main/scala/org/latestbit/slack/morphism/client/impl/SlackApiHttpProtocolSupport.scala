@@ -164,6 +164,21 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
   protected def getSlackMethodAbsoluteUri( methodUri: String ): Uri =
     uri"${SLACK_BASE_URI}/${methodUri}"
 
+  protected def encodePostBody[RQ](
+      request: RequestT[Empty, Either[String, String], Nothing],
+      body: RQ
+  )( implicit encoder: Encoder[RQ] ): RequestT[Empty, Either[String, String], Nothing] = {
+    val bodyAsStr = body.asJson.printWith( SlackJsonPrinter )
+    request
+      .body(
+        StringBody(
+          bodyAsStr,
+          SLACK_API_CHAR_ENCODING,
+          Some( MediaType.ApplicationJson.charset( SLACK_API_CHAR_ENCODING ) )
+        )
+      )
+  }
+
   protected def protectedSlackHttpApiPost[RQ, RS](
       absoluteUri: Uri,
       request: RequestT[Empty, Either[String, String], Nothing],
@@ -174,19 +189,12 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
       decoder: Decoder[RS],
       ec: ExecutionContext
   ): Future[Either[SlackApiClientError, RS]] = {
-    val bodyAsStr = body.asJson.printWith( SlackJsonPrinter )
 
     protectedSlackHttpApiRequest[RS](
-      request
-        .body(
-          StringBody(
-            bodyAsStr,
-            SLACK_API_CHAR_ENCODING,
-            Some( MediaType.ApplicationJson.charset( SLACK_API_CHAR_ENCODING ) )
-          )
-        )
+      encodePostBody[RQ]( request, body )
         .post( absoluteUri )
     )
+
   }
 
   protected def protectedSlackHttpApiPost[RQ, RS]( methodUri: String, body: RQ )(
@@ -222,6 +230,19 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
     )
   }
 
+  /**
+   * Some of Slack responses historically returns HTTP plain text responses with 'Ok' body, instead JSON.
+   * So, this auxiliary function helps to fix and hide this behaviour.
+   *
+   * @note There are very few methods that behave like that,
+   *       so we're fixing it for those particular functions,
+   *       instead of generalising this behaviour for other API methods.
+   *
+   * @param replacement what should be returned instead HTTP OK
+   * @param either a response result to fix
+   * @tparam RS response type
+   * @return either other error or fixed empty result
+   */
   protected def handleSlackEmptyRes[RS]( replacement: => RS )( either: Either[SlackApiClientError, RS] ) = {
     either.leftFlatMap {
       case _: SlackApiEmptyResultError => {

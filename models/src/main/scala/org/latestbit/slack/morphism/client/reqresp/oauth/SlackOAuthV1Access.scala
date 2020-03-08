@@ -29,7 +29,8 @@ case class SlackOAuthV1AccessTokenResponse(
     enterprise_id: Option[String] = None,
     team_name: Option[String] = None,
     user_id: Option[String] = None,
-    bot: Option[SlackOAuthV1BotToken] = None
+    bot: Option[SlackOAuthV1BotToken] = None,
+    incoming_webhook: Option[SlackOAuthIncomingWebHook] = None
 )
 
 /**

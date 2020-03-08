@@ -56,7 +56,7 @@ class MethodsTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenPropertyCheck
             val mockBackend =
               SttpBackendStub.asynchronousFuture.whenAnyRequest
                 .thenRespondWrapped(
-                  createResponseStub[RQ, RS]( responseFactory( sample ) )
+                  createJsonResponseStub[RS]( responseFactory( sample ) )
                 )
             ( sample, apiMethodCall( sample )( mockBackend ) )
           }

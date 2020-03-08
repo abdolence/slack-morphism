@@ -34,7 +34,7 @@ trait SlackApiClientTestsSuiteSupport {
 
   protected implicit val testApiUserToken = SlackApiUserToken( "test-token", Some( "test-scope" ) )
 
-  protected def createResponseStub[RQ, RS](
+  protected def createJsonResponseStub[RS](
       response: RS
   )( implicit encoder: Encoder.AsObject[RS], ec: ExecutionContext ) = {
     Future {
@@ -42,9 +42,38 @@ trait SlackApiClientTestsSuiteSupport {
       Response(
         statusText = "OK",
         code = StatusCode.Ok,
-        body = response.asJsonObject.add( "ok", true.asJson ).asJson.dropNullValues.noSpaces,
+        body = response.asJsonObject
+          .add( "ok", true.asJson )
+          .asJson
+          .printWith( SlackApiHttpProtocolSupport.SlackJsonPrinter ),
         headers = Seq(
           Header.contentType( MediaType.ApplicationJson )
+        ),
+        history = Nil
+      )
+    }
+  }
+
+  protected def createExpectedBody[RQ]( requestBody: RequestBody[_], expectedRequestBody: RQ )(
+      implicit encoder: Encoder.AsObject[RQ]
+  ): Boolean = {
+    requestBody match {
+      case StringBody( value, _, _ ) => {
+        value == expectedRequestBody.asJsonObject.asJson.printWith( SlackApiHttpProtocolSupport.SlackJsonPrinter )
+      }
+      case _ => false
+    }
+  }
+
+  protected def createTextResponseStub( text: String )( implicit ec: ExecutionContext ) = {
+    Future {
+      Thread.sleep( 50 )
+      Response(
+        statusText = "OK",
+        code = StatusCode.Ok,
+        body = text,
+        headers = Seq(
+          Header.contentType( MediaType.TextPlainUtf8 )
         ),
         history = Nil
       )

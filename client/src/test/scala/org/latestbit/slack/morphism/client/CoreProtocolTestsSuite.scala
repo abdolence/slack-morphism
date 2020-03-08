@@ -24,6 +24,7 @@ import java.util.Base64
 import cats.data.EitherT
 import io.circe.{ Encoder, JsonObject }
 import io.circe.syntax._
+import org.asynchttpclient.util.HttpConstants.Methods
 import org.latestbit.slack.morphism.codecs.implicits._
 import org.latestbit.slack.morphism.client.reqresp.channels.{
   SlackApiChannelsListRequest,
@@ -31,7 +32,9 @@ import org.latestbit.slack.morphism.client.reqresp.channels.{
 }
 import org.latestbit.slack.morphism.client.reqresp.chat.{
   SlackApiChatPostMessageRequest,
-  SlackApiChatPostMessageResponse
+  SlackApiChatPostMessageResponse,
+  SlackApiPostEventReply,
+  SlackApiPostWebHookRequest
 }
 import org.latestbit.slack.morphism.client.reqresp.conversations.SlackApiConversationsHistoryRequest
 import org.latestbit.slack.morphism.client.reqresp.test._
@@ -55,7 +58,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
     implicit val testingBackend =
       SttpBackendStub.asynchronousFuture.whenAnyRequest
         .thenRespondWrapped(
-          createResponseStub( mockResponse )
+          createJsonResponseStub( mockResponse )
         )
     val slackApiClient = new SlackApiClient()
 
@@ -100,7 +103,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
       SttpBackendStub.asynchronousFuture
         .whenRequestMatches( _.uri.path.contains( "channels.list" ) )
         .thenRespondWrapped(
-          createResponseStub(
+          createJsonResponseStub(
             SlackApiChannelsListResponse(
               channels = List(
                 SlackChannelInfo(
@@ -117,7 +120,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
         )
         .whenRequestMatches( _.uri.path.contains( "chat.postMessage" ) )
         .thenRespondWrapped(
-          createResponseStub(
+          createJsonResponseStub(
             SlackApiChatPostMessageResponse(
               ts = "message-ts",
               message = SlackUserMessage(
@@ -201,6 +204,66 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
       }
       .getOrElse( fail( "No token" ) )
 
+  }
+
+  it should "able to post event replies using response_url without tokens" in {
+
+    val testReply = SlackApiPostEventReply(
+      text = "hey"
+    )
+
+    implicit val testingBackend =
+      SttpBackendStub.asynchronousFuture
+        .whenRequestMatches { req =>
+          req.uri.path.contains( "some-response-url" ) &&
+          req.method.method == Methods.POST &&
+          createExpectedBody( req.body, testReply )
+        }
+        .thenRespondWrapped(
+          createTextResponseStub( "Ok" )
+        )
+
+    val slackApiClient = new SlackApiClient()
+
+    slackApiClient.chat
+      .postEventReply(
+        "https://example.net/some-response-url",
+        testReply
+      )
+      .map {
+        case Right( resp ) => assert( resp != null )
+        case Left( ex )    => fail( ex )
+      }
+  }
+
+  it should "able to post webhook messages using urls without tokens" in {
+
+    val testWebHookMessage = SlackApiPostWebHookRequest(
+      text = "hey"
+    )
+
+    implicit val testingBackend =
+      SttpBackendStub.asynchronousFuture
+        .whenRequestMatches { req =>
+          req.uri.path.contains( "some-webhook-url" ) &&
+          req.method.method == Methods.POST &&
+          createExpectedBody( req.body, testWebHookMessage )
+        }
+        .thenRespondWrapped(
+          createTextResponseStub( "Ok" )
+        )
+
+    val slackApiClient = new SlackApiClient()
+
+    slackApiClient.chat
+      .postWebhookMessage(
+        "https://example.net/some-webhook-url",
+        testWebHookMessage
+      )
+      .map {
+        case Right( resp ) => assert( resp != null )
+        case Left( ex )    => fail( ex )
+      }
   }
 
 }
