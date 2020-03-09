@@ -1,6 +1,6 @@
 ## Slack Morphism : Type-Safe Reactive Client and Blocks Templating for Scala.
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.latestbit/slack-morphism-client_2.13/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.latestbit/slack-morphism-client_2.13/)
-![](https://github.com/abdolence/circe-tagged-adt-codec/workflows/Scala%20CI/badge.svg)
+![](https://github.com/abdolence/slack-morphism/workflows/tests%20and%20formatting/badge.svg)
 
 ### Overview and Docs
 Please follow to the official website: [https://slack.abdolence.dev](https://slack.abdolence.dev)
