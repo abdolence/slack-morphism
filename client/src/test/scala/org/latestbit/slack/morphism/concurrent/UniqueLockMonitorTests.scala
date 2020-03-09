@@ -49,18 +49,14 @@ class UniqueLockMonitorTests extends AnyFunSuite with MockFactory {
       (lockMock.lock _).expects().once(),
       (lockMock.unlock _).expects().once()
     )
-    Using.resource( UniqueLockMonitor.lockAndMonitor( lockMock ) ) { monitor =>
-      assert( monitor != null )
-    }
+    Using.resource( UniqueLockMonitor.lockAndMonitor( lockMock ) ) { monitor => assert( monitor != null ) }
   }
 
   test( "create a monitor and unlock manually with try-with-resources" ) {
     val lockMock = mock[Lock]
     (lockMock.lock _).expects().once()
     (lockMock.unlock _).expects().once()
-    Using.resource( UniqueLockMonitor.lockAndMonitor( lockMock ) ) { monitor =>
-      monitor.unlock()
-    }
+    Using.resource( UniqueLockMonitor.lockAndMonitor( lockMock ) ) { monitor => monitor.unlock() }
   }
 
   test( "create a monitor and trying to lock/unlock manually many times fails" ) {
@@ -103,8 +99,7 @@ class UniqueLockMonitorTests extends AnyFunSuite with MockFactory {
   test( "create a monitor locked already" ) {
     val lockMock = mock[Lock]
     (lockMock.unlock _).expects().once()
-    Using.resource( UniqueLockMonitor.monitor( lockMock, isLocked = true ) ) { _ =>
-    }
+    Using.resource( UniqueLockMonitor.monitor( lockMock, isLocked = true ) ) { _ => }
   }
 
 }

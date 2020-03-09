@@ -32,9 +32,7 @@ class AsyncSeqIteratorTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenProp
   case class MyItem( value: String, cursor: Option[Int] )
 
   def genBoundedGenList[T]( maxSize: Int, g: Gen[T] ): Gen[List[T]] = {
-    Gen.choose( 1, maxSize ) flatMap { sz =>
-      Gen.listOfN( sz, g )
-    }
+    Gen.choose( 1, maxSize ).flatMap { sz => Gen.listOfN( sz, g ) }
   }
 
   def initialItem(): Future[MyItem] = Future.successful(

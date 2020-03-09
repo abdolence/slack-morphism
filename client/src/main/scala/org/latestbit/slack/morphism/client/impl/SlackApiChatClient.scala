@@ -228,9 +228,7 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
           ec: ExecutionContext
       ): SlackApiResponseScroller[SlackApiChatScheduledMessageInfo, String] = {
         new SlackApiResponseScroller[SlackApiChatScheduledMessageInfo, String](
-          initialLoader = { () =>
-            list( req )
-          },
+          initialLoader = { () => list( req ) },
           batchLoader = { cursor =>
             list(
               SlackApiChatScheduledMessagesListRequest(

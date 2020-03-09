@@ -82,7 +82,7 @@ object SlackTokensDb extends StrictLogging {
             swayMap
               .get( key = teamId )
               .map(
-                _.map(rec =>
+                _.map( rec =>
                   rec.copy(tokens =
                     rec.tokens.filterNot( _.userId == tokenRecord.userId ) :+ tokenRecord
                   )
@@ -104,11 +104,7 @@ object SlackTokensDb extends StrictLogging {
         }
 
         case ReadTokens( teamId, ref ) => {
-          swayMap.foreach { swayMap =>
-            swayMap.get( key = teamId ).foreach { record =>
-              ref ! record
-            }
-          }
+          swayMap.foreach { swayMap => swayMap.get( key = teamId ).foreach { record => ref ! record } }
           Behavior.same
         }
 

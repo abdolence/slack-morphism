@@ -151,9 +151,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
                       text = "Hello"
                     )
                   )
-              ).map { resp =>
-                resp.ts.some
-              }
+              ).map { resp => resp.ts.some }
             }
             .getOrElse(
               EitherT[Future, SlackApiClientError, Option[String]](

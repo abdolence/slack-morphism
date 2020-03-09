@@ -57,13 +57,11 @@ object SlackIcon {
       cursor.keys
         .map { cursorKeys =>
           cursorKeys
-            .filter { key =>
-              key.startsWith( ICON_PREFIX )
-            }
+            .filter { key => key.startsWith( ICON_PREFIX ) }
             .flatMap { key =>
               key.split( '_' ).toList match {
                 case _ :: res :: _ if res.forall( _.isDigit ) => {
-                  cursor.downField( key ).as[String].toOption.map(value => ( res.toInt, value ) )
+                  cursor.downField( key ).as[String].toOption.map( value => ( res.toInt, value ) )
                 }
                 case _ => None
               }

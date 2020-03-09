@@ -39,19 +39,19 @@ trait SlackBlocksTemplateDslInternals {
   protected case object SlackDslNoneItem extends SlackDslItemDef[Nothing]
 
   protected implicit final def slackBlockToDef( block: => SlackBlock ) =
-    SlackDslSomeItem[SlackBlock](() => block )
+    SlackDslSomeItem[SlackBlock]( () => block )
 
   protected implicit final def slackBlockIterableToDef( block: => Iterable[SlackBlock] ) =
-    SlackDslSomeIterableOfItem[SlackBlock](() => block )
+    SlackDslSomeIterableOfItem[SlackBlock]( () => block )
 
   protected implicit final def slackBlockElToDef[T <: SlackBlockElement]( blockEl: => T ) =
-    SlackDslSomeItem[T](() => blockEl )
+    SlackDslSomeItem[T]( () => blockEl )
 
   protected implicit final def slackBlockTextToDef[T <: SlackBlockText]( blockEl: => T ) =
-    SlackDslSomeItem[T](() => blockEl )
+    SlackDslSomeItem[T]( () => blockEl )
 
   protected implicit final def slackBlockOptionItemToDef( item: => SlackBlockChoiceItem ) =
-    SlackDslSomeItem[SlackBlockChoiceItem](() => item )
+    SlackDslSomeItem[SlackBlockChoiceItem]( () => item )
 
   protected implicit def slackBlockElementToOption[T <: SlackBlockElement]( el: T ): Option[T] = Some( el )
 
@@ -71,7 +71,7 @@ trait SlackBlocksTemplateDslInternals {
   }
 
   protected implicit final def slackDslListInnerItemsToListItems[T]( items: => Iterable[Iterable[T]] ) =
-    SlackDslSomeIterableOfItem[T](() => items.flatten )
+    SlackDslSomeIterableOfItem[T]( () => items.flatten )
 
   protected implicit final class SlackTextInterpolators( private val sc: StringContext ) {
 
@@ -105,7 +105,7 @@ trait SlackBlocksTemplateDslInternals {
 
   private[templating] def optElement[T]( condition: => Boolean, element: => T ): SlackDslItemDef[T] =
     if (condition)
-      SlackDslSomeItem[T](() => element )
+      SlackDslSomeItem[T]( () => element )
     else
       SlackDslNoneItem
 }

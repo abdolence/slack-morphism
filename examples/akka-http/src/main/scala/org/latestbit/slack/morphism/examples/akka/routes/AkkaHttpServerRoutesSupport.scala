@@ -48,9 +48,7 @@ trait AkkaHttpServerRoutesSupport extends org.latestbit.slack.morphism.codecs.Ci
       entity: HttpEntity,
       charset: HttpCharset = HttpCharsets.`UTF-8`
   )( implicit ec: ExecutionContext, materializer: ActorMaterializer ): Future[String] = {
-    entity.dataBytes.runFold( ByteString() )( _ ++ _ ).map { bs =>
-      bs.decodeString( charset.value )
-    }
+    entity.dataBytes.runFold( ByteString() )( _ ++ _ ).map { bs => bs.decodeString( charset.value ) }
   }
 
   protected def completeWithJson[T]( response: T )( implicit encoder: Encoder.AsObject[T] ) = {

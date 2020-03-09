@@ -8,7 +8,7 @@ import sbt.Package.ManifestAttributes
 
 name := "slack-morphism-root"
 
-ThisBuild / version := "1.0.4"
+ThisBuild / version := "1.0.5-SNAPSHOT"
 
 ThisBuild / description := "Open Type-Safe Reactive Client with Blocks Templating for Slack"
 
@@ -44,17 +44,17 @@ ThisBuild / publishTo := {
 
 ThisBuild / pomExtra := (
   <scm>
-        <url>https://github.com/abdolence/slack-morphism</url>
-        <connection>scm:git:https://github.com/abdolence/slack-morphism</connection>
-        <developerConnection>scm:git:https://github.com/abdolence/slack-morphism</developerConnection>
-    </scm>
-        <developers>
-            <developer>
-                <id>abdolence</id>
-                <name>Abdulla Abdurakhmanov</name>
-                <url>https://abdolence.dev</url>
-            </developer>
-        </developers>
+    <url>https://github.com/abdolence/slack-morphism</url>
+    <connection>scm:git:https://github.com/abdolence/slack-morphism</connection>
+    <developerConnection>scm:git:https://github.com/abdolence/slack-morphism</developerConnection>
+  </scm>
+  <developers>
+    <developer>
+        <id>abdolence</id>
+        <name>Abdulla Abdurakhmanov</name>
+        <url>https://abdolence.dev</url>
+    </developer>
+  </developers>
 )
 
 ThisBuild / resolvers ++= Seq(
@@ -275,7 +275,7 @@ lazy val docSettings = Seq(
   )
 )
 
-ThisBuild / GitKeys.gitReader := baseDirectory(base => new DefaultReadableGit( base ) ).value
+ThisBuild / GitKeys.gitReader := baseDirectory( base => new DefaultReadableGit( base ) ).value
 
 addCompilerPlugin( "org.typelevel" % "kind-projector" % kindProjectorVer cross CrossVersion.full )
 

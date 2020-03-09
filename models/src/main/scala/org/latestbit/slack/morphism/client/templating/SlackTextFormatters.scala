@@ -83,7 +83,7 @@ trait SlackTextFormatters {
       token_string: String = SlackTextFormatters.SlackDateTimeFormats.DEFAULT,
       link: Option[String] = None
   ): String = {
-    val linkPart = link.map(value => s"^${value}" ).getOrElse( "" )
+    val linkPart = link.map( value => s"^${value}" ).getOrElse( "" )
     s"<!date^${timestamp.getEpochSecond}^${token_string}${linkPart}|${timestamp.toString}>"
   }
 

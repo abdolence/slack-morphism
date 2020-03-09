@@ -92,9 +92,7 @@ trait SlackApiReactionsClient extends SlackApiHttpProtocolSupport {
         ec: ExecutionContext
     ): SlackApiResponseScroller[SlackApiReactionsListItem, String] = {
       new SlackApiResponseScroller[SlackApiReactionsListItem, String](
-        initialLoader = { () =>
-          list( req )
-        },
+        initialLoader = { () => list( req ) },
         batchLoader = { cursor =>
           list(
             SlackApiReactionsListRequest(

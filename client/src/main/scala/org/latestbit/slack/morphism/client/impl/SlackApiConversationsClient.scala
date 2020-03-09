@@ -117,9 +117,7 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
         ec: ExecutionContext
     ): SlackApiResponseScroller[SlackMessage, String] = {
       new SlackApiResponseScroller[SlackMessage, String](
-        initialLoader = { () =>
-          history( req )
-        },
+        initialLoader = { () => history( req ) },
         batchLoader = { cursor =>
           history(
             SlackApiConversationsHistoryRequest(
@@ -250,9 +248,7 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
         ec: ExecutionContext
     ): SlackApiResponseScroller[SlackChannelInfo, String] = {
       new SlackApiResponseScroller[SlackChannelInfo, String](
-        initialLoader = { () =>
-          list( req )
-        },
+        initialLoader = { () => list( req ) },
         batchLoader = { cursor =>
           list(
             SlackApiConversationsListRequest(
@@ -293,9 +289,7 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
         ec: ExecutionContext
     ): SlackApiResponseScroller[String, String] = {
       new SlackApiResponseScroller[String, String](
-        initialLoader = { () =>
-          members( req )
-        },
+        initialLoader = { () => members( req ) },
         batchLoader = { cursor =>
           members(
             SlackApiConversationsMembersRequest(
@@ -358,9 +352,7 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
         ec: ExecutionContext
     ): SlackApiResponseScroller[SlackMessage, String] = {
       new SlackApiResponseScroller[SlackMessage, String](
-        initialLoader = { () =>
-          replies( req )
-        },
+        initialLoader = { () => replies( req ) },
         batchLoader = { cursor =>
           replies(
             SlackApiConversationsRepliesRequest(

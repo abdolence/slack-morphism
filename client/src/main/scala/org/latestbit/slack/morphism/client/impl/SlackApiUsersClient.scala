@@ -62,9 +62,7 @@ trait SlackApiUsersClient extends SlackApiHttpProtocolSupport {
         ec: ExecutionContext
     ): SlackApiResponseScroller[SlackChannelInfo, String] = {
       new SlackApiResponseScroller[SlackChannelInfo, String](
-        initialLoader = { () =>
-          conversations( req )
-        },
+        initialLoader = { () => conversations( req ) },
         batchLoader = { cursor =>
           conversations(
             SlackApiUsersConversationsRequest(
@@ -150,9 +148,7 @@ trait SlackApiUsersClient extends SlackApiHttpProtocolSupport {
         ec: ExecutionContext
     ): SlackApiResponseScroller[SlackUserInfo, String] = {
       new SlackApiResponseScroller[SlackUserInfo, String](
-        initialLoader = { () =>
-          list( req )
-        },
+        initialLoader = { () => list( req ) },
         batchLoader = { cursor =>
           list(
             SlackApiUsersListRequest(

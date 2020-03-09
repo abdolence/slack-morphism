@@ -152,9 +152,7 @@ class SlackPushEventsRoute(
             )
           }
         }
-    ) { statusCode =>
-      complete( statusCode )
-    }
+    ) { statusCode => complete( statusCode ) }
   }
 
   def onEvent( event: SlackPushEvent ): Route = event match {

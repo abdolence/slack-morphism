@@ -89,7 +89,7 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
               .map( Either.left[SlackApiClientError, RS] )
               .getOrElse(
                 decode[RS]( successBody ).left
-                  .map(ex => circeDecodingErrorToApiError( uri, ex, successBody ) )
+                  .map( ex => circeDecodingErrorToApiError( uri, ex, successBody ) )
               )
           }
           case Left( ex ) => {
@@ -122,9 +122,7 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
           SlackApiHttpError(
             uri = uri,
             message = s"HTTP error / ${response.code}: ${response.statusText}.\n${Option( errorBody )
-              .map { body =>
-                s": ${body}"
-              }
+              .map { body => s": ${body}" }
               .getOrElse( "" )}",
             httpResponseBody = Option( errorBody )
           )
@@ -137,7 +135,7 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
       implicit decoder: Decoder[RS],
       ec: ExecutionContext
   ): Future[Either[SlackApiClientError, RS]] = {
-    request.send().map(response => decodeSlackResponse[RS]( request.uri, response ) ).recoverWith {
+    request.send().map( response => decodeSlackResponse[RS]( request.uri, response ) ).recoverWith {
       case ex: IOException =>
         Future.successful( Left( SlackApiConnectionError( request.uri, ex ) ) )
       case ex: Throwable =>

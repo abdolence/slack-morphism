@@ -40,7 +40,7 @@ class OAuthTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuiteSupport
     implicit val testingBackend =
       SttpBackendStub.asynchronousFuture
         .whenRequestMatches { req =>
-          req.headers.exists(header =>
+          req.headers.exists( header =>
             header.is( HeaderNames.Authorization ) &&
               header.value == createBasicCredentials( mockClientId, mockClientSecret )
           )
@@ -83,7 +83,7 @@ class OAuthTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuiteSupport
     implicit val testingBackend =
       SttpBackendStub.asynchronousFuture
         .whenRequestMatches { req =>
-          req.headers.exists(header =>
+          req.headers.exists( header =>
             header.is( HeaderNames.Authorization ) &&
               header.value == createBasicCredentials( mockClientId, mockClientSecret )
           )

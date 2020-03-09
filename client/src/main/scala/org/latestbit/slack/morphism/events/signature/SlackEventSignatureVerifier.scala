@@ -49,9 +49,7 @@ class SlackEventSignatureVerifier() {
           s"v0=${signedBytes.toHexString()}"
         }
       }
-      .leftMap { ex =>
-        SlackSignatureCryptoInitError( ex )
-      }
+      .leftMap { ex => SlackSignatureCryptoInitError( ex ) }
   }
 
   /**

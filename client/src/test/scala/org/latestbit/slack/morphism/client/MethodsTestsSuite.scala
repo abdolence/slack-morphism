@@ -38,9 +38,7 @@ case class Data( a: String, b: String, c: String )
 class MethodsTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenPropertyChecks with SlackApiClientTestsSuiteSupport {
 
   def genBoundedGenList[T]( maxSize: Int, g: Gen[T] ): Gen[List[T]] = {
-    Gen.choose( 1, maxSize ) flatMap { sz =>
-      Gen.listOfN( sz, g )
-    }
+    Gen.choose( 1, maxSize ) flatMap { sz => Gen.listOfN( sz, g ) }
   }
 
   def testSlackApiMethod[RQ, RS](
@@ -87,9 +85,7 @@ class MethodsTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenPropertyCheck
     testSlackApiMethod { req: SlackApiTestRequest => implicit backend =>
       val slackApiClient = new SlackApiClient()
       slackApiClient.api.test( req )
-    } { req: SlackApiTestRequest =>
-      SlackApiTestResponse( args = req.args )
-    } {
+    } { req: SlackApiTestRequest => SlackApiTestResponse( args = req.args ) } {
       case ( req, eitherResp ) => {
         assert(
           eitherResp.exists( req.args == _.args )
@@ -106,9 +102,7 @@ class MethodsTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenPropertyCheck
     testSlackApiMethod { req: SlackApiUninstallRequest => implicit backend =>
       val slackApiClient = new SlackApiClient()
       slackApiClient.apps.uninstall( req )
-    } { req =>
-      SlackApiUninstallResponse()
-    } {
+    } { req => SlackApiUninstallResponse() } {
       case ( req, eitherResp ) => {
         assert(
           eitherResp.nonEmpty

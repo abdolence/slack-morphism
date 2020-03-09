@@ -62,12 +62,8 @@ object Main extends App with StrictLogging {
   private def createParser() = {
     new scopt.OptionParser[AppConfig]( APP_NAME ) {
       head( APP_NAME, APP_VER )
-      opt[String]( "host" ).abbr( "h" ).text( "HTTP Server Host" ).action { ( v, c ) =>
-        c.copy( httpServerHost = v )
-      }
-      opt[Int]( "port" ).abbr( "p" ).text( "HTTP Server Port" ).action { ( v, c ) =>
-        c.copy( httpServerPort = v )
-      }
+      opt[String]( "host" ).abbr( "h" ).text( "HTTP Server Host" ).action { ( v, c ) => c.copy( httpServerHost = v ) }
+      opt[Int]( "port" ).abbr( "p" ).text( "HTTP Server Port" ).action { ( v, c ) => c.copy( httpServerPort = v ) }
       opt[String]( "slack-app-id" ).abbr( "aid" ).text( "Slack App Id" ).required().action { ( v, c ) =>
         c.copy( slackAppConfig = c.slackAppConfig.copy( appId = v ) )
       }
@@ -86,9 +82,7 @@ object Main extends App with StrictLogging {
       opt[String]( "slack-install-bot-scope" )
         .abbr( "bot-scope" )
         .text( "Slack OAuth Install Scope for a bot token" )
-        .action { ( v, c ) =>
-          c.copy( slackAppConfig = c.slackAppConfig.copy( botScope = v ) )
-        }
+        .action { ( v, c ) => c.copy( slackAppConfig = c.slackAppConfig.copy( botScope = v ) ) }
       opt[String]( "sway-db-path" ).abbr( "dbpath" ).text( "Path to data for SwayDb" ).action { ( v, c ) =>
         c.copy( databaseDir = v )
       }

@@ -542,9 +542,7 @@ package object codecs {
 
     implicit val decoderMessage: Decoder[SlackMessage] =
       JsonTaggedAdtCodec.createDecoderDefinition[SlackMessage] {
-        messageDecoderDefinition[SlackMessage] { cursor: HCursor =>
-          cursor.as[SlackUserMessage]
-        }
+        messageDecoderDefinition[SlackMessage] { cursor: HCursor => cursor.as[SlackUserMessage] }
       }
 
     val SLACK_TYPE_VALUE = "message"
@@ -556,9 +554,7 @@ package object codecs {
 
     implicit val decoderPinnedMessage: Decoder[SlackPinnedMessage] =
       JsonTaggedAdtCodec.createDecoderDefinition[SlackPinnedMessage] {
-        messageDecoderDefinition[SlackPinnedMessage] { cursor: HCursor =>
-          cursor.as[SlackUserMessage]
-        }
+        messageDecoderDefinition[SlackPinnedMessage] { cursor: HCursor => cursor.as[SlackUserMessage] }
       }
 
     implicit val encoderSlackMessageChanged: Encoder.AsObject[SlackMessageChanged] =
@@ -592,9 +588,7 @@ package object codecs {
 
     implicit val decoderMessageEvent: Decoder[SlackMessageEvent] =
       JsonTaggedAdtCodec.createDecoderDefinition[SlackMessageEvent] {
-        messageDecoderDefinition[SlackMessageEvent] { cursor: HCursor =>
-          cursor.as[SlackUserMessage]
-        }
+        messageDecoderDefinition[SlackMessageEvent] { cursor: HCursor => cursor.as[SlackUserMessage] }
       }
 
     implicit val encoderSlackModalView: Encoder.AsObject[SlackModalView] = deriveEncoder[SlackModalView]
