@@ -11,5 +11,8 @@ Please follow to the official website: [https://slack.abdolence.dev](https://sla
 ### Licence
 Apache Software License (ASL)
 
+### Code of Conduct
+See the [Code of Conduct](CODE_OF_CONDUCT.md)
+
 ### Author
 Abdulla Abdurakhmanov
