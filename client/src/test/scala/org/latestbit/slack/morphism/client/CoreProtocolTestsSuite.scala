@@ -138,42 +138,13 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
         SlackApiToken.TokenTypes.BOT,
         "xoxb-89....."
       )
-      .foreach { implicit slackApiToken: SlackApiToken =>
-        EitherT( slackApiClient.channels.list( SlackApiChannelsListRequest() ) ).flatMap { channelsResp =>
-          channelsResp.channels
-            .find( _.flags.is_general.contains( true ) )
-            .map { generalChannel =>
-              EitherT(
-                slackApiClient.chat
-                  .postMessage(
-                    SlackApiChatPostMessageRequest(
-                      channel = generalChannel.id,
-                      text = "Hello"
-                    )
-                  )
-              ).map { resp => resp.ts.some }
-            }
-            .getOrElse(
-              EitherT[Future, SlackApiClientError, Option[String]](
-                Future.successful( None.asRight )
-              )
-            )
-        }
-      }
-
-    SlackApiToken
-      .createFrom(
-        SlackApiToken.TokenTypes.BOT,
-        "xoxb-89....."
-      )
       .map { implicit slackApiToken: SlackApiToken =>
-        slackApiClient.channels
-          .list( SlackApiChannelsListRequest() )
-          .flatMap {
-            case Right( channelListResp ) => {
-              channelListResp.channels
-                .find( _.flags.is_general.contains( true ) )
-                .map { generalChannel =>
+        EitherT( slackApiClient.channels.list( SlackApiChannelsListRequest() ) )
+          .flatMap { channelsResp =>
+            channelsResp.channels
+              .find( _.flags.is_general.contains( true ) )
+              .map { generalChannel =>
+                EitherT(
                   slackApiClient.chat
                     .postMessage(
                       SlackApiChatPostMessageRequest(
@@ -181,19 +152,18 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
                         text = "Hello"
                       )
                     )
-                    .map( _.map( Option.apply ) )
-                }
-                .getOrElse(
-                  Future.successful( Right( None ) )
+                ).map { resp => resp.ts.some }
+              }
+              .getOrElse(
+                EitherT[Future, SlackApiClientError, Option[String]](
+                  Future.successful( None.asRight )
                 )
-            }
-            case Left( err ) => {
-              Future.successful( Left( err ) )
-            }
+              )
           }
+          .value
           .map {
             case Right( Some( res ) ) => {
-              assert( res.ts == "message-ts" )
+              assert( res == "message-ts" )
 
             }
             case Right( _ )  => fail()
@@ -201,7 +171,6 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
           }
       }
       .getOrElse( fail( "No token" ) )
-
   }
 
   it should "able to post event replies using response_url without tokens" in {
