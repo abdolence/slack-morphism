@@ -184,7 +184,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
         .whenRequestMatches { req =>
           req.uri.path.contains( "some-response-url" ) &&
           req.method.method == Methods.POST &&
-          createExpectedBody( req.body, testReply )
+          isExpectedJsonBody( req.body, testReply )
         }
         .thenRespondWrapped(
           createTextResponseStub( "Ok" )
@@ -214,7 +214,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
         .whenRequestMatches { req =>
           req.uri.path.contains( "some-webhook-url" ) &&
           req.method.method == Methods.POST &&
-          createExpectedBody( req.body, testWebHookMessage )
+          isExpectedJsonBody( req.body, testWebHookMessage )
         }
         .thenRespondWrapped(
           createTextResponseStub( "Ok" )
