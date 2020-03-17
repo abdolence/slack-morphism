@@ -9,7 +9,7 @@ To show you a complete solution and give you a quick start, Slack Morphism provi
 you a zero-code required and complete example of a Slack bot, 
 written with Slack Morphism and Akka Http.
 
-## Install and configure a Slack bot from the scratch
+## Install and configure a Slack bot from scratch
 
 ### Prerequisites
 
