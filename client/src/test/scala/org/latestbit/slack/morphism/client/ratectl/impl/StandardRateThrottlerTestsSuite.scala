@@ -43,14 +43,13 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
 
   "StandardRateThrottler" should "limit global rate" in {
 
-    val throttlerScheduledExecutorMock = mock[ScheduledExecutorService]
-    val cleanerScheduledExecutorMock = mock[ScheduledExecutorService]
+    val scheduledExecutorMock = mock[ScheduledExecutorService]
 
-    (cleanerScheduledExecutorMock.scheduleAtFixedRate _).expects( *, *, *, * ).once()
+    (scheduledExecutorMock.scheduleAtFixedRate _).expects( *, *, *, * ).once()
 
     var lastDelay = 0L
 
-    (throttlerScheduledExecutorMock.scheduleWithFixedDelay _)
+    (scheduledExecutorMock.scheduleWithFixedDelay _)
       .expects( *, 0, *, TimeUnit.MILLISECONDS )
       .repeated( 50 )
       .times()
@@ -67,7 +66,7 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
 
     var fakeCurrentTime = 0L
 
-    val throttler = new StandardRateThrottler( params, throttlerScheduledExecutorMock, cleanerScheduledExecutorMock ) {
+    val throttler = new StandardRateThrottler( params, scheduledExecutorMock ) {
       override protected def currentTimeInMs(): Long = fakeCurrentTime
     }
 

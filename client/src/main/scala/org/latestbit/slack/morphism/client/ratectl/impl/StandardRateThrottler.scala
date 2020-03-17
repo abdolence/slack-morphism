@@ -29,8 +29,7 @@ import scala.concurrent.duration.FiniteDuration
 
 abstract class StandardRateThrottler private[ratectl] (
     params: RateControlParams,
-    throttleScheduledExecutor: ScheduledExecutorService,
-    cleanerScheduledExecutor: ScheduledExecutorService
+    scheduledExecutor: ScheduledExecutorService
 ) extends RateThrottler {
 
   @volatile private var globalMaxRateMetric: RateThrottlerMetric =
@@ -75,7 +74,7 @@ abstract class StandardRateThrottler private[ratectl] (
   }
 
   private def startWorkspaceMetricsCleanerService() = {
-    cleanerScheduledExecutor.scheduleAtFixedRate(
+    scheduledExecutor.scheduleAtFixedRate(
       () => cleanWorkspaceMetrics(),
       WORKSPACE_METRICS_CLEANER_INITIAL_DELAY_IN_SEC,
       WORKSPACE_METRICS_CLEANER_INTERVAL_IN_SEC,
@@ -156,8 +155,7 @@ abstract class StandardRateThrottler private[ratectl] (
   }
 
   override def shutdown(): Unit = {
-    cleanerScheduledExecutor.shutdown()
-    throttleScheduledExecutor.shutdown()
+    scheduledExecutor.shutdown()
   }
 
   private def promiseDelayedRequest[RS](
@@ -166,7 +164,7 @@ abstract class StandardRateThrottler private[ratectl] (
   ): Future[Either[SlackApiClientError, RS]] = {
     val promise = Promise[Either[SlackApiClientError, RS]]()
 
-    throttleScheduledExecutor.scheduleWithFixedDelay(
+    scheduledExecutor.scheduleWithFixedDelay(
       () => {
         promise.completeWith( request() )
       },
@@ -213,8 +211,7 @@ abstract class StandardRateThrottler private[ratectl] (
 final class StandardRateThrottlerImpl private[ratectl] ( params: RateControlParams )
     extends StandardRateThrottler(
       params,
-      throttleScheduledExecutor = Executors.newScheduledThreadPool( Runtime.getRuntime().availableProcessors ),
-      cleanerScheduledExecutor = Executors.newSingleThreadScheduledExecutor()
+      scheduledExecutor = Executors.newScheduledThreadPool( Runtime.getRuntime().availableProcessors )
     ) {
   override protected def currentTimeInMs(): Long = System.currentTimeMillis()
 }
