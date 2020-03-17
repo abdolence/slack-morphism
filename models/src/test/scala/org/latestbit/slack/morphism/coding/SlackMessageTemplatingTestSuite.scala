@@ -145,7 +145,7 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
   }
 
   it should "support text block interpolators" in {
-    object TestInters extends SlackBlocksTemplateDsl {
+    object TestInters extends `SlackBlocksTemplateDsl` {
       val m1: SlackBlockMarkDownText = md"test"
       val p1: SlackBlockPlainText = pt"test"
 

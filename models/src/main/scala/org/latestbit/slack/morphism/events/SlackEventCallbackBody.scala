@@ -119,6 +119,22 @@ case class SlackUserMessage(
     with SlackPinnedMessage
     with SlackMessageEvent
 
+@JsonAdt( "channel_join" )
+case class SlackJoinedChannelMessage(
+                             override val ts: String,
+                             override val channel: Option[String] = None,
+                             override val channel_type: Option[String] = None,
+                             override val thread_ts: Option[String] = None,
+                             override val reactions: Option[List[SlackMessageReaction]] = None,
+                             edited: Option[SlackMessageEdited] = None,
+                             reply_count: Option[Long] = None,
+                             replies: Option[List[SlackMessageReplyInfo]] = None,
+                             override val text: Option[String] = None,
+                             override val blocks: Option[List[SlackBlock]] = None,
+                             user: String,
+                             inviter: Option[String]
+                           ) extends SlackMessage
+
 @JsonAdt( "bot_message" )
 case class SlackBotMessage(
     override val ts: String,
