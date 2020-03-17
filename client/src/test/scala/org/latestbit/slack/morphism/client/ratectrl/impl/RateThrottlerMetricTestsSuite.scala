@@ -16,9 +16,9 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.ratectl.impl
+package org.latestbit.slack.morphism.client.ratectrl.impl
 
-import org.latestbit.slack.morphism.client.ratectl.RateControlLimit
+import org.latestbit.slack.morphism.client.ratectrl.RateControlLimit
 import org.scalatest.flatspec.AnyFlatSpec
 
 import scala.concurrent.duration._

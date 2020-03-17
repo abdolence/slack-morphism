@@ -16,20 +16,10 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.ratectl
+package org.latestbit.slack.morphism.client.ratectrl.impl
 
-import org.scalatest.flatspec.AnyFlatSpec
-
-import scala.concurrent.duration._
-
-class RateControlParamsTestsSuite extends AnyFlatSpec {
-
-  val params = RateControlParams(
-    globalMaxRateLimit = Some(
-      10,
-      1.second
-    )
-  )
-
-  assert( params.globalMaxRateLimit.exists( limit => limit.value == 10 && limit.per.toSeconds == 1 ) )
-}
+case class RateThrottlerWorkspaceMetrics(
+    wholeWorkspaceMetric: Option[RateThrottlerMetric],
+    tiers: Map[Int, RateThrottlerMetric],
+    updated: Long
+)

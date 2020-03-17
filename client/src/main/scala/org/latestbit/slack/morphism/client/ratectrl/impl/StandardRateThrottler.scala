@@ -16,18 +16,18 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.ratectl.impl
+package org.latestbit.slack.morphism.client.ratectrl.impl
 
 import java.util.concurrent.{ Executors, ScheduledExecutorService, TimeUnit }
 
 import org.latestbit.slack.morphism.client.{ SlackApiClientError, SlackApiRateLimitMaxDelayError, SlackApiToken }
-import org.latestbit.slack.morphism.client.ratectl._
+import org.latestbit.slack.morphism.client.ratectrl._
 import sttp.model.Uri
 
 import scala.concurrent.{ Future, Promise }
 import scala.concurrent.duration.FiniteDuration
 
-abstract class StandardRateThrottler private[ratectl] (
+abstract class StandardRateThrottler private[ratectrl] (
     params: RateControlParams,
     scheduledExecutor: ScheduledExecutorService
 ) extends RateThrottler {
@@ -208,7 +208,7 @@ abstract class StandardRateThrottler private[ratectl] (
   }
 }
 
-final class StandardRateThrottlerImpl private[ratectl] ( params: RateControlParams )
+final class StandardRateThrottlerImpl private[ratectrl] ( params: RateControlParams )
     extends StandardRateThrottler(
       params,
       scheduledExecutor = Executors.newScheduledThreadPool( Runtime.getRuntime().availableProcessors )

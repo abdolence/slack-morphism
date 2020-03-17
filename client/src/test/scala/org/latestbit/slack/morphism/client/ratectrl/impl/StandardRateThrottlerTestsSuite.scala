@@ -16,12 +16,12 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.ratectl.impl
+package org.latestbit.slack.morphism.client.ratectrl.impl
 
 import java.util.concurrent.{ Delayed, ScheduledExecutorService, ScheduledFuture, TimeUnit }
 
 import org.latestbit.slack.morphism.client.SlackApiEmptyResultError
-import org.latestbit.slack.morphism.client.ratectl.RateControlParams
+import org.latestbit.slack.morphism.client.ratectrl.RateControlParams
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.flatspec.AnyFlatSpec
 

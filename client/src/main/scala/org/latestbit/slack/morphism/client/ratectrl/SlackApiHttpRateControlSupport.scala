@@ -16,7 +16,7 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.ratectl
+package org.latestbit.slack.morphism.client.ratectrl
 
 import io.circe.Decoder
 import org.latestbit.slack.morphism.client.{ SlackApiClientError, SlackApiToken }

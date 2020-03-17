@@ -16,10 +16,10 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.ratectl
+package org.latestbit.slack.morphism.client.ratectrl
 
 import org.latestbit.slack.morphism.client._
-import org.latestbit.slack.morphism.client.ratectl.impl._
+import org.latestbit.slack.morphism.client.ratectrl.impl._
 import sttp.model.Uri
 
 import scala.concurrent.Future

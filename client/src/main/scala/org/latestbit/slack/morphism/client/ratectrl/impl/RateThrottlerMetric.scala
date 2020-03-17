@@ -16,9 +16,9 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.ratectl.impl
+package org.latestbit.slack.morphism.client.ratectrl.impl
 
-case class RateThrottlerMetric private[ratectl] (
+case class RateThrottlerMetric private[ratectrl] (
     available: Long,
     lastUpdated: Long,
     rateLimitInMs: Long,

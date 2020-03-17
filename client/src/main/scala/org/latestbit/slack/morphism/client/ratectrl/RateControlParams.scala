@@ -16,7 +16,7 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.ratectl
+package org.latestbit.slack.morphism.client.ratectrl
 
 import scala.language.implicitConversions
 
