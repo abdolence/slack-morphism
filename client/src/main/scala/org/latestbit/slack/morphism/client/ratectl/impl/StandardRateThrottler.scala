@@ -160,6 +160,24 @@ abstract class StandardRateThrottler private[ratectl] (
     throttleScheduledExecutor.shutdown()
   }
 
+  private def promiseDelayedRequest[RS](
+      delay: Long,
+      request: () => Future[Either[SlackApiClientError, RS]]
+  ): Future[Either[SlackApiClientError, RS]] = {
+    val promise = Promise[Either[SlackApiClientError, RS]]()
+
+    throttleScheduledExecutor.scheduleWithFixedDelay(
+      () => {
+        promise.completeWith( request() )
+      },
+      0,
+      delay,
+      TimeUnit.MILLISECONDS
+    )
+
+    promise.future
+  }
+
   override def throttle[RS](
       uri: Uri,
       tier: Option[Int],
@@ -172,18 +190,7 @@ abstract class StandardRateThrottler private[ratectl] (
       case Some( delay ) if delay > 0 => {
 
         if (methodMaxDelay.forall( _.toMillis > delay ) && params.maxDelayTimeout.forall( _.toMillis > delay )) {
-          val promise = Promise[Either[SlackApiClientError, RS]]()
-
-          throttleScheduledExecutor.scheduleWithFixedDelay(
-            () => {
-              promise.completeWith( request() )
-            },
-            0,
-            delay,
-            TimeUnit.MILLISECONDS
-          )
-
-          promise.future
+          promiseDelayedRequest[RS]( delay, request )
         } else {
           Future.successful(
             Left(
