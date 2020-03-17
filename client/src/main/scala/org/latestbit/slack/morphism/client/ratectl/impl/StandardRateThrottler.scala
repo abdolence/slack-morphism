@@ -18,7 +18,7 @@
 
 package org.latestbit.slack.morphism.client.ratectl.impl
 
-import java.util.concurrent.{ Executors, ScheduledExecutorService, TimeUnit }
+import java.util.concurrent.{ Executors, ScheduledExecutorService, ScheduledFuture, TimeUnit }
 
 import org.latestbit.slack.morphism.client.{ SlackApiClientError, SlackApiRateLimitMaxDelayError, SlackApiToken }
 import org.latestbit.slack.morphism.client.ratectl._

@@ -18,7 +18,7 @@
 
 package org.latestbit.slack.morphism.client.ratectl.impl
 
-import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.{ Delayed, ScheduledExecutorService, ScheduledFuture, TimeUnit }
 
 import org.latestbit.slack.morphism.client.SlackApiEmptyResultError
 import org.latestbit.slack.morphism.client.ratectl.RateControlParams
@@ -47,9 +47,25 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
     val cleanerScheduledExecutorMock = mock[ScheduledExecutorService]
 
     (cleanerScheduledExecutorMock.scheduleAtFixedRate _).expects( *, *, *, * ).once()
-    (throttlerScheduledExecutorMock.scheduleWithFixedDelay _).expects( *, 0, *, * ).repeated( 50 ).times()
 
-    var fakeCurrentTime = 0
+    var lastDelay = 0L
+
+    (throttlerScheduledExecutorMock.scheduleWithFixedDelay _)
+      .expects( *, 0, *, TimeUnit.MILLISECONDS )
+      .repeated( 50 )
+      .times()
+      .onCall {
+        case ( _: Runnable, _: Long, delay: Long, _: TimeUnit ) =>
+          assert( delay === 20 + lastDelay )
+          lastDelay += 20
+
+          val scheduledFuture = stub[ScheduledFuture[Unit]]
+          (scheduledFuture.isDone _).when().returns( true )
+          scheduledFuture
+
+      }
+
+    var fakeCurrentTime = 0L
 
     val throttler = new StandardRateThrottler( params, throttlerScheduledExecutorMock, cleanerScheduledExecutorMock ) {
       override protected def currentTimeInMs(): Long = fakeCurrentTime
