@@ -25,6 +25,10 @@ import scala.concurrent.duration._
 case class RateControlLimit( value: Int, per: FiniteDuration ) {
   require( value > 0, "Value should be more than zero" )
   require( per.toMillis > 0, "Duration should be more than zero" )
+
+  def toRateLimitInMs(): Long = {
+    per.toMillis / value
+  }
 }
 
 object RateControlLimit {

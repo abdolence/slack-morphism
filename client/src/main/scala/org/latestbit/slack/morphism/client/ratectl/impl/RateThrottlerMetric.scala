@@ -22,7 +22,8 @@ case class RateThrottlerMetric private[ratectl] (
     available: Long,
     lastUpdated: Long,
     rateLimitInMs: Long,
-    delay: Long
+    delay: Long,
+    maxAvailable: Long
 ) {
 
   def update( now: Long ): RateThrottlerMetric = {
@@ -36,24 +37,27 @@ case class RateThrottlerMetric private[ratectl] (
       } else
         ( 0L, lastUpdated )
 
-    val newAvailable = available + arrived
+    val newAvailable =
+      math.min( available + arrived, maxAvailable )
 
     if (newAvailable > 0) {
-      new RateThrottlerMetric(
+      RateThrottlerMetric(
         newAvailable - 1,
         newLastUpdated,
         rateLimitInMs,
-        0
+        0,
+        maxAvailable
       )
     } else {
       val updatedTimeElapsed = now - newLastUpdated
       val delay = rateLimitInMs - updatedTimeElapsed
 
-      new RateThrottlerMetric(
+      RateThrottlerMetric(
         0,
         now + delay,
         rateLimitInMs,
-        delay
+        delay,
+        maxAvailable
       )
     }
   }

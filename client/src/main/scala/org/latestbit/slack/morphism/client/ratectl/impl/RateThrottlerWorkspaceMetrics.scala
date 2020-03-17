@@ -16,8 +16,10 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.ratectl
+package org.latestbit.slack.morphism.client.ratectl.impl
 
-import org.scalatest.flatspec.AnyFlatSpec
-
-class RateThrottlerMetricTestsSuite extends AnyFlatSpec {}
+case class RateThrottlerWorkspaceMetrics(
+    wholeWorkspaceMetric: Option[RateThrottlerMetric],
+    tiers: Map[Int, RateThrottlerMetric],
+    updated: Long
+)

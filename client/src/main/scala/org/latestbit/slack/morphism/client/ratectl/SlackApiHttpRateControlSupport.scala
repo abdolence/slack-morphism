@@ -23,6 +23,7 @@ import org.latestbit.slack.morphism.client.{ SlackApiClientError, SlackApiToken 
 import org.latestbit.slack.morphism.client.impl.SlackApiHttpProtocolSupport
 import sttp.client.Request
 
+import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ ExecutionContext, Future }
 
 trait SlackApiHttpRateControlSupport extends SlackApiHttpProtocolSupport {
@@ -34,13 +35,15 @@ trait SlackApiHttpRateControlSupport extends SlackApiHttpProtocolSupport {
   )(
       implicit slackApiToken: SlackApiToken,
       decoder: Decoder[RS],
-      ec: ExecutionContext
+      ec: ExecutionContext,
+      methodMaxRateLimitDelay: Option[FiniteDuration] = None
   ): Future[Either[SlackApiClientError, RS]] = {
 
     throttler.throttle[RS](
-      apiMethodUri = Some( request.uri ),
-      apiTier = methodTierLevel,
-      apiToken = Some( slackApiToken )
+      uri = request.uri,
+      tier = methodTierLevel,
+      apiToken = Some( slackApiToken ),
+      methodMaxDelay = methodMaxRateLimitDelay
     ) { () =>
       sendSlackRequest[RS](
         request.auth.bearer( slackApiToken.value )

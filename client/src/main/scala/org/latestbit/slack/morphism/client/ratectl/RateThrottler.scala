@@ -18,15 +18,23 @@
 
 package org.latestbit.slack.morphism.client.ratectl
 
-import org.latestbit.slack.morphism.client.ratectl.impl.StandardRateThrottler
+import java.util.concurrent.Executors
+
+import org.latestbit.slack.morphism.client.ratectl.impl.StandardRateThrottlerImpl
 import org.latestbit.slack.morphism.client.{ SlackApiClientError, SlackApiToken }
 import sttp.model.Uri
 
 import scala.concurrent.Future
+import scala.concurrent.duration.FiniteDuration
 
 trait RateThrottler {
 
-  def throttle[RS]( apiMethodUri: Option[Uri], apiTier: Option[Int], apiToken: Option[SlackApiToken] )(
+  def throttle[RS](
+      uri: Uri,
+      tier: Option[Int],
+      apiToken: Option[SlackApiToken],
+      methodMaxDelay: Option[FiniteDuration]
+  )(
       request: () => Future[Either[SlackApiClientError, RS]]
   ): Future[Either[SlackApiClientError, RS]]
 
@@ -38,7 +46,12 @@ object RateThrottler {
   case object Empty extends RateThrottler {
     override def shutdown(): Unit = {}
 
-    override def throttle[RS]( apiMethodUri: Option[Uri], apiTier: Option[Int], apiToken: Option[SlackApiToken] )(
+    override def throttle[RS](
+        uri: Uri,
+        tier: Option[Int],
+        apiToken: Option[SlackApiToken],
+        methodMaxDelay: Option[FiniteDuration]
+    )(
         request: () => Future[Either[SlackApiClientError, RS]]
     ): Future[Either[SlackApiClientError, RS]] = request()
   }
@@ -48,7 +61,9 @@ object RateThrottler {
   }
 
   def createStandardThrottler( params: RateControlParams ): RateThrottler = {
-    new StandardRateThrottler( params )
+    new StandardRateThrottlerImpl(
+      params
+    )
   }
 
   def createEmptyThrottler(): RateThrottler = RateThrottler.Empty

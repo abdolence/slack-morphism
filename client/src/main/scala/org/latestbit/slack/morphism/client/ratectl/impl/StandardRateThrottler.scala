@@ -18,30 +18,26 @@
 
 package org.latestbit.slack.morphism.client.ratectl.impl
 
-import java.util.concurrent.{ Executors, TimeUnit }
+import java.util.concurrent.{ Executors, ScheduledExecutorService, TimeUnit }
 
-import org.latestbit.slack.morphism.client.{ SlackApiClientError, SlackApiToken }
+import org.latestbit.slack.morphism.client.{ SlackApiClientError, SlackApiRateLimitMaxDelayError, SlackApiToken }
 import org.latestbit.slack.morphism.client.ratectl._
 import sttp.model.Uri
 
 import scala.concurrent.{ Future, Promise }
 import scala.concurrent.duration.FiniteDuration
 
-class StandardRateThrottler private[ratectl] ( params: RateControlParams ) extends RateThrottler {
+abstract class StandardRateThrottler private[ratectl] (
+    params: RateControlParams,
+    throttleScheduledExecutor: ScheduledExecutorService,
+    cleanerScheduledExecutor: ScheduledExecutorService
+) extends RateThrottler {
 
   @volatile private var globalMaxRateMetric: RateThrottlerMetric =
     params.globalMaxRateLimit.map( toRateMetric ).orNull
 
-  case class RateThrottlerWorkspaceMetrics(
-      wholeWorkspaceMetric: Option[RateThrottlerMetric],
-      tiers: Map[Int, RateThrottlerMetric],
-      updated: Long
-  )
-
   private val workspaceMaxRateMetrics: scala.collection.mutable.Map[String, RateThrottlerWorkspaceMetrics] =
     scala.collection.mutable.Map[String, RateThrottlerWorkspaceMetrics]()
-
-  private val workspaceMetricsCleanerExecutor = Executors.newSingleThreadScheduledExecutor()
 
   private final val WORKSPACE_METRICS_CLEANER_INITIAL_DELAY_IN_SEC = 5 * 60 // 5 min delay
   private final val WORKSPACE_METRICS_CLEANER_INTERVAL_IN_SEC = 2 * 60 // 2 min interval
@@ -49,24 +45,20 @@ class StandardRateThrottler private[ratectl] ( params: RateControlParams ) exten
 
   startWorkspaceMetricsCleanerService()
 
-  private val throttleSchedulerExecutor = Executors.newScheduledThreadPool( Runtime.getRuntime().availableProcessors );
-
-  private def toRateLimitInMs( rateLimit: RateControlLimit ) = {
-    rateLimit.per.toMillis / rateLimit.value
-  }
-
   private def toRateMetric( rateLimit: RateControlLimit ) = {
-    val rateLimitInMs = toRateLimitInMs( rateLimit )
+    val rateLimitInMs = rateLimit.toRateLimitInMs()
+    val rateLimitCapacity = rateLimit.per.toMillis / rateLimitInMs
 
     RateThrottlerMetric(
-      available = rateLimit.per.toMillis / rateLimitInMs,
+      available = rateLimitCapacity,
       lastUpdated = currentTimeInMs(),
       rateLimitInMs = rateLimitInMs,
-      delay = 0
+      delay = 0,
+      maxAvailable = rateLimitCapacity
     )
   }
 
-  private def currentTimeInMs(): Long = System.currentTimeMillis()
+  protected def currentTimeInMs(): Long
 
   private def createOrGetWorkspaceMetrics( workspaceId: String, now: Long ): RateThrottlerWorkspaceMetrics = {
     workspaceMaxRateMetrics.getOrElseUpdate(
@@ -83,7 +75,7 @@ class StandardRateThrottler private[ratectl] ( params: RateControlParams ) exten
   }
 
   private def startWorkspaceMetricsCleanerService() = {
-    workspaceMetricsCleanerExecutor.scheduleAtFixedRate(
+    cleanerScheduledExecutor.scheduleAtFixedRate(
       () => cleanWorkspaceMetrics(),
       WORKSPACE_METRICS_CLEANER_INITIAL_DELAY_IN_SEC,
       WORKSPACE_METRICS_CLEANER_INTERVAL_IN_SEC,
@@ -145,7 +137,7 @@ class StandardRateThrottler private[ratectl] ( params: RateControlParams ) exten
       apiMethodUri: Option[Uri],
       apiTier: Option[Int],
       apiToken: Option[SlackApiToken]
-  ): Option[FiniteDuration] = {
+  ): Option[Long] = {
     val now = currentTimeInMs()
 
     synchronized {
@@ -159,34 +151,63 @@ class StandardRateThrottler private[ratectl] ( params: RateControlParams ) exten
           tokenValue.workspaceId.map { workspaceId => calcWorkspaceDelays( now, workspaceId, apiMethodUri, apiTier ) }
         }
         .getOrElse( List() ) )).maxOption
-        .map { delayInMs => FiniteDuration( delayInMs, TimeUnit.MILLISECONDS ) }
 
     }
   }
 
   override def shutdown(): Unit = {
-    workspaceMetricsCleanerExecutor.shutdown()
+    cleanerScheduledExecutor.shutdown()
+    throttleScheduledExecutor.shutdown()
   }
 
-  override def throttle[RS]( apiMethodUri: Option[Uri], apiTier: Option[Int], apiToken: Option[SlackApiToken] )(
+  override def throttle[RS](
+      uri: Uri,
+      tier: Option[Int],
+      apiToken: Option[SlackApiToken],
+      methodMaxDelay: Option[FiniteDuration]
+  )(
       request: () => Future[Either[SlackApiClientError, RS]]
   ): Future[Either[SlackApiClientError, RS]] = {
-    calcDelay( apiMethodUri, apiTier, apiToken ) match {
-      case Some( delay ) if delay.length > 0 => {
-        val promise = Promise[Either[SlackApiClientError, RS]]()
+    calcDelay( Some( uri ), tier, apiToken ) match {
+      case Some( delay ) if delay > 0 => {
 
-        throttleSchedulerExecutor.scheduleWithFixedDelay(
-          () => {
-            promise.completeWith( request() )
-          },
-          0,
-          delay.toMillis,
-          TimeUnit.MILLISECONDS
-        )
+        if (methodMaxDelay.forall( _.toMillis > delay ) && params.maxDelayTimeout.forall( _.toMillis > delay )) {
+          val promise = Promise[Either[SlackApiClientError, RS]]()
 
-        promise.future
+          throttleScheduledExecutor.scheduleWithFixedDelay(
+            () => {
+              promise.completeWith( request() )
+            },
+            0,
+            delay,
+            TimeUnit.MILLISECONDS
+          )
+
+          promise.future
+        } else {
+          Future.successful(
+            Left(
+              SlackApiRateLimitMaxDelayError(
+                uri,
+                s"Rate method max delay exceed: ${delay}. " +
+                  s"Max specified: ${methodMaxDelay.getOrElse( -1 )} (local) / " +
+                  s"${params.maxDelayTimeout.getOrElse( -1 )} (global)"
+              )
+            )
+          )
+        }
+
       }
       case _ => request()
     }
   }
+}
+
+final class StandardRateThrottlerImpl private[ratectl] ( params: RateControlParams )
+    extends StandardRateThrottler(
+      params,
+      throttleScheduledExecutor = Executors.newScheduledThreadPool( Runtime.getRuntime().availableProcessors ),
+      cleanerScheduledExecutor = Executors.newSingleThreadScheduledExecutor()
+    ) {
+  override protected def currentTimeInMs(): Long = System.currentTimeMillis()
 }
