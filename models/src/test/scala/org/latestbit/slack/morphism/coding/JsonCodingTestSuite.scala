@@ -25,7 +25,6 @@ import io.circe.syntax._
 import io.circe.parser._
 import org.latestbit.circe.adt.codec._
 import org.latestbit.slack.morphism.common.SlackDateTime
-import org.latestbit.slack.morphism.messages.SlackUserMessage
 import org.scalatest.flatspec.AnyFlatSpec
 
 case class TestModel( f1: String, f2: Long = 5, f3: Option[String] = None, f4: Option[Long] = None )
