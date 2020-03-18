@@ -21,5 +21,6 @@ package org.latestbit.slack.morphism.client.ratectrl.impl
 case class RateThrottlerWorkspaceMetrics(
     wholeWorkspaceMetric: Option[RateThrottlerMetric],
     tiers: Map[Int, RateThrottlerMetric],
+    specialLimits: Map[String, RateThrottlerMetric],
     updated: Long
 )

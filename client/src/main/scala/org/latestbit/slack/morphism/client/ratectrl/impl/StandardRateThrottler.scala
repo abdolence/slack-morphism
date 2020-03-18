@@ -25,7 +25,6 @@ import org.latestbit.slack.morphism.client.ratectrl._
 import sttp.model.Uri
 
 import scala.concurrent.{ Future, Promise }
-import scala.concurrent.duration.FiniteDuration
 
 abstract class StandardRateThrottler private[ratectrl] (
     params: SlackApiRateControlParams,
@@ -67,6 +66,7 @@ abstract class StandardRateThrottler private[ratectrl] (
           case ( tier, limit ) =>
             ( tier, toRateMetric( limit ) )
         },
+        Map(),
         now
       )
     )
@@ -95,45 +95,82 @@ abstract class StandardRateThrottler private[ratectrl] (
     }
   }
 
+  private def calcWorkspaceTierMetric(
+      now: Long,
+      methodRateControl: Option[SlackApiMethodRateControlParams],
+      workspaceMetrics: RateThrottlerWorkspaceMetrics
+  ) = {
+    methodRateControl
+      .flatMap( _.tier.flatMap { tier =>
+        workspaceMetrics.tiers.get( tier ).map { metric => ( tier, metric.update( now ) ) }
+      } )
+
+  }
+
+  private def calcWorkspaceSpecialLimitMetric(
+      now: Long,
+      methodRateControl: Option[SlackApiMethodRateControlParams],
+      workspaceMetrics: RateThrottlerWorkspaceMetrics
+  ) = {
+    methodRateControl
+      .flatMap( _.specialRateLimit.map { specialLimit =>
+        val metric = workspaceMetrics.specialLimits.getOrElse(
+          specialLimit.key,
+          toRateMetric( specialLimit.limit )
+        )
+        (
+          specialLimit.key,
+          metric.update( now )
+        )
+      } )
+  }
+
   private def calcWorkspaceDelays(
       now: Long,
       workspaceId: String,
       apiMethodUri: Option[Uri],
-      apiTier: Option[Int]
+      methodRateControl: Option[SlackApiMethodRateControlParams]
   ): List[Long] = {
     if (params.workspaceMaxRateLimit.isEmpty || params.slackApiTierLimits.isEmpty) {
       List()
     } else {
-      val workspaceMetrics = createOrGetWorkspaceMetrics( workspaceId, now )
+      val workspaceMetrics =
+        createOrGetWorkspaceMetrics( workspaceId, now )
 
-      val updatedWorkspaceMetric = workspaceMetrics.wholeWorkspaceMetric.map { metric => metric.update( now ) }
-
-      val updatedTierMetric =
-        apiTier.flatMap { tier => workspaceMetrics.tiers.get( tier ).map { metric => ( tier, metric.update( now ) ) } }
+      val updatedWorkspaceGlobalMetric = workspaceMetrics.wholeWorkspaceMetric.map { metric => metric.update( now ) }
+      val updatedTierMetric = calcWorkspaceTierMetric( now, methodRateControl, workspaceMetrics )
+      val updatedSpecialLimitMetric = calcWorkspaceSpecialLimitMetric( now, methodRateControl, workspaceMetrics )
 
       workspaceMaxRateMetrics.update(
         workspaceId,
         workspaceMetrics.copy(
-          wholeWorkspaceMetric = updatedWorkspaceMetric,
+          wholeWorkspaceMetric = updatedWorkspaceGlobalMetric,
           tiers = updatedTierMetric
             .map {
               case ( tier, metric ) =>
                 workspaceMetrics.tiers.updated( tier, metric )
             }
-            .getOrElse( workspaceMetrics.tiers )
+            .getOrElse( workspaceMetrics.tiers ),
+          specialLimits = updatedSpecialLimitMetric
+            .map {
+              case ( key, metric ) =>
+                workspaceMetrics.specialLimits.updated( key, metric )
+            }
+            .getOrElse( workspaceMetrics.specialLimits )
         )
       )
 
       List(
-        updatedWorkspaceMetric,
-        updatedTierMetric.map( _._2 )
+        updatedWorkspaceGlobalMetric,
+        updatedTierMetric.map( _._2 ),
+        updatedSpecialLimitMetric.map( _._2 )
       ).flatten.map( _.delay )
     }
   }
 
   protected def calcDelay(
       apiMethodUri: Option[Uri],
-      apiTier: Option[Int],
+      methodRateControl: Option[SlackApiMethodRateControlParams],
       apiToken: Option[SlackApiToken]
   ): Option[Long] = {
     val now = currentTimeInMs()
@@ -146,7 +183,9 @@ abstract class StandardRateThrottler private[ratectrl] (
         }
       ).flatten ++ (apiToken
         .flatMap { tokenValue =>
-          tokenValue.workspaceId.map { workspaceId => calcWorkspaceDelays( now, workspaceId, apiMethodUri, apiTier ) }
+          tokenValue.workspaceId.map { workspaceId =>
+            calcWorkspaceDelays( now, workspaceId, apiMethodUri, methodRateControl )
+          }
         }
         .getOrElse( List() ) )).maxOption
 
@@ -190,7 +229,7 @@ abstract class StandardRateThrottler private[ratectrl] (
   )(
       request: () => Future[Either[SlackApiClientError, RS]]
   ): Future[Either[SlackApiClientError, RS]] = {
-    calcDelay( Some( uri ), methodRateControl.flatMap( _.tier ), apiToken ) match {
+    calcDelay( Some( uri ), methodRateControl, apiToken ) match {
       case Some( delay ) if delay > 0 => {
 
         if (methodRateControl.forall( _.methodMaxRateLimitDelay.forall( _.toMillis > delay ) ) &&
