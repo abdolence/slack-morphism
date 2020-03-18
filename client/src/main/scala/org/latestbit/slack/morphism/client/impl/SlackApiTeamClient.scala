@@ -19,6 +19,7 @@
 package org.latestbit.slack.morphism.client.impl
 
 import org.latestbit.slack.morphism.client._
+import org.latestbit.slack.morphism.client.ratectrl.SlackApiRateControlParams
 import org.latestbit.slack.morphism.client.reqresp.team._
 
 import scala.concurrent.{ ExecutionContext, Future }
@@ -43,7 +44,8 @@ trait SlackApiTeamClient extends SlackApiHttpProtocolSupport {
         "team.info",
         Map(
           "team" -> req.team
-        )
+        ),
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_3 )
       )
     }
 
@@ -61,7 +63,8 @@ trait SlackApiTeamClient extends SlackApiHttpProtocolSupport {
           "team.profile.get",
           Map(
             "visibility" -> req.visibility
-          )
+          ),
+          methodTierLevel = Some( SlackApiRateControlParams.TIER_3 )
         )
       }
 

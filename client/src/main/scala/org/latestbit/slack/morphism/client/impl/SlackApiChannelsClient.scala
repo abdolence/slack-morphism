@@ -19,6 +19,7 @@
 package org.latestbit.slack.morphism.client.impl
 
 import org.latestbit.slack.morphism.client._
+import org.latestbit.slack.morphism.client.ratectrl.SlackApiRateControlParams
 import org.latestbit.slack.morphism.client.reqresp.channels._
 import org.latestbit.slack.morphism.messages.SlackMessage
 import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
@@ -44,7 +45,8 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport {
 
       http.post[SlackApiChannelsArchiveRequest, SlackApiChannelsArchiveResponse](
         "channels.archive",
-        req
+        req,
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_2 )
       )
     }
 
@@ -58,7 +60,8 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport {
 
       http.post[SlackApiChannelsCreateRequest, SlackApiChannelsCreateResponse](
         "channels.create",
-        req
+        req,
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_2 )
       )
     }
 
@@ -79,7 +82,8 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport {
           "latest" -> req.latest,
           "oldest" -> req.oldest,
           "unreads" -> req.unreads.map( _.toString() )
-        )
+        ),
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_3 )
       )
     }
 
@@ -115,7 +119,8 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport {
 
       http.post[SlackApiChannelsInfoRequest, SlackApiChannelsInfoResponse](
         "channels.info",
-        req
+        req,
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_3 )
       )
     }
 
@@ -129,7 +134,8 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport {
 
       http.post[SlackApiChannelsInviteRequest, SlackApiChannelsInviteResponse](
         "channels.invite",
-        req
+        req,
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_3 )
       )
     }
 
@@ -143,7 +149,8 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport {
 
       http.post[SlackApiChannelsJoinRequest, SlackApiChannelsJoinResponse](
         "channels.join",
-        req
+        req,
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_3 )
       )
     }
 
@@ -157,7 +164,8 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport {
 
       http.post[SlackApiChannelsKickRequest, SlackApiChannelsKickResponse](
         "channels.kick",
-        req
+        req,
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_3 )
       )
     }
 
@@ -171,7 +179,8 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport {
 
       http.post[SlackApiChannelsLeaveRequest, SlackApiChannelsLeaveResponse](
         "channels.leave",
-        req
+        req,
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_3 )
       )
     }
 
@@ -190,7 +199,8 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport {
           "exclude_archived" -> req.exclude_archived.map( _.toString() ),
           "exclude_members" -> req.exclude_archived.map( _.toString() ),
           "limit" -> req.limit.map( _.toString() )
-        )
+        ),
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_2 )
       )
     }
 
@@ -225,7 +235,8 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport {
 
       http.post[SlackApiChannelsMarkRequest, SlackApiChannelsMarkResponse](
         "channels.mark",
-        req
+        req,
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_3 )
       )
     }
 
@@ -239,7 +250,8 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport {
 
       http.post[SlackApiChannelsRenameRequest, SlackApiChannelsRenameResponse](
         "channels.rename",
-        req
+        req,
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_2 )
       )
     }
 
@@ -256,7 +268,8 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport {
         Map(
           "channel" -> Option( req.channel ),
           "thread_ts" -> Option( req.thread_ts )
-        )
+        ),
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_3 )
       )
     }
 
@@ -273,7 +286,8 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport {
         SlackApiChannelsSetPurposeResponse
       ](
         "channels.setPurpose",
-        req
+        req,
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_2 )
       )
     }
 
@@ -287,7 +301,8 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport {
 
       http.post[SlackApiChannelsSetTopicRequest, SlackApiChannelsSetTopicResponse](
         "channels.setTopic",
-        req
+        req,
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_2 )
       )
     }
 
@@ -304,7 +319,8 @@ trait SlackApiChannelsClient extends SlackApiHttpProtocolSupport {
         SlackApiChannelsUnarchiveResponse
       ](
         "channels.unarchive",
-        req
+        req,
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_2 )
       )
     }
 

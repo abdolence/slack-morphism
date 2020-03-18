@@ -18,6 +18,7 @@
 
 package org.latestbit.slack.morphism.client.impl
 
+import org.latestbit.slack.morphism.client.ratectrl.SlackApiRateControlParams
 import org.latestbit.slack.morphism.client.{ SlackApiClientError, _ }
 import org.latestbit.slack.morphism.client.reqresp.chat._
 import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
@@ -43,7 +44,8 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
 
       http.post[SlackApiChatDeleteRequest, SlackApiChatDeleteResponse](
         "chat.delete",
-        req
+        req,
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_3 )
       )
     }
 
@@ -60,7 +62,8 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
         SlackApiChatDeleteScheduledMessageResponse
       ](
         "chat.deleteScheduledMessage",
-        req
+        req,
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_3 )
       )
     }
 
@@ -91,7 +94,8 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
 
       http.post[SlackApiChatMeMessageRequest, SlackApiChatMeMessageResponse](
         "chat.meMessage",
-        req
+        req,
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_3 )
       )
     }
 
@@ -109,7 +113,8 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
           SlackApiChatPostEphemeralResponse
         ](
           "chat.postEphemeral",
-          req
+          req,
+          methodTierLevel = Some( SlackApiRateControlParams.TIER_4 )
         )
         .map( handleSlackEmptyRes( SlackApiChatPostEphemeralResponse() ) )
     }
@@ -168,7 +173,8 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
         SlackApiChatScheduleMessageResponse
       ](
         "chat.scheduleMessage",
-        req
+        req,
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_3 )
       )
     }
 
@@ -182,7 +188,8 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
 
       http.post[SlackApiChatUnfurlRequest, SlackApiChatUnfurlResponse](
         "chat.unfurl",
-        req
+        req,
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_3 )
       )
     }
 
@@ -196,7 +203,8 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
 
       http.post[SlackApiChatUpdateRequest, SlackApiChatUpdateResponse](
         "chat.update",
-        req
+        req,
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_3 )
       )
     }
 
@@ -215,7 +223,8 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
           SlackApiChatScheduledMessagesListResponse
         ](
           "chat.scheduledMessages.list",
-          req
+          req,
+          methodTierLevel = Some( SlackApiRateControlParams.TIER_3 )
         )
       }
 

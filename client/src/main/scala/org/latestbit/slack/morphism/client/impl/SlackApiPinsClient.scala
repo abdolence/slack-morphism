@@ -19,6 +19,7 @@
 package org.latestbit.slack.morphism.client.impl
 
 import org.latestbit.slack.morphism.client._
+import org.latestbit.slack.morphism.client.ratectrl.SlackApiRateControlParams
 import org.latestbit.slack.morphism.client.reqresp.pins._
 
 import scala.concurrent.{ ExecutionContext, Future }
@@ -41,7 +42,8 @@ trait SlackApiPinsClient extends SlackApiHttpProtocolSupport {
 
       http.post[SlackApiPinsAddRequest, SlackApiPinsAddResponse](
         "pins.add",
-        req
+        req,
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_2 )
       )
     }
 
@@ -57,7 +59,8 @@ trait SlackApiPinsClient extends SlackApiHttpProtocolSupport {
         "pins.list",
         Map(
           "channel" -> Option( req.channel )
-        )
+        ),
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_2 )
       )
     }
 
@@ -71,7 +74,8 @@ trait SlackApiPinsClient extends SlackApiHttpProtocolSupport {
 
       http.post[SlackApiPinsRemoveRequest, SlackApiPinsRemoveResponse](
         "pins.remove",
-        req
+        req,
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_2 )
       )
     }
 

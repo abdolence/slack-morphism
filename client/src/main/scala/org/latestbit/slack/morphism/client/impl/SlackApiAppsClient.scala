@@ -19,10 +19,11 @@
 package org.latestbit.slack.morphism.client.impl
 
 import org.latestbit.slack.morphism.client._
+import org.latestbit.slack.morphism.client.ratectrl.SlackApiRateControlParams
 import org.latestbit.slack.morphism.client.reqresp.apps._
+import org.latestbit.slack.morphism.codecs.implicits._
 
 import scala.concurrent.{ ExecutionContext, Future }
-import org.latestbit.slack.morphism.codecs.implicits._
 
 /**
  * Support for Slack Apps API methods
@@ -41,7 +42,8 @@ trait SlackApiAppsClient extends SlackApiHttpProtocolSupport {
 
       http.post[SlackApiUninstallRequest, SlackApiUninstallResponse](
         "apps.uninstall",
-        req
+        req,
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_1 )
       )
     }
   }

@@ -19,6 +19,7 @@
 package org.latestbit.slack.morphism.client.impl
 
 import org.latestbit.slack.morphism.client._
+import org.latestbit.slack.morphism.client.ratectrl.SlackApiRateControlParams
 import org.latestbit.slack.morphism.client.reqresp.reactions._
 import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
 
@@ -42,7 +43,8 @@ trait SlackApiReactionsClient extends SlackApiHttpProtocolSupport {
 
       http.post[SlackApiReactionsAddRequest, SlackApiReactionsAddResponse](
         "reactions.add",
-        req
+        req,
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_2 )
       )
     }
 
@@ -60,7 +62,8 @@ trait SlackApiReactionsClient extends SlackApiHttpProtocolSupport {
           "channel" -> Option( req.channel ),
           "timestamp" -> Option( req.timestamp ),
           "full" -> req.full.map( _.toString() )
-        )
+        ),
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_3 )
       )
     }
 
@@ -79,7 +82,8 @@ trait SlackApiReactionsClient extends SlackApiHttpProtocolSupport {
           "full" -> req.full.map( _.toString() ),
           "limit" -> req.limit.map( _.toString() ),
           "user" -> req.user
-        )
+        ),
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_2 )
       )
     }
 
@@ -114,7 +118,8 @@ trait SlackApiReactionsClient extends SlackApiHttpProtocolSupport {
 
       http.post[SlackApiReactionsRemoveRequest, SlackApiReactionsRemoveResponse](
         "reactions.remove",
-        req
+        req,
+        methodTierLevel = Some( SlackApiRateControlParams.TIER_2 )
       )
     }
 
