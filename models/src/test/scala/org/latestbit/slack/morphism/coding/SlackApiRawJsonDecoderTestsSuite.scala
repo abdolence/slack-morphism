@@ -21,13 +21,18 @@ package org.latestbit.slack.morphism.coding
 import org.latestbit.slack.morphism.client.reqresp.conversations.SlackApiConversationsHistoryResponse
 import org.latestbit.slack.morphism.codecs.CirceCodecs
 import org.latestbit.slack.morphism.common.SlackApiResponseMetadata
-import org.latestbit.slack.morphism.events.SlackChannelJoinMessage
+import org.latestbit.slack.morphism.events.{
+  SlackChannelJoinMessage,
+  SlackChannelNameMessage,
+  SlackChannelPurposeMessage,
+  SlackChannelTopicMessage
+}
 import org.scalatest.flatspec.AnyFlatSpec
 import io.circe.parser._
 
 class SlackApiRawJsonDecoderTestsSuite extends AnyFlatSpec with CirceCodecs {
 
-  "Circe codecs" should "be able to decode an example channel_joined message" in {
+  "Circe codecs" should "be able to decode a channel history with channel_joined, channel_topic, channel_purpose, channel_name messages" in {
 
     val jsonResponse =
       """
@@ -41,7 +46,32 @@ class SlackApiRawJsonDecoderTestsSuite extends AnyFlatSpec with CirceCodecs {
             |      "user": "UID",
             |      "text": "<@UID> has joined the channel",
             |      "inviter": "OTHERID"
-            |    }
+            |    },
+            |    {
+            |            "type": "message",
+            |            "subtype": "channel_purpose",
+            |            "ts": "1584535359.001300",
+            |            "user": "UID",
+            |            "text": "<@UID> set the channel purpose: purpose-text",
+            |            "purpose": "purpose-text"
+            |        },
+            |        {
+            |            "type": "message",
+            |            "subtype": "channel_topic",
+            |            "ts": "1584535194.000900",
+            |            "user": "UID",
+            |            "text": "<@UID> set the channel topic: topic-text",
+            |            "topic": "topic-text"
+            |        },
+            |        {
+            |            "type": "message",
+            |            "subtype": "channel_name",
+            |            "ts": "1584537248.001900",
+            |            "user": "UID",
+            |            "text": "<@UID> has renamed the channel from \"test\" to \"test2\"",
+            |            "old_name": "test",
+            |            "name": "test2"
+            |        }
             |  ],
             |  "has_more": true,
             |  "pin_count": 0,
@@ -60,6 +90,25 @@ class SlackApiRawJsonDecoderTestsSuite extends AnyFlatSpec with CirceCodecs {
           text = Some( "<@UID> has joined the channel" ),
           user = "UID",
           inviter = Some( "OTHERID" )
+        ),
+        SlackChannelPurposeMessage(
+          ts = "1584535359.001300",
+          text = Some( "<@UID> set the channel purpose: purpose-text" ),
+          user = "UID",
+          purpose = Some( "purpose-text" )
+        ),
+        SlackChannelTopicMessage(
+          ts = "1584535194.000900",
+          text = Some( "<@UID> set the channel topic: topic-text" ),
+          user = "UID",
+          topic = Some( "topic-text" )
+        ),
+        SlackChannelNameMessage(
+          ts = "1584537248.001900",
+          text = Some( "<@UID> has renamed the channel from \"test\" to \"test2\"" ),
+          user = "UID",
+          old_name = Some( "test" ),
+          name = "test2"
         )
       ),
       has_more = Some( true ),

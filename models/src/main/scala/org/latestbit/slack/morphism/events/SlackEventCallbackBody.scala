@@ -119,23 +119,6 @@ case class SlackUserMessage(
     with SlackPinnedMessage
     with SlackMessageEvent
 
-@JsonAdt( "channel_join" )
-case class SlackChannelJoinMessage(
-    override val ts: String,
-    override val channel: Option[String] = None,
-    override val channel_type: Option[String] = None,
-    override val reactions: Option[List[SlackMessageReaction]] = None,
-    edited: Option[SlackMessageEdited] = None,
-    reply_count: Option[Long] = None,
-    replies: Option[List[SlackMessageReplyInfo]] = None,
-    override val text: Option[String] = None,
-    override val blocks: Option[List[SlackBlock]] = None,
-    user: String,
-    inviter: Option[String] = None
-) extends SlackMessage {
-  override val thread_ts: Option[String] = None
-}
-
 @JsonAdt( "bot_message" )
 case class SlackBotMessage(
     override val ts: String,
@@ -174,6 +157,75 @@ case class SlackMeMessage(
 ) extends SlackMessage
     with SlackPinnedMessage
     with SlackMessageEvent
+
+@JsonAdt( "channel_join" )
+case class SlackChannelJoinMessage(
+    override val ts: String,
+    override val channel: Option[String] = None,
+    override val channel_type: Option[String] = None,
+    override val reactions: Option[List[SlackMessageReaction]] = None,
+    edited: Option[SlackMessageEdited] = None,
+    reply_count: Option[Long] = None,
+    replies: Option[List[SlackMessageReplyInfo]] = None,
+    override val text: Option[String] = None,
+    override val blocks: Option[List[SlackBlock]] = None,
+    user: String,
+    inviter: Option[String] = None
+) extends SlackMessage {
+  override val thread_ts: Option[String] = None
+}
+
+@JsonAdt( "channel_topic" )
+case class SlackChannelTopicMessage(
+    override val ts: String,
+    override val channel: Option[String] = None,
+    override val channel_type: Option[String] = None,
+    override val reactions: Option[List[SlackMessageReaction]] = None,
+    edited: Option[SlackMessageEdited] = None,
+    reply_count: Option[Long] = None,
+    replies: Option[List[SlackMessageReplyInfo]] = None,
+    override val text: Option[String] = None,
+    override val blocks: Option[List[SlackBlock]] = None,
+    user: String,
+    topic: Option[String] = None
+) extends SlackMessage {
+  override val thread_ts: Option[String] = None
+}
+
+@JsonAdt( "channel_purpose" )
+case class SlackChannelPurposeMessage(
+    override val ts: String,
+    override val channel: Option[String] = None,
+    override val channel_type: Option[String] = None,
+    override val reactions: Option[List[SlackMessageReaction]] = None,
+    edited: Option[SlackMessageEdited] = None,
+    reply_count: Option[Long] = None,
+    replies: Option[List[SlackMessageReplyInfo]] = None,
+    override val text: Option[String] = None,
+    override val blocks: Option[List[SlackBlock]] = None,
+    user: String,
+    purpose: Option[String] = None
+) extends SlackMessage {
+  override val thread_ts: Option[String] = None
+}
+
+@JsonAdt( "channel_name" )
+case class SlackChannelNameMessage(
+    override val ts: String,
+    override val channel: Option[String] = None,
+    override val channel_type: Option[String] = None,
+    override val reactions: Option[List[SlackMessageReaction]] = None,
+    edited: Option[SlackMessageEdited] = None,
+    reply_count: Option[Long] = None,
+    replies: Option[List[SlackMessageReplyInfo]] = None,
+    override val text: Option[String] = None,
+    override val blocks: Option[List[SlackBlock]] = None,
+    user: String,
+    old_name: Option[String] = None,
+    name: String
+) extends SlackMessage {
+  override val thread_ts: Option[String] = None
+}
 
 case class SlackMessageEdited( user: String, ts: String )
 
