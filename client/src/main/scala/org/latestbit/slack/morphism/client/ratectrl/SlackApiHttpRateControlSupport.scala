@@ -27,7 +27,7 @@ import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ ExecutionContext, Future }
 
 trait SlackApiHttpRateControlSupport extends SlackApiHttpProtocolSupport {
-  protected val throttler: RateThrottler
+  protected val throttler: SlackApiRateThrottler
 
   override protected def protectedSlackHttpApiRequest[RS](
       request: Request[Either[String, String], Nothing],

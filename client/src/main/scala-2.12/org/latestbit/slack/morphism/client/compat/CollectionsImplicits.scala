@@ -16,20 +16,20 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.ratectrl
+package org.latestbit.slack.morphism.client.compat
 
-import org.scalatest.flatspec.AnyFlatSpec
+import scala.language.implicitConversions
 
-import scala.concurrent.duration._
+object CollectionsImplicits {
 
-class RateControlParamsTestsSuite extends AnyFlatSpec {
+  implicit class IterableExtensions[A]( val iterable: TraversableOnce[A] ) extends AnyVal {
 
-  val params = RateControlParams(
-    globalMaxRateLimit = Some(
-      10,
-      1.second
-    )
-  )
+    def maxOption[B >: A]( implicit ord: Ordering[B] ): Option[A] = {
+      if (iterable.isEmpty)
+        None
+      else
+        Some( iterable.max( ord ) )
+    }
+  }
 
-  assert( params.globalMaxRateLimit.exists( limit => limit.value == 10 && limit.per.toSeconds == 1 ) )
 }

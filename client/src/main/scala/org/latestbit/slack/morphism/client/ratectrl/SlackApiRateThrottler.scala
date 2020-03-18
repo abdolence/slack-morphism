@@ -25,7 +25,7 @@ import sttp.model.Uri
 import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
 
-trait RateThrottler {
+trait SlackApiRateThrottler {
 
   def throttle[RS](
       uri: Uri,
@@ -39,9 +39,9 @@ trait RateThrottler {
   def shutdown(): Unit
 }
 
-object RateThrottler {
+object SlackApiRateThrottler {
 
-  case object Empty extends RateThrottler {
+  case object Empty extends SlackApiRateThrottler {
     override def shutdown(): Unit = {}
 
     override def throttle[RS](
@@ -54,16 +54,16 @@ object RateThrottler {
     ): Future[Either[SlackApiClientError, RS]] = request()
   }
 
-  def createStandardThrottler(): RateThrottler = {
-    createStandardThrottler( RateControlParams.SlackStandardLimits.DEFAULT_PARAMS )
+  def createStandardThrottler(): SlackApiRateThrottler = {
+    createStandardThrottler( SlackApiRateControlParams.StandardLimits.DEFAULT_PARAMS )
   }
 
-  def createStandardThrottler( params: RateControlParams ): RateThrottler = {
+  def createStandardThrottler( params: SlackApiRateControlParams ): SlackApiRateThrottler = {
     new StandardRateThrottlerImpl(
       params
     )
   }
 
-  def createEmptyThrottler(): RateThrottler = RateThrottler.Empty
+  def createEmptyThrottler(): SlackApiRateThrottler = SlackApiRateThrottler.Empty
 
 }

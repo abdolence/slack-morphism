@@ -28,11 +28,12 @@ import scala.concurrent.{ Future, Promise }
 import scala.concurrent.duration.FiniteDuration
 
 abstract class StandardRateThrottler private[ratectrl] (
-    params: RateControlParams,
+    params: SlackApiRateControlParams,
     scheduledExecutor: ScheduledExecutorService
-) extends RateThrottler {
+) extends SlackApiRateThrottler {
 
   import StandardRateThrottler._
+  import org.latestbit.slack.morphism.client.compat.CollectionsImplicits._
 
   @volatile private var globalMaxRateMetric: RateThrottlerMetric =
     params.globalMaxRateLimit.map( toRateMetric ).orNull
@@ -42,7 +43,7 @@ abstract class StandardRateThrottler private[ratectrl] (
 
   startWorkspaceMetricsCleanerService()
 
-  private def toRateMetric( rateLimit: RateControlLimit ) = {
+  private def toRateMetric( rateLimit: SlackApiRateControlLimit ) = {
     val rateLimitInMs = rateLimit.toRateLimitInMs()
     val rateLimitCapacity = rateLimit.per.toMillis / rateLimitInMs
 
@@ -220,7 +221,7 @@ object StandardRateThrottler {
   final val WORKSPACE_METRICS_CLEANER_MAX_OLD_MSEC = 60 * 60 * 1000 // clean everything more than 1 hour old
 }
 
-final class StandardRateThrottlerImpl private[ratectrl] ( params: RateControlParams )
+final class StandardRateThrottlerImpl private[ratectrl] ( params: SlackApiRateControlParams )
     extends StandardRateThrottler(
       params,
       scheduledExecutor = Executors.newScheduledThreadPool( Runtime.getRuntime().availableProcessors )

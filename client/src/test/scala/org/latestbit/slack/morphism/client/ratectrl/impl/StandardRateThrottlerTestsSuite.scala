@@ -21,7 +21,7 @@ package org.latestbit.slack.morphism.client.ratectrl.impl
 import java.util.concurrent.{ ScheduledExecutorService, ScheduledFuture, TimeUnit }
 
 import org.latestbit.slack.morphism.client._
-import org.latestbit.slack.morphism.client.ratectrl.RateControlParams
+import org.latestbit.slack.morphism.client.ratectrl.SlackApiRateControlParams
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.flatspec.AnyFlatSpec
 import sttp.client._
@@ -31,12 +31,12 @@ import scala.concurrent.duration._
 
 class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
 
-  val params = RateControlParams(
+  val params = SlackApiRateControlParams(
     globalMaxRateLimit = Some( 50, 1.second ),
     workspaceMaxRateLimit = Some( 10, 1.second ),
     slackApiTierLimits = Map(
-      ( RateControlParams.TIER_1, ( 5, 1.second ) ),
-      ( RateControlParams.TIER_2, ( 2, 1.second ) )
+      ( SlackApiRateControlParams.TIER_1, ( 5, 1.second ) ),
+      ( SlackApiRateControlParams.TIER_2, ( 2, 1.second ) )
     )
   )
 
@@ -159,7 +159,7 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
     (1 to 10).foreach { idx =>
       throttler.throttle[String](
         uri"http://example.net/",
-        tier = Some( RateControlParams.TIER_1 ),
+        tier = Some( SlackApiRateControlParams.TIER_1 ),
         apiToken = Some( apiToken1 ),
         methodMaxDelay = None
       ) { () => Future.successful( Right( s"Valid res: ${idx}" ) ) }
@@ -172,7 +172,7 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
     var cleanCommand: Runnable = null
 
     (scheduledExecutorMock.scheduleAtFixedRate _).expects( *, *, *, * ).once().onCall {
-      case ( command: Runnable, _: Long, _: Long, _: TimeUnit ) =>
+      ( command: Runnable, _: Long, _: Long, _: TimeUnit ) =>
         cleanCommand = command
 
         val scheduledFuture = stub[ScheduledFuture[Unit]]
@@ -191,7 +191,7 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
     (1 to 10).foreach { idx =>
       throttler.throttle[String](
         uri"http://example.net/",
-        tier = Some( RateControlParams.TIER_1 ),
+        tier = Some( SlackApiRateControlParams.TIER_1 ),
         apiToken = Some( SlackApiBotToken( s"test-token-${idx}", workspaceId = Some( s"WID-${idx}" ) ) ),
         methodMaxDelay = None
       ) { () => Future.successful( Right( s"Valid res: ${idx}" ) ) }

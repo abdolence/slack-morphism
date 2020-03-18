@@ -22,7 +22,7 @@ import scala.language.implicitConversions
 
 import scala.concurrent.duration._
 
-case class RateControlLimit( value: Int, per: FiniteDuration ) {
+case class SlackApiRateControlLimit( value: Int, per: FiniteDuration ) {
   require( value > 0, "Value should be more than zero" )
   require( per.toMillis > 0, "Duration should be more than zero" )
 
@@ -31,19 +31,19 @@ case class RateControlLimit( value: Int, per: FiniteDuration ) {
   }
 }
 
-object RateControlLimit {
-  implicit def tuple2ToLimit( tuple2: ( Int, FiniteDuration ) ) = RateControlLimit( tuple2._1, tuple2._2 )
+object SlackApiRateControlLimit {
+  implicit def tuple2ToLimit( tuple2: ( Int, FiniteDuration ) ) = SlackApiRateControlLimit( tuple2._1, tuple2._2 )
 }
 
-case class RateControlParams(
-    globalMaxRateLimit: Option[RateControlLimit] = None,
-    workspaceMaxRateLimit: Option[RateControlLimit] = None,
+case class SlackApiRateControlParams(
+    globalMaxRateLimit: Option[SlackApiRateControlLimit] = None,
+    workspaceMaxRateLimit: Option[SlackApiRateControlLimit] = None,
     maxDelayTimeout: Option[FiniteDuration] = None,
-    slackApiTierLimits: Map[Int, RateControlLimit] = Map(),
-    slackApiSpecialLimits: Map[String, RateControlLimit] = Map()
+    slackApiTierLimits: Map[Int, SlackApiRateControlLimit] = Map(),
+    slackApiSpecialLimits: Map[String, SlackApiRateControlLimit] = Map()
 )
 
-object RateControlParams {
+object SlackApiRateControlParams {
 
   final val TIER_1 = 1
   final val TIER_2 = 2
@@ -53,21 +53,21 @@ object RateControlParams {
   /**
    * https://api.slack.com/docs/rate-limits
    */
-  object SlackStandardLimits {
+  object StandardLimits {
 
-    final val TIER_MAP = Map[Int, RateControlLimit](
+    final val TIER_MAP = Map[Int, SlackApiRateControlLimit](
       ( TIER_1, ( 1, 1.minute ) ),
       ( TIER_2, ( 20, 1.minute ) ),
       ( TIER_3, ( 50, 1.minute ) ),
       ( TIER_4, ( 100, 1.minute ) )
     )
 
-    final val SPECIAL_LIMITS = Map[String, RateControlLimit](
+    final val SPECIAL_LIMITS = Map[String, SlackApiRateControlLimit](
       "chat.postMessage" -> (1, 1.second),
       "incoming-webhooks" -> (1, 1.second)
     )
 
-    final val DEFAULT_PARAMS = RateControlParams(
+    final val DEFAULT_PARAMS = SlackApiRateControlParams(
       slackApiTierLimits = TIER_MAP,
       slackApiSpecialLimits = SPECIAL_LIMITS
     )

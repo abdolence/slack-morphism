@@ -19,12 +19,15 @@
 package org.latestbit.slack.morphism.client
 
 import org.latestbit.slack.morphism.client.impl._
+import org.latestbit.slack.morphism.client.ratectrl._
 
 /**
  * Slack API client
  */
-class SlackApiClient()( implicit protected override val sttpBackend: SlackApiClientBackend.SttpFutureBackendType )
-    extends SlackApiHttpProtocolSupport
+class SlackApiClient(
+    protected override val throttler: SlackApiRateThrottler = SlackApiRateThrottler.createEmptyThrottler()
+)( implicit protected override val sttpBackend: SlackApiClientBackend.SttpFutureBackendType )
+    extends SlackApiHttpRateControlSupport
     with SlackApiOAuthClient
     with SlackApiTestClient
     with SlackApiAppsClient

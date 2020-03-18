@@ -18,13 +18,13 @@
 
 package org.latestbit.slack.morphism.client.ratectrl.impl
 
-import org.latestbit.slack.morphism.client.ratectrl.RateControlLimit
+import org.latestbit.slack.morphism.client.ratectrl.SlackApiRateControlLimit
 import org.scalatest.flatspec.AnyFlatSpec
 
 import scala.concurrent.duration._
 
-class RateThrottlerMetricTestsSuite extends AnyFlatSpec {
-  val rateLimit = RateControlLimit( 15, 1.seconds )
+class SlackApiRateThrottlerMetricTestsSuite extends AnyFlatSpec {
+  val rateLimit = SlackApiRateControlLimit( 15, 1.seconds )
   val rateLimitInMs = rateLimit.toRateLimitInMs()
   val rateLimitCapacity = rateLimit.per.toMillis / rateLimitInMs
 
