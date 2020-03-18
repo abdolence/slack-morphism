@@ -21,7 +21,7 @@ package org.latestbit.slack.morphism.client.ratectrl.impl
 import java.util.concurrent.{ ScheduledExecutorService, ScheduledFuture, TimeUnit }
 
 import org.latestbit.slack.morphism.client._
-import org.latestbit.slack.morphism.client.ratectrl.SlackApiRateControlParams
+import org.latestbit.slack.morphism.client.ratectrl.{ SlackApiMethodRateControlParams, SlackApiRateControlParams }
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.flatspec.AnyFlatSpec
 import sttp.client._
@@ -72,9 +72,8 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
     (1 to 100).foreach { idx =>
       throttler.throttle[String](
         uri"http://example.net/",
-        tier = None,
         apiToken = None,
-        methodMaxDelay = None
+        methodRateControl = None
       ) { () => Future.successful( Right( s"Valid res: ${idx}" ) ) }
     }
 
@@ -83,9 +82,8 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
     (1 to 50).foreach { idx =>
       throttler.throttle[String](
         uri"http://example.net/",
-        tier = None,
         apiToken = None,
-        methodMaxDelay = None
+        methodRateControl = None
       ) { () => Future.successful( Right( s"Valid res: ${idx}" ) ) }
     }
   }
@@ -113,18 +111,16 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
     (1 to 20).foreach { idx =>
       throttler.throttle[String](
         uri"http://example.net/",
-        tier = None,
         apiToken = Some( apiToken1 ),
-        methodMaxDelay = None
+        methodRateControl = None
       ) { () => Future.successful( Right( s"Valid res: ${idx}" ) ) }
     }
 
     (1 to 10).foreach { idx =>
       throttler.throttle[String](
         uri"http://example.net/",
-        tier = None,
         apiToken = Some( apiToken2 ),
-        methodMaxDelay = None
+        methodRateControl = None
       ) { () => Future.successful( Right( s"Valid res: ${idx}" ) ) }
     }
 
@@ -133,9 +129,8 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
     (1 to 10).foreach { idx =>
       throttler.throttle[String](
         uri"http://example.net/",
-        tier = None,
         apiToken = Some( apiToken1 ),
-        methodMaxDelay = None
+        methodRateControl = None
       ) { () => Future.successful( Right( s"Valid res: ${idx}" ) ) }
     }
   }
@@ -159,9 +154,8 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
     (1 to 10).foreach { idx =>
       throttler.throttle[String](
         uri"http://example.net/",
-        tier = Some( SlackApiRateControlParams.TIER_1 ),
         apiToken = Some( apiToken1 ),
-        methodMaxDelay = None
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_1 ) ) )
       ) { () => Future.successful( Right( s"Valid res: ${idx}" ) ) }
     }
   }
@@ -191,9 +185,8 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
     (1 to 10).foreach { idx =>
       throttler.throttle[String](
         uri"http://example.net/",
-        tier = Some( SlackApiRateControlParams.TIER_1 ),
-        apiToken = Some( SlackApiBotToken( s"test-token-${idx}", workspaceId = Some( s"WID-${idx}" ) ) ),
-        methodMaxDelay = None
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_1 ) ) ),
+        apiToken = Some( SlackApiBotToken( s"test-token-${idx}", workspaceId = Some( s"WID-${idx}" ) ) )
       ) { () => Future.successful( Right( s"Valid res: ${idx}" ) ) }
     }
 
