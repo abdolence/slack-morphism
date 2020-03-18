@@ -43,4 +43,14 @@ class SlackApiClient(
     with SlackApiReactionsClient
     with SlackApiTeamClient
     with SlackApiUsersClient
-    with SlackApiViewsClient {}
+    with SlackApiViewsClient {
+
+  /**
+   * Release all resources allocated by a client.
+   * Depends on your configuration, the Slack API client may allocate threads for example.
+   */
+  def shutdown(): Unit = {
+    throttler.shutdown()
+  }
+
+}

@@ -21,6 +21,11 @@ package org.latestbit.slack.morphism.client.ratectrl
 import scala.concurrent.duration._
 import scala.language.implicitConversions
 
+/**
+ * A rate limit definition
+ * @param value elements or messages count
+ * @param per time unit/interval
+ */
 case class SlackApiRateControlLimit( value: Int, per: FiniteDuration ) {
   require( value > 0, "Value should be more than zero" )
   require( per.toMillis > 0, "Duration should be more than zero" )
@@ -34,6 +39,9 @@ object SlackApiRateControlLimit {
   implicit def tuple2ToLimit( tuple2: ( Int, FiniteDuration ) ) = SlackApiRateControlLimit( tuple2._1, tuple2._2 )
 }
 
+/**
+ * Global Slack API throttling params
+ */
 case class SlackApiRateControlParams(
     globalMaxRateLimit: Option[SlackApiRateControlLimit] = None,
     workspaceMaxRateLimit: Option[SlackApiRateControlLimit] = None,
@@ -49,6 +57,7 @@ object SlackApiRateControlParams {
   final val TIER_4 = 4
 
   /**
+   * Rate limits according to
    * https://api.slack.com/docs/rate-limits
    */
   object StandardLimits {
