@@ -18,7 +18,7 @@
 
 package org.latestbit.slack.morphism.client.ratectrl.impl
 
-import java.util.concurrent.{ ScheduledExecutorService, ScheduledFuture, TimeUnit }
+import java.util.concurrent.{ Callable, ScheduledExecutorService, ScheduledFuture, TimeUnit }
 
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.ratectrl.{
@@ -52,12 +52,13 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
 
     var lastDelay = 0L
 
-    (scheduledExecutorMock.scheduleWithFixedDelay _)
-      .expects( *, 0, *, TimeUnit.MILLISECONDS )
+    (scheduledExecutorMock
+      .schedule[Unit] _)
+      .expects( *, *, TimeUnit.MILLISECONDS )
       .repeated( 50 )
       .times()
       .onCall {
-        case ( _: Runnable, _: Long, delay: Long, _: TimeUnit ) =>
+        case ( _: Callable[_], delay: Long, _: TimeUnit ) =>
           assert( delay === 20 + lastDelay )
           lastDelay += 20
 
@@ -98,8 +99,9 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
 
     (scheduledExecutorMock.scheduleAtFixedRate _).expects( *, *, *, * ).once()
 
-    (scheduledExecutorMock.scheduleWithFixedDelay _)
-      .expects( *, 0, *, TimeUnit.MILLISECONDS )
+    (scheduledExecutorMock
+      .schedule[Unit] _)
+      .expects( *, *, TimeUnit.MILLISECONDS )
       .repeated( 10 )
       .times()
 
@@ -144,8 +146,9 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
 
     (scheduledExecutorMock.scheduleAtFixedRate _).expects( *, *, *, * ).once()
 
-    (scheduledExecutorMock.scheduleWithFixedDelay _)
-      .expects( *, 0, *, TimeUnit.MILLISECONDS )
+    (scheduledExecutorMock
+      .schedule[Unit] _)
+      .expects( *, *, TimeUnit.MILLISECONDS )
       .repeated( 5 )
       .times()
 
@@ -169,8 +172,9 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
 
     (scheduledExecutorMock.scheduleAtFixedRate _).expects( *, *, *, * ).once()
 
-    (scheduledExecutorMock.scheduleWithFixedDelay _)
-      .expects( *, 0, *, TimeUnit.MILLISECONDS )
+    (scheduledExecutorMock
+      .schedule[Unit] _)
+      .expects( *, *, TimeUnit.MILLISECONDS )
       .repeated( 5 )
       .times()
 

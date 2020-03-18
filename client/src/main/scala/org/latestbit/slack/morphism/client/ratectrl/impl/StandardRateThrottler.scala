@@ -131,7 +131,9 @@ abstract class StandardRateThrottler private[ratectrl] (
       apiMethodUri: Option[Uri],
       methodRateControl: Option[SlackApiMethodRateControlParams]
   ): List[Long] = {
-    if (params.workspaceMaxRateLimit.isEmpty || params.slackApiTierLimits.isEmpty) {
+    if (params.workspaceMaxRateLimit.isEmpty &&
+        params.slackApiTierLimits.isEmpty &&
+        methodRateControl.forall( _.specialRateLimit.isEmpty )) {
       List()
     } else {
       val workspaceMetrics =
@@ -201,12 +203,10 @@ abstract class StandardRateThrottler private[ratectrl] (
       request: () => Future[Either[SlackApiClientError, RS]]
   ): Future[Either[SlackApiClientError, RS]] = {
     val promise = Promise[Either[SlackApiClientError, RS]]()
-
-    scheduledExecutor.scheduleWithFixedDelay(
+    scheduledExecutor.schedule(
       () => {
         promise.completeWith( request() )
       },
-      0,
       delay,
       TimeUnit.MILLISECONDS
     )

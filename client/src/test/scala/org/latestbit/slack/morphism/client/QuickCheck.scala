@@ -18,11 +18,6 @@
 
 package org.latestbit.slack.morphism.client
 
-import org.scalatest.flatspec.AsyncFlatSpec
-import cats._
-import cats.data.EitherT
-import cats.implicits._
+import org.scalatest.flatspec.AnyFlatSpec
 
-import scala.concurrent.Future
-
-class QuickCheck extends AsyncFlatSpec {}
+class QuickCheck extends AnyFlatSpec {}
