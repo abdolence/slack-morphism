@@ -21,7 +21,11 @@ package org.latestbit.slack.morphism.client.ratectrl.impl
 import java.util.concurrent.{ ScheduledExecutorService, ScheduledFuture, TimeUnit }
 
 import org.latestbit.slack.morphism.client._
-import org.latestbit.slack.morphism.client.ratectrl.{ SlackApiMethodRateControlParams, SlackApiRateControlParams }
+import org.latestbit.slack.morphism.client.ratectrl.{
+  SlackApiMethodRateControlParams,
+  SlackApiRateControlParams,
+  SlackApiRateControlSpecialLimit
+}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.flatspec.AnyFlatSpec
 import sttp.client._
@@ -156,6 +160,40 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
         uri"http://example.net/",
         apiToken = Some( apiToken1 ),
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_1 ) ) )
+      ) { () => Future.successful( Right( s"Valid res: ${idx}" ) ) }
+    }
+  }
+
+  it should "limit rate per workspace and method special limit" in {
+    val scheduledExecutorMock = mock[ScheduledExecutorService]
+
+    (scheduledExecutorMock.scheduleAtFixedRate _).expects( *, *, *, * ).once()
+
+    (scheduledExecutorMock.scheduleWithFixedDelay _)
+      .expects( *, 0, *, TimeUnit.MILLISECONDS )
+      .repeated( 5 )
+      .times()
+
+    val throttler = new StandardRateThrottler( params, scheduledExecutorMock ) {
+      override protected def currentTimeInMs(): Long = 0L
+    }
+
+    val apiToken1 = SlackApiBotToken( "test-token-1", workspaceId = Some( "WID1" ) )
+
+    (1 to 10).foreach { idx =>
+      throttler.throttle[String](
+        uri"http://example.net/",
+        apiToken = Some( apiToken1 ),
+        methodRateControl = Some(
+          SlackApiMethodRateControlParams(
+            specialRateLimit = Some(
+              SlackApiRateControlSpecialLimit(
+                key = "test-key",
+                ( 5, 1.second )
+              )
+            )
+          )
+        )
       ) { () => Future.successful( Right( s"Valid res: ${idx}" ) ) }
     }
   }
