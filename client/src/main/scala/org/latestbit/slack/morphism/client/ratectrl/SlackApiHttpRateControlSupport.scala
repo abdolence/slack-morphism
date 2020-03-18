@@ -31,19 +31,17 @@ trait SlackApiHttpRateControlSupport extends SlackApiHttpProtocolSupport {
 
   override protected def protectedSlackHttpApiRequest[RS](
       request: Request[Either[String, String], Nothing],
-      methodTierLevel: Option[Int]
+      methodRateControl: Option[SlackApiMethodRateControlParams]
   )(
       implicit slackApiToken: SlackApiToken,
       decoder: Decoder[RS],
-      ec: ExecutionContext,
-      methodMaxRateLimitDelay: Option[FiniteDuration] = None
+      ec: ExecutionContext
   ): Future[Either[SlackApiClientError, RS]] = {
 
     throttler.throttle[RS](
       uri = request.uri,
-      tier = methodTierLevel,
       apiToken = Some( slackApiToken ),
-      methodMaxDelay = methodMaxRateLimitDelay
+      methodRateControl = methodRateControl
     ) { () =>
       sendSlackRequest[RS](
         request.auth.bearer( slackApiToken.value )

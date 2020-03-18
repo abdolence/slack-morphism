@@ -26,6 +26,7 @@ import io.circe.parser._
 import io.circe.syntax._
 import org.latestbit.slack.morphism.codecs.implicits._
 import org.latestbit.slack.morphism.client._
+import org.latestbit.slack.morphism.client.ratectrl.{ SlackApiMethodRateControlParams, SlackApiRateControlSpecialLimit }
 import org.latestbit.slack.morphism.client.reqresp.internal.SlackGeneralResponseParams
 import sttp.client._
 import sttp.model.{ MediaType, Uri }
@@ -145,12 +146,11 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
 
   protected def protectedSlackHttpApiRequest[RS](
       request: Request[Either[String, String], Nothing],
-      methodTierLevel: Option[Int]
+      methodRateControl: Option[SlackApiMethodRateControlParams]
   )(
       implicit slackApiToken: SlackApiToken,
       decoder: Decoder[RS],
-      ec: ExecutionContext,
-      methodMaxRateLimitDelay: Option[FiniteDuration] = None
+      ec: ExecutionContext
   ): Future[Either[SlackApiClientError, RS]] = {
 
     sendSlackRequest[RS](
@@ -185,35 +185,37 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
       absoluteUri: Uri,
       request: RequestT[Empty, Either[String, String], Nothing],
       body: RQ,
-      methodTierLevel: Option[Int]
+      methodRateControl: Option[SlackApiMethodRateControlParams]
   )(
       implicit slackApiToken: SlackApiToken,
       encoder: Encoder[RQ],
       decoder: Decoder[RS],
-      ec: ExecutionContext,
-      methodMaxRateLimitDelay: Option[FiniteDuration]
+      ec: ExecutionContext
   ): Future[Either[SlackApiClientError, RS]] = {
 
     protectedSlackHttpApiRequest[RS](
       encodePostBody[RQ]( request, body )
         .post( absoluteUri ),
-      methodTierLevel
+      methodRateControl
     )
 
   }
 
-  protected def protectedSlackHttpApiPost[RQ, RS]( methodUri: String, body: RQ, methodTierLevel: Option[Int] )(
+  protected def protectedSlackHttpApiPost[RQ, RS](
+      methodUri: String,
+      body: RQ,
+      methodRateControl: Option[SlackApiMethodRateControlParams]
+  )(
       implicit slackApiToken: SlackApiToken,
       encoder: Encoder[RQ],
       decoder: Decoder[RS],
-      ec: ExecutionContext,
-      methodMaxRateLimitDelay: Option[FiniteDuration]
+      ec: ExecutionContext
   ): Future[Either[SlackApiClientError, RS]] = {
     protectedSlackHttpApiPost[RQ, RS](
       absoluteUri = getSlackMethodAbsoluteUri( methodUri ),
       request = createSlackHttpApiRequest(),
       body = body,
-      methodTierLevel = methodTierLevel
+      methodRateControl = methodRateControl
     )
   }
 
@@ -221,12 +223,11 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
       methodUri: String,
       request: RequestT[Empty, Either[String, String], Nothing],
       params: Map[String, Option[String]],
-      methodTierLevel: Option[Int]
+      methodRateControl: Option[SlackApiMethodRateControlParams]
   )(
       implicit slackApiToken: SlackApiToken,
       decoder: Decoder[RS],
-      ec: ExecutionContext,
-      methodMaxRateLimitDelay: Option[FiniteDuration]
+      ec: ExecutionContext
   ): Future[Either[SlackApiClientError, RS]] = {
 
     val filteredParams: Map[String, String] =
@@ -236,7 +237,7 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
       }
     protectedSlackHttpApiRequest[RS](
       request.get( getSlackMethodAbsoluteUri( methodUri ).params( filteredParams ) ),
-      methodTierLevel
+      methodRateControl
     )
   }
 
@@ -271,13 +272,17 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
      * @tparam RS expected response type
      * @return Decoded from JSON result
      */
-    def get[RS]( methodUri: String, params: Map[String, Option[String]] = Map(), methodTierLevel: Option[Int] = None )(
+    def get[RS](
+        methodUri: String,
+        params: Map[String, Option[String]] = Map(),
+        methodRateControl: Option[SlackApiMethodRateControlParams] = None
+    )(
         implicit slackApiToken: SlackApiToken,
         decoder: Decoder[RS],
         ec: ExecutionContext,
         methodMaxRateLimitDelay: Option[FiniteDuration] = None
     ): Future[Either[SlackApiClientError, RS]] = {
-      protectedSlackHttpApiGet[RS]( methodUri, createSlackHttpApiRequest(), params, methodTierLevel )
+      protectedSlackHttpApiGet[RS]( methodUri, createSlackHttpApiRequest(), params, methodRateControl )
     }
 
     /**
@@ -288,17 +293,16 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
      * @tparam RS expected response type
      * @return Decoded from JSON result
      */
-    def post[RQ, RS]( methodUri: String, req: RQ, methodTierLevel: Option[Int] = None )(
+    def post[RQ, RS]( methodUri: String, req: RQ, methodRateControl: Option[SlackApiMethodRateControlParams] = None )(
         implicit slackApiToken: SlackApiToken,
         encoder: Encoder[RQ],
         decoder: Decoder[RS],
-        ec: ExecutionContext,
-        methodMaxRateLimitDelay: Option[FiniteDuration] = None
+        ec: ExecutionContext
     ): Future[Either[SlackApiClientError, RS]] = {
       protectedSlackHttpApiPost[RQ, RS](
         methodUri,
         req,
-        methodTierLevel
+        methodRateControl
       )
     }
 

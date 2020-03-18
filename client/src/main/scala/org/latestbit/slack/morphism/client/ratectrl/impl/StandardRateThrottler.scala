@@ -185,16 +185,16 @@ abstract class StandardRateThrottler private[ratectrl] (
 
   override def throttle[RS](
       uri: Uri,
-      tier: Option[Int],
       apiToken: Option[SlackApiToken],
-      methodMaxDelay: Option[FiniteDuration]
+      methodRateControl: Option[SlackApiMethodRateControlParams]
   )(
       request: () => Future[Either[SlackApiClientError, RS]]
   ): Future[Either[SlackApiClientError, RS]] = {
-    calcDelay( Some( uri ), tier, apiToken ) match {
+    calcDelay( Some( uri ), methodRateControl.flatMap( _.tier ), apiToken ) match {
       case Some( delay ) if delay > 0 => {
 
-        if (methodMaxDelay.forall( _.toMillis > delay ) && params.maxDelayTimeout.forall( _.toMillis > delay )) {
+        if (methodRateControl.forall( _.methodMaxRateLimitDelay.forall( _.toMillis > delay ) ) &&
+            params.maxDelayTimeout.forall( _.toMillis > delay )) {
           promiseDelayedRequest[RS]( delay, request )
         } else {
           Future.successful(
@@ -202,7 +202,7 @@ abstract class StandardRateThrottler private[ratectrl] (
               SlackApiRateLimitMaxDelayError(
                 uri,
                 s"Rate method max delay exceed: ${delay}. " +
-                  s"Max specified: ${methodMaxDelay.getOrElse( -1 )} (local) / " +
+                  s"Max specified: ${methodRateControl.flatMap( _.methodMaxRateLimitDelay ).getOrElse( -1 )} (local) / " +
                   s"${params.maxDelayTimeout.getOrElse( -1 )} (global)"
               )
             )

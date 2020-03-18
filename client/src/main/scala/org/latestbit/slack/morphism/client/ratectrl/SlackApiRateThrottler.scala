@@ -29,9 +29,8 @@ trait SlackApiRateThrottler {
 
   def throttle[RS](
       uri: Uri,
-      tier: Option[Int],
       apiToken: Option[SlackApiToken],
-      methodMaxDelay: Option[FiniteDuration]
+      methodRateControl: Option[SlackApiMethodRateControlParams]
   )(
       request: () => Future[Either[SlackApiClientError, RS]]
   ): Future[Either[SlackApiClientError, RS]]
@@ -46,9 +45,8 @@ object SlackApiRateThrottler {
 
     override def throttle[RS](
         uri: Uri,
-        tier: Option[Int],
         apiToken: Option[SlackApiToken],
-        methodMaxDelay: Option[FiniteDuration]
+        methodRateControl: Option[SlackApiMethodRateControlParams]
     )(
         request: () => Future[Either[SlackApiClientError, RS]]
     ): Future[Either[SlackApiClientError, RS]] = request()

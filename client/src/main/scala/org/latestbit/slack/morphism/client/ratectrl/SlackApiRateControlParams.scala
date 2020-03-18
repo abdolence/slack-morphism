@@ -18,9 +18,8 @@
 
 package org.latestbit.slack.morphism.client.ratectrl
 
-import scala.language.implicitConversions
-
 import scala.concurrent.duration._
+import scala.language.implicitConversions
 
 case class SlackApiRateControlLimit( value: Int, per: FiniteDuration ) {
   require( value > 0, "Value should be more than zero" )
@@ -39,8 +38,7 @@ case class SlackApiRateControlParams(
     globalMaxRateLimit: Option[SlackApiRateControlLimit] = None,
     workspaceMaxRateLimit: Option[SlackApiRateControlLimit] = None,
     maxDelayTimeout: Option[FiniteDuration] = None,
-    slackApiTierLimits: Map[Int, SlackApiRateControlLimit] = Map(),
-    slackApiSpecialLimits: Map[String, SlackApiRateControlLimit] = Map()
+    slackApiTierLimits: Map[Int, SlackApiRateControlLimit] = Map()
 )
 
 object SlackApiRateControlParams {
@@ -62,14 +60,8 @@ object SlackApiRateControlParams {
       ( TIER_4, ( 100, 1.minute ) )
     )
 
-    final val SPECIAL_LIMITS = Map[String, SlackApiRateControlLimit](
-      "chat.postMessage" -> (1, 1.second),
-      "incoming-webhooks" -> (1, 1.second)
-    )
-
     final val DEFAULT_PARAMS = SlackApiRateControlParams(
-      slackApiTierLimits = TIER_MAP,
-      slackApiSpecialLimits = SPECIAL_LIMITS
+      slackApiTierLimits = TIER_MAP
     )
 
   }

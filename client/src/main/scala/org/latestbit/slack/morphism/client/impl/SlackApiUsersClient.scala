@@ -19,6 +19,7 @@
 package org.latestbit.slack.morphism.client.impl
 
 import org.latestbit.slack.morphism.client._
+import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client.reqresp.users._
 import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
 import org.latestbit.slack.morphism.common.{ SlackChannelInfo, SlackUserInfo }
@@ -49,7 +50,8 @@ trait SlackApiUsersClient extends SlackApiHttpProtocolSupport {
           "limit" -> req.limit.map( _.toString() ),
           "types" -> req.types.map( _.mkString( "," ) ),
           "user" -> req.user
-        )
+        ),
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
       )
     }
 
@@ -86,7 +88,8 @@ trait SlackApiUsersClient extends SlackApiHttpProtocolSupport {
         "users.getPresence",
         Map(
           "user" -> Option( req.user )
-        )
+        ),
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
       )
     }
 
@@ -100,7 +103,8 @@ trait SlackApiUsersClient extends SlackApiHttpProtocolSupport {
 
       http.get[SlackApiUsersIdentityResponse](
         "users.identity",
-        Map[String, Option[String]]()
+        Map[String, Option[String]](),
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
       )
     }
 
@@ -117,7 +121,8 @@ trait SlackApiUsersClient extends SlackApiHttpProtocolSupport {
         Map(
           "user" -> Option( req.user ),
           "include_locale" -> req.include_locale.map( _.toString() )
-        )
+        ),
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_4 ) ) )
       )
     }
 
@@ -135,7 +140,8 @@ trait SlackApiUsersClient extends SlackApiHttpProtocolSupport {
           "cursor" -> req.cursor,
           "include_locale" -> req.include_locale.map( _.toString() ),
           "limit" -> req.limit.map( _.toString() )
-        )
+        ),
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
       )
     }
 
@@ -172,7 +178,8 @@ trait SlackApiUsersClient extends SlackApiHttpProtocolSupport {
         "users.lookupByEmail",
         Map(
           "email" -> Option( req.email )
-        )
+        ),
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
       )
     }
 
@@ -186,7 +193,8 @@ trait SlackApiUsersClient extends SlackApiHttpProtocolSupport {
 
       http.post[SlackApiUsersSetPresenceRequest, SlackApiUsersSetPresenceResponse](
         "users.setPresence",
-        req
+        req,
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
       )
     }
 
@@ -205,7 +213,8 @@ trait SlackApiUsersClient extends SlackApiHttpProtocolSupport {
           Map(
             "user" -> req.user,
             "include_locale" -> req.include_locale.map( _.toString() )
-          )
+          ),
+          methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_4 ) ) )
         )
       }
 
@@ -219,7 +228,8 @@ trait SlackApiUsersClient extends SlackApiHttpProtocolSupport {
 
         http.post[SlackApiUsersProfileSetRequest, SlackApiUsersProfileSetResponse](
           "users.profile.set",
-          req
+          req,
+          methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
         )
       }
 
