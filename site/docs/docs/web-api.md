@@ -207,7 +207,7 @@ Source
     .runForeach(msg => println(msg))
 
 ```
-#### Reply to Slack Events using response_url
+### Reply to Slack Events using response_url
 
 There are some Slack events that provide you a response_url 
 to post a message back using the specified url from those events.
@@ -227,7 +227,7 @@ client.chat
     )
 ```
 
-#### Post Incoming Webhook messages
+### Post Incoming Webhook messages
 
 You can use `SlackApiClient.chat.postWebhookMessage()` to post [Slack Incoming Webhook](https://api.slack.com/messaging/webhooks) messages:
 
