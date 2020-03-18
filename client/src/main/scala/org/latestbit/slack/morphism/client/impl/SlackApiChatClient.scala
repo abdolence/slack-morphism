@@ -122,14 +122,28 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
     /**
      * https://api.slack.com/methods/chat.postMessage
      */
-    def postMessage( req: SlackApiChatPostMessageRequest )(
+    def postMessage(
+        req: SlackApiChatPostMessageRequest,
+        rateControlLimit: SlackApiRateControlLimit =
+          SlackApiRateControlParams.StandardLimits.Specials.POST_CHANNEL_MESSAGE_LIMIT
+    )(
         implicit slackApiToken: SlackApiToken,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiChatPostMessageResponse]] = {
 
       http.post[SlackApiChatPostMessageRequest, SlackApiChatPostMessageResponse](
         "chat.postMessage",
-        req
+        req,
+        methodRateControl = Some(
+          SlackApiMethodRateControlParams(
+            specialRateLimit = Some(
+              SlackApiRateControlSpecialLimit(
+                key = s"chat.postMessage-${req.channel}",
+                rateControlLimit
+              )
+            )
+          )
+        )
       )
     }
 
@@ -152,7 +166,10 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
      * @param url a url from a Slack OAuth response or from a Slack app profile configuration
      * @param req a webhook request message params
      */
-    def postWebhookMessage( url: String, req: SlackApiPostWebHookRequest )(
+    def postWebhookMessage(
+        url: String,
+        req: SlackApiPostWebHookRequest
+    )(
         implicit ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiPostWebHookResponse]] = {
       sendSlackRequest[SlackApiPostWebHookResponse](

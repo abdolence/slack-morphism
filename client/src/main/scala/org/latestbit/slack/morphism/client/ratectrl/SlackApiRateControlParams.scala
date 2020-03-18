@@ -64,5 +64,10 @@ object SlackApiRateControlParams {
       slackApiTierLimits = TIER_MAP
     )
 
+    object Specials {
+      final val POST_CHANNEL_MESSAGE_LIMIT = SlackApiRateControlLimit( 1, 1.second )
+      final val INCOMING_HOOK_LIMIT = SlackApiRateControlLimit( 1, 1.second )
+    }
+
   }
 }
