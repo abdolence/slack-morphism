@@ -19,6 +19,7 @@
 package org.latestbit.slack.morphism.client.impl
 
 import org.latestbit.slack.morphism.client._
+import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client.reqresp.bots._
 
 import scala.concurrent.{ ExecutionContext, Future }
@@ -43,7 +44,8 @@ trait SlackApiBotsClient extends SlackApiHttpProtocolSupport {
         "bots.info",
         params = Map(
           "bot" -> bot
-        )
+        ),
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
       )
     }
 

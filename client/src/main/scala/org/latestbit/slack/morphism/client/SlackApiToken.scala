@@ -24,14 +24,20 @@ package org.latestbit.slack.morphism.client
 trait SlackApiToken {
 
   /**
-	 * Token value
-	 */
+   * Token value
+   */
   val value: String
 
   /**
-	 * Slack scope represented as a set of permissions
-	 */
+   * Slack scope represented as a set of permissions
+   */
   val scopeSet: Set[String]
+
+  /**
+   * Workspace/team id
+   */
+  val workspaceId: Option[String]
+
 }
 
 object SlackApiToken {
@@ -60,12 +66,18 @@ object SlackApiToken {
    * @param tokenType a token type
    * @param tokenValue a token value
    * @param scope a token scope
+   * @param workspaceId a workspace/team id for this token
    * @return an API token instance for Slack API client
    */
-  def createFrom( tokenType: String, tokenValue: String, scope: Option[String] = None ): Option[SlackApiToken] = {
+  def createFrom(
+      tokenType: String,
+      tokenValue: String,
+      scope: Option[String] = None,
+      workspaceId: Option[String] = None
+  ): Option[SlackApiToken] = {
     tokenType match {
-      case TokenTypes.BOT  => Some( SlackApiBotToken( tokenValue, scope ) )
-      case TokenTypes.USER => Some( SlackApiUserToken( tokenValue, scope ) )
+      case TokenTypes.BOT  => Some( SlackApiBotToken( tokenValue, scope, workspaceId ) )
+      case TokenTypes.USER => Some( SlackApiUserToken( tokenValue, scope, workspaceId ) )
       case _               => None
     }
   }
@@ -75,8 +87,13 @@ object SlackApiToken {
  * Slack API user token
  * @param value token value
  * @param scope token scope in a string form
+ * @param workspaceId a workspace/team id for this token
  */
-case class SlackApiUserToken( override val value: String, scope: Option[String] = None ) extends SlackApiToken {
+case class SlackApiUserToken(
+    override val value: String,
+    scope: Option[String] = None,
+    workspaceId: Option[String] = None
+) extends SlackApiToken {
   override val scopeSet: Set[String] = SlackApiToken.scopeToSet( scope )
 }
 
@@ -84,7 +101,12 @@ case class SlackApiUserToken( override val value: String, scope: Option[String] 
  * Slack API bot token
  * @param value token value
  * @param scope token scope in a string form
+ * @param workspaceId a workspace/team id for this token
  */
-case class SlackApiBotToken( override val value: String, scope: Option[String] = None ) extends SlackApiToken {
+case class SlackApiBotToken(
+    override val value: String,
+    scope: Option[String] = None,
+    workspaceId: Option[String] = None
+) extends SlackApiToken {
   override val scopeSet: Set[String] = SlackApiToken.scopeToSet( scope )
 }

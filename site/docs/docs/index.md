@@ -20,7 +20,7 @@ It provides you with a simple API mostly based on Scala Future, Option, Either, 
 Slack Morphism core library intentionally avoid dependencies to any additional Web-frameworks, so 
 you free to use any framework you're familiar with.
 Slack Morphism doesn't have any dependencies to any particular HTTP client library either 
-and uses [sttp library](https://github.com/softwaremill/sttp) to give you choice of options.
+and uses [sttp library](https://github.com/softwaremill/sttp) to give you choice.
 
 However, it would be an incomplete solution to provide you only core components, and for a quick start, 
 there is a [full-featured giter8 template and example](https://github.com/abdolence/slack-morphism-akka-http.g8) 
@@ -30,12 +30,16 @@ of a Slack Bot built with Slack Morphism and Akka Http.
 All of the Slack Morphism API methods available in a non-blocking manner, and 
 some of them (e.g. returning Slack channel history) also have support for a reactive Publisher,
  if you're familiar with Reactive Streams (and using related frameworks).
+ 
+### Rate controlling and throttling access to Slack Web API
+There is ready to use a rate control/throttling implementation, 
+which follows the Slack API rate limits and tiers (or your custom configuration).
 
 ## Getting Started
 Add the following to your `build.sbt`:
 
 ```scala
-libraryDependencies += "org.latestbit" %% "slack-morphism-client" % "1.0.5"
+libraryDependencies += "org.latestbit" %% "slack-morphism-client" % "1.1.0"
 ```
 
 or if you'd like to full-featured and ready to use Slack bot, which uses Akka Http, use this:

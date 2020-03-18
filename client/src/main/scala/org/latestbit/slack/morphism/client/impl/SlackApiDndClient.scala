@@ -19,6 +19,7 @@
 package org.latestbit.slack.morphism.client.impl
 
 import org.latestbit.slack.morphism.client._
+import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client.reqresp.dnd._
 
 import scala.concurrent.{ ExecutionContext, Future }
@@ -41,7 +42,8 @@ trait SlackApiDndClient extends SlackApiHttpProtocolSupport { self: SlackApiClie
 
       http.post[SlackApiDndEndDndRequest, SlackApiDndEndDndResponse](
         "dnd.endDnd",
-        SlackApiDndEndDndRequest()
+        SlackApiDndEndDndRequest(),
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
       )
     }
 
@@ -55,7 +57,8 @@ trait SlackApiDndClient extends SlackApiHttpProtocolSupport { self: SlackApiClie
 
       http.post[SlackApiDndEndSnoozeRequest, SlackApiDndEndSnoozeResponse](
         "dnd.endSnooze",
-        SlackApiDndEndSnoozeRequest()
+        SlackApiDndEndSnoozeRequest(),
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
       )
     }
 
@@ -71,7 +74,8 @@ trait SlackApiDndClient extends SlackApiHttpProtocolSupport { self: SlackApiClie
         "dnd.info",
         Map(
           "user" -> req.user
-        )
+        ),
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
       )
     }
 
@@ -85,7 +89,8 @@ trait SlackApiDndClient extends SlackApiHttpProtocolSupport { self: SlackApiClie
 
       http.post[SlackApiDndSetSnoozeRequest, SlackApiDndSetSnoozeResponse](
         "dnd.setSnooze",
-        SlackApiDndSetSnoozeRequest()
+        SlackApiDndSetSnoozeRequest(),
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
       )
     }
 
@@ -101,7 +106,8 @@ trait SlackApiDndClient extends SlackApiHttpProtocolSupport { self: SlackApiClie
         "dnd.teamInfo",
         Map(
           "users" -> Some( req.users.mkString( "," ) )
-        )
+        ),
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
       )
     }
 

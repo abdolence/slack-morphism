@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Abdulla Abdurakhmanov (abdulla@latestbit.com)
+ * Copyright 2020 Abdulla Abdurakhmanov (abdulla@latestbit.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,20 @@
  *
  */
 
-package org.latestbit.slack.morphism.client
+package org.latestbit.slack.morphism.client.ratectrl
 
 import org.scalatest.flatspec.AnyFlatSpec
 
-class QuickCheck extends AnyFlatSpec {}
+import scala.concurrent.duration._
+
+class SlackApiRateControlParamsTestsSuite extends AnyFlatSpec {
+
+  val params = SlackApiRateControlParams(
+    globalMaxRateLimit = Some(
+      10,
+      1.second
+    )
+  )
+
+  assert( params.globalMaxRateLimit.exists( limit => limit.value == 10 && limit.per.toSeconds == 1 ) )
+}

@@ -35,7 +35,7 @@ trait SlackApiTestClient extends SlackApiHttpProtocolSupport {
      * https://api.slack.com/methods/api.test
      */
     def test( req: SlackApiTestRequest )(
-        implicit slackApiToken: SlackApiUserToken,
+        implicit slackApiToken: SlackApiToken,
         ec: ExecutionContext
     ): Future[Either[SlackApiClientError, SlackApiTestResponse]] = {
 

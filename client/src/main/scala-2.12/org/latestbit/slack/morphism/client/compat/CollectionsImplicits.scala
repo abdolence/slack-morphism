@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Abdulla Abdurakhmanov (abdulla@latestbit.com)
+ * Copyright 2020 Abdulla Abdurakhmanov (abdulla@latestbit.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,20 @@
  *
  */
 
-package org.latestbit.slack.morphism.client
+package org.latestbit.slack.morphism.client.compat
 
-import org.scalatest.flatspec.AnyFlatSpec
+import scala.language.implicitConversions
 
-class QuickCheck extends AnyFlatSpec {}
+object CollectionsImplicits {
+
+  implicit class IterableExtensions[A]( val iterable: TraversableOnce[A] ) extends AnyVal {
+
+    def maxOption[B >: A]( implicit ord: Ordering[B] ): Option[A] = {
+      if (iterable.isEmpty)
+        None
+      else
+        Some( iterable.max( ord ) )
+    }
+  }
+
+}

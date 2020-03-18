@@ -116,3 +116,12 @@ case class SlackApiEmptyResultError( uri: Uri )
       uri = uri,
       s"Expecting some result from ${uri.toString()}, but received nothing"
     )
+
+/**
+ * Slack Web API rate limit max delay error
+ * @group ErrorDefs
+ *
+ * @param uri Web method URL
+ * @param message error message
+ */
+case class SlackApiRateLimitMaxDelayError( uri: Uri, message: String ) extends SlackApiClientError( uri = uri, message )

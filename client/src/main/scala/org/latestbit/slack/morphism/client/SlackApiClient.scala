@@ -19,12 +19,15 @@
 package org.latestbit.slack.morphism.client
 
 import org.latestbit.slack.morphism.client.impl._
+import org.latestbit.slack.morphism.client.ratectrl._
 
 /**
  * Slack API client
  */
-class SlackApiClient()( implicit protected override val sttpBackend: SlackApiClientBackend.SttpFutureBackendType )
-    extends SlackApiHttpProtocolSupport
+class SlackApiClient(
+    protected override val throttler: SlackApiRateThrottler = SlackApiRateThrottler.createEmptyThrottler()
+)( implicit protected override val sttpBackend: SlackApiClientBackend.SttpFutureBackendType )
+    extends SlackApiHttpRateControlSupport
     with SlackApiOAuthClient
     with SlackApiTestClient
     with SlackApiAppsClient
@@ -40,4 +43,14 @@ class SlackApiClient()( implicit protected override val sttpBackend: SlackApiCli
     with SlackApiReactionsClient
     with SlackApiTeamClient
     with SlackApiUsersClient
-    with SlackApiViewsClient {}
+    with SlackApiViewsClient {
+
+  /**
+   * Release all resources allocated by a client.
+   * Depends on your configuration, the Slack API client may allocate threads for example.
+   */
+  def shutdown(): Unit = {
+    throttler.shutdown()
+  }
+
+}

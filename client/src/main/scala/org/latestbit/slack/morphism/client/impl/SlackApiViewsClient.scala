@@ -19,6 +19,7 @@
 package org.latestbit.slack.morphism.client.impl
 
 import org.latestbit.slack.morphism.client._
+import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client.reqresp.views._
 
 import scala.concurrent.{ ExecutionContext, Future }
@@ -41,7 +42,8 @@ trait SlackApiViewsClient extends SlackApiHttpProtocolSupport {
 
       http.post[SlackApiViewsOpenRequest, SlackApiViewsOpenResponse](
         "views.open",
-        req
+        req,
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_4 ) ) )
       )
     }
 
@@ -55,7 +57,8 @@ trait SlackApiViewsClient extends SlackApiHttpProtocolSupport {
 
       http.post[SlackApiViewsPublishRequest, SlackApiViewsPublishResponse](
         "views.publish",
-        req
+        req,
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_4 ) ) )
       )
     }
 
@@ -69,7 +72,8 @@ trait SlackApiViewsClient extends SlackApiHttpProtocolSupport {
 
       http.post[SlackApiViewsPushRequest, SlackApiViewsPushResponse](
         "views.push",
-        req
+        req,
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_4 ) ) )
       )
     }
 
@@ -83,7 +87,8 @@ trait SlackApiViewsClient extends SlackApiHttpProtocolSupport {
 
       http.post[SlackApiViewsUpdateRequest, SlackApiViewsUpdateResponse](
         "views.update",
-        req
+        req,
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_4 ) ) )
       )
     }
 

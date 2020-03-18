@@ -19,10 +19,11 @@
 package org.latestbit.slack.morphism.client.impl
 
 import org.latestbit.slack.morphism.client._
+import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client.reqresp.auth._
+import org.latestbit.slack.morphism.codecs.implicits._
 
 import scala.concurrent.{ ExecutionContext, Future }
-import org.latestbit.slack.morphism.codecs.implicits._
 
 /**
  * Support for Slack Auth API methods
@@ -55,7 +56,8 @@ trait SlackApiAuthClient extends SlackApiHttpProtocolSupport {
 
       http.post[SlackApiAuthRevokeRequest, SlackApiAuthRevokeResponse](
         "auth.revoke",
-        req
+        req,
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
       )
     }
 

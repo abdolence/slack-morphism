@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Abdulla Abdurakhmanov (abdulla@latestbit.com)
+ * Copyright 2020 Abdulla Abdurakhmanov (abdulla@latestbit.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,14 @@
  *
  */
 
-package org.latestbit.slack.morphism.client
+package org.latestbit.slack.morphism.client.ratectrl
 
-import org.scalatest.flatspec.AnyFlatSpec
-
-class QuickCheck extends AnyFlatSpec {}
+/**
+ * Some Slack Web API methods have special rating limits
+ * (e.g. chat.postMessage allowed up to 1rps per workspace channel)
+ *
+ */
+case class SlackApiRateControlSpecialLimit(
+    key: String,
+    limit: SlackApiRateControlLimit
+)

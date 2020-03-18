@@ -19,12 +19,14 @@
 package org.latestbit.slack.morphism.client.impl
 
 import org.latestbit.slack.morphism.client._
+import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client.reqresp.conversations._
 import org.latestbit.slack.morphism.messages.SlackMessage
 import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
 import org.latestbit.slack.morphism.common.SlackChannelInfo
 import sttp.client._
 import org.latestbit.slack.morphism.codecs.implicits._
+
 import scala.concurrent.{ ExecutionContext, Future }
 
 /**
@@ -47,7 +49,8 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
         SlackApiConversationsArchiveResponse
       ](
         "conversations.archive",
-        req
+        req,
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
       )
     }
 
@@ -64,7 +67,8 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
         SlackApiConversationsCloseResponse
       ](
         "conversations.close",
-        req
+        req,
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
       )
     }
 
@@ -81,7 +85,8 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
         SlackApiConversationsCreateResponse
       ](
         "conversations.create",
-        req
+        req,
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
       )
     }
 
@@ -104,7 +109,8 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
           "latest" -> req.latest,
           "limit" -> req.latest.map( _.toString() ),
           "oldest" -> req.oldest
-        )
+        ),
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
       )
     }
 
@@ -146,7 +152,8 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
           "channel" -> Option( req.channel ),
           "include_locale" -> req.include_locale.map( _.toString() ),
           "include_num_members" -> req.include_num_members.map( _.toString() )
-        )
+        ),
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
       )
     }
 
@@ -163,7 +170,8 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
         SlackApiConversationsInviteResponse
       ](
         "conversations.invite",
-        req
+        req,
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
       )
     }
 
@@ -180,7 +188,8 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
         SlackApiConversationsJoinResponse
       ](
         "conversations.join",
-        req
+        req,
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
       )
     }
 
@@ -197,7 +206,8 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
         SlackApiConversationsKickResponse
       ](
         "conversations.kick",
-        req
+        req,
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
       )
     }
 
@@ -214,7 +224,8 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
         SlackApiConversationsLeaveResponse
       ](
         "conversations.leave",
-        req
+        req,
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
       )
     }
 
@@ -235,7 +246,8 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
           "exclude_archived" -> req.exclude_archived.map( _.toString() ),
           "limit" -> req.limit.map( _.toString() ),
           "types" -> req.types.map( _.mkString( "," ) )
-        )
+        ),
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
       )
     }
 
@@ -276,7 +288,8 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
           "channel" -> Option( req.channel ),
           "cursor" -> req.cursor,
           "limit" -> req.limit.map( _.toString() )
-        )
+        ),
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_4 ) ) )
       )
     }
 
@@ -315,7 +328,8 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
         SlackApiConversationsRenameResponse
       ](
         "conversations.rename",
-        req
+        req,
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
       )
     }
 
@@ -339,7 +353,8 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
           "latest" -> req.latest,
           "oldest" -> req.oldest,
           "limit" -> req.limit.map( _.toString() )
-        )
+        ),
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
       )
     }
 
@@ -379,7 +394,8 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
         SlackApiConversationsSetPurposeResponse
       ](
         "conversations.setPurpose",
-        req
+        req,
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
       )
     }
 
@@ -396,7 +412,8 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
         SlackApiConversationsSetTopicResponse
       ](
         "conversations.setTopic",
-        req
+        req,
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
       )
     }
 
@@ -413,7 +430,8 @@ trait SlackApiConversationsClient extends SlackApiHttpProtocolSupport { self: Sl
         SlackApiConversationsUnarchiveResponse
       ](
         "conversations.unarchive",
-        req
+        req,
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
       )
     }
 

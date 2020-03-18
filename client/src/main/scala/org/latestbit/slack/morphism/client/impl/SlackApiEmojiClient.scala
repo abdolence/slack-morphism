@@ -19,6 +19,7 @@
 package org.latestbit.slack.morphism.client.impl
 
 import org.latestbit.slack.morphism.client._
+import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client.reqresp.emoji._
 
 import scala.concurrent.{ ExecutionContext, Future }
@@ -41,7 +42,8 @@ trait SlackApiEmojiClient extends SlackApiHttpProtocolSupport { self: SlackApiCl
 
       http.get[SlackApiEmojiListResponse](
         "emoji.list",
-        Map[String, Option[String]]()
+        Map[String, Option[String]](),
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
       )
     }
 
