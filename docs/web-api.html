@@ -342,7 +342,55 @@ which doesn’t require any tokens to work:</p>
 <p>This method available to use without API tokens.
 The Webhook URL could be gather either from OAuth responses or from your Slack app profile configuration.</p>
 
-<h4 id="avoid-boilerplate-making-consequent-non-blocking-client-requests-with-eithert">Avoid boilerplate making consequent non-blocking client requests with EitherT</h4>
+<h3 id="rate-control--throttling">Rate control / throttling</h3>
+<p>Slack API defines <a href="https://api.slack.com/docs/rate-limits">rate limits</a> to which all of your applications must follow.</p>
+
+<p>Slack Morphism, starting from v1.1, provides an ability to throttling your requests to control the rate limits, 
+and delay your calls when necessary.</p>
+
+<p>By default, throttler <em>isn’t</em> enabled, so you should enable it explicitly:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import org.latestbit.slack.morphism.client._
+import org.latestbit.slack.morphism.client.ratectrl._
+
+// Creating a client instance with throttling
+val client = new SlackApiClient(
+   throttler = SlackApiRateThrottler.createStandardThrottler()
+)
+</code></pre></div></div>
+<p>The example above creates a Slack API Client that follows the official rate limits from Slack.
+Because the Slack rate limits apply per workspaces (separately), 
+to use throttling and limits properly you <em>have to specify</em> workspace/team id in tokens:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// A token should have a workspace id
+implicit val slackApiToken: SlackApiToken = SlackApiBotToken(
+    "xoxb-89.....",
+    workspaceId = Some( "TS......." ) 
+)
+</code></pre></div></div>
+<p>There are also different rate tiers, and all Web API methods in Slack Morphism client 
+are marked accordingly and follow those rate tiers limits.</p>
+
+<p>You can also customise rate control params using <code class="highlighter-rouge">SlackApiRateThrottler.createStandardThrottler( params = ...)</code>.</p>
+
+<p>For example, you can set a global rate limit additionally to Slack limits using API like this:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import org.latestbit.slack.morphism.client._
+import org.latestbit.slack.morphism.client.ratectrl._
+import scala.concurrent.duration._
+
+// Creating a client instance with throttling
+val client = new SlackApiClient(
+   throttler = SlackApiRateThrottler.createStandardThrottler(
+        params = 
+            SlackApiRateControlParams.StandardLimits.DEFAULT_PARAMS.copy(
+                globalMaxRateLimit = Some(
+                   (100, 1.minute) // 100 requests per minute
+                )
+            )
+   )
+)
+</code></pre></div></div>
+
+<h3 id="avoid-boilerplate-making-consequent-non-blocking-client-requests-with-eithert">Avoid boilerplate making consequent non-blocking client requests with EitherT</h3>
 
 <p>This is completely optional and just a recommendation for you.</p>
 

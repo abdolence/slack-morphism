@@ -119,7 +119,7 @@ It provides you with a simple API mostly based on Scala Future, Option, Either, 
 <p>Slack Morphism core library intentionally avoid dependencies to any additional Web-frameworks, so 
 you free to use any framework you’re familiar with.
 Slack Morphism doesn’t have any dependencies to any particular HTTP client library either 
-and uses <a href="https://github.com/softwaremill/sttp">sttp library</a> to give you choice of options.</p>
+and uses <a href="https://github.com/softwaremill/sttp">sttp library</a> to give you choice.</p>
 
 <p>However, it would be an incomplete solution to provide you only core components, and for a quick start, 
 there is a <a href="https://github.com/abdolence/slack-morphism-akka-http.g8">full-featured giter8 template and example</a> 
@@ -130,10 +130,14 @@ of a Slack Bot built with Slack Morphism and Akka Http.</p>
 some of them (e.g. returning Slack channel history) also have support for a reactive Publisher,
  if you’re familiar with Reactive Streams (and using related frameworks).</p>
 
+<h3 id="rate-controlling-and-throttling-access-to-slack-web-api">Rate controlling and throttling access to Slack Web API</h3>
+<p>There is ready to use a rate control/throttling implementation, 
+which follows the Slack API rate limits and tiers (or your custom configuration).</p>
+
 <h2 id="getting-started">Getting Started</h2>
 <p>Add the following to your <code class="highlighter-rouge">build.sbt</code>:</p>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.latestbit"</span> <span class="o">%%</span> <span class="s">"slack-morphism-client"</span> <span class="o">%</span> <span class="s">"1.0.4"</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.latestbit"</span> <span class="o">%%</span> <span class="s">"slack-morphism-client"</span> <span class="o">%</span> <span class="s">"1.1.0"</span>
 </code></pre></div></div>
 
 <p>or if you’d like to full-featured and ready to use Slack bot, which uses Akka Http, use this:</p>
