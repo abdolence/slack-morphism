@@ -24,4 +24,5 @@ package object messages {
   type SlackUserMessage = events.SlackUserMessage
   type SlackBotMessage = events.SlackBotMessage
   type SlackMeMessage = events.SlackMeMessage
+  type SlackChannelJoinMessage = events.SlackChannelJoinMessage
 }

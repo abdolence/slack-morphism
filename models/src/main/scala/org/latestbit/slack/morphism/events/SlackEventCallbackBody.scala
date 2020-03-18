@@ -124,7 +124,6 @@ case class SlackChannelJoinMessage(
     override val ts: String,
     override val channel: Option[String] = None,
     override val channel_type: Option[String] = None,
-    override val thread_ts: Option[String] = None,
     override val reactions: Option[List[SlackMessageReaction]] = None,
     edited: Option[SlackMessageEdited] = None,
     reply_count: Option[Long] = None,
@@ -133,7 +132,9 @@ case class SlackChannelJoinMessage(
     override val blocks: Option[List[SlackBlock]] = None,
     user: String,
     inviter: Option[String] = None
-) extends SlackMessage
+) extends SlackMessage {
+  override val thread_ts: Option[String] = None
+}
 
 @JsonAdt( "bot_message" )
 case class SlackBotMessage(
