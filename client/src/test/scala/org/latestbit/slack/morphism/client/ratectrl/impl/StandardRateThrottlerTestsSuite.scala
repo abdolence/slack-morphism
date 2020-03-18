@@ -18,17 +18,16 @@
 
 package org.latestbit.slack.morphism.client.ratectrl.impl
 
-import java.util.concurrent.{ Delayed, ScheduledExecutorService, ScheduledFuture, TimeUnit }
+import java.util.concurrent.{ ScheduledExecutorService, ScheduledFuture, TimeUnit }
 
-import org.latestbit.slack.morphism.client.SlackApiEmptyResultError
+import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.ratectrl.RateControlParams
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.flatspec.AnyFlatSpec
-
-import scala.concurrent.duration._
 import sttp.client._
 
 import scala.concurrent.Future
+import scala.concurrent.duration._
 
 class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
 
@@ -37,7 +36,7 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
     workspaceMaxRateLimit = Some( 10, 1.second ),
     slackApiTierLimits = Map(
       ( RateControlParams.TIER_1, ( 5, 1.second ) ),
-      ( RateControlParams.TIER_1, ( 2, 1.second ) )
+      ( RateControlParams.TIER_2, ( 2, 1.second ) )
     )
   )
 
@@ -89,6 +88,123 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
         methodMaxDelay = None
       ) { () => Future.successful( Right( s"Valid res: ${idx}" ) ) }
     }
+  }
+
+  it should "limit rate per workspace" in {
+
+    val scheduledExecutorMock = mock[ScheduledExecutorService]
+
+    (scheduledExecutorMock.scheduleAtFixedRate _).expects( *, *, *, * ).once()
+
+    (scheduledExecutorMock.scheduleWithFixedDelay _)
+      .expects( *, 0, *, TimeUnit.MILLISECONDS )
+      .repeated( 10 )
+      .times()
+
+    var fakeCurrentTime = 0L
+
+    val throttler = new StandardRateThrottler( params, scheduledExecutorMock ) {
+      override protected def currentTimeInMs(): Long = fakeCurrentTime
+    }
+
+    val apiToken1 = SlackApiBotToken( "test-token-1", workspaceId = Some( "WID1" ) )
+    val apiToken2 = SlackApiBotToken( "test-token-2", workspaceId = Some( "WID2" ) )
+
+    (1 to 20).foreach { idx =>
+      throttler.throttle[String](
+        uri"http://example.net/",
+        tier = None,
+        apiToken = Some( apiToken1 ),
+        methodMaxDelay = None
+      ) { () => Future.successful( Right( s"Valid res: ${idx}" ) ) }
+    }
+
+    (1 to 10).foreach { idx =>
+      throttler.throttle[String](
+        uri"http://example.net/",
+        tier = None,
+        apiToken = Some( apiToken2 ),
+        methodMaxDelay = None
+      ) { () => Future.successful( Right( s"Valid res: ${idx}" ) ) }
+    }
+
+    fakeCurrentTime = 2000
+
+    (1 to 10).foreach { idx =>
+      throttler.throttle[String](
+        uri"http://example.net/",
+        tier = None,
+        apiToken = Some( apiToken1 ),
+        methodMaxDelay = None
+      ) { () => Future.successful( Right( s"Valid res: ${idx}" ) ) }
+    }
+  }
+
+  it should "limit rate per workspace and method tier" in {
+    val scheduledExecutorMock = mock[ScheduledExecutorService]
+
+    (scheduledExecutorMock.scheduleAtFixedRate _).expects( *, *, *, * ).once()
+
+    (scheduledExecutorMock.scheduleWithFixedDelay _)
+      .expects( *, 0, *, TimeUnit.MILLISECONDS )
+      .repeated( 5 )
+      .times()
+
+    val throttler = new StandardRateThrottler( params, scheduledExecutorMock ) {
+      override protected def currentTimeInMs(): Long = 0L
+    }
+
+    val apiToken1 = SlackApiBotToken( "test-token-1", workspaceId = Some( "WID1" ) )
+
+    (1 to 10).foreach { idx =>
+      throttler.throttle[String](
+        uri"http://example.net/",
+        tier = Some( RateControlParams.TIER_1 ),
+        apiToken = Some( apiToken1 ),
+        methodMaxDelay = None
+      ) { () => Future.successful( Right( s"Valid res: ${idx}" ) ) }
+    }
+  }
+
+  it should "properly clear the cache with workspaces metrics" in {
+    val scheduledExecutorMock = mock[ScheduledExecutorService]
+
+    var cleanCommand: Runnable = null
+
+    (scheduledExecutorMock.scheduleAtFixedRate _).expects( *, *, *, * ).once().onCall {
+      case ( command: Runnable, _: Long, _: Long, _: TimeUnit ) =>
+        cleanCommand = command
+
+        val scheduledFuture = stub[ScheduledFuture[Unit]]
+        (scheduledFuture.isDone _).when().returns( true )
+        scheduledFuture
+    }
+
+    var fakeCurrentTime = 0L
+
+    val throttler = new StandardRateThrottler( params, scheduledExecutorMock ) {
+      override protected def currentTimeInMs(): Long = fakeCurrentTime
+    }
+
+    assert( throttler.getWorkspaceMetricsCacheSize() === 0 )
+
+    (1 to 10).foreach { idx =>
+      throttler.throttle[String](
+        uri"http://example.net/",
+        tier = Some( RateControlParams.TIER_1 ),
+        apiToken = Some( SlackApiBotToken( s"test-token-${idx}", workspaceId = Some( s"WID-${idx}" ) ) ),
+        methodMaxDelay = None
+      ) { () => Future.successful( Right( s"Valid res: ${idx}" ) ) }
+    }
+
+    assert( cleanCommand !== null )
+    assert( throttler.getWorkspaceMetricsCacheSize() === 10 )
+    cleanCommand.run()
+    assert( throttler.getWorkspaceMetricsCacheSize() === 10 )
+    fakeCurrentTime = StandardRateThrottler.WORKSPACE_METRICS_CLEANER_MAX_OLD_MSEC + 1
+    cleanCommand.run()
+    assert( throttler.getWorkspaceMetricsCacheSize() === 0 )
+
   }
 
 }

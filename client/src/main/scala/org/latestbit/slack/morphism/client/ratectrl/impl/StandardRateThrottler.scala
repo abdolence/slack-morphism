@@ -32,15 +32,13 @@ abstract class StandardRateThrottler private[ratectrl] (
     scheduledExecutor: ScheduledExecutorService
 ) extends RateThrottler {
 
+  import StandardRateThrottler._
+
   @volatile private var globalMaxRateMetric: RateThrottlerMetric =
     params.globalMaxRateLimit.map( toRateMetric ).orNull
 
   private val workspaceMaxRateMetrics: scala.collection.mutable.Map[String, RateThrottlerWorkspaceMetrics] =
     scala.collection.mutable.Map[String, RateThrottlerWorkspaceMetrics]()
-
-  private final val WORKSPACE_METRICS_CLEANER_INITIAL_DELAY_IN_SEC = 5 * 60 // 5 min delay
-  private final val WORKSPACE_METRICS_CLEANER_INTERVAL_IN_SEC = 2 * 60 // 2 min interval
-  private final val WORKSPACE_METRICS_CLEANER_MAX_OLD_MSEC = 60 * 60 * 1000 // clean everything more than 1 hour old
 
   startWorkspaceMetricsCleanerService()
 
@@ -176,6 +174,14 @@ abstract class StandardRateThrottler private[ratectrl] (
     promise.future
   }
 
+  def getWorkspaceMetricsCacheSize(): Int = {
+    val result =
+      synchronized {
+        workspaceMaxRateMetrics.size
+      }
+    result
+  }
+
   override def throttle[RS](
       uri: Uri,
       tier: Option[Int],
@@ -206,6 +212,12 @@ abstract class StandardRateThrottler private[ratectrl] (
       case _ => request()
     }
   }
+}
+
+object StandardRateThrottler {
+  final val WORKSPACE_METRICS_CLEANER_INITIAL_DELAY_IN_SEC = 5 * 60 // 5 min delay
+  final val WORKSPACE_METRICS_CLEANER_INTERVAL_IN_SEC = 2 * 60 // 2 min interval
+  final val WORKSPACE_METRICS_CLEANER_MAX_OLD_MSEC = 60 * 60 * 1000 // clean everything more than 1 hour old
 }
 
 final class StandardRateThrottlerImpl private[ratectrl] ( params: RateControlParams )
