@@ -103,7 +103,8 @@ def priorTo2_13( scalaVersion: String ): Boolean =
     case _                                  => false
   }
 
-val catsVersion = "2.1.0"
+val catsVersion = "2.1.1"
+val catsEffectVersion = "2.1.2"
 val circeVersion = "0.13.0"
 val scalaCollectionsCompatVersion = "2.1.3"
 val sttpVersion = "2.0.0"
@@ -138,12 +139,19 @@ val baseDependencies =
     "org.typelevel" %% "cats-core"
   ).map( _ % catsVersion ) ++
     Seq(
+      "org.typelevel" %% "cats-effect" % catsEffectVersion
+    ) ++
+    Seq(
       "io.circe" %% "circe-core",
       "io.circe" %% "circe-generic",
       "io.circe" %% "circe-parser"
-    ).map( _ % circeVersion ) ++
+    ).map(
+      _ % circeVersion
+        excludeAll (ExclusionRule( organization = "org.typelevel" ) )
+    ) ++
     Seq(
       "org.latestbit" %% "circe-tagged-adt-codec" % circeAdtCodecVersion
+        excludeAll (ExclusionRule( organization = "io.circe" ) )
     ) ++
     Seq(
       "org.scalactic" %% "scalactic" % scalaTestVersion,
@@ -157,7 +165,9 @@ val baseDependencies =
       "org.scalatestplus" %% "testng-6-7" % scalaTestPlusTestNG,
       "com.github.alexarchambault" %% "scalacheck-shapeless_1.14" % scalaCheckShapeless,
       "com.softwaremill.sttp.client" %% "async-http-client-backend-future" % sttpVersion
-    ).map( _ % "test" )
+    ).map(
+      _ % "test"
+    )
 
 lazy val noPublishSettings = Seq(
   publish := {},
@@ -213,10 +223,14 @@ lazy val slackMorphismExamples =
       name := "slack-morphism-akka",
       libraryDependencies ++= baseDependencies ++ Seq(
         "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
-        "com.typesafe.akka" %% "akka-stream-typed" % akkaVersion,
+        "com.typesafe.akka" %% "akka-stream-typed" % akkaVersion
+          excludeAll (
+            ExclusionRule( organization = "org.reactivestreams" )
+          ),
         "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion,
         "com.github.scopt" %% "scopt" % scoptVersion,
-        "ch.qos.logback" % "logback-classic" % logbackVersion,
+        "ch.qos.logback" % "logback-classic" % logbackVersion
+          exclude ("org.slf4j", "slf4j-api"),
         "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion,
         "de.heikoseeberger" %% "akka-http-circe" % akkaHttpCirceVersion
           excludeAll (
@@ -226,8 +240,9 @@ lazy val slackMorphismExamples =
         "com.softwaremill.sttp.client" %% "akka-http-backend" % sttpVersion,
         "io.swaydb" %% "swaydb" % swayDbVersion
           excludeAll (
-            ExclusionRule( organization = "org.scala-lang.modules" )
-          )
+            ExclusionRule( organization = "org.scala-lang.modules" ),
+            ExclusionRule( organization = "org.reactivestreams" )
+        )
       )
     )
     .settings( noPublishSettings )
