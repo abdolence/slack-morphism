@@ -115,6 +115,8 @@
 		<div id="content" data-github-owner="abdolence" data-github-repo="slack-morphism">
 			<div class="content-wrapper">
 				<section><h1 id="rate-control-throttling-and-retrying-slack-api-method-requests">Rate control, throttling and retrying Slack API method requests</h1>
+
+<h2 id="enable-rate-control">Enable rate control</h2>
 <p>Slack API defines <a href="https://api.slack.com/docs/rate-limits">rate limits</a> to which all of your applications must follow.</p>
 
 <p>Slack Morphism, starting from v1.1, provides an ability to throttling your requests to control the rate limits, 
@@ -142,6 +144,7 @@ implicit val slackApiToken: SlackApiToken = SlackApiBotToken(
 <p>There are also different rate tiers, and all Web API methods in Slack Morphism client 
 are marked accordingly and follow those rate tiers limits.</p>
 
+<h2 id="customizing-rate-control-params">Customizing rate control params</h2>
 <p>You can also customise rate control params using <code class="highlighter-rouge">SlackApiRateThrottler.createStandardThrottler( params = ...)</code>.</p>
 
 <p>For example, you can set a global rate limit additionally to Slack limits using API like this:</p>
@@ -157,6 +160,42 @@ val client = new SlackApiClient(
                 globalMaxRateLimit = Some(
                    (100, 1.minute) // 100 requests per minute
                 )
+            )
+   )
+)
+</code></pre></div></div>
+
+<h2 id="enable-automatic-retry-for-rate-exceeded-requests">Enable automatic retry for rate exceeded requests</h2>
+
+<p>To enable automatic retry of Slack Web API method requests, 
+you need to specify <code class="highlighter-rouge">maxRetries</code> in rate control params (default value is 0):</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import org.latestbit.slack.morphism.client._
+import org.latestbit.slack.morphism.client.ratectrl._
+
+// Creating a client instance with throttling
+val client = new SlackApiClient(
+   throttler = SlackApiRateThrottler.createStandardThrottler(
+        params = 
+            SlackApiRateControlParams.StandardLimits.DEFAULT_PARAMS.copy(
+                maxRetries = 3 // retry maximum 3 times
+            )
+   )
+)
+</code></pre></div></div>
+
+<p>Using rate control parameters, you can also enable retries for other errors additionally to <code class="highlighter-rouge">SlackApiRateLimitedError</code>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import org.latestbit.slack.morphism.client._
+import org.latestbit.slack.morphism.client.ratectrl._
+
+// Creating a client instance with throttling
+val client = new SlackApiClient(
+   throttler = SlackApiRateThrottler.createStandardThrottler(
+        params = 
+            SlackApiRateControlParams.StandardLimits.DEFAULT_PARAMS.copy(
+                maxRetries = 3 // to retry maximum 3 times,
+                retryFor = Set( classOf[SlackApiRateLimitedError], classOf[SlackApiConnectionError] )
             )
    )
 )
