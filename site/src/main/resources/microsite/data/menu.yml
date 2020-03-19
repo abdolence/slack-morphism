@@ -15,7 +15,7 @@ options:
         url: docs/web-api/pagination
         menu_section: webapi
       - title: Webhook Messages
-        url: docs/web-api/incoming-webhook
+        url: docs/web-api/incoming-webhooks
         menu_section: webapi
       - title: Rate Control
         url: docs/web-api/rate-control
