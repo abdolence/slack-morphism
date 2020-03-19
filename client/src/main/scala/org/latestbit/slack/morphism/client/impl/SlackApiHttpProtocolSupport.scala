@@ -24,12 +24,12 @@ import cats.implicits._
 import io.circe._
 import io.circe.parser._
 import io.circe.syntax._
-import org.latestbit.slack.morphism.codecs.implicits._
 import org.latestbit.slack.morphism.client._
-import org.latestbit.slack.morphism.client.ratectrl.{ SlackApiMethodRateControlParams, SlackApiRateControlSpecialLimit }
+import org.latestbit.slack.morphism.client.ratectrl.SlackApiMethodRateControlParams
 import org.latestbit.slack.morphism.client.reqresp.internal.SlackGeneralResponseParams
+import org.latestbit.slack.morphism.codecs.implicits._
 import sttp.client._
-import sttp.model.{ MediaType, Uri }
+import sttp.model.{ MediaType, StatusCode, Uri }
 
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ ExecutionContext, Future }
@@ -48,12 +48,14 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
 
   protected def slackGeneralResponseToError(
       uri: Uri,
+      response: Response[Either[String, String]],
       generalResponseParams: SlackGeneralResponseParams
   ): Option[SlackApiClientError] = {
     generalResponseParams.error.map { errorCode =>
       SlackApiResponseError(
         uri = uri,
         errorCode = errorCode,
+        httpStatusCode = response.code,
         warning = generalResponseParams.warning,
         messages = generalResponseParams.response_metadata.flatMap( _.messages )
       )
@@ -86,7 +88,7 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
       case Right( successBody ) if responseMediaType.exists( checkIfContentTypeIsJson ) => {
         decodeSlackGeneralResponse( successBody ) match {
           case Right( generalResp ) => {
-            slackGeneralResponseToError( uri, generalResp )
+            slackGeneralResponseToError( uri, response, generalResp )
               .map( Either.left[SlackApiClientError, RS] )
               .getOrElse(
                 decode[RS]( successBody ).left
@@ -105,10 +107,11 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
         Left(
           decodeSlackGeneralResponse( errorBody ) match {
             case Right( generalResp ) =>
-              slackGeneralResponseToError( uri, generalResp ).getOrElse(
+              slackGeneralResponseToError( uri, response, generalResp ).getOrElse(
                 SlackApiHttpError(
                   uri = uri,
                   message = s"HTTP error / ${response.code}: ${response.statusText}.\n${errorBody}",
+                  httpStatusCode = response.code,
                   httpResponseBody = Option( errorBody )
                 )
               )
@@ -125,6 +128,7 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
             message = s"HTTP error / ${response.code}: ${response.statusText}.\n${Option( errorBody )
               .map { body => s": ${body}" }
               .getOrElse( "" )}",
+            httpStatusCode = response.code,
             httpResponseBody = Option( errorBody )
           )
         )

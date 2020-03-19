@@ -22,7 +22,7 @@ import java.io.IOException
 
 import io.circe
 import org.latestbit.slack.morphism.common.SlackApiError
-import sttp.model.Uri
+import sttp.model.{ StatusCode, Uri }
 
 /**
  * Slack Web API error
@@ -61,10 +61,15 @@ case class SlackApiConnectionError( uri: Uri, cause: IOException )
  *
  * @param uri Web method URL
  * @param message error message
+ * @param httpStatusCode HTTP status code
  * @param httpResponseBody HTTP response body
  */
-case class SlackApiHttpError( uri: Uri, message: String, httpResponseBody: Option[String] = None )
-    extends SlackApiClientError( uri = uri, message )
+case class SlackApiHttpError(
+    uri: Uri,
+    message: String,
+    httpStatusCode: StatusCode,
+    httpResponseBody: Option[String] = None
+) extends SlackApiClientError( uri = uri, message )
 
 /**
  * Slack Web API protocol error
@@ -72,6 +77,7 @@ case class SlackApiHttpError( uri: Uri, message: String, httpResponseBody: Optio
  *
  * @param uri Web method URL
  * @param errorCode Slack error code
+ * @param httpStatusCode HTTP status code
  * @param details error detail message
  * @param warning Slack warnings
  * @param messages Slack error messages
@@ -79,6 +85,7 @@ case class SlackApiHttpError( uri: Uri, message: String, httpResponseBody: Optio
 case class SlackApiResponseError(
     uri: Uri,
     errorCode: String,
+    httpStatusCode: StatusCode,
     details: Option[String] = None,
     warning: Option[String] = None,
     messages: Option[List[String]] = None
