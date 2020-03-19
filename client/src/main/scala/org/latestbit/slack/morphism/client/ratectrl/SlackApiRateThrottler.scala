@@ -22,7 +22,7 @@ import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.ratectrl.impl._
 import sttp.model.Uri
 
-import scala.concurrent.Future
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.concurrent.duration.FiniteDuration
 
 /**
@@ -31,14 +31,14 @@ import scala.concurrent.duration.FiniteDuration
 trait SlackApiRateThrottler {
 
   /**
-   * Throttle a Slack API call if necessary
+   * Throttle and retry a Slack API call if it is necessary
    *
    * @param uri Slack API method URI
    * @param apiToken An API token
    * @param methodRateControl method rate control parameters
    * @param request An API async request
    * @tparam RS Response data type
-   * @return a future either directly request or delayed request
+   * @return a future of either source request or delayed request
    */
   def throttle[RS](
       uri: Uri,
@@ -46,7 +46,7 @@ trait SlackApiRateThrottler {
       methodRateControl: Option[SlackApiMethodRateControlParams]
   )(
       request: () => Future[Either[SlackApiClientError, RS]]
-  ): Future[Either[SlackApiClientError, RS]]
+  )( implicit ec: ExecutionContext ): Future[Either[SlackApiClientError, RS]]
 
   /**
    * Release all throttle resources (threads, etc)
@@ -57,7 +57,6 @@ trait SlackApiRateThrottler {
 object SlackApiRateThrottler {
 
   private case object Empty extends SlackApiRateThrottler {
-    override def shutdown(): Unit = {}
 
     override def throttle[RS](
         uri: Uri,
@@ -65,7 +64,9 @@ object SlackApiRateThrottler {
         methodRateControl: Option[SlackApiMethodRateControlParams]
     )(
         request: () => Future[Either[SlackApiClientError, RS]]
-    ): Future[Either[SlackApiClientError, RS]] = request()
+    )( implicit ec: ExecutionContext ): Future[Either[SlackApiClientError, RS]] = request()
+
+    override def shutdown(): Unit = {}
   }
 
   /**

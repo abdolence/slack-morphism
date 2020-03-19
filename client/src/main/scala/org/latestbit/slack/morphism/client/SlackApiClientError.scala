@@ -36,6 +36,11 @@ sealed abstract class SlackApiClientError( uri: Uri, message: String, cause: Opt
     extends SlackApiError( message, cause )
 
 /**
+ * A trait to mark retryable errors
+ */
+trait SlackApiRetryableError
+
+/**
  * System/unexpected Slack Web API error
  * @group ErrorDefs
  *
@@ -54,6 +59,7 @@ case class SlackApiSystemError( uri: Uri, cause: Throwable )
  */
 case class SlackApiConnectionError( uri: Uri, cause: IOException )
     extends SlackApiClientError( uri = uri, message = cause.getMessage, cause = Some( cause ) )
+    with SlackApiRetryableError
 
 /**
  * Slack Web API HTTP protocol error
@@ -70,6 +76,7 @@ case class SlackApiHttpError(
     httpStatusCode: StatusCode,
     httpResponseBody: Option[String] = None
 ) extends SlackApiClientError( uri = uri, message )
+    with SlackApiRetryableError
 
 /**
  * Slack Web API protocol general error
@@ -122,6 +129,7 @@ case class SlackApiRateLimitedError(
                |${messages.map( msgs => s" Additional error messages: \n${msgs.mkString( "\n" )}" ).getOrElse( "" )}"
 			   |""".stripMargin
     )
+    with SlackApiRetryableError
 
 /**
  * Slack Web API JSON decoding error

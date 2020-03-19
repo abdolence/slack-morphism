@@ -19,11 +19,10 @@
 package org.latestbit.slack.morphism.client.ratectrl
 
 import io.circe.Decoder
-import org.latestbit.slack.morphism.client.{ SlackApiClientError, SlackApiToken }
 import org.latestbit.slack.morphism.client.impl.SlackApiHttpProtocolSupport
+import org.latestbit.slack.morphism.client.{ SlackApiClientError, SlackApiToken }
 import sttp.client.Request
 
-import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ ExecutionContext, Future }
 
 trait SlackApiHttpRateControlSupport extends SlackApiHttpProtocolSupport {
@@ -43,10 +42,10 @@ trait SlackApiHttpRateControlSupport extends SlackApiHttpProtocolSupport {
       apiToken = Some( slackApiToken ),
       methodRateControl = methodRateControl
     ) { () =>
-      sendSlackRequest[RS](
-        request.auth.bearer( slackApiToken.value )
-      )
+      super[SlackApiHttpProtocolSupport]
+        .protectedSlackHttpApiRequest( request, methodRateControl )
     }
 
   }
+
 }

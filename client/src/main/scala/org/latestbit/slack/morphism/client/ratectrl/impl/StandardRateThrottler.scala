@@ -20,11 +20,13 @@ package org.latestbit.slack.morphism.client.ratectrl.impl
 
 import java.util.concurrent.{ Executors, ScheduledExecutorService, TimeUnit }
 
-import org.latestbit.slack.morphism.client.{ SlackApiClientError, SlackApiRateLimitMaxDelayError, SlackApiToken }
+import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.ratectrl._
 import sttp.model.Uri
 
-import scala.concurrent.{ Future, Promise }
+import scala.concurrent._
+import scala.concurrent.duration.FiniteDuration
+import scala.util._
 
 abstract class StandardRateThrottler private[ratectrl] (
     params: SlackApiRateControlParams,
@@ -182,7 +184,8 @@ abstract class StandardRateThrottler private[ratectrl] (
         Option( globalMaxRateMetric ).map { metric =>
           globalMaxRateMetric = metric.update( now )
           globalMaxRateMetric.delay
-        }
+        },
+        methodRateControl.flatMap( _.methodMinRateLimitDelay.map( _.toMillis ) )
       ).flatten ++ (apiToken
         .flatMap { tokenValue =>
           tokenValue.workspaceId.map { workspaceId =>
@@ -222,19 +225,76 @@ abstract class StandardRateThrottler private[ratectrl] (
     result
   }
 
+  private def retryIfNecessary[RS](
+      uri: Uri,
+      apiToken: Option[SlackApiToken],
+      methodRateControl: Option[SlackApiMethodRateControlParams],
+      request: () => Future[Either[SlackApiClientError, RS]]
+  )(
+      response: Try[Either[SlackApiClientError, RS]]
+  )( implicit ec: ExecutionContext ): Future[Either[SlackApiClientError, RS]] = {
+
+    def updateMaxRetryCount(
+        methodRateControl: Option[SlackApiMethodRateControlParams]
+    ): SlackApiMethodRateControlParams = {
+      methodRateControl
+        .map( mctrl =>
+          mctrl.copy( maxRetries = mctrl.maxRetries.map( _ - 1 ).orElse( Some( params.maxRetries - 1 ) ) )
+        )
+        .getOrElse(
+          SlackApiMethodRateControlParams(
+            maxRetries = Some( params.maxRetries - 1 )
+          )
+        )
+    }
+
+    if (params.maxRetries > 0 && methodRateControl.flatMap( _.maxRetries ).forall( _ > 0 )) {
+      response match {
+        case Success( Left( ex ) )
+            if ex.isInstanceOf[SlackApiRetryableError] && params.retryFor.contains( ex.getClass ) => {
+          ex match {
+            case rateLimitedError: SlackApiRateLimitedError => {
+              throttle(
+                uri,
+                apiToken,
+                Some(
+                  updateMaxRetryCount( methodRateControl ).copy(
+                    methodMinRateLimitDelay =
+                      rateLimitedError.retryAfter.map( after => FiniteDuration( after, TimeUnit.SECONDS ) )
+                  )
+                )
+              )( request )
+            }
+            case _ => {
+              throttle(
+                uri,
+                apiToken,
+                Some( updateMaxRetryCount( methodRateControl ) )
+              )( request )
+            }
+          }
+        }
+        case _ => Future.fromTry( response )
+      }
+    } else {
+      Future.fromTry( response )
+    }
+  }
+
   override def throttle[RS](
       uri: Uri,
       apiToken: Option[SlackApiToken],
       methodRateControl: Option[SlackApiMethodRateControlParams]
   )(
       request: () => Future[Either[SlackApiClientError, RS]]
-  ): Future[Either[SlackApiClientError, RS]] = {
+  )( implicit ec: ExecutionContext ): Future[Either[SlackApiClientError, RS]] = {
     calcDelay( Some( uri ), methodRateControl, apiToken ) match {
       case Some( delay ) if delay > 0 => {
 
         if (methodRateControl.forall( _.methodMaxRateLimitDelay.forall( _.toMillis > delay ) ) &&
             params.maxDelayTimeout.forall( _.toMillis > delay )) {
           promiseDelayedRequest[RS]( delay, request )
+            .transformWith( retryIfNecessary[RS]( uri, apiToken, methodRateControl, request ) )
         } else {
           Future.successful(
             Left(
@@ -249,7 +309,7 @@ abstract class StandardRateThrottler private[ratectrl] (
         }
 
       }
-      case _ => request()
+      case _ => request().transformWith( retryIfNecessary[RS]( uri, apiToken, methodRateControl, request ) )
     }
   }
 }

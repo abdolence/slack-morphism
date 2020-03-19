@@ -23,5 +23,7 @@ import scala.concurrent.duration.FiniteDuration
 case class SlackApiMethodRateControlParams(
     tier: Option[Int] = None,
     specialRateLimit: Option[SlackApiRateControlSpecialLimit] = None,
-    methodMaxRateLimitDelay: Option[FiniteDuration] = None
+    methodMaxRateLimitDelay: Option[FiniteDuration] = None,
+    methodMinRateLimitDelay: Option[FiniteDuration] = None,
+    maxRetries: Option[Long] = None
 )
