@@ -72,7 +72,7 @@ case class SlackApiHttpError(
 ) extends SlackApiClientError( uri = uri, message )
 
 /**
- * Slack Web API protocol error
+ * Slack Web API protocol general error
  * @group ErrorDefs
  *
  * @param uri Web method URL
@@ -92,6 +92,31 @@ case class SlackApiResponseError(
 ) extends SlackApiClientError(
       uri = uri,
       message = s"""Slack API error response: ${errorCode}.
+			   |${details.map( text => s" Details: ${text}." ).getOrElse( "" )}
+			   |${warning.map( text => s" Warning: ${text}." ).getOrElse( "" )}
+               |${messages.map( msgs => s" Additional error messages: \n${msgs.mkString( "\n" )}" ).getOrElse( "" )}"
+			   |""".stripMargin
+    )
+
+/**
+ * Slack Web API protocol rate limited error
+ * @group ErrorDefs
+ *
+ * @param uri Web method URL
+ * @param retryAfter retry after specified interval (in seconds)
+ * @param details error detail message
+ * @param warning Slack warnings
+ * @param messages Slack error messages
+ */
+case class SlackApiRateLimitedError(
+    uri: Uri,
+    retryAfter: Option[Long] = None,
+    details: Option[String] = None,
+    warning: Option[String] = None,
+    messages: Option[List[String]] = None
+) extends SlackApiClientError(
+      uri = uri,
+      message = s"""Slack API rate limited error.
 			   |${details.map( text => s" Details: ${text}." ).getOrElse( "" )}
 			   |${warning.map( text => s" Warning: ${text}." ).getOrElse( "" )}
                |${messages.map( msgs => s" Additional error messages: \n${msgs.mkString( "\n" )}" ).getOrElse( "" )}"

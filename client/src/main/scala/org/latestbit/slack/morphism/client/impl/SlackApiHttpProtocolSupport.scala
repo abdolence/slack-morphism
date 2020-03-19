@@ -29,7 +29,7 @@ import org.latestbit.slack.morphism.client.ratectrl.SlackApiMethodRateControlPar
 import org.latestbit.slack.morphism.client.reqresp.internal.SlackGeneralResponseParams
 import org.latestbit.slack.morphism.codecs.implicits._
 import sttp.client._
-import sttp.model.{ MediaType, StatusCode, Uri }
+import sttp.model.{ HeaderNames, MediaType, StatusCode, Uri }
 
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ ExecutionContext, Future }
@@ -51,14 +51,25 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
       response: Response[Either[String, String]],
       generalResponseParams: SlackGeneralResponseParams
   ): Option[SlackApiClientError] = {
-    generalResponseParams.error.map { errorCode =>
-      SlackApiResponseError(
-        uri = uri,
-        errorCode = errorCode,
-        httpStatusCode = response.code,
-        warning = generalResponseParams.warning,
-        messages = generalResponseParams.response_metadata.flatMap( _.messages )
+    if (response.code == StatusCode.TooManyRequests) {
+      Some(
+        SlackApiRateLimitedError(
+          uri = uri,
+          retryAfter = response.header( HeaderNames.RetryAfter ).map( _.toLong ),
+          warning = generalResponseParams.warning,
+          messages = generalResponseParams.response_metadata.flatMap( _.messages )
+        )
       )
+    } else {
+      generalResponseParams.error.map { errorCode =>
+        SlackApiResponseError(
+          uri = uri,
+          errorCode = errorCode,
+          httpStatusCode = response.code,
+          warning = generalResponseParams.warning,
+          messages = generalResponseParams.response_metadata.flatMap( _.messages )
+        )
+      }
     }
   }
 
