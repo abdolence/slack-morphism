@@ -1,7 +1,7 @@
 ---
 layout: edocs
 title: Post Incoming Webhook messages
-permalink: docs/web-api/incoming-webhook
+permalink: docs/web-api/incoming-webhooks
 ---
 # Post Incoming Webhook messages
 

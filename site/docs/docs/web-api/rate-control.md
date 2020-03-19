@@ -1,7 +1,7 @@
 ---
 layout: edocs
 title: Rate Control, throttling and retrying
-permalink: docs/web-api/incoming-webhook
+permalink: docs/web-api/rate-control
 ---
 # Rate control, throttling and retrying Slack API method requests
 Slack API defines [rate limits](https://api.slack.com/docs/rate-limits) to which all of your applications must follow.

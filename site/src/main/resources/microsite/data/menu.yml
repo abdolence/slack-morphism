@@ -18,7 +18,7 @@ options:
         url: docs/web-api/incoming-webhook
         menu_section: webapi
       - title: Rate Control
-        url: docs/web-api/incoming-webhook
+        url: docs/web-api/rate-control
         menu_section: webapi
 
   - title: Events API
