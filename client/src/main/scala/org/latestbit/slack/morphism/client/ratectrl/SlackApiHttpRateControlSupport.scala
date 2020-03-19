@@ -19,13 +19,11 @@
 package org.latestbit.slack.morphism.client.ratectrl
 
 import io.circe.Decoder
-import org.latestbit.slack.morphism.client.{ SlackApiClientError, SlackApiToken }
 import org.latestbit.slack.morphism.client.impl.SlackApiHttpProtocolSupport
+import org.latestbit.slack.morphism.client.{ SlackApiClientError, SlackApiToken }
 import sttp.client.Request
 
-import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ ExecutionContext, Future }
-import scala.util.{ Failure, Success, Try }
 
 trait SlackApiHttpRateControlSupport extends SlackApiHttpProtocolSupport {
   protected val throttler: SlackApiRateThrottler
@@ -46,18 +44,8 @@ trait SlackApiHttpRateControlSupport extends SlackApiHttpProtocolSupport {
     ) { () =>
       super[SlackApiHttpProtocolSupport]
         .protectedSlackHttpApiRequest( request, methodRateControl )
-        .transformWith( retryIfPossible[RS]( request, methodRateControl )( _ ) )
     }
 
   }
 
-  private def retryIfPossible[RS](
-      request: Request[Either[String, String], Nothing],
-      methodRateControl: Option[SlackApiMethodRateControlParams]
-  )( respTry: Try[Either[SlackApiClientError, RS]] ): Future[Either[SlackApiClientError, RS]] = {
-    respTry match {
-      case Success( response ) => Future.successful( response )
-      case Failure( ex )       => Future.failed( ex )
-    }
-  }
 }

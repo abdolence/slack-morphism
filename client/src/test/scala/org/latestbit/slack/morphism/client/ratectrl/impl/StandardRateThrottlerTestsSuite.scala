@@ -30,18 +30,30 @@ import org.scalamock.scalatest.MockFactory
 import org.scalatest.flatspec.AnyFlatSpec
 import sttp.client._
 
-import scala.concurrent.Future
+import scala.concurrent.{ Await, Future }
 import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
 
-  val params = SlackApiRateControlParams(
+  val paramsNoRetries = SlackApiRateControlParams(
     globalMaxRateLimit = Some( 50, 1.second ),
     workspaceMaxRateLimit = Some( 10, 1.second ),
     slackApiTierLimits = Map(
       ( SlackApiRateControlParams.TIER_1, ( 5, 1.second ) ),
       ( SlackApiRateControlParams.TIER_2, ( 2, 1.second ) )
     )
+  )
+
+  val paramsWithRetries = SlackApiRateControlParams(
+    globalMaxRateLimit = Some( 50, 1.second ),
+    workspaceMaxRateLimit = Some( 10, 1.second ),
+    slackApiTierLimits = Map(
+      ( SlackApiRateControlParams.TIER_1, ( 5, 1.second ) ),
+      ( SlackApiRateControlParams.TIER_2, ( 2, 1.second ) )
+    ),
+    maxRetries = 3,
+    retryFor = Set( classOf[SlackApiRateLimitedError] )
   )
 
   "StandardRateThrottler" should "limit global rate" in {
@@ -70,27 +82,40 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
 
     var fakeCurrentTime = 0L
 
-    val throttler = new StandardRateThrottler( params, scheduledExecutorMock ) {
+    val throttler = new StandardRateThrottler( paramsNoRetries, scheduledExecutorMock ) {
       override protected def currentTimeInMs(): Long = fakeCurrentTime
     }
+
+    var requestCalled = 0
 
     (1 to 100).foreach { idx =>
       throttler.throttle[String](
         uri"http://example.net/",
         apiToken = None,
         methodRateControl = None
-      ) { () => Future.successful( Right( s"Valid res: ${idx}" ) ) }
+      ) { () =>
+        requestCalled += 1
+        Future.successful( Right( s"Valid res: ${idx}" ) )
+      }
     }
 
-    fakeCurrentTime = 2000
+    assert( requestCalled === 50 )
+
+    fakeCurrentTime = 2000L
+    requestCalled = 0
 
     (1 to 50).foreach { idx =>
       throttler.throttle[String](
         uri"http://example.net/",
         apiToken = None,
         methodRateControl = None
-      ) { () => Future.successful( Right( s"Valid res: ${idx}" ) ) }
+      ) { () =>
+        requestCalled += 1
+        Future.successful( Right( s"Valid res: ${idx}" ) )
+      }
     }
+
+    assert( requestCalled === 50 )
   }
 
   it should "limit rate per workspace" in {
@@ -107,7 +132,7 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
 
     var fakeCurrentTime = 0L
 
-    val throttler = new StandardRateThrottler( params, scheduledExecutorMock ) {
+    val throttler = new StandardRateThrottler( paramsNoRetries, scheduledExecutorMock ) {
       override protected def currentTimeInMs(): Long = fakeCurrentTime
     }
 
@@ -152,7 +177,7 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
       .repeated( 5 )
       .times()
 
-    val throttler = new StandardRateThrottler( params, scheduledExecutorMock ) {
+    val throttler = new StandardRateThrottler( paramsNoRetries, scheduledExecutorMock ) {
       override protected def currentTimeInMs(): Long = 0L
     }
 
@@ -178,7 +203,7 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
       .repeated( 5 )
       .times()
 
-    val throttler = new StandardRateThrottler( params, scheduledExecutorMock ) {
+    val throttler = new StandardRateThrottler( paramsNoRetries, scheduledExecutorMock ) {
       override protected def currentTimeInMs(): Long = 0L
     }
 
@@ -218,7 +243,7 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
 
     var fakeCurrentTime = 0L
 
-    val throttler = new StandardRateThrottler( params, scheduledExecutorMock ) {
+    val throttler = new StandardRateThrottler( paramsNoRetries, scheduledExecutorMock ) {
       override protected def currentTimeInMs(): Long = fakeCurrentTime
     }
 
@@ -240,6 +265,110 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
     cleanCommand.run()
     assert( throttler.getWorkspaceMetricsCacheSize() === 0 )
 
+  }
+
+  it should "retries request when params are specified" in {
+    val scheduledExecutorMock = mock[ScheduledExecutorService]
+
+    (scheduledExecutorMock.scheduleAtFixedRate _).expects( *, *, *, * ).once()
+
+    (scheduledExecutorMock
+      .schedule[Unit] _)
+      .expects( *, 5000, TimeUnit.MILLISECONDS )
+      .repeated( 3 )
+      .times()
+      .onCall {
+        case ( callable: Callable[_], _: Long, _: TimeUnit ) =>
+          val scheduledFuture = stub[ScheduledFuture[Unit]]
+          (scheduledFuture.isDone _).when().returns( true )
+          (scheduledFuture.get: () => Unit).when().returns( callable.call() )
+          scheduledFuture
+      }
+
+    val throttler = new StandardRateThrottler( paramsWithRetries, scheduledExecutorMock ) {
+      override protected def currentTimeInMs(): Long = 0L
+    }
+
+    var calledTimes = 0
+
+    assert(
+      Await.result(
+        throttler.throttle[String](
+          uri"http://example.net/",
+          apiToken = None,
+          methodRateControl = None
+        ) { () =>
+          calledTimes += 1
+          if (calledTimes > 3) {
+            Future.successful( Right( "Test" ) )
+          } else {
+            Future.successful( Left( SlackApiRateLimitedError( uri"http://example.net/", retryAfter = Some( 5L ) ) ) )
+          }
+        },
+        10.seconds
+      )
+        === Right( "Test" )
+    )
+
+  }
+
+  it should "give up retrying requests when max reached" in {
+    val scheduledExecutorMock = mock[ScheduledExecutorService]
+
+    (scheduledExecutorMock.scheduleAtFixedRate _).expects( *, *, *, * ).once()
+
+    (scheduledExecutorMock
+      .schedule[Unit] _)
+      .expects( *, 5000, TimeUnit.MILLISECONDS )
+      .repeated( 3 )
+      .times()
+      .onCall {
+        case ( callable: Callable[_], _: Long, _: TimeUnit ) =>
+          val scheduledFuture = stub[ScheduledFuture[Unit]]
+          (scheduledFuture.isDone _).when().returns( true )
+          (scheduledFuture.get: () => Unit).when().returns( callable.call() )
+          scheduledFuture
+      }
+
+    val throttler = new StandardRateThrottler( paramsWithRetries, scheduledExecutorMock ) {
+      override protected def currentTimeInMs(): Long = 0L
+    }
+
+    assert(
+      Await.result(
+        throttler.throttle[String](
+          uri"http://example.net/",
+          apiToken = None,
+          methodRateControl = None
+        ) { () =>
+          Future.successful( Left( SlackApiRateLimitedError( uri"http://example.net/", retryAfter = Some( 5L ) ) ) )
+        },
+        10.seconds
+      )
+        === Left( SlackApiRateLimitedError( uri"http://example.net/", retryAfter = Some( 5L ) ) )
+    )
+
+  }
+
+  it should "not retry on errors not specified in params" in {
+    val scheduledExecutorMock = mock[ScheduledExecutorService]
+
+    (scheduledExecutorMock.scheduleAtFixedRate _).expects( *, *, *, * ).once()
+    val throttler = new StandardRateThrottler( paramsWithRetries, scheduledExecutorMock ) {
+      override protected def currentTimeInMs(): Long = 0L
+    }
+
+    assert(
+      Await.result(
+        throttler.throttle[String](
+          uri"http://example.net/",
+          apiToken = None,
+          methodRateControl = None
+        ) { () => Future.successful( Left( SlackApiEmptyResultError( uri"http://example.net/" ) ) ) },
+        10.seconds
+      )
+        === Left( SlackApiEmptyResultError( uri"http://example.net/" ) )
+    )
   }
 
 }

@@ -18,7 +18,10 @@
 
 package org.latestbit.slack.morphism.client.ratectrl
 
+import org.latestbit.slack.morphism.client.{ SlackApiClientError, SlackApiRateLimitedError }
+
 import scala.concurrent.duration._
+
 import scala.language.implicitConversions
 
 /**
@@ -45,8 +48,10 @@ object SlackApiRateControlLimit {
 case class SlackApiRateControlParams(
     globalMaxRateLimit: Option[SlackApiRateControlLimit] = None,
     workspaceMaxRateLimit: Option[SlackApiRateControlLimit] = None,
+    slackApiTierLimits: Map[Int, SlackApiRateControlLimit] = Map(),
     maxDelayTimeout: Option[FiniteDuration] = None,
-    slackApiTierLimits: Map[Int, SlackApiRateControlLimit] = Map()
+    maxRetries: Long = 0,
+    retryFor: Set[Class[_ <: SlackApiClientError]] = Set( classOf[SlackApiRateLimitedError] )
 )
 
 object SlackApiRateControlParams {
