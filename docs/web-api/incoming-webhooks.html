@@ -1,5 +1,5 @@
 <html>
-<head><title>Slack Morphism for Scala: Intro</title>
+<head><title>Slack Morphism for Scala: Post Incoming Webhook messages</title>
 	<meta charset="utf-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -7,15 +7,15 @@
 	<meta name="description" content="Open Type-Safe Reactive Client with Blocks Templating for Slack"/>
 	<meta name="og:image" content="/img/poster.png"/>
 	<meta name="image" property="og:image" content="/img/poster.png"/>
-	<meta name="og:title" content="Slack Morphism for Scala: Intro"/>
+	<meta name="og:title" content="Slack Morphism for Scala: Post Incoming Webhook messages"/>
 	<meta name="title" property="og:title"
-	      content="Slack Morphism for Scala: Intro"/>
+	      content="Slack Morphism for Scala: Post Incoming Webhook messages"/>
 	<meta name="og:site_name" content="Slack Morphism for Scala"/>
 	<meta name="og:url" content="https://slack.abdolence.dev"/>
 	<meta name="og:type" content="website"/>
 	<meta name="og:description" content="Open Type-Safe Reactive Client with Blocks Templating for Slack"/>
 	<link rel="icon" type="image/png" href="/img/favicon.png"/>
-	<meta name="twitter:title" content="Slack Morphism for Scala: Intro"/>
+	<meta name="twitter:title" content="Slack Morphism for Scala: Post Incoming Webhook messages"/>
 	<meta name="twitter:image" content="https://slack.abdolence.dev/img/poster.png"/>
 	<meta name="twitter:description" content="Open Type-Safe Reactive Client with Blocks Templating for Slack"/>
 	<meta name="twitter:card" content="summary_large_image"/>
@@ -114,57 +114,21 @@
 		</div>
 		<div id="content" data-github-owner="abdolence" data-github-repo="slack-morphism">
 			<div class="content-wrapper">
-				<section><h1 id="intro-and-motivations">Intro and motivations</h1>
+				<section><h1 id="post-incoming-webhook-messages">Post Incoming Webhook messages</h1>
 
-<h3 id="type-safety">Type-safety</h3>
-<p>Scala is a static-typed language, and Slack Morphism provides methods and models definitions for most of 
-the methods and structures of Slack Web/Events API.
-There is a <a href="Blocks DSL">well-typed DSL</a> to build your messages and views with Slack blocks safely as well.</p>
+<p>You can use <code class="highlighter-rouge">SlackApiClient.chat.postWebhookMessage()</code> to post <a href="https://api.slack.com/messaging/webhooks">Slack Incoming Webhook</a> messages:</p>
 
-<h3 id="easy-to-use">Easy to use</h3>
-<p>While Slack Morphism uses some of FP paradigms and avoids imperative style and mutable states internally, 
-its API doesn’t expose to you anything that might make you learn additional advanced frameworks 
-(like ZIO, cats-effects, and others).
-It provides you with a simple API mostly based on Scala Future, Option, Either, etc.</p>
-
-<h3 id="frameworks-agnostic">Frameworks-agnostic</h3>
-<p>Slack Morphism core library intentionally avoid dependencies to any additional Web-frameworks, so 
-you free to use any framework you’re familiar with.
-Slack Morphism doesn’t have any dependencies to any particular HTTP client library either 
-and uses <a href="https://github.com/softwaremill/sttp">sttp library</a> to give you choice.</p>
-
-<p>However, it would be an incomplete solution to provide you only core components, and for a quick start, 
-there is a <a href="https://github.com/abdolence/slack-morphism-akka-http.g8">full-featured giter8 template and example</a> 
-of a Slack Bot built with Slack Morphism and Akka Http.</p>
-
-<h3 id="non-blocking-and-reactive">Non-blocking and Reactive</h3>
-<p>All of the Slack Morphism API methods available in a non-blocking manner, and 
-some of them (e.g. returning Slack channel history) also have support for a reactive Publisher,
- if you’re familiar with Reactive Streams (and using related frameworks).</p>
-
-<h3 id="rate-controlling-and-throttling-access-to-slack-web-api">Rate controlling and throttling access to Slack Web API</h3>
-<p>There is ready to use a rate control/throttling implementation, 
-which follows the Slack API rate limits and tiers (or your custom configuration).</p>
-
-<h2 id="getting-started">Getting Started</h2>
-<p>Add the following to your <code class="highlighter-rouge">build.sbt</code>:</p>
-
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.latestbit"</span> <span class="o">%%</span> <span class="s">"slack-morphism-client"</span> <span class="o">%</span> <span class="s">"1.1.1"</span>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>client.chat
+    .postWebhookMessage(
+        url = "https://hooks.slack.com/services/...", 
+        req = SlackApiPostWebHookRequest(
+          text = template.renderPlainText(),
+          blocks = template.renderBlocks()
+        )
+     )
 </code></pre></div></div>
-
-<p>or if you’d like to full-featured and ready to use Slack bot, which uses Akka Http, use this:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sbt new abdolence/slack-morphism-akka-http.g8
-</code></pre></div></div>
-<p>Read more about this template <a href="akka-http">here</a>.</p>
-
-<h2 id="limitations">Limitations</h2>
-
-<p>Slack Morphism doesn’t provide:</p>
-<ul>
-  <li>RTM API (the usage of which is slowly declining in favour of Events API)</li>
-  <li>Legacy Web/Events API methods and models (like Slack Message attachments, which should be replaced with Slack Blocks)</li>
-</ul>
+<p>This method available to use without API tokens.
+The Webhook URL could be gather either from OAuth responses or from your Slack app profile configuration.</p>
 </section>
 			</div>
 		</div>
