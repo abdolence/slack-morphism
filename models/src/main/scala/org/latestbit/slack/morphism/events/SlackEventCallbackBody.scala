@@ -175,6 +175,24 @@ case class SlackChannelJoinMessage(
   override val thread_ts: Option[String] = None
 }
 
+@JsonAdt( "bot_add" )
+case class SlackBotAddMessage(
+    override val ts: String,
+    override val channel: Option[String] = None,
+    override val channel_type: Option[String] = None,
+    override val reactions: Option[List[SlackMessageReaction]] = None,
+    edited: Option[SlackMessageEdited] = None,
+    reply_count: Option[Long] = None,
+    replies: Option[List[SlackMessageReplyInfo]] = None,
+    override val text: Option[String] = None,
+    override val blocks: Option[List[SlackBlock]] = None,
+    user: String,
+    bot_id: Option[String] = None,
+    bot_link: Option[String] = None
+) extends SlackMessage {
+  override val thread_ts: Option[String] = None
+}
+
 @JsonAdt( "channel_topic" )
 case class SlackChannelTopicMessage(
     override val ts: String,
