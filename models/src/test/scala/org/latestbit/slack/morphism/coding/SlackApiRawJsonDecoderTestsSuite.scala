@@ -124,8 +124,8 @@ class SlackApiRawJsonDecoderTestsSuite extends AnyFlatSpec with CirceCodecs {
           ts = "1584537248.001900",
           text = Some( "added an integration to this channel: <https://org.slack.com/services/bot-id|bot-name>" ),
           user = "UID",
-          bot_id = Some("bot-id"),
-          bot_link = Some("<https://org.slack.com/services/bot-id|bot-name>")
+          bot_id = Some( "bot-id" ),
+          bot_link = Some( "<https://org.slack.com/services/bot-id|bot-name>" )
         )
       ),
       has_more = Some( true ),
