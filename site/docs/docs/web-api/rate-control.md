@@ -78,7 +78,8 @@ val client = new SlackApiClient(
 ```
 
 The throttler implementation takes into account the timeout specified 
-in an HTTP header in Slack API rate limit response to delay your request at least that value.
+in an HTTP header (the `Retry-After` header) in Slack API rate limit response 
+to delay your request at least that value.
 
 Using rate control parameters, you can also enable automatic retrying for other errors additionally to `SlackApiRateLimitedError`:
 
