@@ -182,7 +182,8 @@ abstract class StandardRateThrottler private[ratectrl] (
         Option( globalMaxRateMetric ).map { metric =>
           globalMaxRateMetric = metric.update( now )
           globalMaxRateMetric.delay
-        }
+        },
+        methodRateControl.flatMap( _.methodMinRateLimitDelay.map( _.toMillis ) )
       ).flatten ++ (apiToken
         .flatMap { tokenValue =>
           tokenValue.workspaceId.map { workspaceId =>

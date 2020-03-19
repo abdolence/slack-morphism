@@ -25,6 +25,7 @@ import sttp.client.Request
 
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ ExecutionContext, Future }
+import scala.util.{ Failure, Success, Try }
 
 trait SlackApiHttpRateControlSupport extends SlackApiHttpProtocolSupport {
   protected val throttler: SlackApiRateThrottler
@@ -43,10 +44,20 @@ trait SlackApiHttpRateControlSupport extends SlackApiHttpProtocolSupport {
       apiToken = Some( slackApiToken ),
       methodRateControl = methodRateControl
     ) { () =>
-      sendSlackRequest[RS](
-        request.auth.bearer( slackApiToken.value )
-      )
+      super[SlackApiHttpProtocolSupport]
+        .protectedSlackHttpApiRequest( request, methodRateControl )
+        .transformWith( retryIfPossible[RS]( request, methodRateControl )( _ ) )
     }
 
+  }
+
+  private def retryIfPossible[RS](
+      request: Request[Either[String, String], Nothing],
+      methodRateControl: Option[SlackApiMethodRateControlParams]
+  )( respTry: Try[Either[SlackApiClientError, RS]] ): Future[Either[SlackApiClientError, RS]] = {
+    respTry match {
+      case Success( response ) => Future.successful( response )
+      case Failure( ex )       => Future.failed( ex )
+    }
   }
 }
