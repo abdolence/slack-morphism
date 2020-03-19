@@ -5,7 +5,21 @@ options:
 
   - title: Web API
     url: docs/web-api
-    section: webapi
+    menu_section: webapi
+
+    nested_options:
+      - title: Web API calls
+        url: docs/web-api/make-web-api-calls
+        menu_section: webapi
+      - title: Pagination
+        url: docs/web-api/pagination
+        menu_section: webapi
+      - title: Webhook Messages
+        url: docs/web-api/incoming-webhook
+        menu_section: webapi
+      - title: Rate Control
+        url: docs/web-api/incoming-webhook
+        menu_section: webapi
 
   - title: Events API
     url: docs/events-api
