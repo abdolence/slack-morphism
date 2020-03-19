@@ -114,7 +114,7 @@ val reactiveStreamsVersion = "1.0.3"
 // For tests
 val scalaTestVersion = "3.1.0"
 val scalaCheckVersion = "1.14.3"
-val scalaTestPlusCheck = "3.1.0.0-RC2"
+val scalaTestPlusCheck = "3.1.1.1"
 val scalaTestPlusTestNG = "3.1.0.0" // reactive publishers tck testing
 val scalaCheckShapeless = "1.2.3"
 val scalaMockVersion = "4.4.0"
@@ -147,7 +147,7 @@ val baseDependencies =
       "io.circe" %% "circe-parser"
     ).map(
       _ % circeVersion
-        excludeAll (ExclusionRule( organization = "org.typelevel" ) )
+        exclude ("org.typelevel", "cats-core")
     ) ++
     Seq(
       "org.latestbit" %% "circe-tagged-adt-codec" % circeAdtCodecVersion
@@ -161,7 +161,7 @@ val baseDependencies =
       "org.typelevel" %% "cats-laws" % catsVersion,
       "org.typelevel" %% "cats-testkit" % catsVersion,
       "org.reactivestreams" % "reactive-streams-tck" % reactiveStreamsVersion,
-      "org.scalatestplus" %% "scalatestplus-scalacheck" % scalaTestPlusCheck,
+      "org.scalatestplus" %% "scalacheck-1-14" % scalaTestPlusCheck,
       "org.scalatestplus" %% "testng-6-7" % scalaTestPlusTestNG,
       "com.github.alexarchambault" %% "scalacheck-shapeless_1.14" % scalaCheckShapeless,
       "com.softwaremill.sttp.client" %% "async-http-client-backend-future" % sttpVersion
