@@ -25,14 +25,15 @@ import org.latestbit.slack.morphism.events.{
   SlackChannelJoinMessage,
   SlackChannelNameMessage,
   SlackChannelPurposeMessage,
-  SlackChannelTopicMessage
+  SlackChannelTopicMessage,
+  SlackBotAddMessage
 }
 import org.scalatest.flatspec.AnyFlatSpec
 import io.circe.parser._
 
 class SlackApiRawJsonDecoderTestsSuite extends AnyFlatSpec with CirceCodecs {
 
-  "Circe codecs" should "be able to decode a channel history with channel_joined, channel_topic, channel_purpose, channel_name messages" in {
+  "Circe codecs" should "be able to decode a channel history with channel_joined, channel_topic, channel_purpose, channel_name, bot_add messages" in {
 
     val jsonResponse =
       """
@@ -71,6 +72,15 @@ class SlackApiRawJsonDecoderTestsSuite extends AnyFlatSpec with CirceCodecs {
             |            "text": "<@UID> has renamed the channel from \"test\" to \"test2\"",
             |            "old_name": "test",
             |            "name": "test2"
+            |        },
+            |        {
+            |            "type": "message",
+            |            "subtype": "bot_add",
+            |            "ts": "1584537248.001900",
+            |            "user": "UID",
+            |            "text": "added an integration to this channel: <https://org.slack.com/services/bot-id|bot-name>",
+            |            "bot_id": "bot-id",
+            |            "bot_link": "<https://org.slack.com/services/bot-id|bot-name>"
             |        }
             |  ],
             |  "has_more": true,
@@ -109,6 +119,13 @@ class SlackApiRawJsonDecoderTestsSuite extends AnyFlatSpec with CirceCodecs {
           user = "UID",
           old_name = Some( "test" ),
           name = "test2"
+        ),
+        SlackBotAddMessage(
+          ts = "1584537248.001900",
+          text = Some( "added an integration to this channel: <https://org.slack.com/services/bot-id|bot-name>" ),
+          user = "UID",
+          bot_id = Some( "bot-id" ),
+          bot_link = Some( "<https://org.slack.com/services/bot-id|bot-name>" )
         )
       ),
       has_more = Some( true ),
