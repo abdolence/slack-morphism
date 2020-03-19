@@ -3,7 +3,7 @@ layout: edocs
 title: Make Web API calls
 permalink: docs/web-api/make-web-api-calls
 ---
-# Make Web API calls
+# Slack API client
 ## Choose an HTTP client backend
 
 You have to choose a [sttp backend](https://sttp.readthedocs.io/en/latest/backends/summary.html) 
@@ -39,7 +39,7 @@ implicit val sttpBackend = AkkaHttpBackend()
 val client = new SlackApiClient()
 ```
 
-## Web API calls using client
+## Make Web API calls
 
 To make calls to Slack Web API methods (except for OAuth methods, Incoming Webhooks and event replies) you need a Slack token.
 For simple bots you can have it in your config files, or you can obtain workspace tokens 

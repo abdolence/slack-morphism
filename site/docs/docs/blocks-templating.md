@@ -241,8 +241,7 @@ More examples are available [here](https://github.com/abdolence/slack-morphism/t
 
 ```scala
 val template = new MyWelcomeMessageTemplateExample( userId )
-slackApiClient.chat
-.postMessage(
+client.chat.postMessage(
   SlackApiChatPostMessageRequest(
     channel = channelId,
     text = template.renderPlainText(),

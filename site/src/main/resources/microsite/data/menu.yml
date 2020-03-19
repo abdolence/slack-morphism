@@ -8,7 +8,7 @@ options:
     menu_section: webapi
 
     nested_options:
-      - title: Web API calls
+      - title: Slack API client
         url: docs/web-api/make-web-api-calls
         menu_section: webapi
       - title: Pagination
