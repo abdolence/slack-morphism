@@ -39,7 +39,7 @@ which follows the Slack API rate limits and tiers (or your custom configuration)
 Add the following to your `build.sbt`:
 
 ```scala
-libraryDependencies += "org.latestbit" %% "slack-morphism-client" % "1.1.1"
+libraryDependencies += "org.latestbit" %% "slack-morphism-client" % "1.1.2"
 ```
 
 or if you'd like to full-featured and ready to use Slack bot, which uses Akka Http, use this:
