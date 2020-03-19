@@ -20,6 +20,7 @@ package org.latestbit.slack.morphism.client
 
 /**
  * Slack API token base representation
+ * @group TokenDefs
  */
 trait SlackApiToken {
 
@@ -40,6 +41,10 @@ trait SlackApiToken {
 
 }
 
+/**
+ * Slack API token utility constructors and constants
+ * @group TokenDefs
+ */
 object SlackApiToken {
 
   /**
@@ -47,7 +52,7 @@ object SlackApiToken {
    * @param scopeAsStr scope as a str
    * @return set of permissions
    */
-  def scopeToSet( scopeAsStr: Option[String] ): Set[String] = {
+  private[client] def scopeToSet( scopeAsStr: Option[String] ): Set[String] = {
     scopeAsStr
       .map( _.split( ',' ).map( _.trim ).filterNot( _.isEmpty ).toSet )
       .getOrElse( Set() )
@@ -85,6 +90,8 @@ object SlackApiToken {
 
 /**
  * Slack API user token
+ * @group TokenDefs
+ *
  * @param value token value
  * @param scope token scope in a string form
  * @param workspaceId a workspace/team id for this token
@@ -99,6 +106,8 @@ case class SlackApiUserToken(
 
 /**
  * Slack API bot token
+ * @group TokenDefs
+ *
  * @param value token value
  * @param scope token scope in a string form
  * @param workspaceId a workspace/team id for this token
