@@ -35,7 +35,7 @@ implicit val slackApiToken: SlackApiToken = SlackApiBotToken(
 There are also different rate tiers, and all Web API methods in Slack Morphism client 
 are marked accordingly and follow those rate tiers limits.
 
-## Customizing rate control params
+## Rate control params
 You can also customise rate control params using `SlackApiRateThrottler.createStandardThrottler( params = ...)`.
 
 For example, you can set a global rate limit additionally to Slack limits using API like this:
@@ -77,7 +77,10 @@ val client = new SlackApiClient(
 )
 ```
 
-Using rate control parameters, you can also enable retries for other errors additionally to `SlackApiRateLimitedError`:
+The throttler implementation takes into account the timeout specified 
+in an HTTP header in Slack API rate limit response to delay your request at least that value.
+
+Using rate control parameters, you can also enable automatic retrying for other errors additionally to `SlackApiRateLimitedError`:
 
 ```
 import org.latestbit.slack.morphism.client._
