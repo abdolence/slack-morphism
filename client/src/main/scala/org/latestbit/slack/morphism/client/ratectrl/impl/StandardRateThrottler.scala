@@ -250,7 +250,8 @@ abstract class StandardRateThrottler private[ratectrl] (
 
     if (params.maxRetries > 0 && methodRateControl.flatMap( _.maxRetries ).forall( _ > 0 )) {
       response match {
-        case Success( Left( ex ) ) if params.retryFor.contains( ex.getClass ) => {
+        case Success( Left( ex ) )
+            if ex.isInstanceOf[SlackApiRetryableError] && params.retryFor.contains( ex.getClass ) => {
           ex match {
             case rateLimitedError: SlackApiRateLimitedError => {
               throttle(

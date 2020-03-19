@@ -281,7 +281,9 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
         case ( callable: Callable[_], _: Long, _: TimeUnit ) =>
           val scheduledFuture = stub[ScheduledFuture[Unit]]
           (scheduledFuture.isDone _).when().returns( true )
-          (scheduledFuture.get: () => Unit).when().returns( callable.call() )
+          (scheduledFuture.get: () => Unit).when().returns {
+            val _ = callable.call()
+          }
           scheduledFuture
       }
 
@@ -326,7 +328,9 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
         case ( callable: Callable[_], _: Long, _: TimeUnit ) =>
           val scheduledFuture = stub[ScheduledFuture[Unit]]
           (scheduledFuture.isDone _).when().returns( true )
-          (scheduledFuture.get: () => Unit).when().returns( callable.call() )
+          (scheduledFuture.get: () => Unit).when().returns {
+            val _ = callable.call()
+          }
           scheduledFuture
       }
 
