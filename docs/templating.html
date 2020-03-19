@@ -60,8 +60,8 @@
 			<div class="sidebar-nav-item  "><a href="/docs/web-api" title="Web API" class="drop-nested">Web API</a><i
 						class="fa fa-angle-right"></i>
 				<div class="sub-section"> <a href="/docs/web-api/make-web-api-calls"
-					                                                       title="Web API calls"
-					                                                       class="">Web API calls</a> <a href="/docs/web-api/pagination"
+					                                                       title="Slack API client"
+					                                                       class="">Slack API client</a> <a href="/docs/web-api/pagination"
 					                                                       title="Pagination"
 					                                                       class="">Pagination</a> <a href="/docs/web-api/incoming-webhooks"
 					                                                       title="Webhook Messages"
@@ -347,8 +347,7 @@ depends on some user defined condition (a predicate):</p>
 <h4 id="use-them-in-your-application-code-like-this">Use them in your application code like this:</h4>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="nv">template</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">MyWelcomeMessageTemplateExample</span><span class="o">(</span> <span class="n">userId</span> <span class="o">)</span>
-<span class="nv">slackApiClient</span><span class="o">.</span><span class="py">chat</span>
-<span class="o">.</span><span class="py">postMessage</span><span class="o">(</span>
+<span class="nv">client</span><span class="o">.</span><span class="py">chat</span><span class="o">.</span><span class="py">postMessage</span><span class="o">(</span>
   <span class="nc">SlackApiChatPostMessageRequest</span><span class="o">(</span>
     <span class="n">channel</span> <span class="k">=</span> <span class="n">channelId</span><span class="o">,</span>
     <span class="n">text</span> <span class="k">=</span> <span class="nv">template</span><span class="o">.</span><span class="py">renderPlainText</span><span class="o">(),</span>
