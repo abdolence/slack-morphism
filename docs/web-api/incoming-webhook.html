@@ -1,5 +1,5 @@
 <html>
-<head><title>Slack Morphism for Scala: Slack Web API</title>
+<head><title>Slack Morphism for Scala: Rate Control, throttling and retrying</title>
 	<meta charset="utf-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -7,15 +7,15 @@
 	<meta name="description" content="Open Type-Safe Reactive Client with Blocks Templating for Slack"/>
 	<meta name="og:image" content="/img/poster.png"/>
 	<meta name="image" property="og:image" content="/img/poster.png"/>
-	<meta name="og:title" content="Slack Morphism for Scala: Slack Web API"/>
+	<meta name="og:title" content="Slack Morphism for Scala: Rate Control, throttling and retrying"/>
 	<meta name="title" property="og:title"
-	      content="Slack Morphism for Scala: Slack Web API"/>
+	      content="Slack Morphism for Scala: Rate Control, throttling and retrying"/>
 	<meta name="og:site_name" content="Slack Morphism for Scala"/>
 	<meta name="og:url" content="https://slack.abdolence.dev"/>
 	<meta name="og:type" content="website"/>
 	<meta name="og:description" content="Open Type-Safe Reactive Client with Blocks Templating for Slack"/>
 	<link rel="icon" type="image/png" href="/img/favicon.png"/>
-	<meta name="twitter:title" content="Slack Morphism for Scala: Slack Web API"/>
+	<meta name="twitter:title" content="Slack Morphism for Scala: Rate Control, throttling and retrying"/>
 	<meta name="twitter:image" content="https://slack.abdolence.dev/img/poster.png"/>
 	<meta name="twitter:description" content="Open Type-Safe Reactive Client with Blocks Templating for Slack"/>
 	<meta name="twitter:card" content="summary_large_image"/>
@@ -57,7 +57,7 @@
 			<div class="sidebar-nav-item  "><a href="/docs/index" title="Intro" class="">Intro</a>
 			</div>
 			 
-			<div class="sidebar-nav-item active open"><a href="/docs/web-api" title="Web API" class="drop-nested">Web API</a><i
+			<div class="sidebar-nav-item  open"><a href="/docs/web-api" title="Web API" class="drop-nested">Web API</a><i
 						class="fa fa-angle-right"></i>
 				<div class="sub-section"> <a href="/docs/web-api/make-web-api-calls"
 					                                                       title="Web API calls"
@@ -65,9 +65,9 @@
 					                                                       title="Pagination"
 					                                                       class="">Pagination</a> <a href="/docs/web-api/incoming-webhook"
 					                                                       title="Webhook Messages"
-					                                                       class="">Webhook Messages</a> <a href="/docs/web-api/incoming-webhook"
+					                                                       class="active">Webhook Messages</a> <a href="/docs/web-api/incoming-webhook"
 					                                                       title="Rate Control"
-					                                                       class="">Rate Control</a>
+					                                                       class="active">Rate Control</a>
 				</div>
 				
 			</div>
@@ -114,7 +114,53 @@
 		</div>
 		<div id="content" data-github-owner="abdolence" data-github-repo="slack-morphism">
 			<div class="content-wrapper">
-				<section><h1 id="slack-web-api-client">Slack Web API client</h1>
+				<section><h1 id="rate-control-throttling-and-retrying-slack-api-method-requests">Rate control, throttling and retrying Slack API method requests</h1>
+<p>Slack API defines <a href="https://api.slack.com/docs/rate-limits">rate limits</a> to which all of your applications must follow.</p>
+
+<p>Slack Morphism, starting from v1.1, provides an ability to throttling your requests to control the rate limits, 
+and delay your calls when necessary.</p>
+
+<p>By default, throttler <em>isn’t</em> enabled, so you should enable it explicitly:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import org.latestbit.slack.morphism.client._
+import org.latestbit.slack.morphism.client.ratectrl._
+
+// Creating a client instance with throttling
+val client = new SlackApiClient(
+   throttler = SlackApiRateThrottler.createStandardThrottler()
+)
+</code></pre></div></div>
+<p>The example above creates a Slack API Client that follows the official rate limits from Slack.
+Because the Slack rate limits apply per workspaces (separately), 
+to use throttling and limits properly you <em>have to specify</em> workspace/team id in tokens:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// A token should have a workspace id
+implicit val slackApiToken: SlackApiToken = SlackApiBotToken(
+    "xoxb-89.....",
+    workspaceId = Some( "TS......." ) 
+)
+</code></pre></div></div>
+<p>There are also different rate tiers, and all Web API methods in Slack Morphism client 
+are marked accordingly and follow those rate tiers limits.</p>
+
+<p>You can also customise rate control params using <code class="highlighter-rouge">SlackApiRateThrottler.createStandardThrottler( params = ...)</code>.</p>
+
+<p>For example, you can set a global rate limit additionally to Slack limits using API like this:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import org.latestbit.slack.morphism.client._
+import org.latestbit.slack.morphism.client.ratectrl._
+import scala.concurrent.duration._
+
+// Creating a client instance with throttling
+val client = new SlackApiClient(
+   throttler = SlackApiRateThrottler.createStandardThrottler(
+        params = 
+            SlackApiRateControlParams.StandardLimits.DEFAULT_PARAMS.copy(
+                globalMaxRateLimit = Some(
+                   (100, 1.minute) // 100 requests per minute
+                )
+            )
+   )
+)
+</code></pre></div></div>
 </section>
 			</div>
 		</div>

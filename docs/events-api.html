@@ -57,7 +57,19 @@
 			<div class="sidebar-nav-item  "><a href="/docs/index" title="Intro" class="">Intro</a>
 			</div>
 			 
-			<div class="sidebar-nav-item  "><a href="/docs/web-api" title="Web API" class="">Web API</a>
+			<div class="sidebar-nav-item  "><a href="/docs/web-api" title="Web API" class="drop-nested">Web API</a><i
+						class="fa fa-angle-right"></i>
+				<div class="sub-section"> <a href="/docs/web-api/make-web-api-calls"
+					                                                       title="Web API calls"
+					                                                       class="">Web API calls</a> <a href="/docs/web-api/pagination"
+					                                                       title="Pagination"
+					                                                       class="">Pagination</a> <a href="/docs/web-api/incoming-webhook"
+					                                                       title="Webhook Messages"
+					                                                       class="">Webhook Messages</a> <a href="/docs/web-api/incoming-webhook"
+					                                                       title="Rate Control"
+					                                                       class="">Rate Control</a>
+				</div>
+				
 			</div>
 			 
 			<div class="sidebar-nav-item active "><a href="/docs/events-api" title="Events API" class="active">Events API</a>
@@ -145,6 +157,25 @@
         <span class="nf">complete</span><span class="o">(</span> <span class="nv">StatusCodes</span><span class="o">.</span><span class="py">BadRequest</span> <span class="o">)</span>
       <span class="o">}</span>
     <span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="reply-to-slack-events-using-response_url">Reply to Slack Events using response_url</h2>
+
+<p>There are some Slack events that provide you a response_url 
+to post a message back using the specified url from those events.</p>
+
+<p>To help with these scenarios, you can use <code class="highlighter-rouge">SlackApiClient.chat.postReply()</code>, 
+which doesn’t require any tokens to work:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>client.chat
+    .postEventReply(
+      response_url = response_url,
+      reply = SlackApiPostEventReply(
+        text = template.renderPlainText(),
+        blocks = template.renderBlocks(),
+        response_type = Some( SlackResponseTypes.EPHEMERAL )
+      )
+    )
 </code></pre></div></div>
 
 <h2 id="slack-events-signature-verifier">Slack events signature verifier</h2>
