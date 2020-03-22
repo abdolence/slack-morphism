@@ -18,16 +18,15 @@
 
 package org.latestbit.slack.morphism.client.impl
 
+import cats.MonadError
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.reqresp.test._
-
-import scala.concurrent.{ ExecutionContext, Future }
 import org.latestbit.slack.morphism.codecs.implicits._
 
 /**
  * Support for Slack test API methods
  */
-trait SlackApiTestClient extends SlackApiHttpProtocolSupport {
+trait SlackApiTestClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
 
   object api {
 
@@ -36,8 +35,8 @@ trait SlackApiTestClient extends SlackApiHttpProtocolSupport {
      */
     def test( req: SlackApiTestRequest )(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiTestResponse]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiTestResponse]] = {
 
       http.post[SlackApiTestRequest, SlackApiTestResponse](
         "api.test",

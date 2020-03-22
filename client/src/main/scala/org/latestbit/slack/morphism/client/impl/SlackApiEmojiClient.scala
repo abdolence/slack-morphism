@@ -21,14 +21,12 @@ package org.latestbit.slack.morphism.client.impl
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client.reqresp.emoji._
-
-import scala.concurrent.{ ExecutionContext, Future }
 import org.latestbit.slack.morphism.codecs.implicits._
 
 /**
  * Support for Slack Emoji API methods
  */
-trait SlackApiEmojiClient extends SlackApiHttpProtocolSupport { self: SlackApiClient =>
+trait SlackApiEmojiClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
 
   object emoji {
 
@@ -37,8 +35,8 @@ trait SlackApiEmojiClient extends SlackApiHttpProtocolSupport { self: SlackApiCl
      */
     def list()(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiEmojiListResponse]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiEmojiListResponse]] = {
 
       http.get[SlackApiEmojiListResponse](
         "emoji.list",

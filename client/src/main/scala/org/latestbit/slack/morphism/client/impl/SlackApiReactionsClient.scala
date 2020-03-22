@@ -23,13 +23,12 @@ import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client.reqresp.reactions._
 import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
 
-import scala.concurrent.{ ExecutionContext, Future }
 import org.latestbit.slack.morphism.codecs.implicits._
 
 /**
  * Support for Slack test API methods
  */
-trait SlackApiReactionsClient extends SlackApiHttpProtocolSupport {
+trait SlackApiReactionsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
 
   object reactions {
 
@@ -38,8 +37,8 @@ trait SlackApiReactionsClient extends SlackApiHttpProtocolSupport {
      */
     def add( req: SlackApiReactionsAddRequest )(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiReactionsAddResponse]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiReactionsAddResponse]] = {
 
       http.post[SlackApiReactionsAddRequest, SlackApiReactionsAddResponse](
         "reactions.add",
@@ -53,8 +52,8 @@ trait SlackApiReactionsClient extends SlackApiHttpProtocolSupport {
      */
     def get( req: SlackApiReactionsGetRequest )(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiReactionsGetResponse]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiReactionsGetResponse]] = {
 
       http.get[SlackApiReactionsGetResponse](
         "reactions.get",
@@ -72,8 +71,8 @@ trait SlackApiReactionsClient extends SlackApiHttpProtocolSupport {
      */
     def list( req: SlackApiReactionsListRequest )(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiReactionsListResponse]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiReactionsListResponse]] = {
 
       http.get[SlackApiReactionsListResponse](
         "reactions.list",
@@ -93,9 +92,9 @@ trait SlackApiReactionsClient extends SlackApiHttpProtocolSupport {
      */
     def listScroller( req: SlackApiReactionsListRequest )(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): SlackApiResponseScroller[SlackApiReactionsListItem, String] = {
-      new SlackApiResponseScroller[SlackApiReactionsListItem, String](
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): SlackApiResponseScroller[F, SlackApiReactionsListItem, String, SlackApiReactionsListResponse] = {
+      new SlackApiResponseScroller[F, SlackApiReactionsListItem, String, SlackApiReactionsListResponse](
         initialLoader = { () => list( req ) },
         batchLoader = { cursor =>
           list(
@@ -113,8 +112,8 @@ trait SlackApiReactionsClient extends SlackApiHttpProtocolSupport {
      */
     def remove( req: SlackApiReactionsRemoveRequest )(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiReactionsRemoveResponse]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiReactionsRemoveResponse]] = {
 
       http.post[SlackApiReactionsRemoveRequest, SlackApiReactionsRemoveResponse](
         "reactions.remove",

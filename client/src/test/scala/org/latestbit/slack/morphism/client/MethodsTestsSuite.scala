@@ -25,11 +25,11 @@ import org.scalacheck.ScalacheckShapeless._
 import org.scalacheck._
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import sttp.client.testing.SttpBackendStub
-import cats.implicits._
 import io.circe.Encoder
 import io.circe.generic.auto._
 import org.latestbit.slack.morphism.client.reqresp.apps._
 import org.scalatest.compatible.Assertion
+import cats.implicits._
 
 import scala.concurrent.Future
 
@@ -83,7 +83,7 @@ class MethodsTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenPropertyCheck
     implicitly[Arbitrary[SlackApiTestRequest]]
 
     testSlackApiMethod { req: SlackApiTestRequest => implicit backend =>
-      val slackApiClient = new SlackApiClient()
+      val slackApiClient = new SlackApiClient[Future]()
       slackApiClient.api.test( req )
     } { req: SlackApiTestRequest => SlackApiTestResponse( args = req.args ) } {
       case ( req, eitherResp ) => {
@@ -100,7 +100,7 @@ class MethodsTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenPropertyCheck
     implicitly[Arbitrary[SlackApiUninstallRequest]]
 
     testSlackApiMethod { req: SlackApiUninstallRequest => implicit backend =>
-      val slackApiClient = new SlackApiClient()
+      val slackApiClient = new SlackApiClient[Future]()
       slackApiClient.apps.uninstall( req )
     } { req => SlackApiUninstallResponse() } {
       case ( req, eitherResp ) => {

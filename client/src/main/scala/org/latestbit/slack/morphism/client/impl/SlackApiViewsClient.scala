@@ -22,13 +22,12 @@ import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client.reqresp.views._
 
-import scala.concurrent.{ ExecutionContext, Future }
 import org.latestbit.slack.morphism.codecs.implicits._
 
 /**
  * Support for Slack Views API methods
  */
-trait SlackApiViewsClient extends SlackApiHttpProtocolSupport {
+trait SlackApiViewsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
 
   object views {
 
@@ -37,8 +36,8 @@ trait SlackApiViewsClient extends SlackApiHttpProtocolSupport {
      */
     def open( req: SlackApiViewsOpenRequest )(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiViewsOpenResponse]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiViewsOpenResponse]] = {
 
       http.post[SlackApiViewsOpenRequest, SlackApiViewsOpenResponse](
         "views.open",
@@ -52,8 +51,8 @@ trait SlackApiViewsClient extends SlackApiHttpProtocolSupport {
      */
     def publish( req: SlackApiViewsPublishRequest )(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiViewsPublishResponse]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiViewsPublishResponse]] = {
 
       http.post[SlackApiViewsPublishRequest, SlackApiViewsPublishResponse](
         "views.publish",
@@ -67,8 +66,8 @@ trait SlackApiViewsClient extends SlackApiHttpProtocolSupport {
      */
     def push( req: SlackApiViewsPushRequest )(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiViewsPushResponse]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiViewsPushResponse]] = {
 
       http.post[SlackApiViewsPushRequest, SlackApiViewsPushResponse](
         "views.push",
@@ -82,8 +81,8 @@ trait SlackApiViewsClient extends SlackApiHttpProtocolSupport {
      */
     def update( req: SlackApiViewsUpdateRequest )(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiViewsUpdateResponse]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiViewsUpdateResponse]] = {
 
       http.post[SlackApiViewsUpdateRequest, SlackApiViewsUpdateResponse](
         "views.update",

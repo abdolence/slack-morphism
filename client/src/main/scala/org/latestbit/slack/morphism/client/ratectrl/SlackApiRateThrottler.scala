@@ -20,6 +20,7 @@ package org.latestbit.slack.morphism.client.ratectrl
 
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.ratectrl.impl._
+import org.latestbit.slack.morphism.concurrent.AsyncTimerSupport
 import sttp.model.Uri
 
 import scala.concurrent.{ ExecutionContext, Future }
@@ -28,7 +29,7 @@ import scala.concurrent.duration.FiniteDuration
 /**
  * Slack API call rate throttler
  */
-trait SlackApiRateThrottler {
+trait SlackApiRateThrottler[F[_]] {
 
   /**
    * Throttle and retry a Slack API call if it is necessary
@@ -45,8 +46,8 @@ trait SlackApiRateThrottler {
       apiToken: Option[SlackApiToken],
       methodRateControl: Option[SlackApiMethodRateControlParams]
   )(
-      request: () => Future[Either[SlackApiClientError, RS]]
-  )( implicit ec: ExecutionContext ): Future[Either[SlackApiClientError, RS]]
+      request: () => F[Either[SlackApiClientError, RS]]
+  ): F[Either[SlackApiClientError, RS]]
 
   /**
    * Release all throttle resources (threads, etc)
@@ -56,15 +57,15 @@ trait SlackApiRateThrottler {
 
 object SlackApiRateThrottler {
 
-  private case object Empty extends SlackApiRateThrottler {
+  private class Empty[F[_]] extends SlackApiRateThrottler[F] {
 
     override def throttle[RS](
         uri: Uri,
         apiToken: Option[SlackApiToken],
         methodRateControl: Option[SlackApiMethodRateControlParams]
     )(
-        request: () => Future[Either[SlackApiClientError, RS]]
-    )( implicit ec: ExecutionContext ): Future[Either[SlackApiClientError, RS]] = request()
+        request: () => F[Either[SlackApiClientError, RS]]
+    ): F[Either[SlackApiClientError, RS]] = request()
 
     override def shutdown(): Unit = {}
   }
@@ -74,7 +75,11 @@ object SlackApiRateThrottler {
    * accordingly to https://api.slack.com/docs/rate-limits
    * @return a throttler implementation
    */
-  def createStandardThrottler(): SlackApiRateThrottler = {
+  def createStandardThrottler[F[_]]()(
+      implicit backendType: SlackApiClientBackend.BackendType[F],
+      ec: ExecutionContext,
+      timerSupport: AsyncTimerSupport[F]
+  ): SlackApiRateThrottler[F] = {
     createStandardThrottler( SlackApiRateControlParams.StandardLimits.DEFAULT_PARAMS )
   }
 
@@ -82,8 +87,14 @@ object SlackApiRateThrottler {
    * Create a Slack API throttler with the specified parameters
    * @return a throttler implementation
    */
-  def createStandardThrottler( params: SlackApiRateControlParams ): SlackApiRateThrottler = {
-    new StandardRateThrottlerImpl(
+  def createStandardThrottler[F[_]](
+      params: SlackApiRateControlParams
+  )(
+      implicit backendType: SlackApiClientBackend.BackendType[F],
+      ec: ExecutionContext,
+      timerSupport: AsyncTimerSupport[F]
+  ): SlackApiRateThrottler[F] = {
+    new StandardRateThrottlerImpl[F](
       params
     )
   }
@@ -92,6 +103,6 @@ object SlackApiRateThrottler {
    * Create an empty throttler (no throttling control)
    * @return an empty throttler implementation
    */
-  def createEmptyThrottler(): SlackApiRateThrottler = SlackApiRateThrottler.Empty
+  def createEmptyThrottler[F[_]](): SlackApiRateThrottler[F] = new SlackApiRateThrottler.Empty[F]
 
 }

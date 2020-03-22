@@ -32,13 +32,14 @@ import org.latestbit.slack.morphism.examples.akka.AppConfig
 import org.latestbit.slack.morphism.examples.akka.db.SlackTokensDb
 import org.latestbit.slack.morphism.examples.akka.templates._
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ ExecutionContext, Future }
+import cats.instances.future._
 
 class SlackInteractionEventsRoute(
     implicit ctx: ActorContext[_],
     materializer: ActorMaterializer,
     config: AppConfig,
-    slackApiClient: SlackApiClient,
+    slackApiClient: SlackApiClient[Future],
     slackTokensDb: ActorRef[SlackTokensDb.Command]
 ) extends StrictLogging
     with AkkaHttpServerRoutesSupport

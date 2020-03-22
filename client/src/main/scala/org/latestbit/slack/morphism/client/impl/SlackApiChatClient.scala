@@ -18,6 +18,7 @@
 
 package org.latestbit.slack.morphism.client.impl
 
+import cats.implicits._
 import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.reqresp.chat._
@@ -25,12 +26,10 @@ import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
 import sttp.client._
 import org.latestbit.slack.morphism.codecs.implicits._
 
-import scala.concurrent.{ ExecutionContext, Future }
-
 /**
  * Support for Slack Chat API methods
  */
-trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
+trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
 
   object chat {
 
@@ -39,8 +38,8 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
      */
     def delete( req: SlackApiChatDeleteRequest )(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiChatDeleteResponse]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiChatDeleteResponse]] = {
 
       http.post[SlackApiChatDeleteRequest, SlackApiChatDeleteResponse](
         "chat.delete",
@@ -54,8 +53,8 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
      */
     def deleteScheduledMessage( req: SlackApiChatDeleteScheduledMessageRequest )(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiChatDeleteScheduledMessageResponse]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiChatDeleteScheduledMessageResponse]] = {
 
       http.post[
         SlackApiChatDeleteScheduledMessageRequest,
@@ -72,8 +71,8 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
      */
     def getPermalink( req: SlackApiChatGetPermalinkRequest )(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiChatGetPermalinkResponse]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiChatGetPermalinkResponse]] = {
 
       http.get[SlackApiChatGetPermalinkResponse](
         "chat.getPermalink",
@@ -89,8 +88,8 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
      */
     def meMessage( req: SlackApiChatMeMessageRequest )(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiChatMeMessageResponse]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiChatMeMessageResponse]] = {
 
       http.post[SlackApiChatMeMessageRequest, SlackApiChatMeMessageResponse](
         "chat.meMessage",
@@ -104,8 +103,8 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
      */
     def postEphemeral( req: SlackApiChatPostEphemeralRequest )(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiChatPostEphemeralResponse]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiChatPostEphemeralResponse]] = {
 
       http
         .post[
@@ -128,8 +127,8 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
           SlackApiRateControlParams.StandardLimits.Specials.POST_CHANNEL_MESSAGE_LIMIT
     )(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiChatPostMessageResponse]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiChatPostMessageResponse]] = {
 
       http.post[SlackApiChatPostMessageRequest, SlackApiChatPostMessageResponse](
         "chat.postMessage",
@@ -153,8 +152,8 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
      * @param reply reply to an event
      */
     def postEventReply( response_url: String, reply: SlackApiPostEventReply )(
-        implicit ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiPostEventReplyResponse]] = {
+        implicit backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiPostEventReplyResponse]] = {
 
       sendSlackRequest[SlackApiPostEventReplyResponse](
         encodePostBody( createSlackHttpApiRequest(), reply ).post( uri"${response_url}" )
@@ -170,8 +169,8 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
         url: String,
         req: SlackApiPostWebHookRequest
     )(
-        implicit ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiPostWebHookResponse]] = {
+        implicit backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiPostWebHookResponse]] = {
       sendSlackRequest[SlackApiPostWebHookResponse](
         encodePostBody( createSlackHttpApiRequest(), req ).post( uri"${url}" )
       ).map( handleSlackEmptyRes( SlackApiPostWebHookResponse() ) )
@@ -182,8 +181,8 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
      */
     def scheduleMessage( req: SlackApiChatScheduleMessageRequest )(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiChatScheduleMessageResponse]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiChatScheduleMessageResponse]] = {
 
       http.post[
         SlackApiChatScheduleMessageRequest,
@@ -200,8 +199,8 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
      */
     def unfurl( req: SlackApiChatUnfurlRequest )(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiChatUnfurlResponse]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiChatUnfurlResponse]] = {
 
       http.post[SlackApiChatUnfurlRequest, SlackApiChatUnfurlResponse](
         "chat.unfurl",
@@ -215,8 +214,8 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
      */
     def update( req: SlackApiChatUpdateRequest )(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiChatUpdateResponse]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiChatUpdateResponse]] = {
 
       http.post[SlackApiChatUpdateRequest, SlackApiChatUpdateResponse](
         "chat.update",
@@ -232,8 +231,8 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
        */
       def list( req: SlackApiChatScheduledMessagesListRequest )(
           implicit slackApiToken: SlackApiToken,
-          ec: ExecutionContext
-      ): Future[Either[SlackApiClientError, SlackApiChatScheduledMessagesListResponse]] = {
+          backendType: SlackApiClientBackend.BackendType[F]
+      ): F[Either[SlackApiClientError, SlackApiChatScheduledMessagesListResponse]] = {
 
         http.post[
           SlackApiChatScheduledMessagesListRequest,
@@ -251,9 +250,19 @@ trait SlackApiChatClient extends SlackApiHttpProtocolSupport {
 	     */
       def listScroller( req: SlackApiChatScheduledMessagesListRequest )(
           implicit slackApiToken: SlackApiToken,
-          ec: ExecutionContext
-      ): SlackApiResponseScroller[SlackApiChatScheduledMessageInfo, String] = {
-        new SlackApiResponseScroller[SlackApiChatScheduledMessageInfo, String](
+          backendType: SlackApiClientBackend.BackendType[F]
+      ): SlackApiResponseScroller[
+        F,
+        SlackApiChatScheduledMessageInfo,
+        String,
+        SlackApiChatScheduledMessagesListResponse
+      ] = {
+        new SlackApiResponseScroller[
+          F,
+          SlackApiChatScheduledMessageInfo,
+          String,
+          SlackApiChatScheduledMessagesListResponse
+        ](
           initialLoader = { () => list( req ) },
           batchLoader = { cursor =>
             list(

@@ -8,7 +8,7 @@ import sbt.Package.ManifestAttributes
 
 name := "slack-morphism-root"
 
-ThisBuild / version := "1.2.0"
+ThisBuild / version := "1.2.0-SNAPSHOT"
 
 ThisBuild / description := "Open Type-Safe Reactive Client with Blocks Templating for Slack"
 
@@ -107,7 +107,7 @@ val catsVersion = "2.1.1"
 val catsEffectVersion = "2.1.2"
 val circeVersion = "0.13.0"
 val scalaCollectionsCompatVersion = "2.1.3"
-val sttpVersion = "2.0.0"
+val sttpVersion = "2.0.6"
 val circeAdtCodecVersion = "0.7.0"
 val reactiveStreamsVersion = "1.0.3"
 
@@ -164,9 +164,12 @@ val baseDependencies =
       "org.scalatestplus" %% "scalacheck-1-14" % scalaTestPlusCheck,
       "org.scalatestplus" %% "testng-6-7" % scalaTestPlusTestNG,
       "com.github.alexarchambault" %% "scalacheck-shapeless_1.14" % scalaCheckShapeless,
-      "com.softwaremill.sttp.client" %% "async-http-client-backend-future" % sttpVersion
+      "com.softwaremill.sttp.client" %% "async-http-client-backend-future" % sttpVersion,
+      "com.softwaremill.sttp.client" %% "async-http-client-backend-cats" % sttpVersion
     ).map(
       _ % "test"
+        exclude ("org.typelevel", "cats-core")
+        exclude ("org.typelevel", "cats-effect")
     )
 
 lazy val noPublishSettings = Seq(

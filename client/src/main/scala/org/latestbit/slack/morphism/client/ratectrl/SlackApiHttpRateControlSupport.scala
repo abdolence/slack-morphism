@@ -19,14 +19,13 @@
 package org.latestbit.slack.morphism.client.ratectrl
 
 import io.circe.Decoder
-import org.latestbit.slack.morphism.client.impl.SlackApiHttpProtocolSupport
-import org.latestbit.slack.morphism.client.{ SlackApiClientError, SlackApiToken }
+import org.latestbit.slack.morphism.client.impl.{ SlackApiClientThrottlerBackend, SlackApiHttpProtocolSupport }
+import org.latestbit.slack.morphism.client.{ SlackApiClientBackend, SlackApiClientError, SlackApiToken }
 import sttp.client.Request
 
-import scala.concurrent.{ ExecutionContext, Future }
-
-trait SlackApiHttpRateControlSupport extends SlackApiHttpProtocolSupport {
-  protected val throttler: SlackApiRateThrottler
+trait SlackApiHttpRateControlSupport[F[_]]
+    extends SlackApiHttpProtocolSupport[F]
+    with SlackApiClientThrottlerBackend[F] {
 
   override protected def protectedSlackHttpApiRequest[RS](
       request: Request[Either[String, String], Nothing],
@@ -34,8 +33,8 @@ trait SlackApiHttpRateControlSupport extends SlackApiHttpProtocolSupport {
   )(
       implicit slackApiToken: SlackApiToken,
       decoder: Decoder[RS],
-      ec: ExecutionContext
-  ): Future[Either[SlackApiClientError, RS]] = {
+      backendType: SlackApiClientBackend.BackendType[F]
+  ): F[Either[SlackApiClientError, RS]] = {
 
     throttler.throttle[RS](
       uri = request.uri,

@@ -20,6 +20,7 @@ package org.latestbit.slack.morphism.client.streaming.impl
 
 import java.util.concurrent.locks.ReentrantLock
 
+import cats.Monad
 import cats.implicits._
 import cats.effect._
 import cats.effect.concurrent.MVar
@@ -31,9 +32,9 @@ import org.reactivestreams.Subscriber
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.Using
 
-class SlackApiScrollableSubscriptionCommandChannel[IT, PT](
+class SlackApiScrollableSubscriptionCommandChannel[F[_] : Monad, IT, PT, SR <: SlackApiScrollableResponse[IT, PT]](
     subscriber: Subscriber[_ >: IT],
-    scrollableResponse: SlackApiResponseScroller[IT, PT],
+    scrollableResponse: SlackApiResponseScroller[F, IT, PT, SR],
     maxItems: Option[Long] = None
 )(
     implicit ec: ExecutionContext,
@@ -45,7 +46,7 @@ class SlackApiScrollableSubscriptionCommandChannel[IT, PT](
   @volatile private var notifyAsyncCommandCb: () => Unit = _
   private val statusLock = new ReentrantLock()
 
-  private def consumerTask( channel: CommandChannel, currentState: ConsumerState[IT, PT] ): IO[Unit] = {
+  private def consumerTask( channel: CommandChannel, currentState: ConsumerState[F, IT, PT, SR] ): IO[Unit] = {
     channel.take.flatMap {
       case RequestElements( n ) => {
         for {
@@ -98,13 +99,13 @@ class SlackApiScrollableSubscriptionCommandChannel[IT, PT](
     }
   }
 
-  private def pullBatchState( state: ConsumerState[IT, PT] ): Future[ConsumerState[IT, PT]] = {
+  private def pullBatchState( state: ConsumerState[F, IT, PT, SR] ): F[ConsumerState[F, IT, PT, SR]] = {
     if (state.remainItems.nonEmpty) {
-      Future.successful( state )
+      Monad[F].pure( state )
     } else {
       state.batchIterator
         .map { batchFuture =>
-          val result: Future[ConsumerState[IT, PT]] =
+          val result: F[ConsumerState[F, IT, PT, SR]] =
             batchFuture.value().flatMap {
               case Right( items ) => {
                 batchFuture.next().map { nextBatchFuture =>
@@ -115,7 +116,7 @@ class SlackApiScrollableSubscriptionCommandChannel[IT, PT](
                 }
               }
               case Left( err ) => {
-                Future.successful(
+                Monad[F].pure(
                   state.copy(
                     lastError = Some( err ),
                     batchIterator = None
@@ -126,15 +127,18 @@ class SlackApiScrollableSubscriptionCommandChannel[IT, PT](
           result
         }
         .getOrElse(
-          Future.successful(
+          Monad[F].pure(
             state
           )
         )
     }
   }
 
-  private def pumpNextBatchAsync( reqN: Long, state: ConsumerState[IT, PT] ): IO[ConsumerState[IT, PT]] = {
-    Async[IO].async[ConsumerState[IT, PT]] { asyncCallback =>
+  private def pumpNextBatchAsync(
+      reqN: Long,
+      state: ConsumerState[F, IT, PT, SR]
+  ): IO[ConsumerState[F, IT, PT, SR]] = {
+    Async[IO].async[ConsumerState[F, IT, PT, SR]] { asyncCallback =>
       if (!state.finished)
         pumpNextBatch( reqN, state, asyncCallback )
       else
@@ -144,15 +148,17 @@ class SlackApiScrollableSubscriptionCommandChannel[IT, PT](
 
   private def pumpNextBatch(
       reqN: Long,
-      state: ConsumerState[IT, PT],
-      asyncCallback: ( Either[Throwable, ConsumerState[IT, PT]] ) => Unit
+      state: ConsumerState[F, IT, PT, SR],
+      asyncCallback: ( Either[Throwable, ConsumerState[F, IT, PT, SR]] ) => Unit
   ): Unit = {
-    def finishState( state: ConsumerState[IT, PT] ) = {
+    def finishState( state: ConsumerState[F, IT, PT, SR] ): Unit = {
       asyncCallback(
-        state.copy( finished = true ).asRight
+        Right(
+          state.copy( finished = true )
+        )
       )
     }
-    pullBatchState( state ).foreach { state =>
+    val _ = pullBatchState( state ).map { state =>
       val n = maxItems.filter( _ < state.sent + reqN ).map( _ - state.sent ).getOrElse( reqN )
       if (n > 0) {
         state.lastError match {
@@ -167,7 +173,7 @@ class SlackApiScrollableSubscriptionCommandChannel[IT, PT](
             } else {
               val ( toSend, toBuffer ) = state.remainItems.splitAt( n.toInt )
               toSend.foreach { item => subscriber.onNext( item ) }
-              val updatedState = state
+              val updatedState: ConsumerState[F, IT, PT, SR] = state
                 .copy(
                   sent = state.sent + toSend.size,
                   remainItems = toBuffer
@@ -195,6 +201,7 @@ class SlackApiScrollableSubscriptionCommandChannel[IT, PT](
         subscriber.onComplete()
         finishState( state )
       }
+      ()
     }
   }
 
@@ -230,12 +237,12 @@ object SlackApiScrollableSubscriptionCommandChannel {
 
   type CommandChannel = MVar[IO, Command]
 
-  case class ConsumerState[IT, PT](
+  case class ConsumerState[F[_] : Monad, IT, PT, SR <: SlackApiScrollableResponse[IT, PT]](
       batchIterator: Option[AsyncSeqIterator[
-        Future,
-        Either[SlackApiClientError, SlackApiScrollableResponse[IT, PT]],
+        F,
+        Either[SlackApiClientError, SR],
         Either[SlackApiClientError, Iterable[IT]]
-      ]],
+      ]] = None,
       lastError: Option[Throwable] = None,
       remainItems: Iterable[IT] = List(),
       sent: Long = 0,

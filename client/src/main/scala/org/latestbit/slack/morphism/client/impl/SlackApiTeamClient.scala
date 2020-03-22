@@ -22,13 +22,12 @@ import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client.reqresp.team._
 
-import scala.concurrent.{ ExecutionContext, Future }
 import org.latestbit.slack.morphism.codecs.implicits._
 
 /**
  * Support for Slack Team API methods
  */
-trait SlackApiTeamClient extends SlackApiHttpProtocolSupport {
+trait SlackApiTeamClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
 
   object team {
 
@@ -37,8 +36,8 @@ trait SlackApiTeamClient extends SlackApiHttpProtocolSupport {
      */
     def info( req: SlackApiTeamInfoRequest )(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiTeamInfoResponse]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiTeamInfoResponse]] = {
 
       http.get[SlackApiTeamInfoResponse](
         "team.info",
@@ -56,8 +55,8 @@ trait SlackApiTeamClient extends SlackApiHttpProtocolSupport {
        */
       def get( req: SlackApiTeamProfileGetRequest )(
           implicit slackApiToken: SlackApiToken,
-          ec: ExecutionContext
-      ): Future[Either[SlackApiClientError, SlackApiTeamProfileGetResponse]] = {
+          backendType: SlackApiClientBackend.BackendType[F]
+      ): F[Either[SlackApiClientError, SlackApiTeamProfileGetResponse]] = {
 
         http.get[SlackApiTeamProfileGetResponse](
           "team.profile.get",

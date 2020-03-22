@@ -18,32 +18,36 @@
 
 package org.latestbit.slack.morphism.client
 
+import cats.MonadError
+import cats.implicits._
+import org.latestbit.slack.morphism.client.SlackApiClientBackend._
 import org.latestbit.slack.morphism.client.impl._
-import org.latestbit.slack.morphism.client.ratectrl._
+import org.latestbit.slack.morphism.client.ratectrl.{ SlackApiHttpRateControlSupport, SlackApiRateThrottler }
 
 /**
  * Slack API client
  */
-class SlackApiClient(
-    protected override val throttler: SlackApiRateThrottler = SlackApiRateThrottler.createEmptyThrottler()
-)( implicit protected override val sttpBackend: SlackApiClientBackend.SttpFutureBackendType )
-    extends SlackApiHttpRateControlSupport
-    with SlackApiOAuthClient
-    with SlackApiTestClient
-    with SlackApiAppsClient
-    with SlackApiAuthClient
-    with SlackApiBotsClient
-    with SlackApiChannelsClient
-    with SlackApiChatClient
-    with SlackApiConversationsClient
-    with SlackApiDndClient
-    with SlackApiEmojiClient
-    with SlackApiImClient
-    with SlackApiPinsClient
-    with SlackApiReactionsClient
-    with SlackApiTeamClient
-    with SlackApiUsersClient
-    with SlackApiViewsClient {
+class SlackApiClient[F[_] : SlackApiClientBackend.BackendType](
+    override protected val throttler: SlackApiRateThrottler[F] = SlackApiRateThrottler.createEmptyThrottler[F]()
+)(
+    override protected implicit val sttpBackend: SttpBackendType[F]
+) extends SlackApiHttpRateControlSupport[F]
+    with SlackApiOAuthClient[F]
+    with SlackApiTestClient[F]
+    with SlackApiAppsClient[F]
+    with SlackApiAuthClient[F]
+    with SlackApiBotsClient[F]
+    with SlackApiChannelsClient[F]
+    with SlackApiChatClient[F]
+    with SlackApiConversationsClient[F]
+    with SlackApiDndClient[F]
+    with SlackApiEmojiClient[F]
+    with SlackApiImClient[F]
+    with SlackApiPinsClient[F]
+    with SlackApiReactionsClient[F]
+    with SlackApiTeamClient[F]
+    with SlackApiUsersClient[F]
+    with SlackApiViewsClient[F] {
 
   /**
    * Release all resources allocated by a client.
@@ -52,5 +56,4 @@ class SlackApiClient(
   def shutdown(): Unit = {
     throttler.shutdown()
   }
-
 }

@@ -21,11 +21,7 @@ package org.latestbit.slack.morphism.client.ratectrl.impl
 import java.util.concurrent.{ Callable, ScheduledExecutorService, ScheduledFuture, TimeUnit }
 
 import org.latestbit.slack.morphism.client._
-import org.latestbit.slack.morphism.client.ratectrl.{
-  SlackApiMethodRateControlParams,
-  SlackApiRateControlParams,
-  SlackApiRateControlSpecialLimit
-}
+import org.latestbit.slack.morphism.client.ratectrl._
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.flatspec.AnyFlatSpec
 import sttp.client._
@@ -33,6 +29,7 @@ import sttp.client._
 import scala.concurrent.{ Await, Future }
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
+import cats.instances.future._
 
 class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
 
@@ -82,7 +79,7 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
 
     var fakeCurrentTime = 0L
 
-    val throttler = new StandardRateThrottler( paramsNoRetries, scheduledExecutorMock ) {
+    val throttler = new StandardRateThrottler[Future]( paramsNoRetries, scheduledExecutorMock ) {
       override protected def currentTimeInMs(): Long = fakeCurrentTime
     }
 
@@ -132,7 +129,7 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
 
     var fakeCurrentTime = 0L
 
-    val throttler = new StandardRateThrottler( paramsNoRetries, scheduledExecutorMock ) {
+    val throttler = new StandardRateThrottler[Future]( paramsNoRetries, scheduledExecutorMock ) {
       override protected def currentTimeInMs(): Long = fakeCurrentTime
     }
 
@@ -177,7 +174,7 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
       .repeated( 5 )
       .times()
 
-    val throttler = new StandardRateThrottler( paramsNoRetries, scheduledExecutorMock ) {
+    val throttler = new StandardRateThrottler[Future]( paramsNoRetries, scheduledExecutorMock ) {
       override protected def currentTimeInMs(): Long = 0L
     }
 
@@ -203,7 +200,7 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
       .repeated( 5 )
       .times()
 
-    val throttler = new StandardRateThrottler( paramsNoRetries, scheduledExecutorMock ) {
+    val throttler = new StandardRateThrottler[Future]( paramsNoRetries, scheduledExecutorMock ) {
       override protected def currentTimeInMs(): Long = 0L
     }
 
@@ -243,7 +240,7 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
 
     var fakeCurrentTime = 0L
 
-    val throttler = new StandardRateThrottler( paramsNoRetries, scheduledExecutorMock ) {
+    val throttler = new StandardRateThrottler[Future]( paramsNoRetries, scheduledExecutorMock ) {
       override protected def currentTimeInMs(): Long = fakeCurrentTime
     }
 
@@ -287,7 +284,7 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
           scheduledFuture
       }
 
-    val throttler = new StandardRateThrottler( paramsWithRetries, scheduledExecutorMock ) {
+    val throttler = new StandardRateThrottler[Future]( paramsWithRetries, scheduledExecutorMock ) {
       override protected def currentTimeInMs(): Long = 0L
     }
 
@@ -334,7 +331,7 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
           scheduledFuture
       }
 
-    val throttler = new StandardRateThrottler( paramsWithRetries, scheduledExecutorMock ) {
+    val throttler = new StandardRateThrottler[Future]( paramsWithRetries, scheduledExecutorMock ) {
       override protected def currentTimeInMs(): Long = 0L
     }
 
@@ -358,7 +355,7 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
     val scheduledExecutorMock = mock[ScheduledExecutorService]
 
     (scheduledExecutorMock.scheduleAtFixedRate _).expects( *, *, *, * ).once()
-    val throttler = new StandardRateThrottler( paramsWithRetries, scheduledExecutorMock ) {
+    val throttler = new StandardRateThrottler[Future]( paramsWithRetries, scheduledExecutorMock ) {
       override protected def currentTimeInMs(): Long = 0L
     }
 

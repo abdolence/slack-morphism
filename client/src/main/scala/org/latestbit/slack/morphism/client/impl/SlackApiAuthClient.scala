@@ -23,12 +23,10 @@ import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client.reqresp.auth._
 import org.latestbit.slack.morphism.codecs.implicits._
 
-import scala.concurrent.{ ExecutionContext, Future }
-
 /**
  * Support for Slack Auth API methods
  */
-trait SlackApiAuthClient extends SlackApiHttpProtocolSupport {
+trait SlackApiAuthClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
 
   object auth {
 
@@ -37,8 +35,8 @@ trait SlackApiAuthClient extends SlackApiHttpProtocolSupport {
      */
     def test()(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiAuthTestResponse]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiAuthTestResponse]] = {
 
       http.post[SlackApiEmptyType, SlackApiAuthTestResponse](
         "auth.test",
@@ -51,8 +49,8 @@ trait SlackApiAuthClient extends SlackApiHttpProtocolSupport {
      */
     def revoke( req: SlackApiAuthRevokeRequest )(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiAuthRevokeResponse]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiAuthRevokeResponse]] = {
 
       http.post[SlackApiAuthRevokeRequest, SlackApiAuthRevokeResponse](
         "auth.revoke",
