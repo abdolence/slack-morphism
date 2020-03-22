@@ -51,7 +51,7 @@ class OAuthTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuiteSupport
         .thenRespondWrapped(
           createJsonResponseStub( mockResponse )
         )
-    val slackApiClient = new SlackApiClient[Future]()
+    val slackApiClient = new SlackApiClient()
 
     slackApiClient.oauth
       .access(

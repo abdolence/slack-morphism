@@ -18,8 +18,6 @@
 
 package org.latestbit.slack.morphism.client
 
-import cats.MonadError
-import cats.implicits._
 import org.latestbit.slack.morphism.client.SlackApiClientBackend._
 import org.latestbit.slack.morphism.client.impl._
 import org.latestbit.slack.morphism.client.ratectrl.{ SlackApiHttpRateControlSupport, SlackApiRateThrottler }
@@ -27,7 +25,7 @@ import org.latestbit.slack.morphism.client.ratectrl.{ SlackApiHttpRateControlSup
 /**
  * Slack API client
  */
-class SlackApiClient[F[_] : SlackApiClientBackend.BackendType](
+class SlackApiClientT[F[_] : SlackApiClientBackend.BackendType](
     override protected val throttler: SlackApiRateThrottler[F] = SlackApiRateThrottler.createEmptyThrottler[F]()
 )(
     override protected implicit val sttpBackend: SttpBackendType[F]

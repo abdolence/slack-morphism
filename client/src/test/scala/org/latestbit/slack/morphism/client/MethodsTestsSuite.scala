@@ -83,7 +83,7 @@ class MethodsTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenPropertyCheck
     implicitly[Arbitrary[SlackApiTestRequest]]
 
     testSlackApiMethod { req: SlackApiTestRequest => implicit backend =>
-      val slackApiClient = new SlackApiClient[Future]()
+      val slackApiClient = new SlackApiClient()
       slackApiClient.api.test( req )
     } { req: SlackApiTestRequest => SlackApiTestResponse( args = req.args ) } {
       case ( req, eitherResp ) => {
@@ -100,7 +100,7 @@ class MethodsTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenPropertyCheck
     implicitly[Arbitrary[SlackApiUninstallRequest]]
 
     testSlackApiMethod { req: SlackApiUninstallRequest => implicit backend =>
-      val slackApiClient = new SlackApiClient[Future]()
+      val slackApiClient = new SlackApiClient()
       slackApiClient.apps.uninstall( req )
     } { req => SlackApiUninstallResponse() } {
       case ( req, eitherResp ) => {

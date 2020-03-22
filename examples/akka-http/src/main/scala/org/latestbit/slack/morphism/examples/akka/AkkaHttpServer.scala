@@ -65,7 +65,7 @@ object AkkaHttpServer extends StrictLogging {
           implicit val appConfig = config
           implicit val akkaSttpBackend: SlackApiClientBackend.SttpBackendType[Future] =
             AkkaHttpBackend.usingActorSystem( classicSystem )
-          implicit val slackApiClient = new SlackApiClient[Future]()
+          implicit val slackApiClient = new SlackApiClient()
 
           implicit val tokensDbRef = context.spawnAnonymous( SlackTokensDb.run )
 

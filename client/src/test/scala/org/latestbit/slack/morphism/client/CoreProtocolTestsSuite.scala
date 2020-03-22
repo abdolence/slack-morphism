@@ -50,7 +50,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
         .thenRespondWrapped(
           createJsonResponseStub( mockResponse )
         )
-    val slackApiClient = new SlackApiClient[Future]()
+    val slackApiClient = new SlackApiClient()
 
     slackApiClient.api.test( SlackApiTestRequest() ).map {
       case Right( resp ) => assert( mockResponse === resp )
@@ -78,7 +78,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
           }
         )
 
-    val slackApiClient = new SlackApiClient[Future]()
+    val slackApiClient = new SlackApiClient()
 
     slackApiClient.api.test( SlackApiTestRequest() ).map {
       case Right( resp )                     => fail( s"Unexpected resp: ${resp}" )
@@ -122,7 +122,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
           )
         )
 
-    val slackApiClient = new SlackApiClient[Future]()
+    val slackApiClient = new SlackApiClient()
 
     SlackApiToken
       .createFrom(

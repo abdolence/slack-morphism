@@ -31,7 +31,7 @@ class AsyncFutureHttpSttpBackendTests extends AsyncFlatSpec with SlackApiClientT
     import sttp.client.asynchttpclient.future.AsyncHttpClientFutureBackend
 
     implicit val sttpBackend = AsyncHttpClientFutureBackend()
-    val slackApiClient = new SlackApiClient[Future]()
+    val slackApiClient = new SlackApiClient()
 
     slackApiClient.apps.uninstall( SlackApiUninstallRequest( "", "" ) )
 
@@ -51,7 +51,7 @@ class AsyncFutureHttpSttpBackendTests extends AsyncFlatSpec with SlackApiClientT
     AsyncHttpClientCatsBackend[IO]()
       .flatMap { implicit backEnd =>
         for {
-          client <- IO.pure( new SlackApiClient[IO] )
+          client <- IO.pure( new SlackApiClientT[IO] )
         } yield client.api.test( SlackApiTestRequest() )
       }
       .unsafeRunSync()
@@ -73,7 +73,7 @@ class AsyncFutureHttpSttpBackendTests extends AsyncFlatSpec with SlackApiClientT
     AsyncHttpClientCatsBackend[IO]()
       .flatMap { implicit backEnd =>
         for {
-          client <- IO.pure( new SlackApiClient[IO]( SlackApiRateThrottler.createStandardThrottler[IO]() ) )
+          client <- IO.pure( new SlackApiClientT[IO]( SlackApiRateThrottler.createStandardThrottler[IO]() ) )
         } yield client.api.test( SlackApiTestRequest() )
       }
       .unsafeRunSync()

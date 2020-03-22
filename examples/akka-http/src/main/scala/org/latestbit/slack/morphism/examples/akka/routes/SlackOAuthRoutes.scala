@@ -36,7 +36,7 @@ class SlackOAuthRoutes(
     implicit ctx: ActorContext[_],
     materializer: ActorMaterializer,
     config: AppConfig,
-    slackApiClient: SlackApiClient[Future],
+    slackApiClient: SlackApiClient,
     slackTokensDb: ActorRef[SlackTokensDb.Command]
 ) extends StrictLogging
     with AkkaHttpServerRoutesSupport
