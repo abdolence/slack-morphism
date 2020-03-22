@@ -23,8 +23,7 @@ import org.latestbit.slack.morphism.client.ratectrl.impl._
 import org.latestbit.slack.morphism.concurrent.AsyncTimerSupport
 import sttp.model.Uri
 
-import scala.concurrent.{ ExecutionContext, Future }
-import scala.concurrent.duration.FiniteDuration
+import scala.concurrent.ExecutionContext
 
 /**
  * Slack API call rate throttler
