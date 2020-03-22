@@ -22,7 +22,7 @@ import org.latestbit.slack.morphism.messages.SlackBlockPlainText
 import org.latestbit.slack.morphism.views.SlackModalView
 
 /**
- * A template to render Slack views with blocks
+ * A template to render Slack modal views with blocks
  */
 trait SlackModalViewTemplate extends SlackBlocksTemplate {
   def titleText(): SlackBlockPlainText

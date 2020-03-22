@@ -18,9 +18,11 @@
 
 package org.latestbit.slack.morphism
 
-import cats.instances.future._
 import scala.concurrent.Future
 
+/**
+ * Slack API http client interfaces and implementation
+ */
 package object client {
   type SlackApiClient = SlackApiClientT[Future]
 }
