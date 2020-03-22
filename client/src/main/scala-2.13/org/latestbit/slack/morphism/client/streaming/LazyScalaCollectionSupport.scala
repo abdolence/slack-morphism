@@ -31,9 +31,6 @@ import scala.concurrent.duration._
 trait LazyScalaCollectionSupport[IT, PT] { self: SlackApiResponseScroller[IT, PT] =>
   type SyncStreamType = LazyList[IT]
 
-  type AsyncItemType = Either[SlackApiClientError, SlackApiScrollableResponse[IT, PT]]
-  type AsyncValueType = Either[SlackApiClientError, Iterable[IT]]
-
   /**
    * Lazy load data synchronously batching using standard lazy container
    *

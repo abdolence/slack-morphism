@@ -18,6 +18,7 @@
 
 package org.latestbit.slack.morphism.client.streaming.impl
 
+import cats.effect.{ ContextShift, IO }
 import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
 import org.reactivestreams.{ Publisher, Subscriber, Subscription }
 
@@ -28,10 +29,11 @@ class SlackApiScrollableReactivePublisher[IT, PT](
     maxItems: Option[Long] = None
 )( implicit ec: ExecutionContext )
     extends Publisher[IT] {
+  private implicit val ctxShift = IO.contextShift( ec )
 
   private final class SlackApiScrollableSubscription( subscriber: Subscriber[_ >: IT] ) extends Subscription {
 
-    private val commandsProcessor = new SlackApiScrollableSubscriptionCommandProcessor[IT, PT](
+    private val commandsChannel = new SlackApiScrollableSubscriptionCommandChannel[IT, PT](
       subscriber,
       scrollableResponse,
       maxItems
@@ -40,25 +42,25 @@ class SlackApiScrollableReactivePublisher[IT, PT](
     override def request( n: Long ): Unit = {
       if (n < 0) {
         subscriber.onError(
-          new IllegalArgumentException( "Subscriber requested negative number of elements" )
+          new IllegalArgumentException( "3.9. Non-positive subscription request." )
         )
       } else if (n == 0) {
         subscriber.onError(
-          new IllegalArgumentException( "Subscriber requested zero number of elements" )
+          new IllegalArgumentException( "3.9. Requested zero number of elements" )
         )
       } else {
-        commandsProcessor.enqueueCommand(
-          SlackApiScrollableSubscriptionCommandProcessor.RequestElements( n )
+        commandsChannel.enqueue(
+          SlackApiScrollableSubscriptionCommandChannel.RequestElements( n )
         )
       }
     }
 
     override def cancel(): Unit = {
-      commandsProcessor.shutdown()
+      commandsChannel.shutdown()
     }
 
     private[impl] def start(): Unit = {
-      commandsProcessor.start()
+      commandsChannel.start()
     }
   }
 

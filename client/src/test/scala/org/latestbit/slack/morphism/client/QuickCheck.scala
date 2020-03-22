@@ -18,6 +18,22 @@
 
 package org.latestbit.slack.morphism.client
 
+import java.time.Instant
+import java.util.concurrent.locks.ReentrantLock
+
 import org.scalatest.flatspec.AnyFlatSpec
+import cats._
+import cats.syntax._
+import cats.implicits._
+import cats.effect._
+import cats.effect.concurrent.{ MVar, Semaphore }
+import cats.effect.implicits._
+import org.latestbit.slack.morphism.concurrent.UniqueLockMonitor
+
+import scala.concurrent.{ Await, Future }
+import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.util.{ Failure, Success, Using }
+import org.scalacheck._
 
 class QuickCheck extends AnyFlatSpec {}
