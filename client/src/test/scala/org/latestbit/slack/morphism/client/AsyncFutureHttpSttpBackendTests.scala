@@ -39,7 +39,7 @@ class AsyncFutureHttpSttpBackendTests extends AsyncFlatSpec with SlackApiClientT
 
     // Creating it with throttler
     {
-      val _ = SlackApiClient.withThrottler( SlackApiRateThrottler.createStandardThrottler() ).create()
+      val _ = SlackApiClient.build.withThrottler( SlackApiRateThrottler.createStandardThrottler() ).create()
     }
 
     slackApiClient.api.test( SlackApiTestRequest() ).map {
@@ -82,7 +82,8 @@ class AsyncFutureHttpSttpBackendTests extends AsyncFlatSpec with SlackApiClientT
         for {
           client <- IO(
                      SlackApiClient
-                       .withThrottler( SlackApiRateThrottler.createStandardThrottler[IO]() )
+                       .build[IO]
+                       .withThrottler( SlackApiRateThrottler.createStandardThrottler() )
                        .create()
                    )
           result <- client.api.test( SlackApiTestRequest() )

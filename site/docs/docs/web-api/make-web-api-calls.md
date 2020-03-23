@@ -67,7 +67,7 @@ implicit val cs: ContextShift[IO] = IO.contextShift( scala.concurrent.ExecutionC
 
 // Creating an STTP backend
 AsyncHttpClientCatsBackend[IO]()
-      .flatMap { implicit backEnd =>        
+      .flatMap { implicit backend =>        
         implicit val slackApiToken: SlackApiToken = SlackApiBotToken("xoxb-89.....")
         for {
           client <- IO( SlackApiClient.create[IO]() ) // create an instance of client

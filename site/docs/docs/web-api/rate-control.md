@@ -58,6 +58,7 @@ val params = SlackApiRateControlParams.StandardLimits.DEFAULT_PARAMS.copy(
 
 // Creating a client instance with throttling
 val client = SlackApiClient
+        .build
         .withThrottler( SlackApiRateThrottler.createStandardThrottler(params) )
         .create()
 
