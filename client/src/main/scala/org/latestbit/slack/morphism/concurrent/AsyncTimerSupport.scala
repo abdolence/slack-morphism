@@ -21,7 +21,7 @@ package org.latestbit.slack.morphism.concurrent
 import scala.languageFeature.implicitConversions
 import java.util.concurrent.{ ScheduledExecutorService, TimeUnit }
 
-import cats.effect.{ IO, Timer }
+import cats.effect.{ ContextShift, IO, Timer }
 
 import scala.concurrent.{ ExecutionContext, Future, Promise }
 import scala.concurrent.duration.FiniteDuration
@@ -83,7 +83,10 @@ object AsyncTimerSupport {
         implicit ec: ExecutionContext
     ): IO[A] = {
       implicit val timer = IO.timer( ec, scheduledExecutor )
-      IO.sleep( duration ).flatMap { _ => effect() }
+      implicit val cs = IO.contextShift( ec )
+
+      IO.sleep( duration ).start.flatMap { _ => effect() }
+
     }
   }
 

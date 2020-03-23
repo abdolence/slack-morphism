@@ -22,9 +22,6 @@ import org.latestbit.slack.morphism.client.ratectrl.SlackApiRateThrottler
 import org.latestbit.slack.morphism.client.reqresp.test.SlackApiTestRequest
 import org.scalatest.flatspec.AsyncFlatSpec
 
-import scala.concurrent.Future
-import org.latestbit.slack.morphism.client.reqresp.apps.SlackApiUninstallRequest
-
 class AsyncFutureHttpSttpBackendTests extends AsyncFlatSpec with SlackApiClientTestsSuiteSupport {
   "A Slack client" should "able to try to connect using a async http client network sttp backend" in {
     import cats.instances.future._
