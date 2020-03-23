@@ -28,7 +28,6 @@ import sttp.model._
 
 import scala.collection.immutable.Seq
 import scala.concurrent.{ ExecutionContext, Future }
-import io.circe.generic.auto._
 
 trait SlackApiClientTestsSuiteSupport {
 

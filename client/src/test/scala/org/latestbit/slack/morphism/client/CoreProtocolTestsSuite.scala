@@ -19,36 +19,26 @@
 package org.latestbit.slack.morphism.client
 
 import java.time.Instant
-import java.util.Base64
+
+import cats.instances.future._
 
 import cats.data.EitherT
-import io.circe.{ Encoder, JsonObject }
+import io.circe._
 import io.circe.syntax._
 import org.asynchttpclient.util.HttpConstants.Methods
 import org.latestbit.slack.morphism.codecs.implicits._
-import org.latestbit.slack.morphism.client.reqresp.channels.{
-  SlackApiChannelsListRequest,
-  SlackApiChannelsListResponse
-}
-import org.latestbit.slack.morphism.client.reqresp.chat.{
-  SlackApiChatPostMessageRequest,
-  SlackApiChatPostMessageResponse,
-  SlackApiPostEventReply,
-  SlackApiPostWebHookRequest
-}
-import org.latestbit.slack.morphism.client.reqresp.conversations.SlackApiConversationsHistoryRequest
+import org.latestbit.slack.morphism.client.reqresp.channels._
+import org.latestbit.slack.morphism.client.reqresp.chat._
 import org.latestbit.slack.morphism.client.reqresp.test._
 import org.latestbit.slack.morphism.common._
 import org.latestbit.slack.morphism.events.SlackUserMessage
-import org.latestbit.slack.morphism.messages.SlackMessage
 import org.scalatest.flatspec.AsyncFlatSpec
-import sttp.client._
+import sttp.client.Response
 import sttp.client.testing.SttpBackendStub
-import sttp.model._
+import sttp.model.{ Header, MediaType, StatusCode }
 
 import scala.collection.immutable.Seq
 import scala.concurrent.Future
-import scala.concurrent.duration._
 
 class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuiteSupport {
 
@@ -69,23 +59,24 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
   }
 
   it should "detect Slack API error responses" in {
-    implicit val testingBackend = SttpBackendStub.asynchronousFuture.whenAnyRequest
-      .thenRespondWrapped(
-        Future {
-          Response(
-            statusText = "OK",
-            code = StatusCode.Ok,
-            body = JsonObject(
-              "ok" -> false.asJson,
-              "error" -> "slack-test-error".asJson
-            ).asJson.dropNullValues.noSpaces,
-            headers = Seq(
-              Header.contentType( MediaType.ApplicationJson )
-            ),
-            history = Nil
-          )
-        }
-      )
+    implicit val testingBackend: SlackApiClientBackend.SttpBackendType[Future] =
+      SttpBackendStub.asynchronousFuture.whenAnyRequest
+        .thenRespondWrapped(
+          Future {
+            Response(
+              statusText = "OK",
+              code = StatusCode.Ok,
+              body = JsonObject(
+                "ok" -> false.asJson,
+                "error" -> "slack-test-error".asJson
+              ).asJson.dropNullValues.noSpaces,
+              headers = Seq(
+                Header.contentType( MediaType.ApplicationJson )
+              ),
+              history = Nil
+            )
+          }
+        )
 
     val slackApiClient = new SlackApiClient()
 
@@ -99,7 +90,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
   it should "able to make some basic API calls" in {
     import cats.implicits._
 
-    implicit val testingBackend =
+    implicit val testingBackend: SlackApiClientBackend.SttpBackendType[Future] =
       SttpBackendStub.asynchronousFuture
         .whenRequestMatches( _.uri.path.contains( "channels.list" ) )
         .thenRespondWrapped(

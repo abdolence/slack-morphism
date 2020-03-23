@@ -18,32 +18,83 @@
 
 package org.latestbit.slack.morphism.client
 
+import org.latestbit.slack.morphism.client.ratectrl.SlackApiRateThrottler
 import org.latestbit.slack.morphism.client.reqresp.test.SlackApiTestRequest
 import org.scalatest.flatspec.AsyncFlatSpec
-import sttp.client.asynchttpclient.future.AsyncHttpClientFutureBackend
 
 class AsyncFutureHttpSttpBackendTests extends AsyncFlatSpec with SlackApiClientTestsSuiteSupport {
   "A Slack client" should "able to try to connect using a async http client network sttp backend" in {
+    import cats.instances.future._
+    import sttp.client.asynchttpclient.future.AsyncHttpClientFutureBackend
+
     implicit val sttpBackend = AsyncHttpClientFutureBackend()
-    val slackApiClient = new SlackApiClient()
+
+    // Creating it with create factory method
+    val slackApiClient = SlackApiClient.create()
+
+    // Creating it with v1.1- method
+    {
+      val _ = new SlackApiClient()
+    }
+
+    // Creating it with throttler
+    {
+      val _ = SlackApiClient.withThrottler( SlackApiRateThrottler.createStandardThrottler() ).create()
+    }
 
     slackApiClient.api.test( SlackApiTestRequest() ).map {
       case Right( resp )                     => fail( s"Unexpected resp: ${resp}" )
       case Left( ex: SlackApiResponseError ) => assert( ex.errorCode !== null )
       case Left( ex )                        => fail( ex )
     }
+
   }
 
-  /*
-  Maybe for future releases
   it should "able to try to connect using a async http cats effect network sttp backend" in {
-    //implicit val sttpBackend = AsyncHttpClientCatsBackend()
-    val slackApiClient = new SlackApiClient()
+    import cats.effect._
+    import sttp.client.asynchttpclient.cats.AsyncHttpClientCatsBackend
+    implicit val cs: ContextShift[IO] = IO.contextShift( scala.concurrent.ExecutionContext.global )
 
-    slackApiClient.api.test( SlackApiTestRequest() ).map {
-      case Right( resp )                     => fail( s"Unexpected resp: ${resp}" )
-      case Left( ex: SlackApiResponseError ) => assert( ex.errorCode !== null )
-      case Left( ex )                        => fail( ex )
-    }
-  }*/
+    AsyncHttpClientCatsBackend[IO]()
+      .flatMap { implicit backEnd =>
+        for {
+          client <- IO( SlackApiClient.create[IO]() )
+          result <- client.api.test( SlackApiTestRequest() )
+        } yield result
+      }
+      .unsafeToFuture()
+      .map {
+        case Right( resp )                     => fail( s"Unexpected resp: ${resp}" )
+        case Left( ex: SlackApiResponseError ) => assert( ex.errorCode !== null )
+        case Left( ex )                        => fail( ex )
+      }
+
+  }
+
+  it should "able to try to connect using a async http cats effect network sttp backend with a throttler" in {
+    import cats.effect._
+
+    import sttp.client.asynchttpclient.cats.AsyncHttpClientCatsBackend
+    implicit val cs: ContextShift[IO] = IO.contextShift( scala.concurrent.ExecutionContext.global )
+
+    AsyncHttpClientCatsBackend[IO]()
+      .flatMap { implicit backEnd =>
+        for {
+          client <- IO(
+                     SlackApiClient
+                       .withThrottler( SlackApiRateThrottler.createStandardThrottler[IO]() )
+                       .create()
+                   )
+          result <- client.api.test( SlackApiTestRequest() )
+        } yield result
+      }
+      .unsafeToFuture()
+      .map {
+        case Right( resp )                     => fail( s"Unexpected resp: ${resp}" )
+        case Left( ex: SlackApiResponseError ) => assert( ex.errorCode !== null )
+        case Left( ex )                        => fail( ex )
+      }
+
+  }
+
 }

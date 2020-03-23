@@ -21,14 +21,12 @@ package org.latestbit.slack.morphism.client.impl
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client.reqresp.bots._
-
-import scala.concurrent.{ ExecutionContext, Future }
 import org.latestbit.slack.morphism.codecs.implicits._
 
 /**
  * Support for Slack Bots API methods
  */
-trait SlackApiBotsClient extends SlackApiHttpProtocolSupport {
+trait SlackApiBotsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
 
   object bots {
 
@@ -37,8 +35,8 @@ trait SlackApiBotsClient extends SlackApiHttpProtocolSupport {
      */
     def info( bot: Option[String] = None )(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiBotsInfo]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiBotsInfo]] = {
 
       http.get[SlackApiBotsInfo](
         "bots.info",

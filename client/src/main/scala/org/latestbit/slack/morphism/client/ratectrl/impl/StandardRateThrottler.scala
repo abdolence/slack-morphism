@@ -20,18 +20,23 @@ package org.latestbit.slack.morphism.client.ratectrl.impl
 
 import java.util.concurrent.{ Executors, ScheduledExecutorService, TimeUnit }
 
+import cats._
+import cats.implicits._
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.ratectrl._
+import org.latestbit.slack.morphism.concurrent
+import org.latestbit.slack.morphism.concurrent.AsyncTimerSupport
 import sttp.model.Uri
 
-import scala.concurrent._
-import scala.concurrent.duration.FiniteDuration
+import scala.concurrent.ExecutionContext
+import scala.concurrent.duration._
 import scala.util._
 
-abstract class StandardRateThrottler private[ratectrl] (
+abstract class StandardRateThrottler[F[_] : SlackApiClientBackend.BackendType : AsyncTimerSupport] private[ratectrl] (
     params: SlackApiRateControlParams,
     scheduledExecutor: ScheduledExecutorService
-) extends SlackApiRateThrottler {
+)( implicit ec: ExecutionContext )
+    extends SlackApiRateThrottler[F] {
 
   import StandardRateThrottler._
   import org.latestbit.slack.morphism.client.compat.CollectionsImplicits._
@@ -203,18 +208,9 @@ abstract class StandardRateThrottler private[ratectrl] (
 
   private def promiseDelayedRequest[RS](
       delay: Long,
-      request: () => Future[Either[SlackApiClientError, RS]]
-  ): Future[Either[SlackApiClientError, RS]] = {
-    val promise = Promise[Either[SlackApiClientError, RS]]()
-    scheduledExecutor.schedule(
-      () => {
-        promise.completeWith( request() )
-      },
-      delay,
-      TimeUnit.MILLISECONDS
-    )
-
-    promise.future
+      request: () => F[Either[SlackApiClientError, RS]]
+  ): F[Either[SlackApiClientError, RS]] = {
+    implicitly[concurrent.AsyncTimerSupport[F]].delayed( request, delay.millis, scheduledExecutor )
   }
 
   def getWorkspaceMetricsCacheSize(): Int = {
@@ -229,10 +225,10 @@ abstract class StandardRateThrottler private[ratectrl] (
       uri: Uri,
       apiToken: Option[SlackApiToken],
       methodRateControl: Option[SlackApiMethodRateControlParams],
-      request: () => Future[Either[SlackApiClientError, RS]]
+      request: () => F[Either[SlackApiClientError, RS]]
   )(
-      response: Try[Either[SlackApiClientError, RS]]
-  )( implicit ec: ExecutionContext ): Future[Either[SlackApiClientError, RS]] = {
+      response: Either[SlackApiClientError, RS]
+  ): F[Either[SlackApiClientError, RS]] = {
 
     def updateMaxRetryCount(
         methodRateControl: Option[SlackApiMethodRateControlParams]
@@ -250,8 +246,7 @@ abstract class StandardRateThrottler private[ratectrl] (
 
     if (params.maxRetries > 0 && methodRateControl.flatMap( _.maxRetries ).forall( _ > 0 )) {
       response match {
-        case Success( Left( ex ) )
-            if ex.isInstanceOf[SlackApiRetryableError] && params.retryFor.contains( ex.getClass ) => {
+        case Left( ex ) if ex.isInstanceOf[SlackApiRetryableError] && params.retryFor.contains( ex.getClass ) => {
           ex match {
             case rateLimitedError: SlackApiRateLimitedError => {
               throttle(
@@ -274,10 +269,10 @@ abstract class StandardRateThrottler private[ratectrl] (
             }
           }
         }
-        case _ => Future.fromTry( response )
+        case _ => Monad[F].pure( response )
       }
     } else {
-      Future.fromTry( response )
+      Monad[F].pure( response )
     }
   }
 
@@ -286,17 +281,17 @@ abstract class StandardRateThrottler private[ratectrl] (
       apiToken: Option[SlackApiToken],
       methodRateControl: Option[SlackApiMethodRateControlParams]
   )(
-      request: () => Future[Either[SlackApiClientError, RS]]
-  )( implicit ec: ExecutionContext ): Future[Either[SlackApiClientError, RS]] = {
+      request: () => F[Either[SlackApiClientError, RS]]
+  ): F[Either[SlackApiClientError, RS]] = {
     calcDelay( Some( uri ), methodRateControl, apiToken ) match {
       case Some( delay ) if delay > 0 => {
 
         if (methodRateControl.forall( _.methodMaxRateLimitDelay.forall( _.toMillis > delay ) ) &&
             params.maxDelayTimeout.forall( _.toMillis > delay )) {
           promiseDelayedRequest[RS]( delay, request )
-            .transformWith( retryIfNecessary[RS]( uri, apiToken, methodRateControl, request ) )
+            .flatMap( retryIfNecessary[RS]( uri, apiToken, methodRateControl, request ) )
         } else {
-          Future.successful(
+          Monad[F].pure(
             Left(
               SlackApiRateLimitMaxDelayError(
                 uri,
@@ -309,7 +304,7 @@ abstract class StandardRateThrottler private[ratectrl] (
         }
 
       }
-      case _ => request().transformWith( retryIfNecessary[RS]( uri, apiToken, methodRateControl, request ) )
+      case _ => request().flatMap( retryIfNecessary[RS]( uri, apiToken, methodRateControl, request ) )
     }
   }
 }
@@ -318,10 +313,13 @@ object StandardRateThrottler {
   final val WORKSPACE_METRICS_CLEANER_INITIAL_DELAY_IN_SEC = 5 * 60 // 5 min delay
   final val WORKSPACE_METRICS_CLEANER_INTERVAL_IN_SEC = 2 * 60 // 2 min interval
   final val WORKSPACE_METRICS_CLEANER_MAX_OLD_MSEC = 60 * 60 * 1000 // clean everything more than 1 hour old
+
 }
 
-final class StandardRateThrottlerImpl private[ratectrl] ( params: SlackApiRateControlParams )
-    extends StandardRateThrottler(
+final class StandardRateThrottlerImpl[F[_] : SlackApiClientBackend.BackendType : AsyncTimerSupport] private[ratectrl] (
+    params: SlackApiRateControlParams
+)( implicit ec: ExecutionContext )
+    extends StandardRateThrottler[F](
       params,
       scheduledExecutor = Executors.newScheduledThreadPool( Runtime.getRuntime().availableProcessors )
     ) {

@@ -39,6 +39,8 @@ import org.latestbit.slack.morphism.examples.akka.db.SlackTokensDb
 import org.latestbit.slack.morphism.examples.akka.templates._
 import org.latestbit.slack.morphism.views.SlackHomeView
 
+import cats.instances.future._
+
 class SlackPushEventsRoute(
     implicit ctx: ActorContext[_],
     materializer: ActorMaterializer,

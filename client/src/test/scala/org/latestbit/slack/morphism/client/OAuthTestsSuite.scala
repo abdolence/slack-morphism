@@ -25,6 +25,9 @@ import org.scalatest.flatspec.AsyncFlatSpec
 import sttp.client.testing.SttpBackendStub
 import sttp.model.HeaderNames
 
+import scala.concurrent.Future
+import cats.instances.future._
+
 class OAuthTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuiteSupport {
 
   it should "get Slack OAuth v1 access codes" in {

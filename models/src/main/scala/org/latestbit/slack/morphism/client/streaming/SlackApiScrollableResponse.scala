@@ -23,7 +23,7 @@ package org.latestbit.slack.morphism.client.streaming
  * @tparam IT item type
  * @tparam PT position/cursor type
  */
-trait SlackApiScrollableResponse[IT, PT] {
+trait SlackApiScrollableResponse[+IT, +PT] {
   def items: List[IT]
   def getLatestPos: Option[PT]
 }

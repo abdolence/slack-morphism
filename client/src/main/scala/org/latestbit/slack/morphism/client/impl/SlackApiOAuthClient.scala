@@ -21,13 +21,12 @@ package org.latestbit.slack.morphism.client.impl
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.reqresp.oauth._
 
-import scala.concurrent.{ ExecutionContext, Future }
 import org.latestbit.slack.morphism.codecs.implicits._
 
 /**
  * Support for Slack OAuth (v1/v2) API methods
  */
-trait SlackApiOAuthClient extends SlackApiHttpProtocolSupport { self: SlackApiClient =>
+trait SlackApiOAuthClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
 
   object oauth {
 
@@ -40,8 +39,8 @@ trait SlackApiOAuthClient extends SlackApiHttpProtocolSupport { self: SlackApiCl
         code: String,
         redirectUri: Option[String] = None
     )(
-        implicit ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackOAuthV1AccessTokenResponse]] = {
+        implicit backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackOAuthV1AccessTokenResponse]] = {
 
       sendSlackRequest[SlackOAuthV1AccessTokenResponse](
         createSlackHttpApiRequest().auth
@@ -68,8 +67,8 @@ trait SlackApiOAuthClient extends SlackApiHttpProtocolSupport { self: SlackApiCl
           code: String,
           redirectUri: Option[String] = None
       )(
-          implicit ec: ExecutionContext
-      ): Future[Either[SlackApiClientError, SlackOAuthV2AccessTokenResponse]] = {
+          implicit backendType: SlackApiClientBackend.BackendType[F]
+      ): F[Either[SlackApiClientError, SlackOAuthV2AccessTokenResponse]] = {
 
         sendSlackRequest[SlackOAuthV2AccessTokenResponse](
           createSlackHttpApiRequest().auth

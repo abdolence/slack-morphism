@@ -21,14 +21,12 @@ package org.latestbit.slack.morphism.client.impl
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client.reqresp.pins._
-
-import scala.concurrent.{ ExecutionContext, Future }
 import org.latestbit.slack.morphism.codecs.implicits._
 
 /**
  * Support for Slack Pins API methods
  */
-trait SlackApiPinsClient extends SlackApiHttpProtocolSupport {
+trait SlackApiPinsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
 
   object pins {
 
@@ -37,8 +35,8 @@ trait SlackApiPinsClient extends SlackApiHttpProtocolSupport {
      */
     def add( req: SlackApiPinsAddRequest )(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiPinsAddResponse]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiPinsAddResponse]] = {
 
       http.post[SlackApiPinsAddRequest, SlackApiPinsAddResponse](
         "pins.add",
@@ -52,8 +50,8 @@ trait SlackApiPinsClient extends SlackApiHttpProtocolSupport {
      */
     def list( req: SlackApiPinsListRequest )(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiPinsListResponse]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiPinsListResponse]] = {
 
       http.get[SlackApiPinsListResponse](
         "pins.list",
@@ -69,8 +67,8 @@ trait SlackApiPinsClient extends SlackApiHttpProtocolSupport {
      */
     def remove( req: SlackApiPinsRemoveRequest )(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiPinsRemoveResponse]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiPinsRemoveResponse]] = {
 
       http.post[SlackApiPinsRemoveRequest, SlackApiPinsRemoveResponse](
         "pins.remove",

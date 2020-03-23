@@ -18,16 +18,15 @@
 
 package org.latestbit.slack.morphism.client
 
+import cats.{ ApplicativeError, Monad, MonadError }
 import sttp.client.{ NothingT, SttpBackend }
-
-import scala.concurrent.Future
 
 /**
  * A trait defines requirement for STTP backend
  */
-trait SlackApiClientBackend {
+trait SlackApiClientBackend[F[_]] {
   import SlackApiClientBackend._
-  protected implicit val sttpBackend: SttpFutureBackendType
+  protected implicit val sttpBackend: SttpBackendType[F]
 }
 
 object SlackApiClientBackend {
@@ -35,5 +34,7 @@ object SlackApiClientBackend {
   /**
    * Compatible STTP backend type alias
    */
-  type SttpFutureBackendType = SttpBackend[Future, Nothing, NothingT]
+  type SttpBackendType[F[_]] = SttpBackend[F, Nothing, NothingT]
+
+  type BackendType[F[_]] = MonadError[F, Throwable]
 }

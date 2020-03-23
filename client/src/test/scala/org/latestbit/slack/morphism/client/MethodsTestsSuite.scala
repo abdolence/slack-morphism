@@ -25,11 +25,11 @@ import org.scalacheck.ScalacheckShapeless._
 import org.scalacheck._
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import sttp.client.testing.SttpBackendStub
-import cats.implicits._
 import io.circe.Encoder
 import io.circe.generic.auto._
 import org.latestbit.slack.morphism.client.reqresp.apps._
 import org.scalatest.compatible.Assertion
+import cats.implicits._
 
 import scala.concurrent.Future
 

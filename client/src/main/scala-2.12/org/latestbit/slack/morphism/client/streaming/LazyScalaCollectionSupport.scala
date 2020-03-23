@@ -20,15 +20,18 @@ package org.latestbit.slack.morphism.client.streaming
 
 import org.latestbit.slack.morphism.client.SlackApiClientError
 
-import scala.concurrent.{ Await, ExecutionContext, Future }
+import cats._
+import cats.implicits._
 import scala.concurrent.duration._
+import org.latestbit.slack.morphism.concurrent.SyncScrollerAwaiter
 
 /**
  * Lazy collection support for Scala 2.12 based on Stream
  * @tparam IT item type
  * @tparam PT position/cursor type
  */
-trait LazyScalaCollectionSupport[IT, PT] { self: SlackApiResponseScroller[IT, PT] =>
+trait LazyScalaCollectionSupport[F[_], IT, PT, SR <: SlackApiScrollableResponse[IT, PT]] {
+    self: SlackApiResponseScroller[F, IT, PT, SR] =>
 
   type SyncStreamType = Stream[IT]
 
@@ -40,21 +43,24 @@ trait LazyScalaCollectionSupport[IT, PT] { self: SlackApiResponseScroller[IT, PT
    */
   def toSyncScroller(
       scrollerTimeout: FiniteDuration = 60.seconds
-  )( implicit ec: ExecutionContext ): Future[Either[SlackApiClientError, SyncStreamType]] = {
+  )(
+      implicit syncScrollerAwaiter: SyncScrollerAwaiter[F],
+      monad: Monad[F]
+  ): F[Either[SlackApiClientError, SyncStreamType]] = {
 
     def loadNext( scrollableResp: SlackApiScrollableResponse[IT, PT] ): SyncStreamType = {
       val loadedStream = scrollableResp.items.toStream
       scrollableResp.getLatestPos
         .map { latestPos =>
-          lazy val scrollNext: SyncStreamType =
-            Await
-              .result(
-                self.next( latestPos ),
-                scrollerTimeout
-              )
-              .toOption
-              .map( loadNext )
-              .getOrElse( Stream.empty )
+            lazy val scrollNext: SyncStreamType =
+                syncScrollerAwaiter
+                .await(
+                    self.next( latestPos ),
+                    scrollerTimeout
+                )
+                .toOption
+                .map( loadNext )
+                .getOrElse( Stream.empty )
 
           loadedStream #::: scrollNext
         }

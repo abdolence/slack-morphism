@@ -20,6 +20,7 @@ package org.latestbit.slack.morphism.client.impl
 
 import java.io.IOException
 
+import cats.MonadError
 import cats.implicits._
 import io.circe._
 import io.circe.parser._
@@ -32,9 +33,8 @@ import sttp.client._
 import sttp.model.{ HeaderNames, MediaType, StatusCode, Uri }
 
 import scala.concurrent.duration.FiniteDuration
-import scala.concurrent.{ ExecutionContext, Future }
 
-trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
+trait SlackApiHttpProtocolSupport[F[_]] extends SlackApiClientBackend[F] {
 
   import SlackApiHttpProtocolSupport._
 
@@ -149,13 +149,13 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
 
   protected def sendSlackRequest[RS]( request: Request[Either[String, String], Nothing] )(
       implicit decoder: Decoder[RS],
-      ec: ExecutionContext
-  ): Future[Either[SlackApiClientError, RS]] = {
+      backendType: SlackApiClientBackend.BackendType[F]
+  ): F[Either[SlackApiClientError, RS]] = {
     request.send().map( response => decodeSlackResponse[RS]( request.uri, response ) ).recoverWith {
       case ex: IOException =>
-        Future.successful( Left( SlackApiConnectionError( request.uri, ex ) ) )
+        backendType.pure( Left( SlackApiConnectionError( request.uri, ex ) ) )
       case ex: Throwable =>
-        Future.successful( Left( SlackApiSystemError( request.uri, ex ) ) )
+        backendType.pure( Left( SlackApiSystemError( request.uri, ex ) ) )
     }
   }
 
@@ -165,8 +165,8 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
   )(
       implicit slackApiToken: SlackApiToken,
       decoder: Decoder[RS],
-      ec: ExecutionContext
-  ): Future[Either[SlackApiClientError, RS]] = {
+      backendType: SlackApiClientBackend.BackendType[F]
+  ): F[Either[SlackApiClientError, RS]] = {
 
     sendSlackRequest[RS](
       request.auth.bearer( slackApiToken.value )
@@ -205,8 +205,8 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
       implicit slackApiToken: SlackApiToken,
       encoder: Encoder[RQ],
       decoder: Decoder[RS],
-      ec: ExecutionContext
-  ): Future[Either[SlackApiClientError, RS]] = {
+      backendType: SlackApiClientBackend.BackendType[F]
+  ): F[Either[SlackApiClientError, RS]] = {
 
     protectedSlackHttpApiRequest[RS](
       encodePostBody[RQ]( request, body )
@@ -224,8 +224,8 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
       implicit slackApiToken: SlackApiToken,
       encoder: Encoder[RQ],
       decoder: Decoder[RS],
-      ec: ExecutionContext
-  ): Future[Either[SlackApiClientError, RS]] = {
+      backendType: SlackApiClientBackend.BackendType[F]
+  ): F[Either[SlackApiClientError, RS]] = {
     protectedSlackHttpApiPost[RQ, RS](
       absoluteUri = getSlackMethodAbsoluteUri( methodUri ),
       request = createSlackHttpApiRequest(),
@@ -242,8 +242,8 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
   )(
       implicit slackApiToken: SlackApiToken,
       decoder: Decoder[RS],
-      ec: ExecutionContext
-  ): Future[Either[SlackApiClientError, RS]] = {
+      backendType: SlackApiClientBackend.BackendType[F]
+  ): F[Either[SlackApiClientError, RS]] = {
 
     val filteredParams: Map[String, String] =
       params.foldLeft( Map[String, String]() ) {
@@ -294,9 +294,9 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
     )(
         implicit slackApiToken: SlackApiToken,
         decoder: Decoder[RS],
-        ec: ExecutionContext,
+        backendType: SlackApiClientBackend.BackendType[F],
         methodMaxRateLimitDelay: Option[FiniteDuration] = None
-    ): Future[Either[SlackApiClientError, RS]] = {
+    ): F[Either[SlackApiClientError, RS]] = {
       protectedSlackHttpApiGet[RS]( methodUri, createSlackHttpApiRequest(), params, methodRateControl )
     }
 
@@ -312,8 +312,8 @@ trait SlackApiHttpProtocolSupport extends SlackApiClientBackend {
         implicit slackApiToken: SlackApiToken,
         encoder: Encoder[RQ],
         decoder: Decoder[RS],
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, RS]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, RS]] = {
       protectedSlackHttpApiPost[RQ, RS](
         methodUri,
         req,

@@ -18,14 +18,13 @@
 
 package org.latestbit.slack.morphism.client.streaming
 
+import cats.Monad
 import org.latestbit.slack.morphism.client.SlackApiClientError
 import org.latestbit.slack.morphism.client.streaming.impl.SlackApiScrollableReactivePublisher
 import org.latestbit.slack.morphism.concurrent.AsyncSeqIterator
 import org.reactivestreams.Publisher
 
 import scala.concurrent._
-
-import cats.implicits._
 
 /**
  * Support for batch loading remote data
@@ -34,12 +33,12 @@ import cats.implicits._
  * @tparam IT batch item type
  * @tparam PT batch value type
  */
-class SlackApiResponseScroller[IT, PT](
-    initialLoader: () => Future[Either[SlackApiClientError, SlackApiScrollableResponse[IT, PT]]],
-    batchLoader: PT => Future[Either[SlackApiClientError, SlackApiScrollableResponse[IT, PT]]]
-) extends LazyScalaCollectionSupport[IT, PT] {
+class SlackApiResponseScroller[F[_] : Monad, IT, PT, SR <: SlackApiScrollableResponse[IT, PT]](
+    initialLoader: () => F[Either[SlackApiClientError, SR]],
+    batchLoader: PT => F[Either[SlackApiClientError, SR]]
+) extends LazyScalaCollectionSupport[F, IT, PT, SR] {
 
-  type AsyncItemType = Either[SlackApiClientError, SlackApiScrollableResponse[IT, PT]]
+  type AsyncItemType = Either[SlackApiClientError, SR]
   type AsyncValueType = Either[SlackApiClientError, Iterable[IT]]
 
   /**
@@ -48,7 +47,7 @@ class SlackApiResponseScroller[IT, PT](
    * @note this functions is mostly available to help to implement your own batching. If it wasn't your intention look at toAsync/SyncScroller or toPublisher
    * @return a scrollable response with a cursor position
    */
-  def first(): Future[Either[SlackApiClientError, SlackApiScrollableResponse[IT, PT]]] = initialLoader()
+  def first(): F[Either[SlackApiClientError, SR]] = initialLoader()
 
   /**
    * Read a next batch providing a last position
@@ -57,14 +56,14 @@ class SlackApiResponseScroller[IT, PT](
    * @param lastPosition a cursor position
    * @return
    */
-  def next( lastPosition: PT ): Future[Either[SlackApiClientError, SlackApiScrollableResponse[IT, PT]]] =
+  def next( lastPosition: PT ): F[Either[SlackApiClientError, SR]] =
     batchLoader( lastPosition )
 
   /**
    * Read data as an infinite async iterator
    * @return infinite async sequence iterator
    */
-  def toAsyncScroller()( implicit ec: ExecutionContext ): AsyncSeqIterator[Future, AsyncItemType, AsyncValueType] = {
+  def toAsyncScroller()( implicit ec: ExecutionContext ): AsyncSeqIterator[F, AsyncItemType, AsyncValueType] = {
     AsyncSeqIterator.cons(
       initialLoader(),
       _.map( _.items ),

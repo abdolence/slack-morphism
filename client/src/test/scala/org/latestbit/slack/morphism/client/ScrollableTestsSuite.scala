@@ -21,6 +21,7 @@ package org.latestbit.slack.morphism.client
 import org.scalatest.flatspec.AsyncFlatSpec
 
 import scala.concurrent.duration._
+import cats.instances.future._
 
 class ScrollableTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuiteSupport {
 

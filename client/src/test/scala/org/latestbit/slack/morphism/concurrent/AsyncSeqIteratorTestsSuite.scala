@@ -26,6 +26,7 @@ import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
 import scala.concurrent._
+import scala.util.Try
 
 class AsyncSeqIteratorTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenPropertyChecks {
 
@@ -102,7 +103,7 @@ class AsyncSeqIteratorTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenProp
     createIterator()( testExecutorContext ).foreach { testIterRes =>
       testEffect = testEffect :+ testIterRes
       if (testIterRes == "last") {
-        testExecutor.shutdown()
+        val _ = Try( testExecutor.shutdown() ).toOption
       }
     }
 

@@ -29,7 +29,8 @@ import org.latestbit.slack.morphism.client.SlackApiClient
 import org.latestbit.slack.morphism.examples.akka.AppConfig
 import org.latestbit.slack.morphism.examples.akka.db.SlackTokensDb
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ ExecutionContext, Future }
+import cats.instances.future._
 
 class SlackOAuthRoutes(
     implicit ctx: ActorContext[_],

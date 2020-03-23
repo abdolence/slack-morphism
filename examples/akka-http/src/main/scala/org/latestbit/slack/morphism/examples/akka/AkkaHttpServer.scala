@@ -36,6 +36,8 @@ import scala.concurrent.duration._
 import scala.concurrent.{ ExecutionContextExecutor, Future }
 import scala.util._
 
+import cats.instances.future._
+
 object AkkaHttpServer extends StrictLogging {
   sealed trait Command
   case class Start( config: AppConfig ) extends Command
@@ -61,9 +63,9 @@ object AkkaHttpServer extends StrictLogging {
             s"Starting routes on ${config.httpServerHost}:${config.httpServerPort}"
           )
           implicit val appConfig = config
-          implicit val akkaSttpBackend: SlackApiClientBackend.SttpFutureBackendType =
+          implicit val akkaSttpBackend: SlackApiClientBackend.SttpBackendType[Future] =
             AkkaHttpBackend.usingActorSystem( classicSystem )
-          implicit val slackApiClient = new SlackApiClient()
+          implicit val slackApiClient = SlackApiClient.create()
 
           implicit val tokensDbRef = context.spawnAnonymous( SlackTokensDb.run )
 

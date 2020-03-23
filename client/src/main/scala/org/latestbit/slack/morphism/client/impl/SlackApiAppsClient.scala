@@ -18,17 +18,16 @@
 
 package org.latestbit.slack.morphism.client.impl
 
+import cats.MonadError
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client.reqresp.apps._
 import org.latestbit.slack.morphism.codecs.implicits._
 
-import scala.concurrent.{ ExecutionContext, Future }
-
 /**
  * Support for Slack Apps API methods
  */
-trait SlackApiAppsClient extends SlackApiHttpProtocolSupport {
+trait SlackApiAppsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
 
   object apps {
 
@@ -37,8 +36,8 @@ trait SlackApiAppsClient extends SlackApiHttpProtocolSupport {
      */
     def uninstall( req: SlackApiUninstallRequest )(
         implicit slackApiToken: SlackApiToken,
-        ec: ExecutionContext
-    ): Future[Either[SlackApiClientError, SlackApiUninstallResponse]] = {
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiUninstallResponse]] = {
 
       http.post[SlackApiUninstallRequest, SlackApiUninstallResponse](
         "apps.uninstall",
