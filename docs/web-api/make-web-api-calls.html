@@ -177,7 +177,7 @@ to all available of Slack Web API methods.</p>
 
 <span class="c1">// Creating an STTP backend</span>
 <span class="nc">AsyncHttpClientCatsBackend</span><span class="o">[</span><span class="kt">IO</span><span class="o">]()</span>
-      <span class="o">.</span><span class="py">flatMap</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">backEnd</span> <span class="k">=&gt;</span>        
+      <span class="o">.</span><span class="py">flatMap</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">backend</span> <span class="k">=&gt;</span>        
         <span class="k">implicit</span> <span class="k">val</span> <span class="nv">slackApiToken</span><span class="k">:</span> <span class="kt">SlackApiToken</span> <span class="o">=</span> <span class="nc">SlackApiBotToken</span><span class="o">(</span><span class="s">"xoxb-89....."</span><span class="o">)</span>
         <span class="k">for</span> <span class="o">{</span>
           <span class="n">client</span> <span class="k">&lt;-</span> <span class="nc">IO</span><span class="o">(</span> <span class="nv">SlackApiClient</span><span class="o">.</span><span class="py">create</span><span class="o">[</span><span class="kt">IO</span><span class="o">]()</span> <span class="o">)</span> <span class="c1">// create an instance of client</span>
