@@ -20,11 +20,11 @@ ThisBuild / licenses := Seq(
   ( "Apache License v2.0", url( "http://www.apache.org/licenses/LICENSE-2.0.html" ) )
 )
 
-ThisBuild / crossScalaVersions := Seq( "2.13.1", "2.12.10" )
+ThisBuild / crossScalaVersions := Seq( "2.13.1", "2.12.11" )
 
 ThisBuild / scalaVersion := (ThisBuild / crossScalaVersions).value.head
 
-ThisBuild / sbtVersion := "1.3.5"
+ThisBuild / sbtVersion := "1.3.8"
 
 ThisBuild / scalacOptions ++= Seq( "-feature" )
 
@@ -165,7 +165,10 @@ val baseDependencies =
       "org.scalatestplus" %% "testng-6-7" % scalaTestPlusTestNG,
       "com.github.alexarchambault" %% "scalacheck-shapeless_1.14" % scalaCheckShapeless,
       "com.softwaremill.sttp.client" %% "async-http-client-backend-future" % sttpVersion,
-      "com.softwaremill.sttp.client" %% "async-http-client-backend-cats" % sttpVersion
+      "com.softwaremill.sttp.client" %% "async-http-client-backend-cats" % sttpVersion,
+      "ch.qos.logback" % "logback-classic" % logbackVersion
+        exclude ("org.slf4j", "slf4j-api"),
+      "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion
     ).map(
       _ % "test"
         exclude ("org.typelevel", "cats-core")

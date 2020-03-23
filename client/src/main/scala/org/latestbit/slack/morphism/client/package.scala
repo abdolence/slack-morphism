@@ -18,11 +18,101 @@
 
 package org.latestbit.slack.morphism
 
+import org.latestbit.slack.morphism.client.ratectrl.SlackApiRateThrottler
+
 import scala.concurrent.Future
 
 /**
- * Slack API http client interfaces and implementation
+ * Slack API http client interfaces and factory methods and implementation
  */
 package object client {
+
+  /**
+   * For compatibility reasons SlackApiClient defined as in previous versions (before 1.2+) so
+   * you still can create it with `new SlackApiClient()`
+   */
   type SlackApiClient = SlackApiClientT[Future]
+
+  object SlackApiClient {
+
+    trait SlackApiClientBuilder[F[_]] {
+      def create(): SlackApiClientT[F]
+    }
+
+    private case class SlackApiClientBuildOptions[F[_] : SlackApiClientBackend.BackendType](
+        sttpBackend: SlackApiClientBackend.SttpBackendType[F],
+        throttler: SlackApiRateThrottler[F] = SlackApiRateThrottler.createEmptyThrottler[F]()
+    ) extends SlackApiClientBuilder[F] {
+
+      override def create(): SlackApiClientT[F] = {
+        implicit val backend = sttpBackend
+        new SlackApiClientT[F]( throttler )
+      }
+
+    }
+
+    /**
+     * Create an instance of Slack API client for the specified backend kind (Future|cats-effect IO, etc)
+     *
+     * @param sttpBackend an implicitly defined STTP backend
+     * @tparam F scala.concurrent.Future or cats.effect.IO
+     * @return an instance of Slack API client
+     *
+     * For example:
+     *
+     * {{{
+     * // For Future:
+     * implicit val sttpBackend = AsyncHttpClientFutureBackend()
+     *
+     * SlackApiClient.create()
+     * }}}
+     *
+     * {{{
+     *
+     * // For IO:
+     * implicit val cs: ContextShift[IO] = IO.contextShift( scala.concurrent.ExecutionContext.global )
+     *
+     * AsyncHttpClientCatsBackend[IO]()
+     *       .flatMap { implicit backEnd =>
+     *         for {
+     *           client <- IO( SlackApiClient.create[IO]() )
+     *           testResult <- client.api.test( SlackApiTestRequest() )
+     *         }
+     *         yield
+     *            testResult
+     *       }
+     *
+     * SlackApiClient.create()
+     * }}}
+     *
+     */
+    def create[F[_] : SlackApiClientBackend.BackendType]()(
+        implicit sttpBackend: SlackApiClientBackend.SttpBackendType[F]
+    ) = SlackApiClientBuildOptions( sttpBackend ).create()
+
+    /**
+     * Building an instance of Slack API client with the specified throttler implementation
+     *
+     * For example:
+     *
+     * {{{
+     *
+     * implicit val sttpBackend = AsyncHttpClientFutureBackend()
+     *
+     * SlackApiClient
+     *  .withThrottler( SlackApiRateThrottler.createStandardThrottler() )
+     *  .create()
+     * }}}
+     *
+     * @param throttler a throttler implementation
+     * @param sttpBackend an implicitly defined STTP backend
+     * @tparam F scala.concurrent.Future or cats.effect.IO
+     * @return an instance builder
+     */
+    def withThrottler[F[_] : SlackApiClientBackend.BackendType]( throttler: SlackApiRateThrottler[F] )(
+        implicit sttpBackend: SlackApiClientBackend.SttpBackendType[F]
+    ): SlackApiClientBuilder[F] = SlackApiClientBuildOptions( sttpBackend, throttler )
+
+  }
+
 }

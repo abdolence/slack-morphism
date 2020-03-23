@@ -31,9 +31,19 @@ class AsyncFutureHttpSttpBackendTests extends AsyncFlatSpec with SlackApiClientT
     import sttp.client.asynchttpclient.future.AsyncHttpClientFutureBackend
 
     implicit val sttpBackend = AsyncHttpClientFutureBackend()
-    val slackApiClient = new SlackApiClient()
 
-    slackApiClient.apps.uninstall( SlackApiUninstallRequest( "", "" ) )
+    // Creating it with create factory method
+    val slackApiClient = SlackApiClient.create()
+
+    // Creating it with v1.1- method
+    {
+      val _ = new SlackApiClient()
+    }
+
+    // Creating it with throttler
+    {
+      val _ = SlackApiClient.withThrottler( SlackApiRateThrottler.createStandardThrottler() ).create()
+    }
 
     slackApiClient.api.test( SlackApiTestRequest() ).map {
       case Right( resp )                     => fail( s"Unexpected resp: ${resp}" )
@@ -51,10 +61,10 @@ class AsyncFutureHttpSttpBackendTests extends AsyncFlatSpec with SlackApiClientT
     AsyncHttpClientCatsBackend[IO]()
       .flatMap { implicit backEnd =>
         for {
-          client <- IO.pure( new SlackApiClientT[IO] )
-        } yield client.api.test( SlackApiTestRequest() )
+          client <- IO( SlackApiClient.create[IO]() )
+          result <- client.api.test( SlackApiTestRequest() )
+        } yield result
       }
-      .unsafeRunSync()
       .unsafeToFuture()
       .map {
         case Right( resp )                     => fail( s"Unexpected resp: ${resp}" )
@@ -73,10 +83,14 @@ class AsyncFutureHttpSttpBackendTests extends AsyncFlatSpec with SlackApiClientT
     AsyncHttpClientCatsBackend[IO]()
       .flatMap { implicit backEnd =>
         for {
-          client <- IO.pure( new SlackApiClientT[IO]( SlackApiRateThrottler.createStandardThrottler[IO]() ) )
-        } yield client.api.test( SlackApiTestRequest() )
+          client <- IO(
+                     SlackApiClient
+                       .withThrottler( SlackApiRateThrottler.createStandardThrottler[IO]() )
+                       .create()
+                   )
+          result <- client.api.test( SlackApiTestRequest() )
+        } yield result
       }
-      .unsafeRunSync()
       .unsafeToFuture()
       .map {
         case Right( resp )                     => fail( s"Unexpected resp: ${resp}" )

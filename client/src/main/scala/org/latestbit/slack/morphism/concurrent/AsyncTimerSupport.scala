@@ -27,11 +27,25 @@ import scala.concurrent.{ ExecutionContext, Future, Promise }
 import scala.concurrent.duration.FiniteDuration
 import scala.language.implicitConversions
 
+/**
+ * Auxiliary interface to support delayed effects for different kind of monads
+ * @tparam F effect kind (Future, IO)
+ */
 trait AsyncTimerSupport[F[_]] {
 
+  /**
+   * Schedule an effect
+   * @param effect a lazily evaluated effect
+   * @param duration delay duration
+   * @param scheduledExecutor scheduler
+   * @param ec execution context
+   * @tparam A delayed result type
+   * @return an effect in the specified monad
+   */
   def delayed[A]( effect: () => F[A], duration: FiniteDuration, scheduledExecutor: ScheduledExecutorService )(
       implicit ec: ExecutionContext
   ): F[A]
+
 }
 
 object AsyncTimerSupport {
