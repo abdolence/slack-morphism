@@ -7,10 +7,13 @@ permalink: docs/web-api/make-web-api-calls
 ## Choose an HTTP client backend
 
 You have to choose a [sttp backend](https://sttp.readthedocs.io/en/latest/backends/summary.html) 
-that supports `scala.concurrent.Future` responses:
+that supports `scala.concurrent.Future` or `cats.effect.Async/Effect` response wrappers:
 * AkkaHttpBackend
 * OkHttpFutureBackend
 * HttpClientFutureBackend
+* AsyncHttpClientCatsBackend
+* AsyncHttpClientFs2Backend
+* Http4sBackend
 
 Add a dependency of your choice to your `build.sbt`.
 
@@ -18,30 +21,65 @@ For Akka Http this is:
 ```
 "com.softwaremill.sttp.client" %% "akka-http-backend" % sttpVersion
 ```
+where `sttpVersion` > 2.0+
 
 ## Create a client to Slack Web API methods
 
 [SlackApiClient](/api/org/latestbit/slack/morphism/client/SlackApiClient.html) provides access 
 to all available of Slack Web API methods.
 
+### Future backend
 ```scala
 // Import Slack Morphism Client
 import org.latestbit.slack.morphism.client._
 
-// Import STTP backend that supports async HTTP access via Future
+// Import STTP backend
 // We're using Akka Http for this example 
 import sttp.client.akkahttp.AkkaHttpBackend
 
+// Import support for scala.concurrent.Future implicits from cats (required if you use Future-based backend)
+// If you bump into compilation errors that `Future` isn't a `cats.Monad` or `cats.MonadError`, 
+// you probably forgot to import this.
+// Also, you can import all implicits from cats using `import cats.implicits._` instead of this 
+import cats.instances.future._
+
 // Creating an STTP backend
-implicit val sttpBackend = AkkaHttpBackend()
+implicit val sttpBackend = AkkaHttpBackend() // this is a Future-based backend
 
 // Creating a client instance
-val client = new SlackApiClient()
+val client = SlackApiClient.create() // or similarly SlackApiClient.create[Future]()
 ```
 
-## Make Web API calls
+### Cats Effect backend
+```scala
+// Import Slack Morphism Client
+import org.latestbit.slack.morphism.client._
 
-To make calls to Slack Web API methods (except for OAuth methods, Incoming Webhooks and event replies) you need a Slack token.
+// Import STTP backend
+// We're using AsyncHttpClientCatsBackend for this example 
+import sttp.client.asynchttpclient.cats.AsyncHttpClientCatsBackend
+
+// Import support for cats-effect
+import cats.effect._
+
+// We should provide a ContextShift for Cats IO and STTP backend
+implicit val cs: ContextShift[IO] = IO.contextShift( scala.concurrent.ExecutionContext.global )
+
+// Creating an STTP backend
+AsyncHttpClientCatsBackend[IO]()
+      .flatMap { implicit backEnd =>        
+        implicit val slackApiToken: SlackApiToken = SlackApiBotToken("xoxb-89.....")
+        for {
+          client <- IO( SlackApiClient.create[IO]() ) // create an instance of client
+          result <- client.api.test( SlackApiTestRequest() ) // call an example method inside IO monad
+        } yield result
+      }.unsafeRunSync() // usual IO lifecycle
+```
+
+## Make Web API methods calls
+
+For most of Slack Web API methods (except for OAuth methods, Incoming Webhooks and event replies) 
+you need a Slack token to make a call.
 For simple bots you can have it in your config files, or you can obtain workspace tokens 
 using [Slack OAuth](https://api.slack.com/docs/oauth).
 
