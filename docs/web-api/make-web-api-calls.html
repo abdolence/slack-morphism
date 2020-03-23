@@ -118,11 +118,14 @@
 <h2 id="choose-an-http-client-backend">Choose an HTTP client backend</h2>
 
 <p>You have to choose a <a href="https://sttp.readthedocs.io/en/latest/backends/summary.html">sttp backend</a> 
-that supports <code class="highlighter-rouge">scala.concurrent.Future</code> responses:</p>
+that supports <code class="highlighter-rouge">scala.concurrent.Future</code> or <code class="highlighter-rouge">cats.effect.Async/Effect</code> response wrappers:</p>
 <ul>
   <li>AkkaHttpBackend</li>
   <li>OkHttpFutureBackend</li>
   <li>HttpClientFutureBackend</li>
+  <li>AsyncHttpClientCatsBackend</li>
+  <li>AsyncHttpClientFs2Backend</li>
+  <li>Http4sBackend</li>
 </ul>
 
 <p>Add a dependency of your choice to your <code class="highlighter-rouge">build.sbt</code>.</p>
@@ -130,29 +133,63 @@ that supports <code class="highlighter-rouge">scala.concurrent.Future</code> res
 <p>For Akka Http this is:</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"com.softwaremill.sttp.client" %% "akka-http-backend" % sttpVersion
 </code></pre></div></div>
+<p>where <code class="highlighter-rouge">sttpVersion</code> &gt; 2.0+</p>
 
 <h2 id="create-a-client-to-slack-web-api-methods">Create a client to Slack Web API methods</h2>
 
 <p><a href="/api/org/latestbit/slack/morphism/client/SlackApiClient.html">SlackApiClient</a> provides access 
 to all available of Slack Web API methods.</p>
 
+<h3 id="future-backend">Future backend</h3>
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Import Slack Morphism Client</span>
 <span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client._</span>
 
-<span class="c1">// Import STTP backend that supports async HTTP access via Future</span>
+<span class="c1">// Import STTP backend</span>
 <span class="c1">// We're using Akka Http for this example </span>
 <span class="k">import</span> <span class="nn">sttp.client.akkahttp.AkkaHttpBackend</span>
 
+<span class="c1">// Import support for scala.concurrent.Future implicits from cats (required if you use Future-based backend)</span>
+<span class="c1">// If you bump into compilation errors that `Future` isn't a `cats.Monad` or `cats.MonadError`, </span>
+<span class="c1">// you probably forgot to import this.</span>
+<span class="c1">// Also, you can import all implicits from cats using `import cats.implicits._` instead of this </span>
+<span class="k">import</span> <span class="nn">cats.instances.future._</span>
+
 <span class="c1">// Creating an STTP backend</span>
-<span class="k">implicit</span> <span class="k">val</span> <span class="nv">sttpBackend</span> <span class="k">=</span> <span class="nc">AkkaHttpBackend</span><span class="o">()</span>
+<span class="k">implicit</span> <span class="k">val</span> <span class="nv">sttpBackend</span> <span class="k">=</span> <span class="nc">AkkaHttpBackend</span><span class="o">()</span> <span class="c1">// this is a Future-based backend</span>
 
 <span class="c1">// Creating a client instance</span>
-<span class="k">val</span> <span class="nv">client</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">SlackApiClient</span><span class="o">()</span>
+<span class="k">val</span> <span class="nv">client</span> <span class="k">=</span> <span class="nv">SlackApiClient</span><span class="o">.</span><span class="py">create</span><span class="o">()</span> <span class="c1">// or similarly SlackApiClient.create[Future]()</span>
 </code></pre></div></div>
 
-<h2 id="make-web-api-calls">Make Web API calls</h2>
+<h3 id="cats-effect-backend">Cats Effect backend</h3>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Import Slack Morphism Client</span>
+<span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client._</span>
 
-<p>To make calls to Slack Web API methods (except for OAuth methods, Incoming Webhooks and event replies) you need a Slack token.
+<span class="c1">// Import STTP backend</span>
+<span class="c1">// We're using AsyncHttpClientCatsBackend for this example </span>
+<span class="k">import</span> <span class="nn">sttp.client.asynchttpclient.cats.AsyncHttpClientCatsBackend</span>
+
+<span class="c1">// Import support for cats-effect</span>
+<span class="k">import</span> <span class="nn">cats.effect._</span>
+
+<span class="c1">// We should provide a ContextShift for Cats IO and STTP backend</span>
+<span class="k">implicit</span> <span class="k">val</span> <span class="nv">cs</span><span class="k">:</span> <span class="kt">ContextShift</span><span class="o">[</span><span class="kt">IO</span><span class="o">]</span> <span class="k">=</span> <span class="nv">IO</span><span class="o">.</span><span class="py">contextShift</span><span class="o">(</span> <span class="nv">scala</span><span class="o">.</span><span class="py">concurrent</span><span class="o">.</span><span class="py">ExecutionContext</span><span class="o">.</span><span class="py">global</span> <span class="o">)</span>
+
+<span class="c1">// Creating an STTP backend</span>
+<span class="nc">AsyncHttpClientCatsBackend</span><span class="o">[</span><span class="kt">IO</span><span class="o">]()</span>
+      <span class="o">.</span><span class="py">flatMap</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">backEnd</span> <span class="k">=&gt;</span>        
+        <span class="k">implicit</span> <span class="k">val</span> <span class="nv">slackApiToken</span><span class="k">:</span> <span class="kt">SlackApiToken</span> <span class="o">=</span> <span class="nc">SlackApiBotToken</span><span class="o">(</span><span class="s">"xoxb-89....."</span><span class="o">)</span>
+        <span class="k">for</span> <span class="o">{</span>
+          <span class="n">client</span> <span class="k">&lt;-</span> <span class="nc">IO</span><span class="o">(</span> <span class="nv">SlackApiClient</span><span class="o">.</span><span class="py">create</span><span class="o">[</span><span class="kt">IO</span><span class="o">]()</span> <span class="o">)</span> <span class="c1">// create an instance of client</span>
+          <span class="n">result</span> <span class="k">&lt;-</span> <span class="nv">client</span><span class="o">.</span><span class="py">api</span><span class="o">.</span><span class="py">test</span><span class="o">(</span> <span class="nc">SlackApiTestRequest</span><span class="o">()</span> <span class="o">)</span> <span class="c1">// call an example method inside IO monad</span>
+        <span class="o">}</span> <span class="k">yield</span> <span class="n">result</span>
+      <span class="o">}.</span><span class="py">unsafeRunSync</span><span class="o">()</span> <span class="c1">// usual IO lifecycle</span>
+</code></pre></div></div>
+
+<h2 id="make-web-api-methods-calls">Make Web API methods calls</h2>
+
+<p>For most of Slack Web API methods (except for OAuth methods, Incoming Webhooks and event replies) 
+you need a Slack token to make a call.
 For simple bots you can have it in your config files, or you can obtain workspace tokens 
 using <a href="https://api.slack.com/docs/oauth">Slack OAuth</a>.</p>
 
