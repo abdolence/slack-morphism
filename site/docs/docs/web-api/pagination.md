@@ -18,30 +18,11 @@ all scrolling/batching requests for you.
 
 With this scroller you have the following choice:
 
-* Load data lazily, but synchronously into a standard Scala lazy container: Stream[] (for Scala 2.12) or [LazyList[]](https://www.scala-lang.org/api/current/scala/collection/immutable/LazyList.html) (for Scala 2.13+)
 * Load data lazily and asynchronously with [AsyncSeqIterator](/api/org/latestbit/slack/morphism/concurrent/AsyncSeqIterator.html)
+* Load data lazily, but synchronously into a standard Scala lazy container: Stream[] (for Scala 2.12) or [LazyList[]](https://www.scala-lang.org/api/current/scala/collection/immutable/LazyList.html) (for Scala 2.13+)
 * Load data reactively with [Publisher[]](https://www.reactive-streams.org/reactive-streams-1.0.3-javadoc/org/reactivestreams/Publisher.html) and use Reactive Streams   
 
 For example, for [conversations.history](https://api.slack.com/methods/conversations.history) you can:
-
-## Load data into Stream[]/LazyList[]
-```scala
-
-// Synchronous approach (all batches would be loaded with blocking)
-client.conversations.historyScroller(
-    SlackApiConversationsHistoryRequest(
-      channel = "C222...." // some channel id
-    )
-  )
-  .toSyncScroller( 5.seconds )
-  .foreach {
-    case Right( results: LazyList[SlackMessage] ) => {
-      // ... results are ready to scroll
-    }
-    case Left( err ) => // the first batch is failed here
-  }
-
-```
 
 ## Using lazy AsyncSeqIterator to scroll data
 
@@ -70,7 +51,6 @@ client.conversations.historyScroller(
 ```scala
 import org.reactivestreams.Publisher
 
-
 val publisher : Publisher[SlackMessage] = 
     client.conversations.historyScroller(
         SlackApiConversationsHistoryRequest(
@@ -89,5 +69,32 @@ import akka.stream.scaladsl._
 Source
     .fromPublisher(publisher)
     .runForeach(msg => println(msg))
+
+```
+
+## Load data into Stream[]/LazyList[]
+
+Because of the nature of Scala Collection API, there are limitations:
+
+* this is synchronous approach and blocking operation, so when you scroll through LazyList[] there are blocking operations (at the moment of a batch loading).
+* you won't get any errors except for the first batch.
+
+Don't use this for huge load scenarios, and it rather was created for testing purposes.
+
+```scala
+
+// Synchronous approach (all batches would be loaded with blocking)
+client.conversations.historyScroller(
+    SlackApiConversationsHistoryRequest(
+      channel = "C222...." // some channel id
+    )
+  )
+  .toSyncScroller( 5.seconds )
+  .foreach {
+    case Right( results: LazyList[SlackMessage] ) => {
+      // ... results are ready to scroll
+    }
+    case Left( err ) => // the first batch is failed here
+  }
 
 ```
