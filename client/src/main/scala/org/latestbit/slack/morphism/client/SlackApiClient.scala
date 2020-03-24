@@ -62,7 +62,7 @@ object SlackApiClient {
   ) = SlackApiClientBuildOptions( sttpBackend ).create()
 
   /**
-   * Building an instance of Slack API client with the specified options
+   * Build an instance of Slack API client with the specified options
    *
    * For example:
    *
@@ -81,6 +81,20 @@ object SlackApiClient {
   def build[F[_] : SlackApiClientBackend.BackendType](
       implicit sttpBackend: SlackApiClientBackend.SttpBackendType[F]
   ): SlackApiClientBuilder[F] = SlackApiClientBuildOptions( sttpBackend )
+
+  /**
+   * Build an instance of Slack API client with the specified backend and options
+   *
+   * @param sttpBackend an STTP backend
+   * @tparam F scala.concurrent.Future or cats.effect.IO
+   * @return an instance builder
+   */
+  def build[F[_] : SlackApiClientBackend.BackendType](
+      sttpBackend: SlackApiClientBackend.SttpBackendType[F]
+  ): SlackApiClientBuilder[F] = {
+    implicit val backend = sttpBackend
+    SlackApiClientBuildOptions[F]( sttpBackend )
+  }
 
   trait SlackApiClientBuilder[F[_]] {
     def withThrottler( throttler: SlackApiRateThrottler[F] ): SlackApiClientBuilder[F]
