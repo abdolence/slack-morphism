@@ -67,3 +67,4 @@ hs_err_pid*
 test-output/**
 data/**
 tmp/**
+**/QuickCheck.scala

@@ -21,7 +21,8 @@ package org.latestbit.slack.morphism.concurrent
 import scala.languageFeature.implicitConversions
 import java.util.concurrent.{ ScheduledExecutorService, TimeUnit }
 
-import cats.effect.{ ContextShift, IO, Timer }
+import cats.effect._
+import cats.implicits._
 
 import scala.concurrent.{ ExecutionContext, Future, Promise }
 import scala.concurrent.duration.FiniteDuration
@@ -73,23 +74,23 @@ object AsyncTimerSupport {
 
   implicit val futureToAsyncTimerSupport: AsyncTimerSupport[Future] = new FutureAsyncTimerSupport()
 
-  class IOAsyncTimerSupport() extends AsyncTimerSupport[IO] {
+  class IOAsyncTimerSupport[F[_] : ConcurrentEffect]() extends AsyncTimerSupport[F] {
 
     override def delayed[A](
-        effect: () => IO[A],
+        effect: () => F[A],
         duration: FiniteDuration,
         scheduledExecutor: ScheduledExecutorService
     )(
         implicit ec: ExecutionContext
-    ): IO[A] = {
+    ): F[A] = {
       implicit val timer = IO.timer( ec, scheduledExecutor )
       implicit val cs = IO.contextShift( ec )
 
-      IO.sleep( duration ).start.flatMap { _ => effect() }
+      LiftIO[F].liftIO( IO.sleep( duration ).start ).flatMap { _ => effect() }
 
     }
   }
 
-  implicit val ioToAsyncTimerSupport: AsyncTimerSupport[IO] = new IOAsyncTimerSupport()
+  implicit def ioToAsyncTimerSupport[F[_] : ConcurrentEffect]: AsyncTimerSupport[F] = new IOAsyncTimerSupport()
 
 }
