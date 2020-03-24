@@ -38,9 +38,9 @@ object SlackApiClient {
    * SlackApiClient.create()
    * }}}
    *
+   * An example for cats-effect IO:
    * {{{
    *
-   * // For IO:
    * implicit val cs: ContextShift[IO] = IO.contextShift( scala.concurrent.ExecutionContext.global )
    *
    * AsyncHttpClientCatsBackend[IO]()
@@ -80,7 +80,7 @@ object SlackApiClient {
    */
   def build[F[_] : SlackApiClientBackend.BackendType](
       implicit sttpBackend: SlackApiClientBackend.SttpBackendType[F]
-  ): SlackApiClientBuilder[F] = SlackApiClientBuildOptions( sttpBackend )
+  ): SlackApiClientBuildOptions[F] = SlackApiClientBuildOptions( sttpBackend )
 
   /**
    * Build an instance of Slack API client with the specified backend and options
@@ -91,26 +91,30 @@ object SlackApiClient {
    */
   def build[F[_] : SlackApiClientBackend.BackendType](
       sttpBackend: SlackApiClientBackend.SttpBackendType[F]
-  ): SlackApiClientBuilder[F] = {
+  ): SlackApiClientBuildOptions[F] = {
     implicit val backend = sttpBackend
     SlackApiClientBuildOptions[F]( sttpBackend )
   }
 
-  trait SlackApiClientBuilder[F[_]] {
-    def withThrottler( throttler: SlackApiRateThrottler[F] ): SlackApiClientBuilder[F]
-    def create(): SlackApiClientT[F]
-  }
-
-  private case class SlackApiClientBuildOptions[F[_] : SlackApiClientBackend.BackendType](
+  case class SlackApiClientBuildOptions[F[_] : SlackApiClientBackend.BackendType] private (
       sttpBackend: SlackApiClientBackend.SttpBackendType[F],
       throttler: SlackApiRateThrottler[F] = SlackApiRateThrottler.createEmptyThrottler[F]()
-  ) extends SlackApiClientBuilder[F] {
+  ) {
 
-    override def withThrottler( throttler: SlackApiRateThrottler[F] ): SlackApiClientBuilder[F] = copy(
+    /**
+     * Specify a throttler implementation
+     * @param throttler a throttler implementation
+     * @return a builder with options
+     */
+    def withThrottler( throttler: SlackApiRateThrottler[F] ): SlackApiClientBuildOptions[F] = copy(
       throttler = throttler
     )
 
-    override def create(): SlackApiClientT[F] = {
+    /**
+     * Create a client instance with the specified options
+     * @return a client instance
+     */
+    def create(): SlackApiClientT[F] = {
       implicit val backend = sttpBackend
       new SlackApiClientT[F]( throttler )
     }
