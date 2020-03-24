@@ -18,6 +18,8 @@
 
 package org.latestbit.slack.morphism.client
 
+import cats.Monad
+import cats.effect.Resource
 import org.latestbit.slack.morphism.client.ratectrl.SlackApiRateThrottler
 
 object SlackApiClient {
@@ -96,6 +98,21 @@ object SlackApiClient {
     SlackApiClientBuildOptions[F]( sttpBackend )
   }
 
+  /**
+   * Wrap a client instance into cats Resource
+   * @param client a client instance
+   * @tparam F scala.concurrent.Future or cats.effect.IO
+   * @return a resource
+   */
+  def toResource[F[_] : SlackApiClientBackend.BackendType](
+      client: SlackApiClientT[F]
+  ): Resource[F, SlackApiClientT[F]] = {
+    Resource.make( implicitly[Monad[F]].pure( client ) ) { client =>
+      client.shutdown()
+      implicitly[Monad[F]].unit
+    }
+  }
+
   case class SlackApiClientBuildOptions[F[_] : SlackApiClientBackend.BackendType] private (
       sttpBackend: SlackApiClientBackend.SttpBackendType[F],
       throttler: SlackApiRateThrottler[F] = SlackApiRateThrottler.createEmptyThrottler[F]()
@@ -117,6 +134,13 @@ object SlackApiClient {
     def create(): SlackApiClientT[F] = {
       implicit val backend = sttpBackend
       new SlackApiClientT[F]( throttler )
+    }
+
+    /**
+     * Create a client as a resource
+     */
+    def resource(): Resource[F, SlackApiClientT[F]] = {
+      toResource( create() )
     }
 
   }
