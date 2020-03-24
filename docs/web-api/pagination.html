@@ -132,30 +132,12 @@ all scrolling/batching requests for you.</p>
 <p>With this scroller you have the following choice:</p>
 
 <ul>
-  <li>Load data lazily, but synchronously into a standard Scala lazy container: Stream[] (for Scala 2.12) or <a href="https://www.scala-lang.org/api/current/scala/collection/immutable/LazyList.html">LazyList[]</a> (for Scala 2.13+)</li>
   <li>Load data lazily and asynchronously with <a href="/api/org/latestbit/slack/morphism/concurrent/AsyncSeqIterator.html">AsyncSeqIterator</a></li>
+  <li>Load data lazily, but synchronously into a standard Scala lazy container: Stream[] (for Scala 2.12) or <a href="https://www.scala-lang.org/api/current/scala/collection/immutable/LazyList.html">LazyList[]</a> (for Scala 2.13+)</li>
   <li>Load data reactively with <a href="https://www.reactive-streams.org/reactive-streams-1.0.3-javadoc/org/reactivestreams/Publisher.html">Publisher[]</a> and use Reactive Streams</li>
 </ul>
 
 <p>For example, for <a href="https://api.slack.com/methods/conversations.history">conversations.history</a> you can:</p>
-
-<h2 id="load-data-into-streamlazylist">Load data into Stream[]/LazyList[]</h2>
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-<span class="c1">// Synchronous approach (all batches would be loaded with blocking)</span>
-<span class="nv">client</span><span class="o">.</span><span class="py">conversations</span><span class="o">.</span><span class="py">historyScroller</span><span class="o">(</span>
-    <span class="nc">SlackApiConversationsHistoryRequest</span><span class="o">(</span>
-      <span class="n">channel</span> <span class="k">=</span> <span class="s">"C222...."</span> <span class="c1">// some channel id</span>
-    <span class="o">)</span>
-  <span class="o">)</span>
-  <span class="o">.</span><span class="py">toSyncScroller</span><span class="o">(</span> <span class="mf">5.</span><span class="n">seconds</span> <span class="o">)</span>
-  <span class="o">.</span><span class="py">foreach</span> <span class="o">{</span>
-    <span class="k">case</span> <span class="nc">Right</span><span class="o">(</span> <span class="n">results</span><span class="k">:</span> <span class="kt">LazyList</span><span class="o">[</span><span class="kt">SlackMessage</span><span class="o">]</span> <span class="o">)</span> <span class="k">=&gt;</span> <span class="o">{</span>
-      <span class="c1">// ... results are ready to scroll</span>
-    <span class="o">}</span>
-    <span class="k">case</span> <span class="nc">Left</span><span class="o">(</span> <span class="n">err</span> <span class="o">)</span> <span class="k">=&gt;</span> <span class="c1">// the first batch is failed here</span>
-  <span class="o">}</span>
-
-</code></pre></div></div>
 
 <h2 id="using-lazy-asyncseqiterator-to-scroll-data">Using lazy AsyncSeqIterator to scroll data</h2>
 
@@ -184,7 +166,6 @@ all scrolling/batching requests for you.</p>
 <h2 id="create-a-reactive-publisher">Create a reactive Publisher[]</h2>
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">org.reactivestreams.Publisher</span>
 
-
 <span class="k">val</span> <span class="nv">publisher</span> <span class="k">:</span> <span class="kt">Publisher</span><span class="o">[</span><span class="kt">SlackMessage</span><span class="o">]</span> <span class="k">=</span> 
     <span class="nv">client</span><span class="o">.</span><span class="py">conversations</span><span class="o">.</span><span class="py">historyScroller</span><span class="o">(</span>
         <span class="nc">SlackApiConversationsHistoryRequest</span><span class="o">(</span>
@@ -203,6 +184,34 @@ all scrolling/batching requests for you.</p>
 <span class="nc">Source</span>
     <span class="o">.</span><span class="py">fromPublisher</span><span class="o">(</span><span class="n">publisher</span><span class="o">)</span>
     <span class="o">.</span><span class="py">runForeach</span><span class="o">(</span><span class="n">msg</span> <span class="k">=&gt;</span> <span class="nf">println</span><span class="o">(</span><span class="n">msg</span><span class="o">))</span>
+
+</code></pre></div></div>
+
+<h2 id="load-data-into-streamlazylist">Load data into Stream[]/LazyList[]</h2>
+
+<p>Because of the nature of Scala Collection API, there are limitations:</p>
+
+<ul>
+  <li>this is synchronous approach and blocking operation, so when you scroll through LazyList[] there are blocking operations (at the moment of a batch loading).</li>
+  <li>you won’t get any errors except for the first batch.</li>
+</ul>
+
+<p>Don’t use this for huge load scenarios, and it rather was created for testing purposes.</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">// Synchronous approach (all batches would be loaded with blocking)</span>
+<span class="nv">client</span><span class="o">.</span><span class="py">conversations</span><span class="o">.</span><span class="py">historyScroller</span><span class="o">(</span>
+    <span class="nc">SlackApiConversationsHistoryRequest</span><span class="o">(</span>
+      <span class="n">channel</span> <span class="k">=</span> <span class="s">"C222...."</span> <span class="c1">// some channel id</span>
+    <span class="o">)</span>
+  <span class="o">)</span>
+  <span class="o">.</span><span class="py">toSyncScroller</span><span class="o">(</span> <span class="mf">5.</span><span class="n">seconds</span> <span class="o">)</span>
+  <span class="o">.</span><span class="py">foreach</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="nc">Right</span><span class="o">(</span> <span class="n">results</span><span class="k">:</span> <span class="kt">LazyList</span><span class="o">[</span><span class="kt">SlackMessage</span><span class="o">]</span> <span class="o">)</span> <span class="k">=&gt;</span> <span class="o">{</span>
+      <span class="c1">// ... results are ready to scroll</span>
+    <span class="o">}</span>
+    <span class="k">case</span> <span class="nc">Left</span><span class="o">(</span> <span class="n">err</span> <span class="o">)</span> <span class="k">=&gt;</span> <span class="c1">// the first batch is failed here</span>
+  <span class="o">}</span>
 
 </code></pre></div></div>
 </section>
