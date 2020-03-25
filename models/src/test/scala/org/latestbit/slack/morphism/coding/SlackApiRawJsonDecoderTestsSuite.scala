@@ -307,4 +307,71 @@ class SlackApiRawJsonDecoderTestsSuite extends AnyFlatSpec with CirceCodecs {
     }
   }
 
+  it should "decode messages with blocks and checkboxes" in {
+    val json =
+      """
+              | {
+              |    "type": "modal",
+              |    "title": {
+              |        "type": "plain_text",
+              |        "text": "My App",
+              |        "emoji": true
+              |    },
+              |    "submit": {
+              |        "type": "plain_text",
+              |        "text": "Submit",
+              |        "emoji": true
+              |    },
+              |    "close": {
+              |        "type": "plain_text",
+              |        "text": "Cancel",
+              |        "emoji": true
+              |    },
+              |    "blocks": [
+              |        {
+              |            "type": "section",
+              |            "text": {
+              |                "type": "plain_text",
+              |                "text": "Check out these charming checkboxes"
+              |            },
+              |            "accessory": {
+              |                "type": "checkboxes",
+              |                "action_id": "this_is_an_action_id",
+              |                "initial_options": [{
+              |                    "value": "A1",
+              |                    "text": {
+              |                        "type": "plain_text",
+              |                        "text": "Checkbox 1"
+              |                    }
+              |                }],
+              |                "options": [
+              |                    {
+              |                        "value": "A1",
+              |                        "text": {
+              |                            "type": "plain_text",
+              |                            "text": "Checkbox 1"
+              |                        }
+              |                    },
+              |                    {
+              |                        "value": "A2",
+              |                        "text": {
+              |                            "type": "mrkdwn",
+              |                            "text": "Checkbox 2"
+              |                        }
+              |                    }
+              |                ]
+              |            }
+              |        }
+              |    ]
+              |}
+              |""".stripMargin
+
+    decode[SlackModalView]( json ) match {
+      case Right( modal ) => {
+        assert( modal.blocks.nonEmpty )
+      }
+      case Left( err ) => fail( err )
+    }
+  }
+
 }

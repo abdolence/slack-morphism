@@ -81,6 +81,8 @@ trait SlackBlocksTemplateDsl extends SlackBlocksTemplateDslInternals {
 
   protected def radioButtons = SlackBlockRadioButtonsElement
 
+  protected def checkboxes = SlackBlockCheckboxesElement
+
   protected def choiceItems[T <: SlackBlockText](
       defs: SlackDslItemDef[SlackBlockChoiceItem[T]]*
   ): NonEmptyList[SlackBlockChoiceItem[T]] =

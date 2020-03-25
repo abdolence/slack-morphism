@@ -86,6 +86,16 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
                     )
                   )
                 ),
+                sectionBlock(
+                  text = md"Test Checkboxes",
+                  accessory = checkboxes(
+                    action_id = "-",
+                    options = choiceItems(
+                      choiceItem( text = md"test-menu-item1", value = "" ),
+                      choiceItem( text = pt"test-menu-item2", value = "" )
+                    )
+                  )
+                ),
                 inputBlock(
                   label = pt"Input",
                   element = staticSelect(

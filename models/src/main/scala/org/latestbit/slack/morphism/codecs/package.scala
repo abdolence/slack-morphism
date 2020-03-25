@@ -524,6 +524,12 @@ package object codecs {
     implicit val decoderSlackBlockRadioButtonsElement: Decoder[SlackBlockRadioButtonsElement] =
       deriveDecoder[SlackBlockRadioButtonsElement]
 
+    implicit val encoderSlackBlockCheckboxesElement: Encoder.AsObject[SlackBlockCheckboxesElement] =
+      deriveEncoder[SlackBlockCheckboxesElement]
+
+    implicit val decoderSlackBlockCheckboxesElement: Decoder[SlackBlockCheckboxesElement] =
+      deriveDecoder[SlackBlockCheckboxesElement]
+
     implicit val encoderSlackBlockElement: Encoder[SlackBlockElement] =
       JsonTaggedAdtCodec.createEncoder[SlackBlockElement]( "type" )
 

@@ -303,6 +303,20 @@ case class SlackBlockRadioButtonsElement(
     with SlackActionBlockElement
     with SlackInputBlockElement
 
+/**
+ * https://api.slack.com/reference/block-kit/block-elements#checkboxes
+ */
+@JsonAdt( "checkboxes" )
+case class SlackBlockCheckboxesElement(
+    action_id: String,
+    options: NonEmptyList[SlackBlockChoiceItem[SlackBlockText]],
+    initial_options: Option[NonEmptyList[SlackBlockChoiceItem[SlackBlockText]]] = None,
+    confirm: Option[SlackBlockConfirmItem] = None
+) extends SlackBlockElement
+    with SlackSectionBlockElement
+    with SlackActionBlockElement
+    with SlackInputBlockElement
+
 @JsonAdt( "rich_text_section" )
 case class SlackBlockRichTextSection() extends SlackBlockElement with SlackRichBlockElement
 
