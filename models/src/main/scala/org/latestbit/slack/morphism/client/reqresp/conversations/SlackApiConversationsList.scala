@@ -18,7 +18,8 @@
 
 package org.latestbit.slack.morphism.client.reqresp.conversations
 
-import org.latestbit.slack.morphism.common.{ SlackApiResponseMetadata, SlackChannelInfo }
+import cats.data.NonEmptyList
+import org.latestbit.slack.morphism.common.{ SlackApiResponseMetadata, SlackChannelInfo, SlackConversationType }
 import org.latestbit.slack.morphism.client.streaming.SlackApiScrollableResponse
 
 /**
@@ -28,7 +29,7 @@ case class SlackApiConversationsListRequest(
     cursor: Option[String] = None,
     exclude_archived: Option[Boolean] = None,
     limit: Option[Long] = None,
-    types: Option[List[String]] = None
+    types: Option[NonEmptyList[SlackConversationType]] = None
 )
 
 /**

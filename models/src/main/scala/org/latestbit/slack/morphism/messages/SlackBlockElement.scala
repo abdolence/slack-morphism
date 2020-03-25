@@ -20,6 +20,7 @@ package org.latestbit.slack.morphism.messages
 
 import cats.data.NonEmptyList
 import org.latestbit.circe.adt.codec._
+import org.latestbit.slack.morphism.common.SlackConversationType
 
 /**
  * Block elements can be used inside of section, context, and actions layout blocks. Inputs can only be used inside of input blocks.
@@ -195,7 +196,8 @@ case class SlackBlockConversationListSelectElement(
     action_id: String,
     initial_conversation: Option[String] = None,
     confirm: Option[SlackBlockConfirmItem] = None,
-    response_url_enabled: Option[Boolean] = None
+    response_url_enabled: Option[Boolean] = None,
+    filter: Option[SlackConversationListFilter] = None
 ) extends SlackBlockSelectElement
     with SlackSectionBlockElement
     with SlackInputBlockElement
@@ -209,7 +211,8 @@ case class SlackBlockMultiConversationListSelectElement(
     action_id: String,
     initial_conversations: Option[NonEmptyList[String]] = None,
     confirm: Option[SlackBlockConfirmItem] = None,
-    max_selected_items: Option[Long] = None
+    max_selected_items: Option[Long] = None,
+    filter: Option[SlackConversationListFilter] = None
 ) extends SlackBlockSelectElement
     with SlackSectionBlockElement
     with SlackInputBlockElement
@@ -359,3 +362,12 @@ case class SlackBlockMarkDownText(
     text: String,
     verbatim: Option[Boolean] = None
 ) extends SlackBlockText
+
+/**
+ * https://api.slack.com/reference/block-kit/composition-objects#filter_conversations
+ */
+case class SlackConversationListFilter(
+    include: Option[NonEmptyList[SlackConversationType]] = None,
+    exclude_external_shared_channels: Option[Boolean] = None,
+    exclude_bot_users: Option[Boolean] = None
+)
