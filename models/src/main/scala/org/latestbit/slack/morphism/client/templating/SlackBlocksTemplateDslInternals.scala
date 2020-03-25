@@ -50,8 +50,8 @@ trait SlackBlocksTemplateDslInternals {
   protected implicit final def slackBlockTextToDef[T <: SlackBlockText]( blockEl: => T ) =
     SlackDslSomeItem[T]( () => blockEl )
 
-  protected implicit final def slackBlockOptionItemToDef( item: => SlackBlockChoiceItem ) =
-    SlackDslSomeItem[SlackBlockChoiceItem]( () => item )
+  protected implicit final def slackBlockOptionItemToDef[T <: SlackBlockText]( item: => SlackBlockChoiceItem[T] ) =
+    SlackDslSomeItem[SlackBlockChoiceItem[T]]( () => item )
 
   protected implicit def slackBlockElementToOption[T <: SlackBlockElement]( el: T ): Option[T] = Some( el )
 

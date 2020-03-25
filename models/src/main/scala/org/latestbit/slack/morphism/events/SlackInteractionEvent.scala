@@ -119,6 +119,6 @@ case class SlackInteractionActionInfo(
     block_id: Option[String] = None,
     text: Option[SlackBlockText] = None,
     value: Option[String] = None,
-    selected_option: Option[SlackBlockChoiceItem] = None,
+    selected_option: Option[SlackBlockChoiceItem[SlackBlockText]] = None,
     action_ts: Option[String] = None
 )

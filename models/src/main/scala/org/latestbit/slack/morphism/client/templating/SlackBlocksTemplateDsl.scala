@@ -81,27 +81,31 @@ trait SlackBlocksTemplateDsl extends SlackBlocksTemplateDslInternals {
 
   protected def radioButtons = SlackBlockRadioButtonsElement
 
-  protected def choiceItems( defs: SlackDslItemDef[SlackBlockChoiceItem]* ): NonEmptyList[SlackBlockChoiceItem] =
+  protected def choiceItems[T <: SlackBlockText](
+      defs: SlackDslItemDef[SlackBlockChoiceItem[T]]*
+  ): NonEmptyList[SlackBlockChoiceItem[T]] =
     NonEmptyList.fromListUnsafe( defs.toList.flatten )
 
   protected def choiceStrItems( defs: String* ): NonEmptyList[String] =
     NonEmptyList.fromListUnsafe( defs.toList )
 
-  protected def optChoiceItem(
+  protected def optChoiceItem[T <: SlackBlockText](
       condition: => Boolean
-  )( item: => SlackBlockChoiceItem ): SlackDslItemDef[SlackBlockChoiceItem] =
+  )( item: => SlackBlockChoiceItem[T] ): SlackDslItemDef[SlackBlockChoiceItem[T]] =
     optElement( condition, item )
 
   protected def choiceItem = SlackBlockChoiceItem
 
-  protected def choiceGroups( defs: SlackDslItemDef[SlackBlockOptionGroup]* ): NonEmptyList[SlackBlockOptionGroup] =
+  protected def choiceGroups[T <: SlackBlockText](
+      defs: SlackDslItemDef[SlackBlockOptionGroup[T]]*
+  ): NonEmptyList[SlackBlockOptionGroup[T]] =
     NonEmptyList.fromListUnsafe( defs.flatten.toList )
 
   protected def choiceGroup = SlackBlockOptionGroup
 
-  protected def optChoiceGroup(
+  protected def optChoiceGroup[T <: SlackBlockText](
       condition: => Boolean
-  )( group: => SlackBlockOptionGroup ): SlackDslItemDef[SlackBlockOptionGroup] =
+  )( group: => SlackBlockOptionGroup[T] ): SlackDslItemDef[SlackBlockOptionGroup[T]] =
     optElement( condition, group )
 
   protected def confirm = SlackBlockConfirmItem

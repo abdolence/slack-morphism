@@ -104,9 +104,9 @@ sealed trait SlackBlockSelectElement extends SlackBlockElement
 case class SlackBlockStaticSelectElement(
     placeholder: SlackBlockPlainText,
     action_id: String,
-    options: Option[NonEmptyList[SlackBlockChoiceItem]] = None,
-    option_groups: Option[NonEmptyList[SlackBlockOptionGroup]] = None,
-    initial_option: Option[SlackBlockChoiceItem] = None,
+    options: Option[NonEmptyList[SlackBlockChoiceItem[SlackBlockPlainText]]] = None,
+    option_groups: Option[NonEmptyList[SlackBlockOptionGroup[SlackBlockPlainText]]] = None,
+    initial_option: Option[SlackBlockChoiceItem[SlackBlockPlainText]] = None,
     confirm: Option[SlackBlockConfirmItem] = None
 ) extends SlackBlockSelectElement
     with SlackSectionBlockElement
@@ -121,9 +121,9 @@ case class SlackBlockStaticSelectElement(
 case class SlackBlockMultiStaticSelectElement(
     placeholder: SlackBlockPlainText,
     action_id: String,
-    options: Option[NonEmptyList[SlackBlockChoiceItem]] = None,
-    option_groups: Option[NonEmptyList[SlackBlockOptionGroup]] = None,
-    initial_options: Option[NonEmptyList[SlackBlockChoiceItem]] = None,
+    options: Option[NonEmptyList[SlackBlockChoiceItem[SlackBlockPlainText]]] = None,
+    option_groups: Option[NonEmptyList[SlackBlockOptionGroup[SlackBlockPlainText]]] = None,
+    initial_options: Option[NonEmptyList[SlackBlockChoiceItem[SlackBlockPlainText]]] = None,
     confirm: Option[SlackBlockConfirmItem] = None,
     max_selected_items: Option[Long] = None
 ) extends SlackBlockSelectElement
@@ -139,7 +139,7 @@ case class SlackBlockMultiStaticSelectElement(
 case class SlackBlockExternalSelectElement(
     placeholder: SlackBlockPlainText,
     action_id: String,
-    initial_option: Option[SlackBlockChoiceItem] = None,
+    initial_option: Option[SlackBlockChoiceItem[SlackBlockPlainText]] = None,
     confirm: Option[SlackBlockConfirmItem] = None
 ) extends SlackBlockSelectElement
     with SlackSectionBlockElement
@@ -152,7 +152,7 @@ case class SlackBlockExternalSelectElement(
 case class SlackBlockMultiExternalSelectElement(
     placeholder: SlackBlockPlainText,
     action_id: String,
-    initial_options: Option[NonEmptyList[SlackBlockChoiceItem]] = None,
+    initial_options: Option[NonEmptyList[SlackBlockChoiceItem[SlackBlockPlainText]]] = None,
     confirm: Option[SlackBlockConfirmItem] = None,
     max_selected_items: Option[Long] = None
 ) extends SlackBlockSelectElement
@@ -246,15 +246,18 @@ case class SlackBlockMultiChannelsListSelectElement(
 @JsonAdt( "overflow" )
 case class SlackBlockOverflowElement(
     action_id: String,
-    options: NonEmptyList[SlackBlockChoiceItem],
+    options: NonEmptyList[SlackBlockChoiceItem[SlackBlockPlainText]],
     confirm: Option[SlackBlockConfirmItem] = None
 ) extends SlackBlockSelectElement
     with SlackSectionBlockElement
     with SlackActionBlockElement
 
-case class SlackBlockChoiceItem( text: SlackBlockPlainText, value: String, url: Option[String] = None )
+case class SlackBlockChoiceItem[+T <: SlackBlockText]( text: T, value: String, url: Option[String] = None )
 
-case class SlackBlockOptionGroup( label: SlackBlockPlainText, options: List[SlackBlockChoiceItem] )
+case class SlackBlockOptionGroup[+T <: SlackBlockText](
+    label: SlackBlockPlainText,
+    options: List[SlackBlockChoiceItem[T]]
+)
 
 /**
  * https://api.slack.com/reference/block-kit/block-elements#datepicker
@@ -292,8 +295,8 @@ case class SlackBlockPlainInputElement(
 @JsonAdt( "radio_buttons" )
 case class SlackBlockRadioButtonsElement(
     action_id: String,
-    options: NonEmptyList[SlackBlockChoiceItem],
-    initial_options: Option[NonEmptyList[SlackBlockChoiceItem]] = None,
+    options: NonEmptyList[SlackBlockChoiceItem[SlackBlockText]],
+    initial_options: Option[NonEmptyList[SlackBlockChoiceItem[SlackBlockText]]] = None,
     confirm: Option[SlackBlockConfirmItem] = None
 ) extends SlackBlockElement
     with SlackSectionBlockElement

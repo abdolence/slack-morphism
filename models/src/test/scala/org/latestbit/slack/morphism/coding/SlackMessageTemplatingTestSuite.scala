@@ -56,15 +56,15 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
                   fields = sectionFields(
                     md"Test 1",
                     md"Test 2",
-                    plain"Test 3",
-                    optSectionField( testCond > 0 )( plain"Test 3" )
+                    pt"Test 3",
+                    optSectionField( testCond > 0 )( pt"Test 3" )
                   ),
                   accessory = image( "https://example.net/image.png", alt_text = "test image" )
                 ),
                 actionsBlock(
                   elements = blockElements(
-                    button( text = plain"test button", action_id = "-" ),
-                    button( text = plain"test button", action_id = "-" )
+                    button( text = pt"test button", action_id = "-" ),
+                    button( text = pt"test button", action_id = "-" )
                   )
                 ),
                 sectionBlock(
@@ -72,31 +72,41 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
                   accessory = overflow(
                     action_id = "-",
                     options = choiceItems(
-                      choiceItem( text = plain"test-menu-item", value = "" )
+                      choiceItem( text = pt"test-menu-item", value = "" )
                     )
                   )
                 ),
-                inputBlock(
-                  label = plain"Input",
-                  element = staticSelect(
-                    placeholder = plain"test",
+                sectionBlock(
+                  text = md"Test Radio Buttons",
+                  accessory = radioButtons(
                     action_id = "-",
                     options = choiceItems(
-                      choiceItem( text = plain"test-menu-item", value = "" ),
-                      optChoiceItem( testCond > 0 )( choiceItem( text = plain"test-menu-item2", value = "" ) )
-                    ),
-                    confirm = confirm(
-                      title = plain"Test title",
-                      text = md"Confirm this",
-                      confirm = plain"OK",
-                      deny = plain"Cancel"
+                      choiceItem( text = md"test-menu-item1", value = "" ),
+                      choiceItem( text = pt"test-menu-item2", value = "" )
                     )
                   )
                 ),
                 inputBlock(
-                  label = plain"Input",
+                  label = pt"Input",
+                  element = staticSelect(
+                    placeholder = pt"test",
+                    action_id = "-",
+                    options = choiceItems(
+                      choiceItem( text = pt"test-menu-item", value = "" ),
+                      optChoiceItem( testCond > 0 )( choiceItem( text = pt"test-menu-item2", value = "" ) )
+                    ),
+                    confirm = confirm(
+                      title = pt"Test title",
+                      text = md"Confirm this",
+                      confirm = pt"OK",
+                      deny = pt"Cancel"
+                    )
+                  )
+                ),
+                inputBlock(
+                  label = pt"Input",
                   element = multiUsersSelect(
-                    placeholder = plain"test",
+                    placeholder = pt"test",
                     action_id = "-",
                     initial_users = choiceStrItems(
                       "test-user-1"
@@ -105,7 +115,7 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
                 ),
                 contextBlock(
                   elements = blockElements(
-                    plain"Test",
+                    pt"Test",
                     image( "https://example.net/image.png", alt_text = "test image" )
                   )
                 )

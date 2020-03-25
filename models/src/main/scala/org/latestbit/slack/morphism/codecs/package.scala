@@ -382,13 +382,31 @@ package object codecs {
       deriveEncoder[SlackBlockRichTextList]
     implicit val decoderSlackBlockRichTextList: Decoder[SlackBlockRichTextList] = deriveDecoder[SlackBlockRichTextList]
 
-    implicit val encoderSlackBlockOptionItem: Encoder.AsObject[SlackBlockChoiceItem] =
-      deriveEncoder[SlackBlockChoiceItem]
-    implicit val decoderSlackBlockOptionItem: Decoder[SlackBlockChoiceItem] = deriveDecoder[SlackBlockChoiceItem]
+    implicit val encoderSlackBlockOptionItemBlockText: Encoder.AsObject[SlackBlockChoiceItem[SlackBlockText]] =
+      deriveEncoder[SlackBlockChoiceItem[SlackBlockText]]
 
-    implicit val encoderSlackBlockOptionGroup: Encoder.AsObject[SlackBlockOptionGroup] =
-      deriveEncoder[SlackBlockOptionGroup]
-    implicit val decoderSlackBlockOptionGroup: Decoder[SlackBlockOptionGroup] = deriveDecoder[SlackBlockOptionGroup]
+    implicit val decoderSlackBlockOptionItemBlockText: Decoder[SlackBlockChoiceItem[SlackBlockText]] =
+      deriveDecoder[SlackBlockChoiceItem[SlackBlockText]]
+
+    implicit val encoderSlackBlockOptionGroupBlockText: Encoder.AsObject[SlackBlockOptionGroup[SlackBlockText]] =
+      deriveEncoder[SlackBlockOptionGroup[SlackBlockText]]
+
+    implicit val decoderSlackBlockOptionGroupBlockText: Decoder[SlackBlockOptionGroup[SlackBlockText]] =
+      deriveDecoder[SlackBlockOptionGroup[SlackBlockText]]
+
+    implicit val encoderSlackBlockOptionItemBlockPlainText
+        : Encoder.AsObject[SlackBlockChoiceItem[SlackBlockPlainText]] =
+      deriveEncoder[SlackBlockChoiceItem[SlackBlockPlainText]]
+
+    implicit val decoderSlackBlockOptionItemBlockPlainText: Decoder[SlackBlockChoiceItem[SlackBlockPlainText]] =
+      deriveDecoder[SlackBlockChoiceItem[SlackBlockPlainText]]
+
+    implicit val encoderSlackBlockOptionGroupBlockPlainText
+        : Encoder.AsObject[SlackBlockOptionGroup[SlackBlockPlainText]] =
+      deriveEncoder[SlackBlockOptionGroup[SlackBlockPlainText]]
+
+    implicit val decoderSlackBlockOptionGroupBlockPlainText: Decoder[SlackBlockOptionGroup[SlackBlockPlainText]] =
+      deriveDecoder[SlackBlockOptionGroup[SlackBlockPlainText]]
 
     implicit val encoderSlackBlockSelectElement: Encoder.AsObject[SlackBlockSelectElement] =
       deriveEncoder[SlackBlockSelectElement]

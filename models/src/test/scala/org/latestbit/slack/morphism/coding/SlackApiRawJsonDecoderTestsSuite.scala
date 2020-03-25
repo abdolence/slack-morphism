@@ -18,18 +18,20 @@
 
 package org.latestbit.slack.morphism.coding
 
+import io.circe.DecodingFailure
 import org.latestbit.slack.morphism.client.reqresp.conversations.SlackApiConversationsHistoryResponse
 import org.latestbit.slack.morphism.codecs.CirceCodecs
 import org.latestbit.slack.morphism.common.SlackApiResponseMetadata
 import org.latestbit.slack.morphism.events.{
+  SlackBotAddMessage,
   SlackChannelJoinMessage,
   SlackChannelNameMessage,
   SlackChannelPurposeMessage,
-  SlackChannelTopicMessage,
-  SlackBotAddMessage
+  SlackChannelTopicMessage
 }
 import org.scalatest.flatspec.AnyFlatSpec
 import io.circe.parser._
+import org.latestbit.slack.morphism.views.SlackModalView
 
 class SlackApiRawJsonDecoderTestsSuite extends AnyFlatSpec with CirceCodecs {
 
@@ -136,6 +138,173 @@ class SlackApiRawJsonDecoderTestsSuite extends AnyFlatSpec with CirceCodecs {
     val result = decode[SlackApiConversationsHistoryResponse]( jsonResponse )
 
     assert( result === Right( expectedResponse ) )
+  }
+
+  it should "decode messages with blocks and mrkdown radio buttons" in {
+    val json =
+      """
+          | {
+          |  "type": "modal",
+          |  "title": {
+          |    "type": "plain_text",
+          |    "text": "My App",
+          |    "emoji": true
+          |  },
+          |  "submit": {
+          |    "type": "plain_text",
+          |    "text": "Submit",
+          |    "emoji": true
+          |  },
+          |  "close": {
+          |    "type": "plain_text",
+          |    "text": "Cancel",
+          |    "emoji": true
+          |  },
+          |  "blocks": [
+          |    {
+          |      "type": "section",
+          |      "text": {
+          |        "type": "plain_text",
+          |        "text": "Check out these rad radio buttons"
+          |      },
+          |      "accessory": {
+          |        "type": "radio_buttons",
+          |        "action_id": "this_is_an_action_id",
+          |        "initial_option": {
+          |          "value": "A1",
+          |          "text": {
+          |            "type": "plain_text",
+          |            "text": "Radio 1"
+          |          }
+          |        },
+          |        "options": [
+          |          {
+          |            "value": "A1",
+          |            "text": {
+          |              "type": "plain_text",
+          |              "text": "Radio 1"
+          |            }
+          |          },
+          |          {
+          |            "value": "A2",
+          |            "text": {
+          |              "type": "mrkdwn",
+          |              "text": "Radio 2"
+          |            }
+          |          }
+          |        ]
+          |      }
+          |    },
+          |    {
+          |    "type": "section",
+          |    "block_id": "section678",
+          |    "text": {
+          |      "type": "mrkdwn",
+          |      "text": "Pick an item from the dropdown list"
+          |    },
+          |    "accessory": {
+          |      "action_id": "text1234",
+          |      "type": "static_select",
+          |      "placeholder": {
+          |        "type": "plain_text",
+          |        "text": "Select an item"
+          |      },
+          |      "options": [
+          |        {
+          |          "text": {
+          |            "type": "plain_text",
+          |            "text": "*this is plain_text text*"
+          |          },
+          |          "value": "value-0"
+          |        },
+          |        {
+          |          "text": {
+          |            "type": "plain_text",
+          |            "text": "*this is plain_text text*"
+          |          },
+          |          "value": "value-1"
+          |        },
+          |        {
+          |          "text": {
+          |            "type": "plain_text",
+          |            "text": "*this is plain_text text*"
+          |          },
+          |          "value": "value-2"
+          |        }
+          |      ]
+          |    }
+          |  }
+          |  ]
+          |}
+          |""".stripMargin
+
+    decode[SlackModalView]( json ) match {
+      case Right( modal ) => {
+        assert( modal.blocks.nonEmpty )
+      }
+      case Left( err ) => fail( err )
+    }
+  }
+
+  it should "not decode messages with blocks and mrkdown selects" in {
+    val json =
+      """
+              | {
+              |  "type": "modal",
+              |  "title": {
+              |    "type": "plain_text",
+              |    "text": "My App",
+              |    "emoji": true
+              |  },
+              |  "submit": {
+              |    "type": "plain_text",
+              |    "text": "Submit",
+              |    "emoji": true
+              |  },
+              |  "close": {
+              |    "type": "plain_text",
+              |    "text": "Cancel",
+              |    "emoji": true
+              |  },
+              |  "blocks": [
+              |    {
+              |    "type": "section",
+              |    "block_id": "section678",
+              |    "text": {
+              |      "type": "mrkdwn",
+              |      "text": "Pick an item from the dropdown list"
+              |    },
+              |    "accessory": {
+              |      "action_id": "text1234",
+              |      "type": "static_select",
+              |      "placeholder": {
+              |        "type": "plain_text",
+              |        "text": "Select an item"
+              |      },
+              |      "options": [
+              |        {
+              |          "text": {
+              |            "type": "mrkdwn",
+              |            "text": "*this is plain_text text*"
+              |          },
+              |          "value": "value-0"
+              |        }
+              |      ]
+              |    }
+              |  }
+              |  ]
+              |}
+              |""".stripMargin
+
+    decode[SlackModalView]( json ) match {
+      case Right( _ ) => {
+        fail()
+      }
+      case Left( err ) => {
+        println( err )
+        assert( err.isInstanceOf[DecodingFailure] )
+      }
+    }
   }
 
 }
