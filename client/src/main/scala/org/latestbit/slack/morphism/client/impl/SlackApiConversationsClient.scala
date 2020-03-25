@@ -242,7 +242,7 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
           "cursor" -> req.cursor,
           "exclude_archived" -> req.exclude_archived.map( _.toString() ),
           "limit" -> req.limit.map( _.toString() ),
-          "types" -> req.types.map( _.mkString( "," ) )
+          "types" -> req.types.map( _.toList.map( _.value ).mkString( "," ) )
         ),
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
       )

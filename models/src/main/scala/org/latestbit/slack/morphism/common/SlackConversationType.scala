@@ -18,11 +18,31 @@
 
 package org.latestbit.slack.morphism.common
 
-trait SlackConversationType {}
+import org.latestbit.circe.adt.codec.JsonAdt
+
+sealed trait SlackConversationType {
+  val value: String
+}
 
 object SlackConversationType {
-  case object IM extends SlackConversationType
-  case object MPIM extends SlackConversationType
-  case object PRIVATE extends SlackConversationType
-  case object PUBLIC extends SlackConversationType
+
+  @JsonAdt( IM.value )
+  case object IM extends SlackConversationType {
+    override final val value = "im"
+  }
+
+  @JsonAdt( MPIM.value )
+  case object MPIM extends SlackConversationType {
+    override final val value = "mpim"
+  }
+
+  @JsonAdt( PRIVATE.value )
+  case object PRIVATE extends SlackConversationType {
+    override final val value = "private"
+  }
+
+  @JsonAdt( PUBLIC.value )
+  case object PUBLIC extends SlackConversationType {
+    override final val value = "public"
+  }
 }
