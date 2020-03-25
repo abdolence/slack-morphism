@@ -194,7 +194,8 @@ case class SlackBlockConversationListSelectElement(
     placeholder: SlackBlockPlainText,
     action_id: String,
     initial_conversation: Option[String] = None,
-    confirm: Option[SlackBlockConfirmItem] = None
+    confirm: Option[SlackBlockConfirmItem] = None,
+    response_url_enabled: Option[Boolean] = None
 ) extends SlackBlockSelectElement
     with SlackSectionBlockElement
     with SlackInputBlockElement
@@ -221,7 +222,8 @@ case class SlackBlockChannelsListSelectElement(
     placeholder: SlackBlockPlainText,
     action_id: String,
     initial_channel: Option[String] = None,
-    confirm: Option[SlackBlockConfirmItem] = None
+    confirm: Option[SlackBlockConfirmItem] = None,
+    response_url_enabled: Option[Boolean] = None
 ) extends SlackBlockSelectElement
     with SlackSectionBlockElement
     with SlackInputBlockElement
