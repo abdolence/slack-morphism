@@ -277,6 +277,7 @@ Available DSL terms:
     * `multiStaticSelect` : ["multi_static_select"](https://api.slack.com/reference/block-kit/block-elements#multi_select)
     * `multiExternalSelect` : ["multi_external_select"](https://api.slack.com/reference/block-kit/block-elements#multi_external_select)
     * `radioButtons` : ["radio_buttons"](https://api.slack.com/reference/block-kit/block-elements#radio)
+    * `checkboxes` : ["checkboxes"](https://api.slack.com/reference/block-kit/block-elements#checkboxes)    
 * `choiceItems` : items for selects, overflow and radio buttons
     * `choiceItem` : [option object](https://api.slack.com/reference/block-kit/composition-objects#option)
 * `choiceStrItems` : items for strings for users/conversations/channels selects    
