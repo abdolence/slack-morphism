@@ -28,6 +28,7 @@ import io.circe.syntax._
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.ratectrl.SlackApiMethodRateControlParams
 import org.latestbit.slack.morphism.client.reqresp.internal.SlackGeneralResponseParams
+import org.latestbit.slack.morphism.codecs.SlackCirceJsonSettings
 import org.latestbit.slack.morphism.codecs.implicits._
 import sttp.client._
 import sttp.model.{ HeaderNames, MediaType, StatusCode, Uri }
@@ -329,8 +330,5 @@ object SlackApiHttpProtocolSupport {
   val SLACK_BASE_URI = "https://slack.com/api"
   val SLACK_API_CHAR_ENCODING = "UTF-8"
 
-  final val SlackJsonPrinter = Printer(
-    dropNullValues = true,
-    indent = ""
-  )
+  final val SlackJsonPrinter = SlackCirceJsonSettings.printer
 }

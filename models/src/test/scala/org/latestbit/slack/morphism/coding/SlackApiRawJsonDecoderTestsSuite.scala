@@ -20,17 +20,14 @@ package org.latestbit.slack.morphism.coding
 
 import io.circe.DecodingFailure
 import org.latestbit.slack.morphism.client.reqresp.conversations.SlackApiConversationsHistoryResponse
-import org.latestbit.slack.morphism.codecs.CirceCodecs
-import org.latestbit.slack.morphism.common.SlackApiResponseMetadata
-import org.latestbit.slack.morphism.events.{
-  SlackBotAddMessage,
-  SlackChannelJoinMessage,
-  SlackChannelNameMessage,
-  SlackChannelPurposeMessage,
-  SlackChannelTopicMessage
-}
+import org.latestbit.slack.morphism.codecs.{ CirceCodecs, SlackCirceJsonSettings }
+import org.latestbit.slack.morphism.common._
+import org.latestbit.slack.morphism.events._
 import org.scalatest.flatspec.AnyFlatSpec
+import io.circe.{ Decoder, Encoder, Json }
+import io.circe.syntax._
 import io.circe.parser._
+import org.latestbit.slack.morphism.messages.SlackBlockConversationListSelectElement
 import org.latestbit.slack.morphism.views.SlackModalView
 
 class SlackApiRawJsonDecoderTestsSuite extends AnyFlatSpec with CirceCodecs {
@@ -369,6 +366,46 @@ class SlackApiRawJsonDecoderTestsSuite extends AnyFlatSpec with CirceCodecs {
     decode[SlackModalView]( json ) match {
       case Right( modal ) => {
         assert( modal.blocks.nonEmpty )
+      }
+      case Left( err ) => fail( err )
+    }
+  }
+
+  it should "encode and decode conversations_select filter" in {
+    val json =
+      """
+          | {
+          |  "type": "conversations_select",
+          |  "action_id" : "-",
+          |  "placeholder": {
+          |    "type": "plain_text",
+          |    "text": "Select a conversation",
+          |    "emoji": true
+          |  },
+          |  "filter": {
+          |    "include": [
+          |      "public",
+          |      "mpim"
+          |    ],
+          |    "exclude_bot_users" : true
+          |  } 
+          | }
+          |""".stripMargin
+
+    decode[SlackBlockConversationListSelectElement]( json ) match {
+      case Right( convList ) => {
+        convList.filter match {
+          case Some( filter ) => {
+            assert(
+              filter.include.exists( _.toList === List( SlackConversationType.PUBLIC, SlackConversationType.MPIM ) )
+            )
+
+            val encodedJson = convList.asJson.printWith( SlackCirceJsonSettings.printer )
+            assert( encodedJson.contains( """"include":["public","mpim"]""" ) )
+          }
+          case _ => fail()
+        }
+
       }
       case Left( err ) => fail( err )
     }
