@@ -36,5 +36,8 @@ object SlackApiClientBackend {
    */
   type SttpBackendType[F[_]] = SttpBackend[F, Nothing, NothingT]
 
+  /**
+   * SlackApiClient backend kind requirements
+   */
   type BackendType[F[_]] = MonadError[F, Throwable]
 }
