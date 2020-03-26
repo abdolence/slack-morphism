@@ -1313,17 +1313,17 @@ package object codecs {
     implicit val decoderSlackApiChatUpdateResponse: Decoder[SlackApiChatUpdateResponse] =
       deriveDecoder[SlackApiChatUpdateResponse]
 
-    implicit val encoderSlackApiPostEventReply: Encoder.AsObject[SlackApiPostEventReply] =
-      deriveEncoder[SlackApiPostEventReply]
+    implicit val encoderSlackApiPostEventReply: Encoder.AsObject[SlackApiEventMessageReply] =
+      deriveEncoder[SlackApiEventMessageReply]
 
-    implicit val decoderSlackApiPostEventReply: Decoder[SlackApiPostEventReply] =
-      deriveDecoder[SlackApiPostEventReply]
+    implicit val decoderSlackApiPostEventReply: Decoder[SlackApiEventMessageReply] =
+      deriveDecoder[SlackApiEventMessageReply]
 
-    implicit val encoderSlackApiPostEventReplyResponse: Encoder.AsObject[SlackApiPostEventReplyResponse] =
-      deriveEncoder[SlackApiPostEventReplyResponse]
+    implicit val encoderSlackApiPostEventReplyResponse: Encoder.AsObject[SlackApiEventMessageReplyResponse] =
+      deriveEncoder[SlackApiEventMessageReplyResponse]
 
-    implicit val decoderSlackApiPostEventReplyResponse: Decoder[SlackApiPostEventReplyResponse] =
-      deriveDecoder[SlackApiPostEventReplyResponse]
+    implicit val decoderSlackApiPostEventReplyResponse: Decoder[SlackApiEventMessageReplyResponse] =
+      deriveDecoder[SlackApiEventMessageReplyResponse]
 
     implicit val encoderSlackApiPostWebHookRequest: Encoder.AsObject[SlackApiPostWebHookRequest] =
       deriveEncoder[SlackApiPostWebHookRequest]

@@ -49,23 +49,25 @@ and you can decode all of the Slack Events like:
 
 ## Reply to Slack Events using response_url
 
-There are some Slack events that provide you a response_url 
-to post a message back using the specified url from those events.
+There are some Slack events that provide you a response_url, and you can 
+post a message back using the specified url from those events.
 
-To help with these scenarios, you can use `SlackApiClient.chat.postReply()`, 
+To help with these scenarios, you can use `SlackApiClient.events.reply()`, 
 which doesn't require any tokens to work:
 
 ```
-client.chat
-    .postEventReply(
+client.events
+    .reply(
       response_url = response_url,
-      reply = SlackApiPostEventReply(
+      reply = SlackApiEventMessageReply(
         text = template.renderPlainText(),
         blocks = template.renderBlocks(),
         response_type = Some( SlackResponseTypes.EPHEMERAL )
       )
     )
 ```
+
+To find out how to create a SlackApiClient instance [read this](web-api/make-web-api-calls).
 
 ## Slack events signatures verifier
 

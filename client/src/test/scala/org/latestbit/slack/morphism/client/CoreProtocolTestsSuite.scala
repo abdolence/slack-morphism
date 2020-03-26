@@ -21,7 +21,6 @@ package org.latestbit.slack.morphism.client
 import java.time.Instant
 
 import cats.instances.future._
-
 import cats.data.EitherT
 import io.circe._
 import io.circe.syntax._
@@ -31,7 +30,7 @@ import org.latestbit.slack.morphism.client.reqresp.channels._
 import org.latestbit.slack.morphism.client.reqresp.chat._
 import org.latestbit.slack.morphism.client.reqresp.test._
 import org.latestbit.slack.morphism.common._
-import org.latestbit.slack.morphism.events.SlackUserMessage
+import org.latestbit.slack.morphism.events.{ SlackApiEventMessageReply, SlackUserMessage }
 import org.scalatest.flatspec.AsyncFlatSpec
 import sttp.client.Response
 import sttp.client.testing.SttpBackendStub
@@ -166,7 +165,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
 
   it should "able to post event replies using response_url without tokens" in {
 
-    val testReply = SlackApiPostEventReply(
+    val testReply = SlackApiEventMessageReply(
       text = "hey"
     )
 
@@ -183,8 +182,8 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
 
     val slackApiClient = new SlackApiClient()
 
-    slackApiClient.chat
-      .postEventReply(
+    slackApiClient.events
+      .reply(
         "https://example.net/some-response-url",
         testReply
       )

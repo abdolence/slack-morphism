@@ -45,7 +45,8 @@ class SlackApiClientT[F[_] : SlackApiClientBackend.BackendType](
     with SlackApiReactionsClient[F]
     with SlackApiTeamClient[F]
     with SlackApiUsersClient[F]
-    with SlackApiViewsClient[F] {
+    with SlackApiViewsClient[F]
+    with SlackApiEventsCallbackClient[F] {
 
   /**
    * Release all resources allocated by a client.

@@ -21,10 +21,11 @@ package org.latestbit.slack.morphism.client.impl
 import cats.implicits._
 import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client._
-import org.latestbit.slack.morphism.client.reqresp.chat._
+import org.latestbit.slack.morphism.client.reqresp.chat.{ SlackApiPostEventReplyResponse, _ }
 import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
 import sttp.client._
 import org.latestbit.slack.morphism.codecs.implicits._
+import org.latestbit.slack.morphism.events.SlackApiEventMessageReplyResponse
 
 /**
  * Support for Slack Chat API methods
@@ -151,13 +152,14 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
      * @param response_url a url from Slack Event
      * @param reply reply to an event
      */
+    @deprecated( "Use client.events.reply instead", "1.2.4" )
     def postEventReply( response_url: String, reply: SlackApiPostEventReply )(
         implicit backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiPostEventReplyResponse]] = {
 
       sendSlackRequest[SlackApiPostEventReplyResponse](
         encodePostBody( createSlackHttpApiRequest(), reply ).post( uri"${response_url}" )
-      ).map( handleSlackEmptyRes( SlackApiPostEventReplyResponse() ) )
+      ).map( handleSlackEmptyRes( SlackApiEventMessageReplyResponse() ) )
     }
 
     /**

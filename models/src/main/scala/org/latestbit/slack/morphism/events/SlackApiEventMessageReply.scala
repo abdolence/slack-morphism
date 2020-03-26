@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Abdulla Abdurakhmanov (abdulla@latestbit.com)
+ * Copyright 2020 Abdulla Abdurakhmanov (abdulla@latestbit.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.reqresp.chat
+package org.latestbit.slack.morphism.events
 
 import org.latestbit.slack.morphism.messages.{ SlackBlock, SlackMessage }
 
 /**
  * An event reply message using response_url
  */
-case class SlackApiPostEventReply(
+case class SlackApiEventMessageReply(
     text: String,
     blocks: Option[List[SlackBlock]] = None,
     response_type: Option[String] = None,
@@ -34,7 +34,7 @@ case class SlackApiPostEventReply(
 /**
  * Response for posting event reply
  */
-case class SlackApiPostEventReplyResponse(
+case class SlackApiEventMessageReplyResponse(
     channel: Option[String] = None,
     message: Option[SlackMessage] = None
 )
