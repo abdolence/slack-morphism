@@ -79,6 +79,18 @@ case class SlackInteractionMessageActionEvent(
 ) extends SlackInteractionEvent
 
 /**
+ * https://api.slack.com/reference/interaction-payloads/shortcuts
+ */
+@JsonAdt( "shortcut" )
+case class SlackInteractionShortcutEvent(
+    override val team: SlackBasicTeamInfo,
+    user: SlackBasicUserInfo,
+    callback_id: String,
+    trigger_id: String,
+    actions: Option[List[SlackInteractionActionInfo]] = None
+) extends SlackInteractionEvent
+
+/**
  * https://api.slack.com/reference/interaction-payloads/views
  */
 @JsonAdt( "view_submission" )

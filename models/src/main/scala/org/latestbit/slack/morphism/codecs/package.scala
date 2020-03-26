@@ -906,6 +906,12 @@ package object codecs {
     implicit val decoderSlackInteractionMessageActionEvent: Decoder[SlackInteractionMessageActionEvent] =
       deriveDecoder[SlackInteractionMessageActionEvent]
 
+    implicit val encoderSlackInteractionShortcutEvent: Encoder.AsObject[SlackInteractionShortcutEvent] =
+      deriveEncoder[SlackInteractionShortcutEvent]
+
+    implicit val decoderSlackInteractionShortcutEvent: Decoder[SlackInteractionShortcutEvent] =
+      deriveDecoder[SlackInteractionShortcutEvent]
+
     implicit val encoderSlackInteractionDialogueSubmissionEvent
         : Encoder.AsObject[SlackInteractionDialogueSubmissionEvent] =
       deriveEncoder[SlackInteractionDialogueSubmissionEvent]
