@@ -52,7 +52,7 @@ class SlackPushEventsRoutes[F[_] : Sync](
     def onPushEvent( event: SlackPushEvent ) = event match {
       case urlVerEv: SlackUrlVerificationEvent => {
         logger.info( s"Received a challenge request:\n${urlVerEv.challenge}" )
-        Ok()
+        Ok( urlVerEv.challenge )
       }
       case callbackEvent: SlackEventCallback => {
         extractSlackWorkspaceToken[F]( callbackEvent.team_id ) { implicit slackApiToken =>
