@@ -581,6 +581,12 @@ package object codecs {
     implicit val decoderSlackBotAddMessage: Decoder[SlackBotAddMessage] =
       deriveDecoder[SlackBotAddMessage]
 
+    implicit val encoderSlackBotRemoveMessage: Encoder.AsObject[SlackBotRemoveMessage] =
+      deriveEncoder[SlackBotRemoveMessage]
+
+    implicit val decoderSlackBotRemoveMessage: Decoder[SlackBotRemoveMessage] =
+      deriveDecoder[SlackBotRemoveMessage]
+
     implicit val encoderSlackChannelTopicMessage: Encoder.AsObject[SlackChannelTopicMessage] =
       deriveEncoder[SlackChannelTopicMessage]
 

@@ -32,7 +32,7 @@ import org.latestbit.slack.morphism.views.SlackModalView
 
 class SlackApiRawJsonDecoderTestsSuite extends AnyFlatSpec with CirceCodecs {
 
-  "Circe codecs" should "be able to decode a channel history with channel_joined, channel_topic, channel_purpose, channel_name, bot_add messages" in {
+  "Circe codecs" should "be able to decode a channel history with different message subtypes" in {
 
     val jsonResponse =
       """
@@ -80,7 +80,24 @@ class SlackApiRawJsonDecoderTestsSuite extends AnyFlatSpec with CirceCodecs {
             |            "text": "added an integration to this channel: <https://org.slack.com/services/bot-id|bot-name>",
             |            "bot_id": "bot-id",
             |            "bot_link": "<https://org.slack.com/services/bot-id|bot-name>"
-            |        }
+            |        },
+            |        {
+            |            "type": "message",
+            |            "subtype": "bot_remove",
+            |            "ts": "1584537248.001900",
+            |            "user": "UID",
+            |            "text": "removed an integration from this channel: <https://org.slack.com/services/bot-id|bot-name>",
+            |            "bot_id": "bot-id",
+            |            "bot_link": "<https://org.slack.com/services/bot-id|bot-name>"
+            |        },
+            |        {
+            |            "type": "message",
+            |            "subtype": "channel_join",
+            |            "ts": "1585252947.004300",
+            |            "user": "UID1",
+            |            "text": "<@UID> has joined the channel",
+            |            "inviter": "UID2"
+            |        }        
             |  ],
             |  "has_more": true,
             |  "pin_count": 0,
@@ -125,6 +142,19 @@ class SlackApiRawJsonDecoderTestsSuite extends AnyFlatSpec with CirceCodecs {
           user = "UID",
           bot_id = Some( "bot-id" ),
           bot_link = Some( "<https://org.slack.com/services/bot-id|bot-name>" )
+        ),
+        SlackBotRemoveMessage(
+          ts = "1584537248.001900",
+          text = Some( "removed an integration from this channel: <https://org.slack.com/services/bot-id|bot-name>" ),
+          user = "UID",
+          bot_id = Some( "bot-id" ),
+          bot_link = Some( "<https://org.slack.com/services/bot-id|bot-name>" )
+        ),
+        SlackChannelJoinMessage(
+          ts = "1585252947.004300",
+          text = Some( "<@UID> has joined the channel" ),
+          user = "UID1",
+          inviter = Some( "UID2" )
         )
       ),
       has_more = Some( true ),
