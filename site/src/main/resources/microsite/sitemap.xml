@@ -10,7 +10,32 @@
         <priority>0.8</priority>
     </url>
     <url>
+        <loc>https://slack.abdolence.dev/docs/getting-started</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
         <loc>https://slack.abdolence.dev/docs/web-api</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://slack.abdolence.dev/docs/web-api/make-web-api-calls</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://slack.abdolence.dev/docs/web-api/pagination</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://slack.abdolence.dev/docs/web-api/incoming-webhooks</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://slack.abdolence.dev/docs/web-api/rate-control</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
@@ -26,6 +51,11 @@
     </url>
     <url>
         <loc>https://slack.abdolence.dev/docs/akka-http</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://slack.abdolence.dev/docs/http4s</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>

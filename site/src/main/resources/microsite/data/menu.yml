@@ -3,6 +3,10 @@ options:
     url: docs/index
     section: intro
 
+  - title: Getting Started
+    url: docs/getting-started
+    section: intro
+
   - title: Web API
     url: docs/web-api
     menu_section: webapi
