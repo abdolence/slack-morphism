@@ -19,7 +19,7 @@
 package org.latestbit.slack.morphism.examples.akka.routes
 
 import akka.actor.typed.ActorRef
-import akka.actor.typed.scaladsl.ActorContext
+import akka.actor.typed.scaladsl._
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server._
 import akka.stream.typed.scaladsl.ActorMaterializer
@@ -86,6 +86,11 @@ class SlackInteractionEventsRoutes(
     }
   }
 
+  def removeTokens( workspaceId: String, re: SlackTokensRevokedEvent ) = {
+    slackTokensDb ! SlackTokensDb.RemoveTokens( workspaceId, re.tokens.oauth.toSet ++ re.tokens.bot.toSet )
+    complete( StatusCodes.OK )
+  }
+
   def onEvent( event: SlackInteractionEvent ): Route = {
     routeWithSlackApiToken( event.team.id ) { implicit slackApiToken =>
       event match {
@@ -108,6 +113,9 @@ class SlackInteractionEventsRoutes(
               ""
             )
           )
+        }
+        case removeToken: SlackTokensRevokedEvent => {
+          removeTokens( event.team.id, removeToken )
         }
         case interactionEvent: SlackInteractionEvent => {
           logger.warn( s"We don't handle this interaction in this example: ${interactionEvent}" )

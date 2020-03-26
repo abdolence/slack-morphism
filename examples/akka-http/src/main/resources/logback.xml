@@ -44,7 +44,6 @@
     <logger name="org.latestbit" level="TRACE">
     </logger>
 
-
     <root level="INFO">
         <appender-ref ref="STDERR"/>
         <appender-ref ref="STDOUT"/>

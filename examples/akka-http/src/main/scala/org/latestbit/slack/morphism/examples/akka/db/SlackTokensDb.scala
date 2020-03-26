@@ -21,7 +21,7 @@ package org.latestbit.slack.morphism.examples.akka.db
 import akka.actor.typed._
 import akka.actor.typed.scaladsl._
 import org.latestbit.slack.morphism.examples.akka.AppConfig
-import swaydb._
+import swaydb.{ Set => _, _ }
 import swaydb.serializers.Default._
 import akka.actor.typed.scaladsl.adapter._
 import com.typesafe.scalalogging._
@@ -54,7 +54,7 @@ object SlackTokensDb extends StrictLogging {
   case class OpenDb( config: AppConfig ) extends Command
   case class Close() extends Command
   case class InsertToken( teamId: String, tokenRecord: TokenRecord ) extends Command
-  case class RemoveToken( teamId: String, userId: String ) extends Command
+  case class RemoveTokens( teamId: String, users: Set[String] ) extends Command
   case class ReadTokens( teamId: String, ref: akka.actor.typed.ActorRef[Option[TeamTokensRecord]] ) extends Command
 
   type FunctionType = PureFunction[String, TeamTokensRecord, Apply.Map[TeamTokensRecord]]
@@ -108,7 +108,7 @@ object SlackTokensDb extends StrictLogging {
           Behavior.same
         }
 
-        case RemoveToken( teamId: String, userId: String ) => {
+        case RemoveTokens( teamId: String, users: Set[String] ) => {
           swayMap.foreach { swayMap =>
             swayMap
               .get( key = teamId )
@@ -116,7 +116,7 @@ object SlackTokensDb extends StrictLogging {
                 swayMap.put(
                   teamId,
                   record.copy(
-                    tokens = record.tokens.filterNot( _.userId == userId )
+                    tokens = record.tokens.filterNot( token => users.contains( token.userId ) )
                   )
                 )
               } )

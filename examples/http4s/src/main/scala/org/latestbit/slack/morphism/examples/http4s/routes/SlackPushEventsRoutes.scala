@@ -73,6 +73,10 @@ class SlackPushEventsRoutes[F[_] : Sync](
               sendReplyToMsg( msg )
             }
 
+            case removeToken: SlackTokensRevokedEvent => {
+              removeTokens( callbackEvent.team_id, removeToken )
+            }
+
             case unknownBody: SlackEventCallbackBody => {
               logger.warn( s"We don't handle this callback event we received in this example: ${unknownBody}" )
               Ok()
@@ -189,6 +193,10 @@ class SlackPushEventsRoutes[F[_] : Sync](
           }
         }
 
+    }
+
+    def removeTokens( workspaceId: String, re: SlackTokensRevokedEvent ): F[Response[F]] = {
+      tokensDb.removeTokens( workspaceId, re.tokens.oauth.toSet ++ re.tokens.bot.toSet ).flatMap( _ => Ok() )
     }
 
     HttpRoutes.of[F] {
