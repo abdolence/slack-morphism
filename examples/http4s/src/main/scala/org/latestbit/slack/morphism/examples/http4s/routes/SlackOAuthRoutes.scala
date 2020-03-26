@@ -89,7 +89,7 @@ class SlackOAuthRoutes[F[_] : Sync](
               }
               .value
               .flatMap {
-                case Right( _ ) => Ok()
+                case Right( _ ) => Ok( "Installed" )
                 case Left( err ) => {
                   logger.info( s"OAuth access error : ${err}" )
                   InternalServerError()

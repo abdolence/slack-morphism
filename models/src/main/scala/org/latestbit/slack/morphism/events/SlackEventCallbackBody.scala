@@ -186,10 +186,12 @@ case class SlackBotAddMessage(
     replies: Option[List[SlackMessageReplyInfo]] = None,
     override val text: Option[String] = None,
     override val blocks: Option[List[SlackBlock]] = None,
+    override val hidden: Option[Boolean] = None,
     user: String,
     bot_id: Option[String] = None,
     bot_link: Option[String] = None
-) extends SlackMessage {
+) extends SlackMessage
+    with SlackMessageEvent {
   override val thread_ts: Option[String] = None
 }
 
