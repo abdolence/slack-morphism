@@ -20,7 +20,6 @@ package org.latestbit.slack.morphism.client.impl
 
 import java.io.IOException
 
-import cats.MonadError
 import cats.implicits._
 import io.circe._
 import io.circe.parser._
