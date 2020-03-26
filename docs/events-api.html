@@ -80,6 +80,9 @@
 			 
 			<div class="sidebar-nav-item  "><a href="/docs/akka-http" title="Akka HTTP" class="">Akka HTTP</a>
 			</div>
+			 
+			<div class="sidebar-nav-item  "><a href="/docs/http4s" title="http4s" class="">http4s</a>
+			</div>
 			
 		</div>
 	</div>
@@ -127,7 +130,7 @@
 <p>Because Slack Morphism is a Web-framework agnostic, you are free to choose any you’re familiar with.</p>
 
 <p>However, to simplify understanding and show how to use it, Slack Morphism provides 
-<a href="akka-http">a full-featured bot for Akka HTTP</a>, which implements Events API with OAuth.</p>
+full-featured bots for <a href="akka-http">Akka HTTP</a> and <a href="http4s">http4s</a>, which implement Events API with OAuth.</p>
 
 <h2 id="slack-events-api-model">Slack Events API Model</h2>
 
@@ -178,7 +181,7 @@ which doesn’t require any tokens to work:</p>
     )
 </code></pre></div></div>
 
-<h2 id="slack-events-signature-verifier">Slack events signature verifier</h2>
+<h2 id="slack-events-signatures-verifier">Slack events signatures verifier</h2>
 
 <p>To verify requests from Slack using your signing secret, there is <a href="/api/org/latestbit/slack/morphism/events/signature/SlackEventSignatureVerifier.html">SlackEventSignatureVerifier</a>, 
 which provides you <code class="highlighter-rouge">verify()</code>:</p>

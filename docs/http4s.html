@@ -1,5 +1,5 @@
 <html>
-<head><title>Slack Morphism for Scala: Using Slack Morphism with Akka HTTP</title>
+<head><title>Slack Morphism for Scala: Using Slack Morphism with http4s</title>
 	<meta charset="utf-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -7,15 +7,15 @@
 	<meta name="description" content="Open Type-Safe Reactive Client with Blocks Templating for Slack"/>
 	<meta name="og:image" content="/img/poster.png"/>
 	<meta name="image" property="og:image" content="/img/poster.png"/>
-	<meta name="og:title" content="Slack Morphism for Scala: Using Slack Morphism with Akka HTTP"/>
+	<meta name="og:title" content="Slack Morphism for Scala: Using Slack Morphism with http4s"/>
 	<meta name="title" property="og:title"
-	      content="Slack Morphism for Scala: Using Slack Morphism with Akka HTTP"/>
+	      content="Slack Morphism for Scala: Using Slack Morphism with http4s"/>
 	<meta name="og:site_name" content="Slack Morphism for Scala"/>
 	<meta name="og:url" content="https://slack.abdolence.dev"/>
 	<meta name="og:type" content="website"/>
 	<meta name="og:description" content="Open Type-Safe Reactive Client with Blocks Templating for Slack"/>
 	<link rel="icon" type="image/png" href="/img/favicon.png"/>
-	<meta name="twitter:title" content="Slack Morphism for Scala: Using Slack Morphism with Akka HTTP"/>
+	<meta name="twitter:title" content="Slack Morphism for Scala: Using Slack Morphism with http4s"/>
 	<meta name="twitter:image" content="https://slack.abdolence.dev/img/poster.png"/>
 	<meta name="twitter:description" content="Open Type-Safe Reactive Client with Blocks Templating for Slack"/>
 	<meta name="twitter:card" content="summary_large_image"/>
@@ -78,10 +78,10 @@
 			<div class="sidebar-nav-item  "><a href="/docs/templating" title="Blocks Templating" class="">Blocks Templating</a>
 			</div>
 			 
-			<div class="sidebar-nav-item active "><a href="/docs/akka-http" title="Akka HTTP" class="active">Akka HTTP</a>
+			<div class="sidebar-nav-item  "><a href="/docs/akka-http" title="Akka HTTP" class="">Akka HTTP</a>
 			</div>
 			 
-			<div class="sidebar-nav-item  "><a href="/docs/http4s" title="http4s" class="">http4s</a>
+			<div class="sidebar-nav-item active "><a href="/docs/http4s" title="http4s" class="active">http4s</a>
 			</div>
 			
 		</div>
@@ -117,11 +117,11 @@
 		</div>
 		<div id="content" data-github-owner="abdolence" data-github-repo="slack-morphism">
 			<div class="content-wrapper">
-				<section><h1 id="using-slack-morphism-with-akka-http">Using Slack Morphism with Akka HTTP</h1>
+				<section><h1 id="using-slack-morphism-with-http4s">Using Slack Morphism with http4s</h1>
 
 <p>To show you a complete solution and give you a quick start, Slack Morphism provides 
 you a zero-code required and complete example of a Slack bot, 
-written with Slack Morphism and Akka Http.</p>
+written with Slack Morphism and <a href="https://http4s.org/">http4s</a>.</p>
 
 <h2 id="install-and-configure-a-slack-bot-from-scratch">Install and configure a Slack bot from scratch</h2>
 
@@ -167,7 +167,7 @@ and we will use this line further.</p>
 
 <ul>
   <li>Choose some directory and create your own Slack bot with <code class="highlighter-rouge">sbt</code> tool:
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sbt new abdolence/slack-morphism-akka-http.g8
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sbt new abdolence/slack-morphism-http4s.g8
 </code></pre></div>    </div>
     <p><img src="https://slack.abdolence.dev/img/create-sbt-bot-command.png" alt="sbt-example-command" /></p>
   </li>
@@ -238,7 +238,7 @@ If you all this correctly you should see something like this:</p>
 </code></pre></div></div>
 <p>in your browser and allow the installation.</p>
 
-<p>That’s it, you now have a working bot in your workspace written with Scala, Slack Morphism and Akka.
+<p>That’s it, you now have a working bot in your workspace written with Scala, Slack Morphism and http4s.
 Follow to the <code class="highlighter-rouge">Apps</code> section in your workspace. 
 You should see your app with its <code class="highlighter-rouge">Home tab</code> and try to send a message to it, 
 or click on buttons on messages and views.</p>
@@ -247,8 +247,8 @@ or click on buttons on messages and views.</p>
 <p>Now it is probably time to open a bot project in IDE to have deeper look how it works inside:</p>
 
 <ul>
-  <li>Akka HTTP routes are located in <code class="highlighter-rouge">routes</code> subpackage, where you can find an auxiliary trait
-<code class="highlighter-rouge">AkkaHttpServerRoutesSupport</code> that helps you to verify Slack Events signature 
+  <li>HTTP routes are located in <code class="highlighter-rouge">routes</code> subpackage, where you can find an auxiliary trait
+<code class="highlighter-rouge">SlackEventsMiddleware</code> that helps you to verify Slack Events signature and work with Events API
 and read tokens for workspace.</li>
   <li><code class="highlighter-rouge">SlackInteractionEventsRoutes</code> implements a handler for Slack Blocks Interactions Events (like clicking on buttons).</li>
   <li><code class="highlighter-rouge">SlackPushEventsRoutes</code> implements a handler for Slack Push Events (like incoming messages or opening tabs).</li>
@@ -259,8 +259,8 @@ and read tokens for workspace.</li>
 <ul>
   <li>This template uses an embedded database <a href="http://swaydb.io/">SwayDb</a> to store tokens. 
    For production environments, you should consider to use more appropriate solutions for your case.</li>
-  <li>This template doesn’t provide HTTPS configuration for Akka, which is described in detail <a href="https://doc.akka.io/docs/akka-http/current/server-side/server-https-support.html">here</a> 
-   or you should consider other HTTPS solutions (like reverse HTTP proxies).</li>
+  <li>This template doesn’t provide any kind of HTTPS. You should consider HTTPS solutions 
+   (like reverse HTTP proxies or using http4s configs).</li>
 </ul>
 
 </section>

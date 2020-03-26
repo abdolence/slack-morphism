@@ -80,6 +80,9 @@
 			 
 			<div class="sidebar-nav-item  "><a href="/docs/akka-http" title="Akka HTTP" class="">Akka HTTP</a>
 			</div>
+			 
+			<div class="sidebar-nav-item  "><a href="/docs/http4s" title="http4s" class="">http4s</a>
+			</div>
 			
 		</div>
 	</div>
@@ -119,7 +122,7 @@
 <h3 id="type-safety">Type-safety</h3>
 <p>Scala is a static-typed language, and Slack Morphism provides methods and models definitions for most of 
 the methods and structures of Slack Web/Events API.
-There is a <a href="Blocks DSL">well-typed DSL</a> to build your messages and views with Slack blocks safely as well.</p>
+There is a <a href="templating">well-typed DSL</a> to build your messages and views with Slack blocks safely as well.</p>
 
 <h3 id="easy-to-use">Easy to use</h3>
 <p>While Slack Morphism uses some of FP paradigms and mostly avoids imperative style and mutable states internally, 
@@ -134,8 +137,11 @@ Slack Morphism doesn’t have any dependencies to any particular HTTP client lib
 and uses <a href="https://github.com/softwaremill/sttp">sttp library</a> to give you choice.</p>
 
 <p>However, it would be an incomplete solution to provide you only core components, and for a quick start, 
-there is a <a href="https://github.com/abdolence/slack-morphism-akka-http.g8">full-featured giter8 template and example</a> 
-of a Slack Bot built with Slack Morphism and Akka Http.</p>
+there are full-featured giter8 templates and examples for:</p>
+<ul>
+  <li><a href="https://github.com/abdolence/slack-morphism-akka-http.g8">Slack bot with Akka HTTP</a></li>
+  <li><a href="https://github.com/abdolence/slack-morphism-http4s.g8">Slack bot with http4s</a></li>
+</ul>
 
 <h3 id="non-blocking-and-reactive">Non-blocking and Reactive</h3>
 <p>All of the Slack Morphism API methods available in a non-blocking manner, and 
@@ -149,14 +155,20 @@ which follows the Slack API rate limits and tiers (or your custom configuration)
 <h2 id="getting-started">Getting Started</h2>
 <p>Add the following to your <code class="highlighter-rouge">build.sbt</code>:</p>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.latestbit"</span> <span class="o">%%</span> <span class="s">"slack-morphism-client"</span> <span class="o">%</span> <span class="s">"1.2.2"</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.latestbit"</span> <span class="o">%%</span> <span class="s">"slack-morphism-client"</span> <span class="o">%</span> <span class="s">"1.2.3"</span>
 </code></pre></div></div>
 
-<p>or if you’d like to full-featured and ready to use Slack bot, which uses Akka Http, use this:</p>
+<p>or if you’d like to full-featured and ready to use Slack bots, use this:</p>
 
+<h3 id="akka-http">Akka HTTP</h3>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sbt new abdolence/slack-morphism-akka-http.g8
 </code></pre></div></div>
 <p>Read more about this template <a href="akka-http">here</a>.</p>
+
+<h3 id="http4s">http4s</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sbt new abdolence/slack-morphism-http4s.g8
+</code></pre></div></div>
+<p>Read more about this template <a href="http4s">here</a>.</p>
 
 <h2 id="limitations">Limitations</h2>
 
