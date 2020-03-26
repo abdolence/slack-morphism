@@ -167,22 +167,24 @@ full-featured bots for <a href="akka-http">Akka HTTP</a> and <a href="http4s">ht
 
 <h2 id="reply-to-slack-events-using-response_url">Reply to Slack Events using response_url</h2>
 
-<p>There are some Slack events that provide you a response_url 
-to post a message back using the specified url from those events.</p>
+<p>There are some Slack events that provide you a response_url, and you can 
+post a message back using the specified url from those events.</p>
 
-<p>To help with these scenarios, you can use <code class="highlighter-rouge">SlackApiClient.chat.postReply()</code>, 
+<p>To help with these scenarios, you can use <code class="highlighter-rouge">SlackApiClient.events.reply()</code>, 
 which doesn’t require any tokens to work:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>client.chat
-    .postEventReply(
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>client.events
+    .reply(
       response_url = response_url,
-      reply = SlackApiPostEventReply(
+      reply = SlackApiEventMessageReply(
         text = template.renderPlainText(),
         blocks = template.renderBlocks(),
         response_type = Some( SlackResponseTypes.EPHEMERAL )
       )
     )
 </code></pre></div></div>
+
+<p>To find out how to create a SlackApiClient instance <a href="web-api/make-web-api-calls">read this</a>.</p>
 
 <h2 id="slack-events-signatures-verifier">Slack events signatures verifier</h2>
 
