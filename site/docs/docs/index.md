@@ -28,6 +28,8 @@ there are full-featured giter8 templates and examples for:
 which is implemented in a conservative way with classic Scala Futures.
 * [Slack bot with http4s](https://github.com/abdolence/slack-morphism-http4s.g8), 
 which is implemented in a pure functional way with cats-effect effects and FS2 streams.
+
+You can browse source codes of examples (without installing them) [here](https://github.com/abdolence/slack-morphism/tree/master/examples).
  
 ### Non-blocking and Reactive
 All of the Slack Morphism API methods available in a non-blocking manner, and 
