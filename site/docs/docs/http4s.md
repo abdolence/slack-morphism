@@ -49,7 +49,7 @@ and we will use this line further.
 ```bash
 sbt new abdolence/slack-morphism-http4s.g8
 ```
-![sbt-example-command](https://slack.abdolence.dev/img/create-sbt-bot-command.png)
+![sbt-example-command](https://slack.abdolence.dev/img/create-sbt-bot-command-http4s.png)
 
 * Compile and run it with `sbt`:
 ```bash
