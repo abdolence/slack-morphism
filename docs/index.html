@@ -57,6 +57,9 @@
 			<div class="sidebar-nav-item  "><a href="/docs/index" title="Intro" class="">Intro</a>
 			</div>
 			 
+			<div class="sidebar-nav-item  "><a href="/docs/getting-started" title="Getting Started" class="">Getting Started</a>
+			</div>
+			 
 			<div class="sidebar-nav-item  "><a href="/docs/web-api" title="Web API" class="drop-nested">Web API</a><i
 						class="fa fa-angle-right"></i>
 				<div class="sub-section"> <a href="/docs/web-api/make-web-api-calls"
@@ -119,18 +122,18 @@
 			<div class="content-wrapper">
 				<section><h1 id="intro-and-motivations">Intro and motivations</h1>
 
-<h3 id="type-safety">Type-safety</h3>
+<h2 id="type-safety">Type-safety</h2>
 <p>Scala is a static-typed language, and Slack Morphism provides methods and models definitions for most of 
 the methods and structures of Slack Web/Events API.
 There is a <a href="templating">well-typed DSL</a> to build your messages and views with Slack blocks safely as well.</p>
 
-<h3 id="easy-to-use">Easy to use</h3>
+<h2 id="easy-to-use">Easy to use</h2>
 <p>While Slack Morphism uses some of FP paradigms and mostly avoids imperative style and mutable states internally, 
 its API doesn’t expose your app anything that might make you learn additional advanced frameworks (like ZIO, cats-effects, and others).
 It provides you with a simple API with the support for Scala Future, Option, Either, etc.
 If you’re into pure functional concepts, there is support for cats-effect IO as well.</p>
 
-<h3 id="frameworks-agnostic">Frameworks-agnostic</h3>
+<h2 id="frameworks-agnostic">Frameworks-agnostic</h2>
 <p>Slack Morphism core library intentionally avoid dependencies to any additional Web-frameworks, so 
 you free to use any framework you’re familiar with.
 Slack Morphism doesn’t have any dependencies to any particular HTTP client library either 
@@ -147,34 +150,16 @@ which is implemented in a pure functional way with cats-effect effects and FS2 s
 
 <p>You can browse source codes of examples (without installing them) <a href="https://github.com/abdolence/slack-morphism/tree/master/examples">here</a>.</p>
 
-<h3 id="non-blocking-and-reactive">Non-blocking and Reactive</h3>
+<h2 id="non-blocking-and-reactive">Non-blocking and Reactive</h2>
 <p>All of the Slack Morphism API methods available in a non-blocking manner, and 
 some of them (e.g. returning Slack channel history) also have support for a reactive Publisher,
  if you’re familiar with Reactive Streams (and using related frameworks).</p>
 
-<h3 id="rate-controlling-and-throttling-access-to-slack-web-api">Rate controlling and throttling access to Slack Web API</h3>
+<h2 id="rate-controlling-and-throttling-access-to-slack-web-api">Rate controlling and throttling access to Slack Web API</h2>
 <p>There is ready to use a rate control/throttling implementation, 
 which follows the Slack API rate limits and tiers (or your custom configuration).</p>
 
-<h2 id="getting-started">Getting Started</h2>
-<p>Add the following to your <code class="highlighter-rouge">build.sbt</code>:</p>
-
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.latestbit"</span> <span class="o">%%</span> <span class="s">"slack-morphism-client"</span> <span class="o">%</span> <span class="s">"1.2.3"</span>
-</code></pre></div></div>
-
-<p>or if you’d like to full-featured and ready to use Slack bots, use this:</p>
-
-<h3 id="akka-http">Akka HTTP</h3>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sbt new abdolence/slack-morphism-akka-http.g8
-</code></pre></div></div>
-<p>Read more about this template <a href="akka-http">here</a>.</p>
-
-<h3 id="http4s">http4s</h3>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sbt new abdolence/slack-morphism-http4s.g8
-</code></pre></div></div>
-<p>Read more about this template <a href="http4s">here</a>.</p>
-
-<h2 id="limitations">Limitations</h2>
+<h1 id="limitations">Limitations</h1>
 
 <p>Slack Morphism doesn’t provide:</p>
 <ul>
