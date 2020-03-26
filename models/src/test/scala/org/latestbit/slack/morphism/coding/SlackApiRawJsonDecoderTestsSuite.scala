@@ -298,7 +298,6 @@ class SlackApiRawJsonDecoderTestsSuite extends AnyFlatSpec with CirceCodecs {
         fail()
       }
       case Left( err ) => {
-        println( err )
         assert( err.isInstanceOf[DecodingFailure] )
       }
     }

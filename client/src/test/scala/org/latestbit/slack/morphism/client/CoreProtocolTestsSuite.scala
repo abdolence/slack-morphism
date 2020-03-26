@@ -28,9 +28,10 @@ import org.asynchttpclient.util.HttpConstants.Methods
 import org.latestbit.slack.morphism.codecs.implicits._
 import org.latestbit.slack.morphism.client.reqresp.channels._
 import org.latestbit.slack.morphism.client.reqresp.chat._
+import org.latestbit.slack.morphism.client.reqresp.events.SlackApiEventMessageReply
 import org.latestbit.slack.morphism.client.reqresp.test._
 import org.latestbit.slack.morphism.common._
-import org.latestbit.slack.morphism.events.{ SlackApiEventMessageReply, SlackUserMessage }
+import org.latestbit.slack.morphism.events.SlackUserMessage
 import org.scalatest.flatspec.AsyncFlatSpec
 import sttp.client.Response
 import sttp.client.testing.SttpBackendStub

@@ -16,9 +16,9 @@
  *
  */
 
-package org.latestbit.slack.morphism.events
+package org.latestbit.slack.morphism.client.reqresp.events
 
-import org.latestbit.slack.morphism.messages.SlackBlock
+import org.latestbit.slack.morphism.messages.{ SlackBlock, SlackMessage }
 
 /**
  * An event reply message using response_url

@@ -18,13 +18,19 @@
 
 package org.latestbit.slack.morphism.client.reqresp
 
-import org.latestbit.slack.morphism.events.{ SlackApiEventMessageReply, SlackApiEventMessageReplyResponse }
+import org.latestbit.slack.morphism.client.reqresp.events._
 
 package object chat {
 
-  @deprecated( "Use org.latestbit.slack.morphism.events.SlackApiEventMessageReply instead", "1.2.4" )
+  @deprecated(
+    "Use org.latestbit.slack.morphism.client.reqresp.events.SlackApiEventMessageReply instead",
+    "1.2.4"
+  )
   type SlackApiPostEventReply = SlackApiEventMessageReply
 
-  @deprecated( "Use org.latestbit.slack.morphism.events.SlackApiEventMessageReplyResponse instead", "1.2.4" )
+  @deprecated(
+    "Use org.latestbit.slack.morphism.client.reqresp.events.SlackApiEventMessageReplyResponse instead",
+    "1.2.4"
+  )
   type SlackApiPostEventReplyResponse = SlackApiEventMessageReplyResponse
 }

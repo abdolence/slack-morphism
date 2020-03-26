@@ -22,10 +22,10 @@ import cats.implicits._
 import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.reqresp.chat.{ SlackApiPostEventReplyResponse, _ }
+import org.latestbit.slack.morphism.client.reqresp.events.SlackApiEventMessageReplyResponse
 import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
 import sttp.client._
 import org.latestbit.slack.morphism.codecs.implicits._
-import org.latestbit.slack.morphism.events.SlackApiEventMessageReplyResponse
 
 /**
  * Support for Slack Chat API methods

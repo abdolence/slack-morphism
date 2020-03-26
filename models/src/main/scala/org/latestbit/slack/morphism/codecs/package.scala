@@ -37,6 +37,10 @@ import org.latestbit.slack.morphism.client.reqresp.chat._
 import org.latestbit.slack.morphism.client.reqresp.conversations._
 import org.latestbit.slack.morphism.client.reqresp.dnd._
 import org.latestbit.slack.morphism.client.reqresp.emoji._
+import org.latestbit.slack.morphism.client.reqresp.events.{
+  SlackApiEventMessageReply,
+  SlackApiEventMessageReplyResponse
+}
 import org.latestbit.slack.morphism.client.reqresp.im._
 import org.latestbit.slack.morphism.client.reqresp.interaction._
 import org.latestbit.slack.morphism.client.reqresp.internal._
