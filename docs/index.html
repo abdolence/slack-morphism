@@ -139,8 +139,10 @@ and uses <a href="https://github.com/softwaremill/sttp">sttp library</a> to give
 <p>However, it would be an incomplete solution to provide you only core components, and for a quick start, 
 there are full-featured giter8 templates and examples for:</p>
 <ul>
-  <li><a href="https://github.com/abdolence/slack-morphism-akka-http.g8">Slack bot with Akka HTTP</a></li>
-  <li><a href="https://github.com/abdolence/slack-morphism-http4s.g8">Slack bot with http4s</a></li>
+  <li><a href="https://github.com/abdolence/slack-morphism-akka-http.g8">Slack bot with Akka HTTP</a>, 
+which is implemented in a conservative way with classic Scala Futures.</li>
+  <li><a href="https://github.com/abdolence/slack-morphism-http4s.g8">Slack bot with http4s</a>, 
+which is implemented in a pure functional way with cats-effect effects and FS2 streams.</li>
 </ul>
 
 <h3 id="non-blocking-and-reactive">Non-blocking and Reactive</h3>
