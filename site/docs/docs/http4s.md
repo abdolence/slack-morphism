@@ -1,13 +1,13 @@
 ---
 layout: edocs
-title: Using Slack Morphism with Akka HTTP
-permalink: docs/akka-http
+title: Using Slack Morphism with http4s
+permalink: docs/http4s
 ---
-# Using Slack Morphism with Akka HTTP
+# Using Slack Morphism with http4s
 
 To show you a complete solution and give you a quick start, Slack Morphism provides 
 you a zero-code required and complete example of a Slack bot, 
-written with Slack Morphism and Akka Http.
+written with Slack Morphism and [http4s](https://http4s.org/).
 
 ## Install and configure a Slack bot from scratch
 
@@ -47,7 +47,7 @@ and we will use this line further.
 
 * Choose some directory and create your own Slack bot with `sbt` tool: 
 ```bash
-sbt new abdolence/slack-morphism-akka-http.g8
+sbt new abdolence/slack-morphism-http4s.g8
 ```
 ![sbt-example-command](https://slack.abdolence.dev/img/create-sbt-bot-command.png)
 
@@ -104,7 +104,7 @@ http://localhost:8080/auth/install
 ```
 in your browser and allow the installation.
 
-That's it, you now have a working bot in your workspace written with Scala, Slack Morphism and Akka.
+That's it, you now have a working bot in your workspace written with Scala, Slack Morphism and http4s.
 Follow to the `Apps` section in your workspace. 
 You should see your app with its `Home tab` and try to send a message to it, 
 or click on buttons on messages and views.
@@ -112,8 +112,8 @@ or click on buttons on messages and views.
 ## The code structure overview
 Now it is probably time to open a bot project in IDE to have deeper look how it works inside:
 
-* Akka HTTP routes are located in `routes` subpackage, where you can find an auxiliary trait
-`AkkaHttpServerRoutesSupport` that helps you to verify Slack Events signature 
+* HTTP routes are located in `routes` subpackage, where you can find an auxiliary trait
+`SlackEventsMiddleware` that helps you to verify Slack Events signature and work with Events API
 and read tokens for workspace.
 * `SlackInteractionEventsRoutes` implements a handler for Slack Blocks Interactions Events (like clicking on buttons).
 * `SlackPushEventsRoutes` implements a handler for Slack Push Events (like incoming messages or opening tabs).
@@ -122,6 +122,6 @@ and read tokens for workspace.
 For simplicity sake:
    * This template uses an embedded database [SwayDb](http://swaydb.io/) to store tokens. 
    For production environments, you should consider to use more appropriate solutions for your case.   
-   * This template doesn't provide HTTPS configuration for Akka, which is described in detail [here](https://doc.akka.io/docs/akka-http/current/server-side/server-https-support.html) 
-   or you should consider other HTTPS solutions (like reverse HTTP proxies).
+   * This template doesn't provide any kind of HTTPS. You should consider HTTPS solutions 
+   (like reverse HTTP proxies or using http4s configs).
    

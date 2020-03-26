@@ -14,7 +14,7 @@ To help you implement [Slack Events API](https://api.slack.com/events-api) liste
 Because Slack Morphism is a Web-framework agnostic, you are free to choose any you're familiar with.
 
 However, to simplify understanding and show how to use it, Slack Morphism provides 
-[a full-featured bot for Akka HTTP](akka-http), which implements Events API with OAuth.
+full-featured bots for [Akka HTTP](akka-http) and [http4s](http4s), which implement Events API with OAuth.
 
 ## Slack Events API Model
 
@@ -67,7 +67,7 @@ client.chat
     )
 ```
 
-## Slack events signature verifier
+## Slack events signatures verifier
 
 To verify requests from Slack using your signing secret, there is [SlackEventSignatureVerifier](/api/org/latestbit/slack/morphism/events/signature/SlackEventSignatureVerifier.html), 
 which provides you `verify()`:

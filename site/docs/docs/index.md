@@ -8,7 +8,7 @@ permalink: docs/
 ### Type-safety
 Scala is a static-typed language, and Slack Morphism provides methods and models definitions for most of 
 the methods and structures of Slack Web/Events API.
-There is a [well-typed DSL](Blocks DSL) to build your messages and views with Slack blocks safely as well. 
+There is a [well-typed DSL](templating) to build your messages and views with Slack blocks safely as well. 
  
 ### Easy to use
 While Slack Morphism uses some of FP paradigms and mostly avoids imperative style and mutable states internally, 
@@ -23,9 +23,10 @@ Slack Morphism doesn't have any dependencies to any particular HTTP client libra
 and uses [sttp library](https://github.com/softwaremill/sttp) to give you choice.
 
 However, it would be an incomplete solution to provide you only core components, and for a quick start, 
-there is a [full-featured giter8 template and example](https://github.com/abdolence/slack-morphism-akka-http.g8) 
-of a Slack Bot built with Slack Morphism and Akka Http. 
-
+there are full-featured giter8 templates and examples for:
+* [Slack bot with Akka HTTP](https://github.com/abdolence/slack-morphism-akka-http.g8) 
+* [Slack bot with http4s](https://github.com/abdolence/slack-morphism-http4s.g8)
+ 
 ### Non-blocking and Reactive
 All of the Slack Morphism API methods available in a non-blocking manner, and 
 some of them (e.g. returning Slack channel history) also have support for a reactive Publisher,
@@ -42,12 +43,19 @@ Add the following to your `build.sbt`:
 libraryDependencies += "org.latestbit" %% "slack-morphism-client" % "1.2.3"
 ```
 
-or if you'd like to full-featured and ready to use Slack bot, which uses Akka Http, use this:
+or if you'd like to full-featured and ready to use Slack bots, use this:
 
+### Akka HTTP
 ```
 sbt new abdolence/slack-morphism-akka-http.g8
 ```
 Read more about this template [here](akka-http).
+
+### http4s
+```
+sbt new abdolence/slack-morphism-http4s.g8
+```
+Read more about this template [here](http4s).
 
 ## Limitations
 
