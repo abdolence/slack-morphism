@@ -19,7 +19,7 @@ or if you'd like to start with a full-featured example and template of a Slack b
 ![sbt-example-command](https://slack.abdolence.dev/img/sample-bot-features.png)
 
 ## Start with Akka HTTP
-The template is using Slack-Morphism with Akka HTTP and class scala Futures.
+The template is using Slack-Morphism with Akka HTTP and classic scala Futures.
 
 ```
 sbt new abdolence/slack-morphism-akka-http.g8
