@@ -63,7 +63,7 @@ class SlackApiResponseScroller[F[_] : Monad, IT, PT, SR <: SlackApiScrollableRes
    * Read data as an infinite async iterator
    * @return infinite async sequence iterator
    */
-  def toAsyncScroller()( implicit ec: ExecutionContext ): AsyncSeqIterator[F, AsyncItemType, AsyncValueType] = {
+  def toAsyncScroller(): AsyncSeqIterator[F, AsyncItemType, AsyncValueType] = {
     AsyncSeqIterator.cons(
       initialLoader(),
       _.map( _.items ),

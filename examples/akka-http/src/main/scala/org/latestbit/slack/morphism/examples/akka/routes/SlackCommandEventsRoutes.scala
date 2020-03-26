@@ -38,7 +38,7 @@ import scala.concurrent.{ ExecutionContext, Future }
 
 import cats.instances.future._
 
-class SlackCommandEventsRoute(
+class SlackCommandEventsRoutes(
     implicit ctx: ActorContext[_],
     materializer: ActorMaterializer,
     config: AppConfig,

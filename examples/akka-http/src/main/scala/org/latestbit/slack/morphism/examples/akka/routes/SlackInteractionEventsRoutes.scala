@@ -35,7 +35,7 @@ import org.latestbit.slack.morphism.examples.akka.templates._
 import scala.concurrent.{ ExecutionContext, Future }
 import cats.instances.future._
 
-class SlackInteractionEventsRoute(
+class SlackInteractionEventsRoutes(
     implicit ctx: ActorContext[_],
     materializer: ActorMaterializer,
     config: AppConfig,

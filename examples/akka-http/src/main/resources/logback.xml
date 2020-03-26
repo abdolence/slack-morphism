@@ -38,6 +38,9 @@
     </appender>
 
 
+    <logger name="swaydb.core" level="WARN">
+    </logger>
+
     <logger name="org.latestbit" level="TRACE">
     </logger>
 

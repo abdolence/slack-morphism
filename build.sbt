@@ -119,7 +119,7 @@ val scalaTestPlusTestNG = "3.1.0.0" // reactive publishers tck testing
 val scalaCheckShapeless = "1.2.3"
 val scalaMockVersion = "4.4.0"
 
-// For full-featured examples we use additional libs like akka-http
+// For full-featured examples we use additional libs
 val akkaVersion = "2.5.27"
 val akkaHttpVersion = "10.1.11"
 val akkaHttpCirceVersion = "1.30.0"
@@ -127,6 +127,7 @@ val logbackVersion = "1.2.3"
 val scalaLoggingVersion = "3.9.2"
 val scoptVersion = "3.7.1"
 val swayDbVersion = "0.11"
+val http4sVersion = "0.21.1"
 
 // Compiler plugins
 val kindProjectorVer = "0.11.0"
@@ -195,7 +196,7 @@ lazy val compilerPluginSettings = Seq(
 
 lazy val slackMorphismRoot = project
   .in( file( "." ) )
-  .aggregate( slackMorphismModels, slackMorphismClient, slackMorphismExamples )
+  .aggregate( slackMorphismModels, slackMorphismClient, slackMorphismAkkaExample, slackMorphismHttp4sExample )
   .settings( noPublishSettings )
 
 lazy val slackMorphismModels =
@@ -223,7 +224,7 @@ lazy val slackMorphismClient =
     .settings( compilerPluginSettings )
     .dependsOn( slackMorphismModels )
 
-lazy val slackMorphismExamples =
+lazy val slackMorphismAkkaExample =
   (project in file( "examples/akka-http" ))
     .settings(
       name := "slack-morphism-akka",
@@ -248,6 +249,37 @@ lazy val slackMorphismExamples =
           excludeAll (
             ExclusionRule( organization = "org.scala-lang.modules" ),
             ExclusionRule( organization = "org.reactivestreams" )
+        )
+      )
+    )
+    .settings( noPublishSettings )
+    .settings( compilerPluginSettings )
+    .dependsOn( slackMorphismClient )
+
+lazy val slackMorphismHttp4sExample =
+  (project in file( "examples/http4s" ))
+    .settings(
+      name := "slack-morphism-http4s",
+      libraryDependencies ++= baseDependencies ++ Seq(
+        "org.http4s" %% "http4s-blaze-server" % http4sVersion,
+        "org.http4s" %% "http4s-blaze-client" % http4sVersion,
+        "org.http4s" %% "http4s-circe" % http4sVersion,
+        "org.http4s" %% "http4s-dsl" % http4sVersion,
+        "com.github.scopt" %% "scopt" % scoptVersion,
+        "ch.qos.logback" % "logback-classic" % logbackVersion
+          exclude ("org.slf4j", "slf4j-api"),
+        "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion,
+        "com.softwaremill.sttp.client" %% "http4s-backend" % sttpVersion,
+        "io.swaydb" %% "swaydb" % swayDbVersion
+          excludeAll (
+            ExclusionRule( organization = "org.scala-lang.modules" ),
+            ExclusionRule( organization = "org.reactivestreams" )
+        ),
+        "io.swaydb" %% "cats-effect" % swayDbVersion
+          excludeAll (
+            ExclusionRule( organization = "org.scala-lang.modules" ),
+            ExclusionRule( organization = "org.reactivestreams" ),
+            ExclusionRule( organization = "org.typelevel" )
         )
       )
     )
@@ -311,6 +343,6 @@ lazy val slackMorphismMicrosite = project
   .settings( scalaDocSettings )
   .enablePlugins( MicrositesPlugin )
   .enablePlugins( ScalaUnidocPlugin )
-  .dependsOn( slackMorphismModels, slackMorphismClient, slackMorphismExamples )
+  .dependsOn( slackMorphismModels, slackMorphismClient, slackMorphismAkkaExample )
 
 addCommandAlias( "publishAllDocs", ";slackMorphismMicrosite/publishMicrosite" )

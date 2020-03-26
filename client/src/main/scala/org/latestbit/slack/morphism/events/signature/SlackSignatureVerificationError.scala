@@ -59,3 +59,10 @@ case class SlackSignatureWrongSignatureError(
 ) extends SlackSignatureVerificationError( s"""
 | Received hash from Slack '${receivedHash}' doesn't match with the generated: ${generatedHash}. Received timestamp: '${timestamp}''
 |""".stripMargin, cause )
+
+/**
+ * Absent Slack signature HTTP headers error
+ * @group ErrorDefs
+ */
+case class SlackAbsentSignatureError( message: String = "Absent Slack signature HTTP headers" )
+    extends SlackSignatureVerificationError( message )

@@ -41,7 +41,7 @@ import org.latestbit.slack.morphism.views.SlackHomeView
 
 import cats.instances.future._
 
-class SlackPushEventsRoute(
+class SlackPushEventsRoutes(
     implicit ctx: ActorContext[_],
     materializer: ActorMaterializer,
     config: AppConfig,
