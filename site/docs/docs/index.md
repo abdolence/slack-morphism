@@ -24,8 +24,10 @@ and uses [sttp library](https://github.com/softwaremill/sttp) to give you choice
 
 However, it would be an incomplete solution to provide you only core components, and for a quick start, 
 there are full-featured giter8 templates and examples for:
-* [Slack bot with Akka HTTP](https://github.com/abdolence/slack-morphism-akka-http.g8) 
-* [Slack bot with http4s](https://github.com/abdolence/slack-morphism-http4s.g8)
+* [Slack bot with Akka HTTP](https://github.com/abdolence/slack-morphism-akka-http.g8), 
+which is implemented in a conservative way with classic Scala Futures.
+* [Slack bot with http4s](https://github.com/abdolence/slack-morphism-http4s.g8), 
+which is implemented in a pure functional way with cats-effect effects and FS2 streams.
  
 ### Non-blocking and Reactive
 All of the Slack Morphism API methods available in a non-blocking manner, and 
