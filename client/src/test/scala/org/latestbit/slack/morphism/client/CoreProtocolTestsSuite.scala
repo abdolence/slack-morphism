@@ -99,7 +99,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
               channels = List(
                 SlackChannelInfo(
                   id = "channel-id",
-                  name = "general",
+                  name = Some( "general" ),
                   flags = SlackChannelFlags(
                     is_general = Some( true )
                   ),

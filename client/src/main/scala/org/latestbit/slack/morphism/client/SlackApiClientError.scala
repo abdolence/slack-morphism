@@ -98,11 +98,10 @@ case class SlackApiResponseError(
     messages: Option[List[String]] = None
 ) extends SlackApiClientError(
       uri = uri,
-      message = s"""Slack API error response: ${errorCode}.
-			   |${details.map( text => s" Details: ${text}." ).getOrElse( "" )}
-			   |${warning.map( text => s" Warning: ${text}." ).getOrElse( "" )}
-               |${messages.map( msgs => s" Additional error messages: \n${msgs.mkString( "\n" )}" ).getOrElse( "" )}"
-			   |""".stripMargin
+      message = s"Slack API error response: ${errorCode}. Uri: ${uri}. " +
+        s"${details.map( text => s" Details: ${text}.\n" ).getOrElse( "" )}" +
+        s"${warning.map( text => s" Warning: ${text}.\n" ).getOrElse( "" )}" +
+        s"${messages.map( msgs => s" Additional error messages: \n${msgs.mkString( "\n" )}" ).getOrElse( "" )}"
     )
 
 /**
@@ -123,11 +122,10 @@ case class SlackApiRateLimitedError(
     messages: Option[List[String]] = None
 ) extends SlackApiClientError(
       uri = uri,
-      message = s"""Slack API rate limited error.
-			   |${details.map( text => s" Details: ${text}." ).getOrElse( "" )}
-			   |${warning.map( text => s" Warning: ${text}." ).getOrElse( "" )}
-               |${messages.map( msgs => s" Additional error messages: \n${msgs.mkString( "\n" )}" ).getOrElse( "" )}"
-			   |""".stripMargin
+      message = s"Slack API rate limited error. Uri: ${uri}."
+        + s"${details.map( text => s" Details: ${text}.\n" ).getOrElse( "" )}" +
+        s"${warning.map( text => s" Warning: ${text}.\n" ).getOrElse( "" )}" +
+        s"${messages.map( msgs => s" Additional error messages: \n${msgs.mkString( "\n" )}" ).getOrElse( "" )}"
     )
     with SlackApiRetryableError
 

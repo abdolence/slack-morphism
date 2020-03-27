@@ -25,6 +25,7 @@ import org.latestbit.slack.morphism.messages.SlackMessage
  */
 sealed trait SlackChannelProfile {
   val id: String
+  val name: Option[String]
 }
 
 /**
@@ -32,7 +33,7 @@ sealed trait SlackChannelProfile {
  */
 case class SlackChannelInfo(
     override val id: String,
-    name: String,
+    override val name: Option[String] = None,
     created: SlackDateTime,
     creator: Option[String] = None,
     unlinked: Option[Long] = None,
@@ -92,5 +93,5 @@ object SlackChannelInfo {
  */
 case class SlackBasicChannelInfo(
     override val id: String,
-    name: Option[String] = None
+    override val name: Option[String] = None
 ) extends SlackChannelProfile

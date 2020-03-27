@@ -135,7 +135,7 @@ package object codecs {
     implicit val slackChannelInfoDecoder: Decoder[SlackChannelInfo] = (c: HCursor) => {
       for {
         id <- c.downField( "id" ).as[String]
-        name <- c.downField( "name" ).as[String]
+        name <- c.downField( "name" ).as[Option[String]]
         created <- c.downField( "created" ).as[SlackDateTime]
         creator <- c.downField( "creator" ).as[Option[String]]
         unlinked <- c.downField( "unlinked" ).as[Option[Long]]
