@@ -1479,6 +1479,28 @@ package object codecs {
     implicit val decoderSlackApiConversationsMembersResponse: Decoder[SlackApiConversationsMembersResponse] =
       deriveDecoder[SlackApiConversationsMembersResponse]
 
+    implicit val encoderSlackApiConversationsOpenRequest: Encoder.AsObject[SlackApiConversationsOpenRequest] =
+      deriveEncoder[SlackApiConversationsOpenRequest]
+
+    implicit val decoderSlackApiConversationsOpenRequest: Decoder[SlackApiConversationsOpenRequest] =
+      deriveDecoder[SlackApiConversationsOpenRequest]
+
+    implicit val encoderSlackApiConversationsOpenResponseFull
+        : Encoder.AsObject[SlackApiConversationsOpenResponse[SlackChannelInfo]] =
+      deriveEncoder[SlackApiConversationsOpenResponse[SlackChannelInfo]]
+
+    implicit val decoderSlackApiConversationsOpenResponseFull
+        : Decoder[SlackApiConversationsOpenResponse[SlackChannelInfo]] =
+      deriveDecoder[SlackApiConversationsOpenResponse[SlackChannelInfo]]
+
+    implicit val encoderSlackApiConversationsOpenResponseBasic
+        : Encoder.AsObject[SlackApiConversationsOpenResponse[SlackBasicChannelInfo]] =
+      deriveEncoder[SlackApiConversationsOpenResponse[SlackBasicChannelInfo]]
+
+    implicit val decoderSlackApiConversationsOpenResponseBasic
+        : Decoder[SlackApiConversationsOpenResponse[SlackBasicChannelInfo]] =
+      deriveDecoder[SlackApiConversationsOpenResponse[SlackBasicChannelInfo]]
+
     implicit val encoderSlackApiConversationsRenameRequest: Encoder.AsObject[SlackApiConversationsRenameRequest] =
       deriveEncoder[SlackApiConversationsRenameRequest]
 

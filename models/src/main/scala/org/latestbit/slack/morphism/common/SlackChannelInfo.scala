@@ -21,10 +21,17 @@ package org.latestbit.slack.morphism.common
 import org.latestbit.slack.morphism.messages.SlackMessage
 
 /**
+ * A universal trait to specify either full channel info or just basic
+ */
+sealed trait SlackChannelProfile {
+  val id: String
+}
+
+/**
  * Slack Channel Information
  */
 case class SlackChannelInfo(
-    id: String,
+    override val id: String,
     name: String,
     created: SlackDateTime,
     creator: Option[String] = None,
@@ -38,7 +45,7 @@ case class SlackChannelInfo(
     locale: Option[String] = None,
     flags: SlackChannelFlags = SlackChannelFlags(),
     lastState: SlackChannelCurrentState = SlackChannelCurrentState()
-)
+) extends SlackChannelProfile
 
 /**
  * Slack Channel Flags
@@ -84,6 +91,6 @@ object SlackChannelInfo {
  * Basic Slack Channel information
  */
 case class SlackBasicChannelInfo(
-    id: String,
+    override val id: String,
     name: Option[String] = None
-)
+) extends SlackChannelProfile

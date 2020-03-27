@@ -23,7 +23,7 @@ import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client.reqresp.conversations._
 import org.latestbit.slack.morphism.messages.SlackMessage
 import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
-import org.latestbit.slack.morphism.common.SlackChannelInfo
+import org.latestbit.slack.morphism.common.{ SlackBasicChannelInfo, SlackChannelInfo, SlackChannelProfile }
 import org.latestbit.slack.morphism.codecs.implicits._
 
 /**
@@ -309,6 +309,44 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
             )
           )
         }
+      )
+    }
+
+    /**
+     * https://api.slack.com/methods/conversations.open
+     * return_im is set to None
+     */
+    def open( req: SlackApiConversationsOpenRequest )(
+        implicit slackApiToken: SlackApiToken,
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiConversationsOpenResponse[SlackBasicChannelInfo]]] = {
+
+      http.post[
+        SlackApiConversationsOpenRequest,
+        SlackApiConversationsOpenResponse[SlackBasicChannelInfo]
+      ](
+        "conversations.open",
+        req.copy( return_im = None ),
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
+      )
+    }
+
+    /**
+     * https://api.slack.com/methods/conversations.open
+     * return_im is set to Some(true)
+     */
+    def openFullProfile( req: SlackApiConversationsOpenRequest )(
+        implicit slackApiToken: SlackApiToken,
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiConversationsOpenResponse[SlackChannelInfo]]] = {
+
+      http.post[
+        SlackApiConversationsOpenRequest,
+        SlackApiConversationsOpenResponse[SlackChannelInfo]
+      ](
+        "conversations.open",
+        req.copy( return_im = Some( true ) ),
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
       )
     }
 
