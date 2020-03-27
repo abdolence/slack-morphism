@@ -182,6 +182,10 @@ lazy val noPublishSettings = Seq(
   publishArtifact := false
 )
 
+lazy val overwritePublishSettings = Seq(
+  publishConfiguration := publishConfiguration.value.withOverwrite( true )
+)
+
 lazy val scalaDocSettings = Seq(
   scalacOptions in (Compile, doc) ++= Seq( "-groups", "-skip-packages", "sttp.client" ) ++
     (if (priorTo2_13( scalaVersion.value ))
@@ -207,6 +211,7 @@ lazy val slackMorphismModels =
     )
     .settings( scalaDocSettings )
     .settings( compilerPluginSettings )
+    .settings( overwritePublishSettings )
 
 lazy val slackMorphismClient =
   (project in file( "client" ))
@@ -222,6 +227,7 @@ lazy val slackMorphismClient =
     )
     .settings( scalaDocSettings )
     .settings( compilerPluginSettings )
+    .settings( overwritePublishSettings )
     .dependsOn( slackMorphismModels )
 
 lazy val slackMorphismAkkaExample =
@@ -260,16 +266,24 @@ lazy val slackMorphismHttp4sExample =
   (project in file( "examples/http4s" ))
     .settings(
       name := "slack-morphism-http4s",
-      libraryDependencies ++= baseDependencies ++ Seq(
-        "org.http4s" %% "http4s-blaze-server" % http4sVersion,
-        "org.http4s" %% "http4s-blaze-client" % http4sVersion,
-        "org.http4s" %% "http4s-circe" % http4sVersion,
-        "org.http4s" %% "http4s-dsl" % http4sVersion,
+      libraryDependencies ++= baseDependencies ++ (Seq(
+        "org.http4s" %% "http4s-blaze-server",
+        "org.http4s" %% "http4s-blaze-client",
+        "org.http4s" %% "http4s-circe",
+        "org.http4s" %% "http4s-dsl"
+      ).map(
+        _ % http4sVersion
+          exclude ("org.typelevel", "cats-core")
+          exclude ("org.typelevel", "cats-effect")
+          excludeAll (ExclusionRule( organization = "io.circe" ) )
+      ) ) ++ Seq(
         "com.github.scopt" %% "scopt" % scoptVersion,
         "ch.qos.logback" % "logback-classic" % logbackVersion
           exclude ("org.slf4j", "slf4j-api"),
         "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion,
-        "com.softwaremill.sttp.client" %% "http4s-backend" % sttpVersion,
+        "com.softwaremill.sttp.client" %% "http4s-backend" % sttpVersion
+          excludeAll (ExclusionRule( organization = "org.http4s" ) )
+          excludeAll (ExclusionRule( organization = "io.circe" ) ),
         "io.swaydb" %% "swaydb" % swayDbVersion
           excludeAll (
             ExclusionRule( organization = "org.scala-lang.modules" ),
