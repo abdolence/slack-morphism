@@ -19,7 +19,7 @@
 package org.latestbit.slack.morphism.client.streaming
 
 import cats.Monad
-import org.latestbit.slack.morphism.client.SlackApiClientError
+import org.latestbit.slack.morphism.client.{ SlackApiClientBackend, SlackApiClientError }
 import org.latestbit.slack.morphism.client.streaming.impl.SlackApiScrollableReactivePublisher
 import org.latestbit.slack.morphism.concurrent.AsyncSeqIterator
 import org.reactivestreams.Publisher
@@ -33,7 +33,10 @@ import scala.concurrent._
  * @tparam IT batch item type
  * @tparam PT batch value type
  */
-class SlackApiResponseScroller[F[_] : Monad, IT, PT, SR <: SlackApiScrollableResponse[IT, PT]](
+class SlackApiResponseScroller[F[_] : SlackApiClientBackend.BackendType, IT, PT, SR <: SlackApiScrollableResponse[
+  IT,
+  PT
+]](
     initialLoader: () => F[Either[SlackApiClientError, SR]],
     batchLoader: PT => F[Either[SlackApiClientError, SR]]
 ) extends LazyScalaCollectionSupport[F, IT, PT, SR] {

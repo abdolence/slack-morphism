@@ -8,7 +8,7 @@ import sbt.Package.ManifestAttributes
 
 name := "slack-morphism-root"
 
-ThisBuild / version := "1.2.6"
+ThisBuild / version := "1.2.7-SNAPSHOT"
 
 ThisBuild / description := "Open Type-Safe Reactive Client with Blocks Templating for Slack"
 
@@ -129,6 +129,9 @@ val scoptVersion = "3.7.1"
 val swayDbVersion = "0.11"
 val http4sVersion = "0.21.1"
 
+// For fs2 integration module
+val fs2Version = "2.2.1"
+
 // Compiler plugins
 val kindProjectorVer = "0.11.0"
 
@@ -200,7 +203,13 @@ lazy val compilerPluginSettings = Seq(
 
 lazy val slackMorphismRoot = project
   .in( file( "." ) )
-  .aggregate( slackMorphismModels, slackMorphismClient, slackMorphismAkkaExample, slackMorphismHttp4sExample )
+  .aggregate(
+    slackMorphismModels,
+    slackMorphismClient,
+    slackMorphismAkkaExample,
+    slackMorphismHttp4sExample,
+    slackMorphismFs2
+  )
   .settings( noPublishSettings )
 
 lazy val slackMorphismModels =
@@ -299,6 +308,22 @@ lazy val slackMorphismHttp4sExample =
     )
     .settings( noPublishSettings )
     .settings( compilerPluginSettings )
+    .dependsOn( slackMorphismClient )
+
+lazy val slackMorphismFs2 =
+  (project in file( "fs2" ))
+    .settings(
+      name := "slack-morphism-fs2",
+      libraryDependencies ++= baseDependencies ++ Seq(
+        "co.fs2" %% "fs2-core" % fs2Version
+          exclude ("org.typelevel", "cats-core")
+          exclude ("org.typelevel", "cats-effect")
+          excludeAll (ExclusionRule( organization = "io.circe" ) )
+      )
+    )
+    .settings( scalaDocSettings )
+    .settings( compilerPluginSettings )
+    .settings( overwritePublishSettings )
     .dependsOn( slackMorphismClient )
 
 lazy val apiDocsDir = settingKey[String]( "Name of subdirectory for api docs" )

@@ -18,6 +18,7 @@
 
 package org.latestbit.slack.morphism.client.tests
 
+import cats.effect.IO
 import org.latestbit.slack.morphism.client.{ SlackApiClientError, SlackApiSystemError }
 import org.latestbit.slack.morphism.client.streaming.{ SlackApiResponseScroller, SlackApiScrollableResponse }
 
@@ -89,6 +90,42 @@ object TestScrollableResponse {
     }
 
     new SlackApiResponseScroller[Future, Int, String, TestScrollableResponse](
+      initialResponseLoader _,
+      responseScroller
+    )
+  }
+
+  def createIOTestScrollableResponse(): SlackApiResponseScroller[IO, Int, String, TestScrollableResponse] = {
+
+    def initialResponseLoader(): IO[Either[SlackApiClientError, TestScrollableResponse]] = {
+      IO {
+        testBatches.headOption
+          .map( Right.apply )
+          .getOrElse(
+            Left( SlackApiSystemError( null, new IllegalStateException( "Empty head?" ) ) )
+          )
+      }
+    }
+
+    def responseScroller(
+        cursor: String
+    ): IO[Either[SlackApiClientError, TestScrollableResponse]] = {
+      IO {
+        testBatches
+          .lift( cursor.toInt )
+          .map( Right.apply )
+          .getOrElse(
+            Left(
+              SlackApiSystemError(
+                null,
+                new IllegalArgumentException( s"Illegal cursor: ${cursor}" )
+              )
+            )
+          )
+      }
+    }
+
+    new SlackApiResponseScroller[IO, Int, String, TestScrollableResponse](
       initialResponseLoader _,
       responseScroller
     )
