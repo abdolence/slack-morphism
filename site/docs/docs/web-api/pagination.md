@@ -78,8 +78,8 @@ Source
 
 ```
 
-## Create a FS2 stream and Cats
-This is an optional support and if you're using FS2, you need to add additional dependency:
+## Create a FS2 stream
+This is an optional module, and if you're using FS2, you need additional dependency:
 
 ```scala
 libraryDependencies += "org.latestbit" %% "slack-morphism-fs2" % slackMorphismVer
