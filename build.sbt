@@ -324,7 +324,7 @@ lazy val slackMorphismFs2 =
     .settings( scalaDocSettings )
     .settings( compilerPluginSettings )
     .settings( overwritePublishSettings )
-    .dependsOn( slackMorphismClient )
+    .dependsOn( slackMorphismClient % "compile->compile;test->test" )
 
 lazy val apiDocsDir = settingKey[String]( "Name of subdirectory for api docs" )
 
