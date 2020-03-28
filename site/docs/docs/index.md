@@ -33,8 +33,8 @@ You can browse source codes of examples (without installing them) [here](https:/
  
 ## Non-blocking and Reactive
 All of the Slack Morphism API methods available in a non-blocking manner, and 
-some of them (e.g. returning Slack channel history) also have support for a reactive Publisher,
- if you're familiar with Reactive Streams (and using related frameworks).
+some of them (e.g. returning Slack channel history) also have support for reactive frameworks
+(Reactive Stream, FS2).
  
 ## Rate controlling and throttling access to Slack Web API
 There is ready to use a rate control/throttling implementation, 

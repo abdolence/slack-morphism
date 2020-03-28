@@ -13,14 +13,18 @@ Examples:
 * [users.list](https://api.slack.com/methods/users.list)
 * ...
 
-To help with those methods Slack Morphism provides a "scroller" implementation, which deal with 
+To help with those methods Slack Morphism provides additional "scroller" implementation, which deal with 
 all scrolling/batching requests for you.
 
 With this scroller you have the following choice:
 
 * Load data lazily and asynchronously with [AsyncSeqIterator](/api/org/latestbit/slack/morphism/concurrent/AsyncSeqIterator.html)
+* Load data reactively with [Reactive Streams Publisher[]](https://www.reactive-streams.org/reactive-streams-1.0.3-javadoc/org/reactivestreams/Publisher.html) 
+* Load data reactively with [FS2 streams](https://fs2.io/)
 * Load data lazily, but synchronously into a standard Scala lazy container: Stream[] (for Scala 2.12) or [LazyList[]](https://www.scala-lang.org/api/current/scala/collection/immutable/LazyList.html) (for Scala 2.13+)
-* Load data reactively with [Publisher[]](https://www.reactive-streams.org/reactive-streams-1.0.3-javadoc/org/reactivestreams/Publisher.html) and use Reactive Streams   
+
+If none of those approaches are suitable for you, you can always use original API method. 
+Scrollers are completely optional.
 
 For example, for [conversations.history](https://api.slack.com/methods/conversations.history) you can:
 
@@ -30,6 +34,8 @@ Async iterator implements:
 * `foldLeft` for accumulating batching results if you need it (the implementation of AsyncSeqIterator doesn't memoize like Stream/LazyList)
 * `map` to transform results
 * `foreach` to iterate with effects
+
+(It is implemented as a very simple and pure functor and provides `cats.Functor` instance as well).
 
 This is an example of using `foldLeft`:
 ```scala
@@ -47,7 +53,7 @@ client.conversations.historyScroller(
   }
 ```
 
-## Create a reactive Publisher[]
+## Create a reactive steam Publisher[]
 ```scala
 import org.reactivestreams.Publisher
 
@@ -71,6 +77,29 @@ Source
     .runForeach(msg => println(msg))
 
 ```
+
+## Create a FS2 stream and Cats
+This is an optional support and if you're using FS2, you need to add additional dependency:
+
+```scala
+libraryDependencies += "org.latestbit" %% "slack-morphism-fs2" % slackMorphismVer
+```
+
+Then you can use it as following:
+
+```scala
+
+// Additional import for support FS2
+import org.latestbit.slack.morphism.client.fs2s._
+
+client.conversations.historyScroller(
+    SlackApiConversationsHistoryRequest(
+      channel = "C222...." // some channel id
+    )
+  )
+  .toFs2Scroller().compile.toList.unsafeRunSync() 
+
+``` 
 
 ## Load data into Stream[]/LazyList[]
 
