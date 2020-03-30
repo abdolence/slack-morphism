@@ -58,7 +58,7 @@ class SlackApiResponseScroller[F[_] : SlackApiClientBackend.BackendType, IT, PT,
     batchLoader( lastPosition )
 
   /**
-   * Read data as an infinite async iterator
+   * Read data as an infinite async iterator of batches
    * @return infinite async sequence iterator
    */
   def toAsyncScroller(): AsyncSeqIterator[F, AsyncItemType, AsyncValueType] = {
