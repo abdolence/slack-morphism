@@ -142,7 +142,7 @@ As you might noticed here, Slack Morphism API mimics Slack Web API method names,
 is `client.chat.postMessage(...)`, or [https://api.slack.com/methods/oauth.v2.access](https://api.slack.com/methods/oauth.v2.access) 
 is `client.oauth.v2.access(...)` etc.
 
-The complete list of all of the implemented Web API methods is available [here](/api/org/latestbit/slack/morphism/client/SlackApiClient.html).
+The complete list of all of the implemented Web API methods is available [here](/api/org/latestbit/slack/morphism/client/SlackApiClientT.html).
 
 ## Low-level HTTP API to Slack Web API
 In case you didn't find a method you need on the list above, 
