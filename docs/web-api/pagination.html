@@ -139,8 +139,8 @@ all scrolling/batching requests for you.</p>
 
 <ul>
   <li>Load data lazily and asynchronously with <a href="/api/org/latestbit/slack/morphism/concurrent/AsyncSeqIterator.html">AsyncSeqIterator</a></li>
-  <li>Load data reactively with <a href="https://www.reactive-streams.org/reactive-streams-1.0.3-javadoc/org/reactivestreams/Publisher.html">Reactive Streams Publisher[]</a></li>
-  <li>Load data reactively with <a href="https://fs2.io/">FS2 streams</a></li>
+  <li>Load data with <a href="https://fs2.io/">FS2 streams</a></li>
+  <li>Load data with <a href="https://www.reactive-streams.org/reactive-streams-1.0.3-javadoc/org/reactivestreams/Publisher.html">Reactive Streams Publisher[]</a></li>
   <li>Load data lazily, but synchronously into a standard Scala lazy container: Stream[] (for Scala 2.12) or <a href="https://www.scala-lang.org/api/current/scala/collection/immutable/LazyList.html">LazyList[]</a> (for Scala 2.13+)</li>
 </ul>
 
@@ -149,7 +149,7 @@ Scrollers are completely optional.</p>
 
 <p>For example, for <a href="https://api.slack.com/methods/conversations.history">conversations.history</a> you can:</p>
 
-<h2 id="using-lazy-asyncseqiterator-to-scroll-data">Using lazy AsyncSeqIterator to scroll data</h2>
+<h2 id="using-a-built-in-lazy-asyncseqiterator-to-scroll-data">Using a built-in lazy AsyncSeqIterator to scroll data</h2>
 
 <p>Async iterator implements:</p>
 <ul>
@@ -173,6 +173,27 @@ Scrollers are completely optional.</p>
     <span class="nf">case</span> <span class="o">(</span> <span class="n">wholeList</span><span class="o">,</span> <span class="n">futureRes</span> <span class="o">)</span> <span class="k">=&gt;</span>
       <span class="nv">futureRes</span><span class="o">.</span><span class="py">map</span><span class="o">(</span> <span class="n">wholeList</span> <span class="o">++</span> <span class="k">_</span> <span class="o">).</span><span class="py">getOrElse</span><span class="o">(</span> <span class="n">wholeList</span> <span class="o">)</span>     
   <span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="create-a-fs2-stream">Create a FS2 stream</h2>
+<p>This is an optional module, and if you’re using FS2, you need additional dependency:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.latestbit"</span> <span class="o">%%</span> <span class="s">"slack-morphism-fs2"</span> <span class="o">%</span> <span class="n">slackMorphismVer</span>
+</code></pre></div></div>
+
+<p>Then you can use it as following:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">// Additional import for support FS2</span>
+<span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client.fs2s._</span>
+
+<span class="nv">client</span><span class="o">.</span><span class="py">conversations</span><span class="o">.</span><span class="py">historyScroller</span><span class="o">(</span>
+    <span class="nc">SlackApiConversationsHistoryRequest</span><span class="o">(</span>
+      <span class="n">channel</span> <span class="k">=</span> <span class="s">"C222...."</span> <span class="c1">// some channel id</span>
+    <span class="o">)</span>
+  <span class="o">)</span>
+  <span class="o">.</span><span class="py">toFs2Scroller</span><span class="o">().</span><span class="py">compile</span><span class="o">.</span><span class="py">toList</span><span class="o">.</span><span class="py">unsafeRunSync</span><span class="o">()</span> 
+
 </code></pre></div></div>
 
 <h2 id="create-a-reactive-stream-publisher">Create a reactive stream Publisher[]</h2>
@@ -213,27 +234,6 @@ Scrollers are completely optional.</p>
 
 </code></pre></div></div>
 
-<h2 id="create-a-fs2-stream">Create a FS2 stream</h2>
-<p>This is an optional module, and if you’re using FS2, you need additional dependency:</p>
-
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.latestbit"</span> <span class="o">%%</span> <span class="s">"slack-morphism-fs2"</span> <span class="o">%</span> <span class="n">slackMorphismVer</span>
-</code></pre></div></div>
-
-<p>Then you can use it as following:</p>
-
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-<span class="c1">// Additional import for support FS2</span>
-<span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client.fs2s._</span>
-
-<span class="nv">client</span><span class="o">.</span><span class="py">conversations</span><span class="o">.</span><span class="py">historyScroller</span><span class="o">(</span>
-    <span class="nc">SlackApiConversationsHistoryRequest</span><span class="o">(</span>
-      <span class="n">channel</span> <span class="k">=</span> <span class="s">"C222...."</span> <span class="c1">// some channel id</span>
-    <span class="o">)</span>
-  <span class="o">)</span>
-  <span class="o">.</span><span class="py">toFs2Scroller</span><span class="o">().</span><span class="py">compile</span><span class="o">.</span><span class="py">toList</span><span class="o">.</span><span class="py">unsafeRunSync</span><span class="o">()</span> 
-
-</code></pre></div></div>
-
 <h2 id="load-data-into-streamlazylist">Load data into Stream[]/LazyList[]</h2>
 
 <p>Because of the nature of Scala Collection API, there are limitations:</p>
@@ -252,7 +252,7 @@ Scrollers are completely optional.</p>
       <span class="n">channel</span> <span class="k">=</span> <span class="s">"C222...."</span> <span class="c1">// some channel id</span>
     <span class="o">)</span>
   <span class="o">)</span>
-  <span class="o">.</span><span class="py">toSyncScroller</span><span class="o">(</span> <span class="mf">5.</span><span class="n">seconds</span> <span class="o">)</span>
+  <span class="o">.</span><span class="py">toSyncScroller</span><span class="o">(</span> <span class="mf">30.</span><span class="n">seconds</span> <span class="o">)</span>
   <span class="o">.</span><span class="py">foreach</span> <span class="o">{</span>
     <span class="k">case</span> <span class="nc">Right</span><span class="o">(</span> <span class="n">results</span><span class="k">:</span> <span class="kt">LazyList</span><span class="o">[</span><span class="kt">SlackMessage</span><span class="o">]</span> <span class="o">)</span> <span class="k">=&gt;</span> <span class="o">{</span>
       <span class="c1">// ... results are ready to scroll</span>
