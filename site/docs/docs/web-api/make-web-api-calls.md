@@ -7,13 +7,16 @@ permalink: docs/web-api/make-web-api-calls
 ## Choose an HTTP client backend
 
 You have to choose a [sttp backend](https://sttp.readthedocs.io/en/latest/backends/summary.html) 
-that supports `scala.concurrent.Future` or `cats.effect.Async/Effect` response wrappers:
+that supports `scala.concurrent.Future`, `cats.effect.Async/Effect`, `monix.eval.Task` response wrappers:
 * AkkaHttpBackend
 * OkHttpFutureBackend
+* OkHttpMonixBackend
 * HttpClientFutureBackend
+* HttpClientMonixBackend
 * AsyncHttpClientCatsBackend
 * AsyncHttpClientFs2Backend
 * Http4sBackend
+* AsyncHttpClientMonixBackend
 
 Add a dependency of your choice to your `build.sbt`.
 
@@ -29,6 +32,7 @@ where `sttpVersion` > 2.0+
 to all available of Slack Web API methods.
 
 ### Future backend
+
 ```scala
 // Import Slack Morphism Client
 import org.latestbit.slack.morphism.client._
@@ -51,6 +55,7 @@ val client = SlackApiClient.create() // or similarly SlackApiClient.create[Futur
 ```
 
 ### Cats Effect backend
+
 ```scala
 // Import Slack Morphism Client
 import org.latestbit.slack.morphism.client._
@@ -74,6 +79,31 @@ AsyncHttpClientCatsBackend[IO]()
           result <- client.api.test( SlackApiTestRequest() ) // call an example method inside IO monad
         } yield result
       }.unsafeRunSync() // usual IO lifecycle
+```
+
+### Monix backend
+
+```scala
+// Import Slack Morphism Client
+import org.latestbit.slack.morphism.client._
+
+// Import STTP backend
+import sttp.client.asynchttpclient.monix.AsyncHttpClientMonixBackend
+
+
+// Monix imports 
+import monix.eval._
+import monix.execution.Scheduler.Implicits.global
+
+// Creating an STTP backend
+AsyncHttpClientMonixBackend()
+      .flatMap { implicit backend =>
+        for {
+          client <- Task.pure( SlackApiClient.create[Task]() )
+          result <- client.api.test( SlackApiTestRequest() )
+        } yield result
+      }
+      .executeAsync // Monix Task here
 ```
 
 ## Make Web API methods calls

@@ -22,7 +22,7 @@ import org.latestbit.slack.morphism.client.ratectrl.SlackApiRateThrottler
 import org.latestbit.slack.morphism.client.reqresp.test.SlackApiTestRequest
 import org.scalatest.flatspec.AsyncFlatSpec
 
-class AsyncFutureHttpSttpBackendTests extends AsyncFlatSpec with SlackApiClientTestsSuiteSupport {
+class SttpBackendTests extends AsyncFlatSpec with SlackApiClientTestsSuiteSupport {
   "A Slack client" should "able to try to connect using a async http client network sttp backend" in {
     import cats.instances.future._
     import sttp.client.asynchttpclient.future.AsyncHttpClientFutureBackend
@@ -85,6 +85,28 @@ class AsyncFutureHttpSttpBackendTests extends AsyncFlatSpec with SlackApiClientT
         } yield result
       }
       .unsafeToFuture()
+      .map {
+        case Right( resp )                     => fail( s"Unexpected resp: ${resp}" )
+        case Left( ex: SlackApiResponseError ) => assert( ex.errorCode !== null )
+        case Left( ex )                        => fail( ex )
+      }
+
+  }
+
+  it should "able to try to connect using the monix effect sttp backend" in {
+    import sttp.client.asynchttpclient.monix.AsyncHttpClientMonixBackend
+    import monix.eval._
+    import monix.execution.Scheduler.Implicits.global
+
+    AsyncHttpClientMonixBackend()
+      .flatMap { implicit backEnd =>
+        for {
+          client <- Task.pure( SlackApiClient.create[Task]() )
+          result <- client.api.test( SlackApiTestRequest() )
+        } yield result
+      }
+      .executeAsync
+      .runToFuture
       .map {
         case Right( resp )                     => fail( s"Unexpected resp: ${resp}" )
         case Left( ex: SlackApiResponseError ) => assert( ex.errorCode !== null )
