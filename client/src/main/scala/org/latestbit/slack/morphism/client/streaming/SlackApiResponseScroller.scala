@@ -18,13 +18,8 @@
 
 package org.latestbit.slack.morphism.client.streaming
 
-import cats.Monad
 import org.latestbit.slack.morphism.client.{ SlackApiClientBackend, SlackApiClientError }
-import org.latestbit.slack.morphism.client.streaming.impl.SlackApiScrollableReactivePublisher
 import org.latestbit.slack.morphism.concurrent.AsyncSeqIterator
-import org.reactivestreams.Publisher
-
-import scala.concurrent._
 
 /**
  * Support for batch loading remote data
@@ -74,15 +69,5 @@ class SlackApiResponseScroller[F[_] : SlackApiClientBackend.BackendType, IT, PT,
       batchLoader
     )
   }
-
-  /**
-   * Read data as a reactive publisher
-   * @param maxItems - limit optionally maximum items you want to receive
-   * @return reactive publisher
-   */
-  def toPublisher(
-      maxItems: Option[Long] = None
-  )( implicit ec: ExecutionContext ): Publisher[IT] =
-    new SlackApiScrollableReactivePublisher( this, maxItems )
 
 }

@@ -16,20 +16,20 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.streaming.impl
+package org.latestbit.slack.morphism.client.reactive.impl
 
 import java.util.concurrent.locks.ReentrantLock
 
 import cats.Monad
-import cats.implicits._
 import cats.effect._
 import cats.effect.concurrent.MVar
+import cats.implicits._
 import org.latestbit.slack.morphism.client.SlackApiClientError
 import org.latestbit.slack.morphism.client.streaming.{ SlackApiResponseScroller, SlackApiScrollableResponse }
 import org.latestbit.slack.morphism.concurrent.{ AsyncSeqIterator, UniqueLockMonitor }
 import org.reactivestreams.Subscriber
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.ExecutionContext
 import scala.util.Using
 
 class SlackApiScrollableSubscriptionCommandChannel[F[_] : Monad, IT, PT, SR <: SlackApiScrollableResponse[IT, PT]](

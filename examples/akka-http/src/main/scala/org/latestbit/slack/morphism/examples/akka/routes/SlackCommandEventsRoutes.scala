@@ -25,9 +25,7 @@ import akka.http.scaladsl.server._
 import akka.stream.typed.scaladsl.ActorMaterializer
 import com.typesafe.scalalogging._
 import io.circe.parser._
-import org.latestbit.slack.morphism.client.reqresp.chat.SlackApiPostWebHookRequest
-import org.latestbit.slack.morphism.client.reqresp.views.SlackApiViewsOpenRequest
-import org.latestbit.slack.morphism.client.{ SlackApiClient, SlackApiToken }
+import org.latestbit.slack.morphism.client.SlackApiClientT
 import org.latestbit.slack.morphism.common.SlackResponseTypes
 import org.latestbit.slack.morphism.events._
 import org.latestbit.slack.morphism.examples.akka.AppConfig
@@ -42,7 +40,7 @@ class SlackCommandEventsRoutes(
     implicit ctx: ActorContext[_],
     materializer: ActorMaterializer,
     config: AppConfig,
-    slackApiClient: SlackApiClient,
+    slackApiClient: SlackApiClientT[Future],
     slackTokensDb: ActorRef[SlackTokensDb.Command]
 ) extends StrictLogging
     with AkkaHttpServerRoutesSupport

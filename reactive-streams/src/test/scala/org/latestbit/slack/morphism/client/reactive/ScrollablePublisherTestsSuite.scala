@@ -16,17 +16,19 @@
  *
  */
 
-package org.latestbit.slack.morphism.client
+package org.latestbit.slack.morphism.client.reactive
 
 import org.latestbit.slack.morphism.client.tests.TestScrollableResponse
-import org.reactivestreams.tck.flow.support.Optional
-import org.reactivestreams.{ Publisher, Subscriber, Subscription }
 import org.reactivestreams.tck.{ PublisherVerification, TestEnvironment }
+import org.reactivestreams.{ Publisher, Subscriber, Subscription }
 import org.scalatestplus.testng.TestNGSuiteLike
-import org.testng.Assert
 import org.testng.annotations.Test
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
+
+import cats.instances.future._
+import scala.concurrent.Future
 
 class ScrollablePublisherTestsSuite( env: TestEnvironment, publisherShutdownTimeout: Long )
     extends PublisherVerification[Int]( env, publisherShutdownTimeout )
@@ -37,7 +39,9 @@ class ScrollablePublisherTestsSuite( env: TestEnvironment, publisherShutdownTime
   }
 
   def createPublisher( elements: Long ): Publisher[Int] = {
-    val scrollableResponse = TestScrollableResponse.createTestScrollableResponse()
+    val scrollableResponse: SlackApiResponseScroller[Future, Int, String, TestScrollableResponse] =
+      TestScrollableResponse.createTestScrollableResponse()
+
     scrollableResponse.toPublisher( maxItems = Some( elements ) )
   }
 

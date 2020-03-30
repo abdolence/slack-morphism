@@ -48,6 +48,9 @@ package object fs2s {
 
     }
 
+    /**
+     * Read data as a FS2 stream
+     */
     def toFs2Scroller(): Stream[F, IT] = {
       iterateEvalF( scroller.first() )
         .flatMap( res => Stream.emits( res.items ) )

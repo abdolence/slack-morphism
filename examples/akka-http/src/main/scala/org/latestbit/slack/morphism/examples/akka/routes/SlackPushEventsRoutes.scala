@@ -45,7 +45,7 @@ class SlackPushEventsRoutes(
     implicit ctx: ActorContext[_],
     materializer: ActorMaterializer,
     config: AppConfig,
-    slackApiClient: SlackApiClient,
+    slackApiClient: SlackApiClientT[Future],
     slackTokensDb: ActorRef[SlackTokensDb.Command]
 ) extends StrictLogging
     with AkkaHttpServerRoutesSupport

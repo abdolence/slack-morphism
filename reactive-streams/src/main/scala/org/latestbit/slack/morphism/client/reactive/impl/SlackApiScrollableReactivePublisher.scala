@@ -16,7 +16,7 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.streaming.impl
+package org.latestbit.slack.morphism.client.reactive.impl
 
 import cats.Monad
 import cats.effect.IO

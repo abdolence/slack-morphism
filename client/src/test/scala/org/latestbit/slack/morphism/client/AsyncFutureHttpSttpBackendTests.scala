@@ -32,11 +32,6 @@ class AsyncFutureHttpSttpBackendTests extends AsyncFlatSpec with SlackApiClientT
     // Creating it with create factory method
     val slackApiClient = SlackApiClient.create()
 
-    // Creating it with v1.1- method
-    {
-      val _ = new SlackApiClient()
-    }
-
     // Creating it with throttler
     {
       val _ = SlackApiClient.build.withThrottler( SlackApiRateThrottler.createStandardThrottler() ).create()

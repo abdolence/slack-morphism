@@ -8,7 +8,7 @@ import sbt.Package.ManifestAttributes
 
 name := "slack-morphism-root"
 
-ThisBuild / version := "1.2.7"
+ThisBuild / version := "1.3.0-SNAPSHOT"
 
 ThisBuild / description := "Open Type-Safe Reactive Client with Blocks Templating for Slack"
 
@@ -109,7 +109,6 @@ val circeVersion = "0.13.0"
 val scalaCollectionsCompatVersion = "2.1.3"
 val sttpVersion = "2.0.6"
 val circeAdtCodecVersion = "0.9.0"
-val reactiveStreamsVersion = "1.0.3"
 
 // For tests
 val scalaTestVersion = "3.1.0"
@@ -131,6 +130,9 @@ val http4sVersion = "0.21.1"
 
 // For fs2 integration module
 val fs2Version = "2.2.1"
+
+// For reactive-streams integration module
+val reactiveStreamsVersion = "1.0.3"
 
 // Compiler plugins
 val kindProjectorVer = "0.11.0"
@@ -164,7 +166,6 @@ val baseDependencies =
       "org.scalamock" %% "scalamock" % scalaMockVersion,
       "org.typelevel" %% "cats-laws" % catsVersion,
       "org.typelevel" %% "cats-testkit" % catsVersion,
-      "org.reactivestreams" % "reactive-streams-tck" % reactiveStreamsVersion,
       "org.scalatestplus" %% "scalacheck-1-14" % scalaTestPlusCheck,
       "org.scalatestplus" %% "testng-6-7" % scalaTestPlusTestNG,
       "com.github.alexarchambault" %% "scalacheck-shapeless_1.14" % scalaCheckShapeless,
@@ -208,7 +209,8 @@ lazy val slackMorphismRoot = project
     slackMorphismClient,
     slackMorphismAkkaExample,
     slackMorphismHttp4sExample,
-    slackMorphismFs2
+    slackMorphismFs2,
+    slackMorphismReactiveStreams
   )
   .settings( noPublishSettings )
 
@@ -228,8 +230,7 @@ lazy val slackMorphismClient =
       name := "slack-morphism-client",
       libraryDependencies ++= (baseDependencies ++ Seq(
         "com.softwaremill.sttp.client" %% "core" % sttpVersion,
-        "org.scala-lang.modules" %% "scala-collection-compat" % scalaCollectionsCompatVersion,
-        "org.reactivestreams" % "reactive-streams" % reactiveStreamsVersion
+        "org.scala-lang.modules" %% "scala-collection-compat" % scalaCollectionsCompatVersion
       ) ++ (if (priorTo2_13( scalaVersion.value ))
               Seq( "com.github.bigwheel" %% "util-backports" % bigwheelUtilBackports )
             else Seq()))
@@ -320,6 +321,21 @@ lazy val slackMorphismFs2 =
           exclude ("org.typelevel", "cats-effect")
           excludeAll (ExclusionRule( organization = "io.circe" ) )
       )
+    )
+    .settings( scalaDocSettings )
+    .settings( compilerPluginSettings )
+    .settings( overwritePublishSettings )
+    .dependsOn( slackMorphismClient % "compile->compile;test->test" )
+
+lazy val slackMorphismReactiveStreams =
+  (project in file( "reactive-streams" ))
+    .settings(
+      name := "slack-morphism-reactive-streams",
+      libraryDependencies ++= baseDependencies ++ Seq(
+        "org.reactivestreams" % "reactive-streams" % reactiveStreamsVersion
+      ) ++ (Seq(
+        "org.reactivestreams" % "reactive-streams-tck" % reactiveStreamsVersion
+      ).map( _ % "test" ) )
     )
     .settings( scalaDocSettings )
     .settings( compilerPluginSettings )
