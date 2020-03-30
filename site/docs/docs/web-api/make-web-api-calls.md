@@ -125,7 +125,7 @@ import sttp.client.akkahttp.AkkaHttpBackend
 
 implicit val sttpBackend = AkkaHttpBackend()
 
-val client = new SlackApiClient()
+val client = SlackApiClient.create[Future]()
 
 implicit val slackApiToken: SlackApiToken = SlackApiBotToken("xoxb-89.....")
 
