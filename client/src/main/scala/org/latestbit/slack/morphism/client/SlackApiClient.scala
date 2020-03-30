@@ -107,7 +107,7 @@ object SlackApiClient {
   def toResource[F[_] : SlackApiClientBackend.BackendType](
       client: SlackApiClientT[F]
   ): Resource[F, SlackApiClientT[F]] = {
-    Resource.make( implicitly[Monad[F]].pure( client ) ) { client => implicitly[Monad[F]].pure( client.shutdown() ) }
+    Resource.make( Monad[F].pure( client ) ) { client => Monad[F].pure( client.shutdown() ) }
   }
 
   case class SlackApiClientBuildOptions[F[_] : SlackApiClientBackend.BackendType] private (

@@ -50,14 +50,13 @@ class SttpBackendTests extends AsyncFlatSpec with SlackApiClientTestsSuiteSuppor
     import sttp.client.asynchttpclient.cats.AsyncHttpClientCatsBackend
     implicit val cs: ContextShift[IO] = IO.contextShift( scala.concurrent.ExecutionContext.global )
 
-    AsyncHttpClientCatsBackend[IO]()
-      .flatMap { implicit backEnd =>
-        for {
-          client <- IO( SlackApiClient.create[IO]() )
-          result <- client.api.test( SlackApiTestRequest() )
-        } yield result
-      }
-      .unsafeToFuture()
+    (
+      for {
+        backend <- AsyncHttpClientCatsBackend[IO]()
+        client = SlackApiClient.build[IO]( backend ).create()
+        result <- client.api.test( SlackApiTestRequest() )
+      } yield result
+    ).unsafeToFuture()
       .map {
         case Right( resp )                     => fail( s"Unexpected resp: ${resp}" )
         case Left( ex: SlackApiResponseError ) => assert( ex.errorCode !== null )
@@ -72,19 +71,18 @@ class SttpBackendTests extends AsyncFlatSpec with SlackApiClientTestsSuiteSuppor
     import sttp.client.asynchttpclient.cats.AsyncHttpClientCatsBackend
     implicit val cs: ContextShift[IO] = IO.contextShift( scala.concurrent.ExecutionContext.global )
 
-    AsyncHttpClientCatsBackend[IO]()
-      .flatMap { implicit backEnd =>
-        for {
-          client <- IO(
-                     SlackApiClient
-                       .build[IO]
-                       .withThrottler( SlackApiRateThrottler.createStandardThrottler() )
-                       .create()
-                   )
-          result <- client.api.test( SlackApiTestRequest() )
-        } yield result
-      }
-      .unsafeToFuture()
+    (
+      for {
+        backend <- AsyncHttpClientCatsBackend[IO]()
+        client <- IO(
+                   SlackApiClient
+                     .build[IO]( backend )
+                     .withThrottler( SlackApiRateThrottler.createStandardThrottler() )
+                     .create()
+                 )
+        result <- client.api.test( SlackApiTestRequest() )
+      } yield result
+    ).unsafeToFuture()
       .map {
         case Right( resp )                     => fail( s"Unexpected resp: ${resp}" )
         case Left( ex: SlackApiResponseError ) => assert( ex.errorCode !== null )
@@ -98,15 +96,13 @@ class SttpBackendTests extends AsyncFlatSpec with SlackApiClientTestsSuiteSuppor
     import monix.eval._
     import monix.execution.Scheduler.Implicits.global
 
-    AsyncHttpClientMonixBackend()
-      .flatMap { implicit backEnd =>
-        for {
-          client <- Task.pure( SlackApiClient.create[Task]() )
-          result <- client.api.test( SlackApiTestRequest() )
-        } yield result
-      }
-      .executeAsync
-      .runToFuture
+    (
+      for {
+        backend <- AsyncHttpClientMonixBackend()
+        client = SlackApiClient.build[Task]( backend ).create()
+        result <- client.api.test( SlackApiTestRequest() )
+      } yield result
+    ).executeAsync.runToFuture
       .map {
         case Right( resp )                     => fail( s"Unexpected resp: ${resp}" )
         case Left( ex: SlackApiResponseError ) => assert( ex.errorCode !== null )

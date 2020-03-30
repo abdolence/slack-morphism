@@ -70,15 +70,12 @@ import cats.effect._
 // We should provide a ContextShift for Cats IO and STTP backend
 implicit val cs: ContextShift[IO] = IO.contextShift( scala.concurrent.ExecutionContext.global )
 
-// Creating an STTP backend
-AsyncHttpClientCatsBackend[IO]()
-      .flatMap { implicit backend =>        
-        implicit val slackApiToken: SlackApiToken = SlackApiBotToken("xoxb-89.....")
-        for {
-          client <- IO( SlackApiClient.create[IO]() ) // create an instance of client
-          result <- client.api.test( SlackApiTestRequest() ) // call an example method inside IO monad
-        } yield result
-      }.unsafeRunSync() // usual IO lifecycle
+for {
+  backend <- AsyncHttpClientCatsBackend[IO]() // Creating an STTP backend
+  client = SlackApiClient.build[IO]( backend ).create() // Create a Slack API client
+  result <- client.api.test( SlackApiTestRequest() ) // call an example method inside IO monad
+} yield result
+
 ```
 
 ### Monix backend
@@ -95,15 +92,12 @@ import sttp.client.asynchttpclient.monix.AsyncHttpClientMonixBackend
 import monix.eval._
 import monix.execution.Scheduler.Implicits.global
 
-// Creating an STTP backend
-AsyncHttpClientMonixBackend()
-      .flatMap { implicit backend =>
-        for {
-          client <- Task.pure( SlackApiClient.create[Task]() )
-          result <- client.api.test( SlackApiTestRequest() )
-        } yield result
-      }
-      .executeAsync // Monix Task here
+for {
+        backend <- AsyncHttpClientMonixBackend() // Creating an STTP backend
+        client = SlackApiClient.build[Task]( backend ).create() // Create a Slack API client
+        result <- client.api.test( SlackApiTestRequest() ) // call an example method inside Task monad
+} yield result
+
 ```
 
 ## Make Web API methods calls
