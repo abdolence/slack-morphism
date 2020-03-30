@@ -290,12 +290,10 @@ lazy val slackMorphismHttp4sExample =
           excludeAll (ExclusionRule( organization = "io.circe" ) )
       ) ) ++ Seq(
         "com.monovore" %% "decline" % declineVersion
-          exclude ("org.typelevel", "cats-core")
-          excludeAll (ExclusionRule( organization = "io.circe" ) ),
+          exclude ("org.typelevel", "cats-core"),
         "com.monovore" %% "decline-effect" % declineVersion
           exclude ("org.typelevel", "cats-core")
-          exclude ("org.typelevel", "cats-effect")
-          excludeAll (ExclusionRule( organization = "io.circe" ) ),
+          exclude ("org.typelevel", "cats-effect"),
         "ch.qos.logback" % "logback-classic" % logbackVersion
           exclude ("org.slf4j", "slf4j-api"),
         "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion,
