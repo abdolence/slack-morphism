@@ -53,7 +53,7 @@ client.conversations.historyScroller(
   }
 ```
 
-## Create a reactive steam Publisher[]
+## Create a reactive stream Publisher[]
 ```scala
 import org.reactivestreams.Publisher
 
