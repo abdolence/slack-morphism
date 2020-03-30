@@ -53,12 +53,14 @@ client.conversations.historyScroller(
   }
 ```
 
-## Create a reactive steam Publisher[]
+## Create a reactive stream Publisher[]
 This is an optional module, and if you're using Reactive Streams, you need additional dependency:
 
 ```scala
 libraryDependencies += "org.latestbit" %% "slack-morphism-reactive-streams" % slackMorphismVer
 ```
+
+Then you can use it as in this example:
 
 ```scala
 import org.reactivestreams.Publisher

@@ -21,6 +21,7 @@ import cats.instances.future._
 // Creating a client instance with throttling
 val client = 
     SlackApiClient
+        .build
         .withThrottler( SlackApiRateThrottler.createStandardThrottler() )
         .create()
 ```
