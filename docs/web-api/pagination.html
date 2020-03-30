@@ -175,7 +175,7 @@ Scrollers are completely optional.</p>
   <span class="o">}</span>
 </code></pre></div></div>
 
-<h2 id="create-a-reactive-steam-publisher">Create a reactive steam Publisher[]</h2>
+<h2 id="create-a-reactive-stream-publisher">Create a reactive stream Publisher[]</h2>
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">org.reactivestreams.Publisher</span>
 
 <span class="k">val</span> <span class="nv">publisher</span> <span class="k">:</span> <span class="kt">Publisher</span><span class="o">[</span><span class="kt">SlackMessage</span><span class="o">]</span> <span class="k">=</span> 
@@ -199,8 +199,8 @@ Scrollers are completely optional.</p>
 
 </code></pre></div></div>
 
-<h2 id="create-a-fs2-stream">Create a FS2 stream</h2>
-<p>This is an optional module, and if you’re using FS2, you need additional dependency:</p>
+<h2 id="create-a-fs2-stream-and-cats">Create a FS2 stream and Cats</h2>
+<p>This is an optional support and if you’re using FS2, you need to add additional dependency:</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.latestbit"</span> <span class="o">%%</span> <span class="s">"slack-morphism-fs2"</span> <span class="o">%</span> <span class="n">slackMorphismVer</span>
 </code></pre></div></div>
