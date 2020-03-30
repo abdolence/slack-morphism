@@ -1,57 +1,56 @@
 package org.latestbit.slack.morphism.examples.http4s
 
-import cats.effect.{ ExitCode, IO, IOApp }
+import cats.effect._
 import cats.implicits._
 import com.typesafe.scalalogging.StrictLogging
+
+import com.monovore.decline._
+import com.monovore.decline.effect._
+
 import org.latestbit.slack.morphism.examples.http4s.config._
 
-object Main extends IOApp with StrictLogging {
+object Main
+    extends CommandIOApp( name = Main.APP_NAME, version = Main.APP_VER, header = Main.APP_DESC_HEADER )
+    with StrictLogging {
 
-  val APP_NAME = "Slack-Morphism-Example"
-  val APP_VER = "0.1.0"
+  final val APP_NAME = "Slack-Morphism-Example"
+  final val APP_VER = "0.1.0"
+  final val APP_DESC_HEADER = "Slack Morphism Example Bot For http4s"
 
-  private def createParser() = {
-    new scopt.OptionParser[AppConfig]( APP_NAME ) {
-      head( APP_NAME, APP_VER )
-      opt[String]( "host" ).abbr( "h" ).text( "HTTP Server Host" ).action { ( v, c ) => c.copy( httpServerHost = v ) }
-      opt[Int]( "port" ).abbr( "p" ).text( "HTTP Server Port" ).action { ( v, c ) => c.copy( httpServerPort = v ) }
-      opt[String]( "slack-app-id" ).abbr( "aid" ).text( "Slack App Id" ).required().action { ( v, c ) =>
-        c.copy( slackAppConfig = c.slackAppConfig.copy( appId = v ) )
-      }
-      opt[String]( "slack-client-id" ).abbr( "cid" ).text( "Slack Client Id" ).required().action { ( v, c ) =>
-        c.copy( slackAppConfig = c.slackAppConfig.copy( clientId = v ) )
-      }
-      opt[String]( "slack-client-secret" ).abbr( "cs" ).text( "Slack Client Secret" ).required().action { ( v, c ) =>
-        c.copy( slackAppConfig = c.slackAppConfig.copy( clientSecret = v ) )
-      }
-      opt[String]( "slack-signing-secret" ).abbr( "ss" ).text( "Slack Signing Secret" ).required().action { ( v, c ) =>
-        c.copy( slackAppConfig = c.slackAppConfig.copy( signingSecret = v ) )
-      }
-      opt[String]( "slack-redirect-url" ).abbr( "rurl" ).text( "Slack Redirect URL" ).action { ( v, c ) =>
-        c.copy( slackAppConfig = c.slackAppConfig.copy( redirectUrl = Some( v ) ) )
-      }
-      opt[String]( "slack-install-bot-scope" )
-        .abbr( "bot-scope" )
-        .text( "Slack OAuth Install Scope for a bot token" )
-        .action { ( v, c ) => c.copy( slackAppConfig = c.slackAppConfig.copy( botScope = v ) ) }
-      opt[String]( "sway-db-path" ).abbr( "dbpath" ).text( "Path to data for SwayDb" ).action { ( v, c ) =>
-        c.copy( databaseDir = v )
-      }
-    }
+  private val parseSlackConfigOpts: Opts[SlackAppConfig] = {
+    (
+      Opts.option[String]( long = "slack-app-id", short = "aid", help = "Slack App Id" ),
+      Opts.option[String]( long = "slack-client-id", short = "cid", help = "Slack Client Id" ),
+      Opts.option[String]( long = "slack-client-secret", short = "cs", help = "Slack Client Secret" ),
+      Opts.option[String]( long = "slack-signing-secret", short = "ss", help = "Slack Signing Secret" ),
+      Opts
+        .option[String]( long = "slack-redirect-url", short = "rurl", help = "Slack OAuth Redirect URL" )
+        .orNone,
+      Opts
+        .option[String](
+          long = "slack-install-bot-scope",
+          short = "bot-scope",
+          help = "Slack OAuth Install Scope for a bot token"
+        )
+        .withDefault( SlackAppConfig.defaultScope )
+    ).mapN( SlackAppConfig.apply )
   }
 
-  def run( args: List[String] ) = {
-    val parser = createParser()
-    parser.parse( args, AppConfig( slackAppConfig = SlackAppConfig.empty ) ) match {
-      case Some( config: AppConfig ) => {
-        logger.info( "Loading..." )
-        Http4sServer.stream[IO]( config ).compile.drain.as( ExitCode.Success )
-      }
+  private val parseAppConfigOpts: Opts[AppConfig] = {
+    (
+      Opts.option[String]( long = "host", short = "h", help = "HTTP Server Host" ).withDefault( AppConfig.defaultHost ),
+      Opts.option[Int]( long = "port", short = "p", help = "HTTP Server Port" ).withDefault( AppConfig.defaultPort ),
+      parseSlackConfigOpts,
+      Opts
+        .option[String]( long = "sway-db-path", short = "dbpath", help = "Path to data for SwayDb" )
+        .withDefault( AppConfig.defaultDatabaseDir )
+    ).mapN( AppConfig.apply )
+  }
 
-      case _ => {
-        parser.showTryHelp()
-        IO.pure( ExitCode.Error )
-      }
+  override def main: Opts[IO[ExitCode]] = {
+    parseAppConfigOpts.map { config: AppConfig =>
+      logger.info( "Loading..." )
+      Http4sServer.stream[IO]( config ).compile.drain.as( ExitCode.Success )
     }
   }
 }

@@ -8,7 +8,7 @@ import sbt.Package.ManifestAttributes
 
 name := "slack-morphism-root"
 
-ThisBuild / version := "1.3.0"
+ThisBuild / version := "1.3.1-SNAPSHOT"
 
 ThisBuild / description := "Open Type-Safe Reactive Client with Blocks Templating for Slack"
 
@@ -127,6 +127,7 @@ val scalaLoggingVersion = "3.9.2"
 val scoptVersion = "3.7.1"
 val swayDbVersion = "0.11"
 val http4sVersion = "0.21.1"
+val declineVersion = "1.0.0"
 
 // For fs2 integration module
 val fs2Version = "2.2.1"
@@ -288,7 +289,13 @@ lazy val slackMorphismHttp4sExample =
           exclude ("org.typelevel", "cats-effect")
           excludeAll (ExclusionRule( organization = "io.circe" ) )
       ) ) ++ Seq(
-        "com.github.scopt" %% "scopt" % scoptVersion,
+        "com.monovore" %% "decline" % declineVersion
+          exclude ("org.typelevel", "cats-core")
+          excludeAll (ExclusionRule( organization = "io.circe" ) ),
+        "com.monovore" %% "decline-effect" % declineVersion
+          exclude ("org.typelevel", "cats-core")
+          exclude ("org.typelevel", "cats-effect")
+          excludeAll (ExclusionRule( organization = "io.circe" ) ),
         "ch.qos.logback" % "logback-classic" % logbackVersion
           exclude ("org.slf4j", "slf4j-api"),
         "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion,
