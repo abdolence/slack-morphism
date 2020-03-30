@@ -8,15 +8,16 @@ permalink: docs/web-api/make-web-api-calls
 
 You have to choose a [sttp backend](https://sttp.readthedocs.io/en/latest/backends/summary.html) 
 that supports `scala.concurrent.Future`, `cats.effect.Async/Effect`, `monix.eval.Task` response wrappers:
+* AsyncHttpClientFutureBackend
+* AsyncHttpClientCatsBackend
+* AsyncHttpClientFs2Backend
+* AsyncHttpClientMonixBackend
 * AkkaHttpBackend
 * OkHttpFutureBackend
 * OkHttpMonixBackend
 * HttpClientFutureBackend
 * HttpClientMonixBackend
-* AsyncHttpClientCatsBackend
-* AsyncHttpClientFs2Backend
 * Http4sBackend
-* AsyncHttpClientMonixBackend
 
 Add a dependency of your choice to your `build.sbt`.
 
