@@ -37,7 +37,8 @@ object SlackApiClient {
    * // For Future:
    * implicit val sttpBackend = AsyncHttpClientFutureBackend()
    *
-   * SlackApiClient.create()
+   * val client = SlackApiClient.create[Future]()
+   *
    * }}}
    *
    * An example for cats-effect IO:
@@ -45,17 +46,12 @@ object SlackApiClient {
    *
    * implicit val cs: ContextShift[IO] = IO.contextShift( scala.concurrent.ExecutionContext.global )
    *
-   * AsyncHttpClientCatsBackend[IO]()
-   *       .flatMap { implicit backEnd =>
-   *         for {
-   *           client <- IO( SlackApiClient.create[IO]() )
-   *           testResult <- client.api.test( SlackApiTestRequest() )
-   *         }
-   *         yield
-   *            testResult
-   *       }
+   * for {
+   *   backend <- AsyncHttpClientCatsBackend[IO]() // Creating an STTP backend
+   *   client = SlackApiClient.build[IO]( backend ).create() // Create a Slack API client
+   *   result <- client.api.test( SlackApiTestRequest() ) // call an example method inside IO monad
+   * } yield result
    *
-   * SlackApiClient.create()
    * }}}
    *
    */
