@@ -139,10 +139,10 @@ that supports <code class="highlighter-rouge">scala.concurrent.Future</code>, <c
 
 <p>Add a dependency of your choice to your <code class="highlighter-rouge">build.sbt</code>.</p>
 
-<p>For Akka Http this is:</p>
+<p>For instance, for Akka Http backend this is:</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"com.softwaremill.sttp.client" %% "akka-http-backend" % sttpVersion
 </code></pre></div></div>
-<p>where <code class="highlighter-rouge">sttpVersion</code> &gt; 2.0+</p>
+<p>where <code class="highlighter-rouge">sttpVersion</code> should be 2.0+</p>
 
 <h2 id="create-a-client-to-slack-web-api-methods">Create a client to Slack Web API methods</h2>
 
@@ -208,9 +208,9 @@ to all available of Slack Web API methods.</p>
 <span class="k">import</span> <span class="nn">monix.execution.Scheduler.Implicits.global</span>
 
 <span class="k">for</span> <span class="o">{</span>
-        <span class="n">backend</span> <span class="k">&lt;-</span> <span class="nc">AsyncHttpClientMonixBackend</span><span class="o">()</span> <span class="c1">// Creating an STTP backend</span>
-        <span class="n">client</span> <span class="k">=</span> <span class="nv">SlackApiClient</span><span class="o">.</span><span class="py">build</span><span class="o">[</span><span class="kt">Task</span><span class="o">](</span> <span class="n">backend</span> <span class="o">).</span><span class="py">create</span><span class="o">()</span> <span class="c1">// Create a Slack API client</span>
-        <span class="n">result</span> <span class="k">&lt;-</span> <span class="nv">client</span><span class="o">.</span><span class="py">api</span><span class="o">.</span><span class="py">test</span><span class="o">(</span> <span class="nc">SlackApiTestRequest</span><span class="o">()</span> <span class="o">)</span> <span class="c1">// call an example method inside Task monad</span>
+  <span class="n">backend</span> <span class="k">&lt;-</span> <span class="nc">AsyncHttpClientMonixBackend</span><span class="o">()</span> <span class="c1">// Creating an STTP backend</span>
+  <span class="n">client</span> <span class="k">=</span> <span class="nv">SlackApiClient</span><span class="o">.</span><span class="py">build</span><span class="o">[</span><span class="kt">Task</span><span class="o">](</span> <span class="n">backend</span> <span class="o">).</span><span class="py">create</span><span class="o">()</span> <span class="c1">// Create a Slack API client</span>
+  <span class="n">result</span> <span class="k">&lt;-</span> <span class="nv">client</span><span class="o">.</span><span class="py">api</span><span class="o">.</span><span class="py">test</span><span class="o">(</span> <span class="nc">SlackApiTestRequest</span><span class="o">()</span> <span class="o">)</span> <span class="c1">// call an example method inside Task monad</span>
 <span class="o">}</span> <span class="k">yield</span> <span class="n">result</span>
 
 </code></pre></div></div>
