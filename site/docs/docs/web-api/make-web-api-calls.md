@@ -20,11 +20,11 @@ that supports `scala.concurrent.Future`, `cats.effect.Async/Effect`, `monix.eval
 
 Add a dependency of your choice to your `build.sbt`.
 
-For Akka Http this is:
+For instance, for Akka Http backend this is:
 ```
 "com.softwaremill.sttp.client" %% "akka-http-backend" % sttpVersion
 ```
-where `sttpVersion` > 2.0+
+where `sttpVersion` should be 2.0+
 
 ## Create a client to Slack Web API methods
 
@@ -93,9 +93,9 @@ import monix.eval._
 import monix.execution.Scheduler.Implicits.global
 
 for {
-        backend <- AsyncHttpClientMonixBackend() // Creating an STTP backend
-        client = SlackApiClient.build[Task]( backend ).create() // Create a Slack API client
-        result <- client.api.test( SlackApiTestRequest() ) // call an example method inside Task monad
+  backend <- AsyncHttpClientMonixBackend() // Creating an STTP backend
+  client = SlackApiClient.build[Task]( backend ).create() // Create a Slack API client
+  result <- client.api.test( SlackApiTestRequest() ) // call an example method inside Task monad
 } yield result
 
 ```
