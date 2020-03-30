@@ -61,7 +61,7 @@ class AsyncSeqIteratorTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenProp
     )( catsStdInstancesForFuture( ec ) )
   }
 
-  "iterating over generated async results" should "be in correct order" in {
+  "iterating with AsyncIterator over generated async results" should "be in correct order" in {
     createIterator()
       .foldLeft( List[String]() ) {
         case ( all, itemValue ) =>
@@ -129,6 +129,27 @@ class AsyncSeqIteratorTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenProp
       .map { xs =>
         assert( xs.nonEmpty )
         assert( xs.headOption.contains( "initial".toUpperCase ) )
+      }
+  }
+
+  it should "provide a filter function" in {
+    createIterator()
+      .map( _.toUpperCase )
+      .filter( _.startsWith( "NEXT" ) )
+      .map( _.toLowerCase )
+      .filter( _.startsWith( "next" ) )
+      .foldLeft( List[String]() ) {
+        case ( all, itemValue ) =>
+          all :+ itemValue
+      }
+      .map { xs =>
+        assert( xs.nonEmpty )
+        assert( !xs.headOption.contains( "initial" ) )
+        assert( !xs.lastOption.contains( "last" ) )
+        assert( xs.zipWithIndex.forall {
+          case ( x, idx ) =>
+            x.contains( s"next: ${idx + 1}" )
+        } )
       }
   }
 

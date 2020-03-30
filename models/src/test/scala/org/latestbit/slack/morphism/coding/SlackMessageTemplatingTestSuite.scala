@@ -36,7 +36,7 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
     }
   }
 
-  "it" should "provide DSL to build blocks API" in {
+  it should "provide DSL to build blocks API" in {
     val testCond = 0
 
     new SlackMessageTemplate {

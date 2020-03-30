@@ -106,24 +106,27 @@ class SlackApiScrollableSubscriptionCommandChannel[F[_] : Monad, IT, PT, SR <: S
       state.batchIterator
         .map { batchFuture =>
           val result: F[ConsumerState[F, IT, PT, SR]] =
-            batchFuture.value().flatMap {
-              case Right( items ) => {
-                batchFuture.next().map { nextBatchFuture =>
-                  state.copy(
-                    remainItems = items,
-                    batchIterator = nextBatchFuture
+            batchFuture
+              .value()
+              .flatMap( _.getOrElse( List[IT]().asRight ) match {
+                case Right( items ) => {
+                  batchFuture.next().map { nextBatchFuture =>
+                    state.copy(
+                      remainItems = items,
+                      batchIterator = nextBatchFuture
+                    )
+                  }
+                }
+                case Left( err ) => {
+                  Monad[F].pure(
+                    state.copy(
+                      lastError = Some( err ),
+                      batchIterator = None
+                    )
                   )
                 }
-              }
-              case Left( err ) => {
-                Monad[F].pure(
-                  state.copy(
-                    lastError = Some( err ),
-                    batchIterator = None
-                  )
-                )
-              }
-            }
+              } )
+
           result
         }
         .getOrElse(

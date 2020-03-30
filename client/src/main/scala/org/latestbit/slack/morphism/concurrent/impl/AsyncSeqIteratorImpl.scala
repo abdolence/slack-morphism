@@ -22,9 +22,9 @@ import cats.Monad
 import cats.implicits._
 import org.latestbit.slack.morphism.concurrent.AsyncSeqIterator
 
-private[concurrent] final class AsyncSeqIteratorImpl[F[_] : Monad, I, A, P](
+private[concurrent] final class AsyncSeqIteratorImpl[F[_] : Monad, I, A, P] private[concurrent] (
     initial: => F[I],
-    toValue: I => A,
+    toValue: I => Option[A],
     getPos: I => Option[P],
     producer: P => F[I]
 ) extends AsyncSeqIterator[F, I, A] {
@@ -32,7 +32,7 @@ private[concurrent] final class AsyncSeqIteratorImpl[F[_] : Monad, I, A, P](
 
   override def item(): F[I] = computed
 
-  override def value(): F[A] = computed.map( toValue )
+  override def value(): F[Option[A]] = computed.map( toValue )
 
   override def next(): F[Option[AsyncSeqIterator[F, I, A]]] = {
     computed.map { computedValue =>
@@ -48,17 +48,18 @@ private[concurrent] final class AsyncSeqIteratorImpl[F[_] : Monad, I, A, P](
   }
 
   override def map[B]( f: A => B ): AsyncSeqIterator[F, I, B] = {
-    new AsyncSeqIteratorImpl(
+    new AsyncSeqIteratorImpl[F, I, B, P](
       initial,
-      toValue.andThen( f ),
+      toValue.andThen( _.map( f ) ),
       getPos,
       producer
     )
   }
 
   override def foldLeft[B]( initial: B )( f: ( B, A ) => B ): F[B] = {
-    value().flatMap { currentValue =>
-      val folded = f( initial, currentValue )
+    value().flatMap { currentValueOpt =>
+      val folded =
+        currentValueOpt.map { currentValue => f( initial, currentValue ) }.getOrElse( initial )
 
       next().flatMap {
         case Some( nextIterator ) => {
@@ -72,8 +73,8 @@ private[concurrent] final class AsyncSeqIteratorImpl[F[_] : Monad, I, A, P](
   }
 
   override def foreach[U]( f: A => U ): Unit = {
-    value().flatMap { currentValue =>
-      f( currentValue )
+    value().flatMap { currentValueOpt =>
+      currentValueOpt.foreach( f )
       next().map {
         case Some( nextIter ) => {
           nextIter.foreach( f )
@@ -84,4 +85,10 @@ private[concurrent] final class AsyncSeqIteratorImpl[F[_] : Monad, I, A, P](
     ()
   }
 
+  override def filter( f: A => Boolean ): AsyncSeqIterator[F, I, A] = new AsyncSeqIteratorImpl(
+    initial,
+    toValue.andThen( _.filter( f ) ),
+    getPos,
+    producer
+  )
 }

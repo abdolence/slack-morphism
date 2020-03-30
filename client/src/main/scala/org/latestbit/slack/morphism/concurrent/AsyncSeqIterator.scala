@@ -73,7 +73,7 @@ import scala.language.implicitConversions
  * }}}
  *
  * @note It is not possible to implement standard Iterator[] because of the sync nature of hasNext.
- * @tparam F async/effect monad kind (for example standard scala.concurrent.Future)
+ * @tparam F async/effect monad kind (for example, standard scala.concurrent.Future or cats.effect.IO)
  * @tparam I iterating over item type which has a some position
  * @tparam A extracted value type (extracted from I)
  */
@@ -87,7 +87,7 @@ trait AsyncSeqIterator[F[_], I, A] {
   /**
    * Future of value of item
    */
-  def value(): F[A]
+  def value(): F[Option[A]]
 
   /**
    * Future next iterator if it exists (depends on current item and its position/state)
@@ -122,6 +122,16 @@ trait AsyncSeqIterator[F[_], I, A] {
    * @param f a function to apply
    */
   def foreach[U]( f: A => U ): Unit
+
+  /**
+   * Filter items using the given function `f`
+   *
+   * @param f a filter function
+   * @return a new iterator with filtered items
+   */
+  def filter(
+      f: A => Boolean
+  ): AsyncSeqIterator[F, I, A]
 }
 
 /**
@@ -155,7 +165,7 @@ object AsyncSeqIterator {
         producer: P => F[I]
     ): AsyncSeqIterator[F, I, A] = new AsyncSeqIteratorImpl[F, I, A, P](
       initial,
-      toValue,
+      toValue.andThen( Some.apply ),
       getPos,
       producer
     )
