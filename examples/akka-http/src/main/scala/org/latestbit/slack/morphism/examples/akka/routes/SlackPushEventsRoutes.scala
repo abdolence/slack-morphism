@@ -27,7 +27,6 @@ import akka.http.scaladsl.server._
 import akka.stream.typed.scaladsl.ActorMaterializer
 import com.typesafe.scalalogging._
 import org.latestbit.slack.morphism.events._
-import org.latestbit.slack.morphism.examples.akka.AppConfig
 
 import scala.concurrent.{ ExecutionContext, Future }
 import io.circe.parser._
@@ -38,8 +37,8 @@ import org.latestbit.slack.morphism.client.reqresp.views.SlackApiViewsPublishReq
 import org.latestbit.slack.morphism.examples.akka.db.SlackTokensDb
 import org.latestbit.slack.morphism.examples.akka.templates._
 import org.latestbit.slack.morphism.views.SlackHomeView
-
 import cats.instances.future._
+import org.latestbit.slack.morphism.examples.akka.config.AppConfig
 
 class SlackPushEventsRoutes(
     implicit ctx: ActorContext[_],

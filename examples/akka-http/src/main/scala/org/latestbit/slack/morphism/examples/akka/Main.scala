@@ -22,6 +22,7 @@ import akka.Done
 import akka.actor.typed._
 import akka.actor.typed.scaladsl._
 import com.typesafe.scalalogging._
+import org.latestbit.slack.morphism.examples.akka.config.{ AppConfig, SlackAppConfig }
 
 import scala.concurrent.Await
 import scala.concurrent.duration._

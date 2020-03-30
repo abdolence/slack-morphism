@@ -28,13 +28,13 @@ import io.circe.parser._
 import org.latestbit.slack.morphism.client.SlackApiClientT
 import org.latestbit.slack.morphism.common.SlackResponseTypes
 import org.latestbit.slack.morphism.events._
-import org.latestbit.slack.morphism.examples.akka.AppConfig
 import org.latestbit.slack.morphism.examples.akka.db.SlackTokensDb
 import org.latestbit.slack.morphism.examples.akka.templates._
 
 import scala.concurrent.{ ExecutionContext, Future }
 import cats.instances.future._
 import org.latestbit.slack.morphism.client.reqresp.events.SlackApiEventMessageReply
+import org.latestbit.slack.morphism.examples.akka.config.AppConfig
 
 class SlackCommandEventsRoutes(
     implicit ctx: ActorContext[_],

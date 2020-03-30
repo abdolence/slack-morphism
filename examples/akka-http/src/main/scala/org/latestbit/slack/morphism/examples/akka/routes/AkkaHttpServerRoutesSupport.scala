@@ -30,7 +30,6 @@ import io.circe.Encoder
 import io.circe.syntax._
 import org.latestbit.slack.morphism.client.SlackApiToken
 import org.latestbit.slack.morphism.events.signature.SlackEventSignatureVerifier
-import org.latestbit.slack.morphism.examples.akka.AppConfig
 import org.latestbit.slack.morphism.examples.akka.db.SlackTokensDb
 
 import scala.concurrent.{ ExecutionContext, Future }
@@ -39,6 +38,7 @@ import cats.Functor
 import cats.instances.option._
 import cats.implicits._
 import com.typesafe.scalalogging.StrictLogging
+import org.latestbit.slack.morphism.examples.akka.config.AppConfig
 
 trait AkkaHttpServerRoutesSupport extends org.latestbit.slack.morphism.codecs.CirceCodecs with StrictLogging {
 

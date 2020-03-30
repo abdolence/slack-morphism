@@ -26,11 +26,11 @@ import akka.http.scaladsl.server._
 import akka.stream.typed.scaladsl.ActorMaterializer
 import com.typesafe.scalalogging.StrictLogging
 import org.latestbit.slack.morphism.client.{ SlackApiClient, SlackApiClientT }
-import org.latestbit.slack.morphism.examples.akka.AppConfig
 import org.latestbit.slack.morphism.examples.akka.db.SlackTokensDb
 
 import scala.concurrent.{ ExecutionContext, Future }
 import cats.instances.future._
+import org.latestbit.slack.morphism.examples.akka.config.AppConfig
 
 class SlackOAuthRoutes(
     implicit ctx: ActorContext[_],

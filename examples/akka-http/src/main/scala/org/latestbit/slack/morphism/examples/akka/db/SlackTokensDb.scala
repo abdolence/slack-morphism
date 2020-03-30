@@ -20,7 +20,6 @@ package org.latestbit.slack.morphism.examples.akka.db
 
 import akka.actor.typed._
 import akka.actor.typed.scaladsl._
-import org.latestbit.slack.morphism.examples.akka.AppConfig
 import swaydb.{ Set => _, _ }
 import swaydb.serializers.Default._
 import akka.actor.typed.scaladsl.adapter._
@@ -28,6 +27,7 @@ import com.typesafe.scalalogging._
 import swaydb.IO.ApiIO
 import swaydb.data.slice.Slice
 import cats.implicits._
+import org.latestbit.slack.morphism.examples.akka.config.AppConfig
 
 import scala.concurrent.ExecutionContextExecutor
 
