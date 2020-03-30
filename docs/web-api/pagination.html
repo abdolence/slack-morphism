@@ -176,7 +176,21 @@ Scrollers are completely optional.</p>
 </code></pre></div></div>
 
 <h2 id="create-a-reactive-stream-publisher">Create a reactive stream Publisher[]</h2>
+<p>This is an optional module, and if you’re using Reactive Streams, you need additional dependency:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.latestbit"</span> <span class="o">%%</span> <span class="s">"slack-morphism-reactive-streams"</span> <span class="o">%</span> <span class="n">slackMorphismVer</span>
+</code></pre></div></div>
+
+<p>Then you can use it as in this example:</p>
+
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">org.reactivestreams.Publisher</span>
+
+<span class="k">import</span> <span class="nn">cats.instances.future._</span> <span class="c1">// or cats.implicits._ required</span>
+<span class="k">import</span> <span class="nn">scala.concurrent.ExecutionContext.Implicits.global</span>
+
+<span class="c1">// Additional import for support Reactive Streams</span>
+<span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client.reactive._</span>
+
 
 <span class="k">val</span> <span class="nv">publisher</span> <span class="k">:</span> <span class="kt">Publisher</span><span class="o">[</span><span class="kt">SlackMessage</span><span class="o">]</span> <span class="k">=</span> 
     <span class="nv">client</span><span class="o">.</span><span class="py">conversations</span><span class="o">.</span><span class="py">historyScroller</span><span class="o">(</span>
@@ -199,8 +213,8 @@ Scrollers are completely optional.</p>
 
 </code></pre></div></div>
 
-<h2 id="create-a-fs2-stream-and-cats">Create a FS2 stream and Cats</h2>
-<p>This is an optional support and if you’re using FS2, you need to add additional dependency:</p>
+<h2 id="create-a-fs2-stream">Create a FS2 stream</h2>
+<p>This is an optional module, and if you’re using FS2, you need additional dependency:</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.latestbit"</span> <span class="o">%%</span> <span class="s">"slack-morphism-fs2"</span> <span class="o">%</span> <span class="n">slackMorphismVer</span>
 </code></pre></div></div>

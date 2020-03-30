@@ -124,14 +124,17 @@
 <h2 id="choose-an-http-client-backend">Choose an HTTP client backend</h2>
 
 <p>You have to choose a <a href="https://sttp.readthedocs.io/en/latest/backends/summary.html">sttp backend</a> 
-that supports <code class="highlighter-rouge">scala.concurrent.Future</code> or <code class="highlighter-rouge">cats.effect.Async/Effect</code> response wrappers:</p>
+that supports <code class="highlighter-rouge">scala.concurrent.Future</code>, <code class="highlighter-rouge">cats.effect.Async/Effect</code>, <code class="highlighter-rouge">monix.eval.Task</code> response wrappers:</p>
 <ul>
   <li>AkkaHttpBackend</li>
   <li>OkHttpFutureBackend</li>
+  <li>OkHttpMonixBackend</li>
   <li>HttpClientFutureBackend</li>
+  <li>HttpClientMonixBackend</li>
   <li>AsyncHttpClientCatsBackend</li>
   <li>AsyncHttpClientFs2Backend</li>
   <li>Http4sBackend</li>
+  <li>AsyncHttpClientMonixBackend</li>
 </ul>
 
 <p>Add a dependency of your choice to your <code class="highlighter-rouge">build.sbt</code>.</p>
@@ -147,6 +150,7 @@ that supports <code class="highlighter-rouge">scala.concurrent.Future</code> or 
 to all available of Slack Web API methods.</p>
 
 <h3 id="future-backend">Future backend</h3>
+
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Import Slack Morphism Client</span>
 <span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client._</span>
 
@@ -168,6 +172,7 @@ to all available of Slack Web API methods.</p>
 </code></pre></div></div>
 
 <h3 id="cats-effect-backend">Cats Effect backend</h3>
+
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Import Slack Morphism Client</span>
 <span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client._</span>
 
@@ -190,6 +195,30 @@ to all available of Slack Web API methods.</p>
           <span class="n">result</span> <span class="k">&lt;-</span> <span class="nv">client</span><span class="o">.</span><span class="py">api</span><span class="o">.</span><span class="py">test</span><span class="o">(</span> <span class="nc">SlackApiTestRequest</span><span class="o">()</span> <span class="o">)</span> <span class="c1">// call an example method inside IO monad</span>
         <span class="o">}</span> <span class="k">yield</span> <span class="n">result</span>
       <span class="o">}.</span><span class="py">unsafeRunSync</span><span class="o">()</span> <span class="c1">// usual IO lifecycle</span>
+</code></pre></div></div>
+
+<h3 id="monix-backend">Monix backend</h3>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Import Slack Morphism Client</span>
+<span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client._</span>
+
+<span class="c1">// Import STTP backend</span>
+<span class="k">import</span> <span class="nn">sttp.client.asynchttpclient.monix.AsyncHttpClientMonixBackend</span>
+
+
+<span class="c1">// Monix imports </span>
+<span class="k">import</span> <span class="nn">monix.eval._</span>
+<span class="k">import</span> <span class="nn">monix.execution.Scheduler.Implicits.global</span>
+
+<span class="c1">// Creating an STTP backend</span>
+<span class="nc">AsyncHttpClientMonixBackend</span><span class="o">()</span>
+      <span class="o">.</span><span class="py">flatMap</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">backend</span> <span class="k">=&gt;</span>
+        <span class="k">for</span> <span class="o">{</span>
+          <span class="n">client</span> <span class="k">&lt;-</span> <span class="nv">Task</span><span class="o">.</span><span class="py">pure</span><span class="o">(</span> <span class="nv">SlackApiClient</span><span class="o">.</span><span class="py">create</span><span class="o">[</span><span class="kt">Task</span><span class="o">]()</span> <span class="o">)</span>
+          <span class="n">result</span> <span class="k">&lt;-</span> <span class="nv">client</span><span class="o">.</span><span class="py">api</span><span class="o">.</span><span class="py">test</span><span class="o">(</span> <span class="nc">SlackApiTestRequest</span><span class="o">()</span> <span class="o">)</span>
+        <span class="o">}</span> <span class="k">yield</span> <span class="n">result</span>
+      <span class="o">}</span>
+      <span class="o">.</span><span class="py">executeAsync</span> <span class="c1">// Monix Task here</span>
 </code></pre></div></div>
 
 <h2 id="make-web-api-methods-calls">Make Web API methods calls</h2>
