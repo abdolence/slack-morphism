@@ -126,15 +126,16 @@
 <p>You have to choose a <a href="https://sttp.readthedocs.io/en/latest/backends/summary.html">sttp backend</a> 
 that supports <code class="highlighter-rouge">scala.concurrent.Future</code>, <code class="highlighter-rouge">cats.effect.Async/Effect</code>, <code class="highlighter-rouge">monix.eval.Task</code> response wrappers:</p>
 <ul>
+  <li>AsyncHttpClientFutureBackend</li>
+  <li>AsyncHttpClientCatsBackend</li>
+  <li>AsyncHttpClientFs2Backend</li>
+  <li>AsyncHttpClientMonixBackend</li>
   <li>AkkaHttpBackend</li>
   <li>OkHttpFutureBackend</li>
   <li>OkHttpMonixBackend</li>
   <li>HttpClientFutureBackend</li>
   <li>HttpClientMonixBackend</li>
-  <li>AsyncHttpClientCatsBackend</li>
-  <li>AsyncHttpClientFs2Backend</li>
   <li>Http4sBackend</li>
-  <li>AsyncHttpClientMonixBackend</li>
 </ul>
 
 <p>Add a dependency of your choice to your <code class="highlighter-rouge">build.sbt</code>.</p>
