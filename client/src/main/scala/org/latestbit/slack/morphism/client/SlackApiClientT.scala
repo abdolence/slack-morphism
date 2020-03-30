@@ -25,9 +25,8 @@ import org.latestbit.slack.morphism.client.ratectrl.{ SlackApiHttpRateControlSup
 /**
  * Slack API client
  */
-class SlackApiClientT[F[_] : SlackApiClientBackend.BackendType](
-    override protected val throttler: SlackApiRateThrottler[F] = SlackApiRateThrottler.createEmptyThrottler[F]()
-)(
+class SlackApiClientT[F[_] : SlackApiClientBackend.BackendType] private[client] (
+    override protected val throttler: SlackApiRateThrottler[F] = SlackApiRateThrottler.createEmptyThrottler[F](),
     override protected implicit val sttpBackend: SttpBackendType[F]
 ) extends SlackApiHttpRateControlSupport[F]
     with SlackApiOAuthClient[F]

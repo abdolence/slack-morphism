@@ -132,8 +132,7 @@ object SlackApiClient {
      * @return a client instance
      */
     def create(): SlackApiClientT[F] = {
-      implicit val backend = sttpBackend
-      new SlackApiClientT[F]( throttler )
+      new SlackApiClientT[F]( throttler, sttpBackend )
     }
 
     /**
