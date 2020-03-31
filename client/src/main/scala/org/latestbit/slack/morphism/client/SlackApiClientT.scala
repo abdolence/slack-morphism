@@ -62,7 +62,8 @@ class SlackApiClientT[F[_] : SlackApiClientBackend.BackendType] private[client] 
    * {{{
    *  for {
    *     ...
-   *     result <- client.withToken( readToken )( implicit token => _.api.test( SlackApiTestRequest() ) )
+   *     tokenValue <- readToken()
+   *     result <- client.withToken( tokenValue )( implicit token => _.api.test( SlackApiTestRequest() ) )
    *     ...
    *  }
    * }}}
