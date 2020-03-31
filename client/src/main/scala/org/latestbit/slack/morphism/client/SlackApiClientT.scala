@@ -54,4 +54,27 @@ class SlackApiClientT[F[_] : SlackApiClientBackend.BackendType] private[client] 
   def shutdown(): Unit = {
     throttler.shutdown()
   }
+
+  /**
+   * Auxiliary function to help in for-comprehension with tokens,
+   * where you still can't define implicit vals at the moment:
+   *
+   * {{{
+   *  for {
+   *     ...
+   *     result <- client.withToken( readToken )( implicit token => _.api.test( SlackApiTestRequest() ) )
+   *     ...
+   *  }
+   * }}}
+   *
+   * @param token a Slack API token
+   * @param request request requires a token
+   * @return result of execution
+   */
+  def withToken[T <: SlackApiToken, RS]( token: T )(
+      request: T => SlackApiClientT[F] => F[Either[SlackApiClientError, RS]]
+  ): F[Either[SlackApiClientError, RS]] = {
+    request( token )( this )
+  }
+
 }
