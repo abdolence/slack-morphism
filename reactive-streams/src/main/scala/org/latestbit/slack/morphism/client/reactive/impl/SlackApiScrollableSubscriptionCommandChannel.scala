@@ -211,8 +211,10 @@ class SlackApiScrollableSubscriptionCommandChannel[F[_] : Monad, IT, PT, SR <: S
   def enqueue( command: Command ) = {
     val _ = Using( UniqueLockMonitor.lockAndMonitor( statusLock ) ) { monitor =>
       commandBuffer = commandBuffer :+ command
+      val notify = notifyAsyncCommandCb
+      notifyAsyncCommandCb = null
       monitor.unlock()
-      Option( notifyAsyncCommandCb ).foreach( _.apply() )
+      Option( notify ).foreach( _.apply() )
     }
   }
 
