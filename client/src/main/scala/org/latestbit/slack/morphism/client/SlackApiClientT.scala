@@ -56,7 +56,7 @@ class SlackApiClientT[F[_] : SlackApiClientBackend.BackendType] private[client] 
   }
 
   /**
-   * Auxiliary function to help in for-comprehension with tokens,
+   * An auxiliary function to help in for-comprehensions with tokens,
    * where you still can't define implicit vals at the moment:
    *
    * {{{
