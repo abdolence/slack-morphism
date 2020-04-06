@@ -33,7 +33,7 @@ sealed trait SlackPushEvent
  * https://api.slack.com/events-api#request_url_configuration__amp__verification
  */
 @JsonAdt( "url_verification" )
-case class SlackUrlVerificationEvent( challenge: String = null ) extends SlackPushEvent
+case class SlackUrlVerificationEvent( challenge: String ) extends SlackPushEvent
 
 /**
  * Incoming Slack callback Event
