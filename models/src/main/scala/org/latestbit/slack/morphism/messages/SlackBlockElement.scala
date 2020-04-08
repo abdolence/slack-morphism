@@ -287,7 +287,7 @@ case class SlackBlockPlainInputElement(
     placeholder: Option[SlackBlockPlainText] = None,
     initial_value: Option[String] = None,
     multiline: Option[Boolean] = None,
-    min_length: Option[Int] = None,
+    min_length: Option[Long] = None,
     max_length: Option[Long] = None
 ) extends SlackBlockElement
     with SlackSectionBlockElement
