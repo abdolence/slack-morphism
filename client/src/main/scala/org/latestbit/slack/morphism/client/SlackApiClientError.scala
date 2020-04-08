@@ -122,8 +122,8 @@ case class SlackApiRateLimitedError(
     messages: Option[List[String]] = None
 ) extends SlackApiClientError(
       uri = uri,
-      message = s"Slack API rate limited error. Uri: ${uri}."
-        + s"${details.map( text => s" Details: ${text}.\n" ).getOrElse( "" )}" +
+      message = s"Slack API rate limited error. Uri: ${uri}." +
+        s"${details.map( text => s" Details: ${text}.\n" ).getOrElse( "" )}" +
         s"${warning.map( text => s" Warning: ${text}.\n" ).getOrElse( "" )}" +
         s"${messages.map( msgs => s" Additional error messages: \n${msgs.mkString( "\n" )}" ).getOrElse( "" )}"
     )
