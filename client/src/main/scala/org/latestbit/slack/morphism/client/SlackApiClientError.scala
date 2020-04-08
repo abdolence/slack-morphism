@@ -141,7 +141,13 @@ case class SlackApiDecodingError(
     uri: Uri,
     coderError: circe.Error,
     httpResponseBody: Option[String] = None
-) extends SlackApiClientError( uri = uri, message = coderError.getMessage, cause = Some( coderError ) )
+) extends SlackApiClientError(
+      uri = uri,
+      message =
+        s"Json codec error: ${coderError.getMessage}" +
+          s"${httpResponseBody.map( text => s"Received:\n${text}\n" ).getOrElse( "" )}",
+      cause = Some( coderError )
+    )
 
 /**
  * Slack Wep API unexpected empty result has been received
