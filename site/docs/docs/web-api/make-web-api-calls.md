@@ -145,6 +145,16 @@ is `client.oauth.v2.access(...)` etc.
 
 The complete list of all of the implemented Web API methods is available [here](/api/org/latestbit/slack/morphism/client/SlackApiClientT.html).
 
+There is also the auxiliary function `client.withToken` to help with implicit tokens in Scala for-comprehension:
+
+```scala
+for {
+        backend <- AsyncHttpClientCatsBackend[IO]()
+        client = SlackApiClient.build[IO]( backend ).create()
+        result <- client.withToken( yourToken )( implicit token => _.api.test( SlackApiTestRequest() ) )
+} yield result
+```
+
 ## Low-level HTTP API to Slack Web API
 In case you didn't find a method you need on the list above, 
 or you need something different/undocumented/legacy, 
