@@ -150,15 +150,30 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
      * Post a webhook message using webhook url
      * @param url a url from a Slack OAuth response or from a Slack app profile configuration
      * @param req a webhook request message params
+     * @param rateControlLimit optionally you may specify your own rate limit for this function
      */
     def postWebhookMessage(
         url: String,
-        req: SlackApiPostWebHookRequest
+        req: SlackApiPostWebHookRequest,
+        rateControlLimit: SlackApiRateControlLimit =
+          SlackApiRateControlParams.StandardLimits.Specials.INCOMING_HOOK_LIMIT
     )(
         implicit backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiPostWebHookResponse]] = {
-      sendSlackRequest[SlackApiPostWebHookResponse](
-        encodePostBody( createSlackHttpApiRequest(), req ).post( uri"${url}" )
+
+      sendManagedSlackHttpRequest[SlackApiPostWebHookResponse](
+        request = encodePostBody( createSlackHttpApiRequest(), req ).post( uri"${url}" ),
+        methodRateControl = Some(
+          SlackApiMethodRateControlParams(
+            specialRateLimit = Some(
+              SlackApiRateControlSpecialLimit(
+                key = s"webhook.post-${url}",
+                rateControlLimit
+              )
+            )
+          )
+        ),
+        slackApiToken = None
       ).map( handleSlackEmptyRes( SlackApiPostWebHookResponse() ) )
     }
 

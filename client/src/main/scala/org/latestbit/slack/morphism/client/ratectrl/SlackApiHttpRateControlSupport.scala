@@ -27,22 +27,22 @@ trait SlackApiHttpRateControlSupport[F[_]] extends SlackApiHttpProtocolSupport[F
 
   protected val throttler: SlackApiRateThrottler[F]
 
-  override protected def protectedSlackHttpApiRequest[RS](
+  override protected def sendManagedSlackHttpRequest[RS](
       request: Request[Either[String, String], Nothing],
-      methodRateControl: Option[SlackApiMethodRateControlParams]
+      methodRateControl: Option[SlackApiMethodRateControlParams],
+      slackApiToken: Option[SlackApiToken]
   )(
-      implicit slackApiToken: SlackApiToken,
-      decoder: Decoder[RS],
+      implicit decoder: Decoder[RS],
       backendType: SlackApiClientBackend.BackendType[F]
   ): F[Either[SlackApiClientError, RS]] = {
 
     throttler.throttle[RS](
       uri = request.uri,
-      apiToken = Some( slackApiToken ),
+      apiToken = slackApiToken,
       methodRateControl = methodRateControl
     ) { () =>
       super[SlackApiHttpProtocolSupport]
-        .protectedSlackHttpApiRequest( request, methodRateControl )
+        .sendManagedSlackHttpRequest( request, methodRateControl, slackApiToken )
     }
 
   }

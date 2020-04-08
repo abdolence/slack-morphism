@@ -159,17 +159,17 @@ trait SlackApiHttpProtocolSupport[F[_]] extends SlackApiClientBackend[F] {
     }
   }
 
-  protected def protectedSlackHttpApiRequest[RS](
+  protected def sendManagedSlackHttpRequest[RS](
       request: Request[Either[String, String], Nothing],
-      methodRateControl: Option[SlackApiMethodRateControlParams]
+      methodRateControl: Option[SlackApiMethodRateControlParams],
+      slackApiToken: Option[SlackApiToken]
   )(
-      implicit slackApiToken: SlackApiToken,
-      decoder: Decoder[RS],
+      implicit decoder: Decoder[RS],
       backendType: SlackApiClientBackend.BackendType[F]
   ): F[Either[SlackApiClientError, RS]] = {
 
     sendSlackRequest[RS](
-      request.auth.bearer( slackApiToken.value )
+      slackApiToken.map { token => request.auth.bearer( token.value ) }.getOrElse( request )
     )
 
   }
@@ -208,10 +208,11 @@ trait SlackApiHttpProtocolSupport[F[_]] extends SlackApiClientBackend[F] {
       backendType: SlackApiClientBackend.BackendType[F]
   ): F[Either[SlackApiClientError, RS]] = {
 
-    protectedSlackHttpApiRequest[RS](
+    sendManagedSlackHttpRequest[RS](
       encodePostBody[RQ]( request, body )
         .post( absoluteUri ),
-      methodRateControl
+      methodRateControl,
+      Some( slackApiToken )
     )
 
   }
@@ -250,9 +251,10 @@ trait SlackApiHttpProtocolSupport[F[_]] extends SlackApiClientBackend[F] {
         case ( acc, ( k, v ) ) =>
           v.map( acc.updated( k, _ ) ).getOrElse( acc )
       }
-    protectedSlackHttpApiRequest[RS](
+    sendManagedSlackHttpRequest[RS](
       request.get( getSlackMethodAbsoluteUri( methodUri ).params( filteredParams ) ),
-      methodRateControl
+      methodRateControl,
+      Some( slackApiToken )
     )
   }
 
