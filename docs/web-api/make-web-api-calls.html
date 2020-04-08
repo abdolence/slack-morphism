@@ -259,6 +259,15 @@ is <code class="highlighter-rouge">client.oauth.v2.access(...)</code> etc.</p>
 
 <p>The complete list of all of the implemented Web API methods is available <a href="/api/org/latestbit/slack/morphism/client/SlackApiClientT.html">here</a>.</p>
 
+<p>There is also the auxiliary function <code class="highlighter-rouge">client.withToken</code> to help with implicit tokens in Scala for-comprehension:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="o">{</span>
+        <span class="n">backend</span> <span class="k">&lt;-</span> <span class="nc">AsyncHttpClientCatsBackend</span><span class="o">[</span><span class="kt">IO</span><span class="o">]()</span>
+        <span class="n">client</span> <span class="k">=</span> <span class="nv">SlackApiClient</span><span class="o">.</span><span class="py">build</span><span class="o">[</span><span class="kt">IO</span><span class="o">](</span> <span class="n">backend</span> <span class="o">).</span><span class="py">create</span><span class="o">()</span>
+        <span class="n">result</span> <span class="k">&lt;-</span> <span class="nv">client</span><span class="o">.</span><span class="py">withToken</span><span class="o">(</span> <span class="n">yourToken</span> <span class="o">)(</span> <span class="k">implicit</span> <span class="n">token</span> <span class="k">=&gt;</span> <span class="nv">_</span><span class="o">.</span><span class="py">api</span><span class="o">.</span><span class="py">test</span><span class="o">(</span> <span class="nc">SlackApiTestRequest</span><span class="o">()</span> <span class="o">)</span> <span class="o">)</span>
+<span class="o">}</span> <span class="k">yield</span> <span class="n">result</span>
+</code></pre></div></div>
+
 <h2 id="low-level-http-api-to-slack-web-api">Low-level HTTP API to Slack Web API</h2>
 <p>In case you didn’t find a method you need on the list above, 
 or you need something different/undocumented/legacy, 
