@@ -234,15 +234,12 @@ using Scala language features and <a href="https://en.wikipedia.org/wiki/Design_
 depends on some user defined condition (a predicate):</p>
 
 <ul>
-  <li><code class="highlighter-rouge">optBlocks</code></li>
-  <li><code class="highlighter-rouge">optBlock</code></li>
-  <li><code class="highlighter-rouge">optBlockEl</code></li>
-  <li><code class="highlighter-rouge">optSectionField</code></li>
-  <li><code class="highlighter-rouge">optChoiceItem</code></li>
-  <li><code class="highlighter-rouge">optChoiceGroup</code></li>
+  <li><code class="highlighter-rouge">optionally</code> - single optional item (block, block element, section field, choice item, choice group)</li>
+  <li><code class="highlighter-rouge">optBlocks</code> - optional list of blocks</li>
 </ul>
 
-<p>They all lazily evaluated a second parameter, so it might be useful as well.</p>
+<p>The <code class="highlighter-rouge">optionally</code> function evaluates lazily a second parameter (only if condition is true), 
+so it might be useful as well.</p>
 
 <p>You can use them in Scala as:</p>
 
@@ -254,7 +251,7 @@ depends on some user defined condition (a predicate):</p>
     <span class="n">options</span> <span class="k">=</span> <span class="nf">choiceItems</span><span class="o">(</span>
       <span class="nf">choiceItem</span><span class="o">(</span> <span class="n">text</span> <span class="k">=</span> <span class="n">pt</span><span class="s">"test-menu-item 1"</span><span class="o">,</span> <span class="n">value</span> <span class="k">=</span> <span class="s">"1"</span> <span class="o">),</span>
       <span class="nf">choiceItem</span><span class="o">(</span> <span class="n">text</span> <span class="k">=</span> <span class="n">pt</span><span class="s">"test-menu-item 2"</span><span class="o">,</span> <span class="n">value</span> <span class="k">=</span> <span class="s">"2"</span> <span class="o">),</span>
-      <span class="nf">optChoiceItem</span><span class="o">(</span> <span class="n">someUserParam</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">)</span> <span class="o">(</span> <span class="nf">choiceItem</span><span class="o">(</span> <span class="n">text</span> <span class="k">=</span> <span class="n">pt</span><span class="s">"conditional-menu-item 3"</span><span class="o">,</span> <span class="n">value</span> <span class="k">=</span> <span class="s">"3"</span> <span class="o">)</span> <span class="o">)</span>
+      <span class="nf">optionally</span><span class="o">(</span> <span class="n">someUserParam</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">)</span> <span class="o">(</span> <span class="nf">choiceItem</span><span class="o">(</span> <span class="n">text</span> <span class="k">=</span> <span class="n">pt</span><span class="s">"conditional-menu-item 3"</span><span class="o">,</span> <span class="n">value</span> <span class="k">=</span> <span class="s">"3"</span> <span class="o">)</span> <span class="o">)</span>
     <span class="o">)</span>
   <span class="o">)</span>
 <span class="o">)</span>
@@ -270,7 +267,9 @@ depends on some user defined condition (a predicate):</p>
     <span class="o">),</span>
     <span class="nf">contextBlock</span><span class="o">(</span>
         <span class="nf">blockElements</span><span class="o">(</span>
-            <span class="n">md</span><span class="s">"*Author:* T. M. Schwartz"</span>
+            <span class="n">md</span><span class="s">"*Author:* T. M. Schwartz"</span><span class="o">,</span>
+            <span class="c1">// an optional block element</span>
+            <span class="nf">optionally</span><span class="o">(</span> <span class="n">someParam</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">)</span> <span class="o">(</span> <span class="n">md</span><span class="s">"*Rating:* cool"</span> <span class="o">)</span> 
         <span class="o">)</span>
     <span class="o">)</span>
 <span class="o">)</span>
