@@ -119,14 +119,11 @@ There are specialised DSL string interpolators:
 There are very useful DSL terms to provide an optional block, element, field or a choice item 
 depends on some user defined condition (a predicate):
 
-* `optBlocks`
-* `optBlock`
-* `optBlockEl`
-* `optSectionField`
-* `optChoiceItem`
-* `optChoiceGroup`  
+* `optionally` - single optional item (block, block element, section field, choice item, choice group)
+* `optBlocks` - optional list of blocks
 
-They all lazily evaluated a second parameter, so it might be useful as well.
+The `optionally` function evaluates lazily a second parameter (only if condition is true), 
+so it might be useful as well.
 
 You can use them in Scala as:
 
@@ -139,7 +136,7 @@ sectionBlock(
     options = choiceItems(
       choiceItem( text = pt"test-menu-item 1", value = "1" ),
       choiceItem( text = pt"test-menu-item 2", value = "2" ),
-      optChoiceItem( someUserParam > 0 ) ( choiceItem( text = pt"conditional-menu-item 3", value = "3" ) )
+      optionally( someUserParam > 0 ) ( choiceItem( text = pt"conditional-menu-item 3", value = "3" ) )
     )
   )
 )
@@ -156,7 +153,9 @@ optBlocks(
     ),
     contextBlock(
         blockElements(
-            md"*Author:* T. M. Schwartz"
+            md"*Author:* T. M. Schwartz",
+            // an optional block element
+            optionally( someParam > 0 ) ( md"*Rating:* cool" ) 
         )
     )
 )

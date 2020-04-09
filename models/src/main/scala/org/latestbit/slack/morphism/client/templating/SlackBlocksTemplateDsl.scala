@@ -36,9 +36,6 @@ trait SlackBlocksTemplateDsl extends SlackBlocksTemplateDslInternals {
       blocks( blockDefs: _* )
     } else List.empty
 
-  protected def optBlock[T <: SlackBlock]( condition: => Boolean )( block: => T ): SlackDslItemDef[T] =
-    optElement( condition, block )
-
   protected def dividerBlock = SlackDividerBlock
   protected def sectionBlock = SlackSectionBlock
   protected def inputBlock = SlackInputBlock
@@ -51,15 +48,9 @@ trait SlackBlocksTemplateDsl extends SlackBlocksTemplateDslInternals {
   protected def sectionFields( defs: SlackDslItemDef[SlackBlockText]* ): Option[List[SlackBlockText]] =
     noneIfEmptyList( defs.toList.flatten )
 
-  protected def optSectionField[T <: SlackBlockText]( condition: => Boolean )( field: => T ): SlackDslItemDef[T] =
-    optElement( condition, field )
-
   protected def blockElements[T <: SlackBlockElement](
       defs: SlackDslItemDef[T]*
   ): NonEmptyList[T] = NonEmptyList.fromListUnsafe( defs.toList.flatten )
-
-  protected def optBlockEl[T <: SlackBlockElement]( condition: => Boolean )( blockElement: => T ): SlackDslItemDef[T] =
-    optElement( condition, blockElement )
 
   protected def button = SlackBlockButtonElement
   protected def image = SlackBlockImageElement
@@ -91,11 +82,6 @@ trait SlackBlocksTemplateDsl extends SlackBlocksTemplateDslInternals {
   protected def choiceStrItems( defs: String* ): NonEmptyList[String] =
     NonEmptyList.fromListUnsafe( defs.toList )
 
-  protected def optChoiceItem[T <: SlackBlockText](
-      condition: => Boolean
-  )( item: => SlackBlockChoiceItem[T] ): SlackDslItemDef[SlackBlockChoiceItem[T]] =
-    optElement( condition, item )
-
   protected def choiceItem = SlackBlockChoiceItem
 
   protected def choiceGroups[T <: SlackBlockText](
@@ -105,11 +91,35 @@ trait SlackBlocksTemplateDsl extends SlackBlocksTemplateDslInternals {
 
   protected def choiceGroup = SlackBlockOptionGroup
 
+  protected def confirm = SlackBlockConfirmItem
+
+  protected def optionally[T]( condition: => Boolean )( createItem: => T ): SlackDslItemDef[T] = {
+    optElement[T]( condition, createItem )
+  }
+
+  // deprecated DSL constructs
+
+  @deprecated( message = "Use optionally() instead", "1.3.2" )
+  protected def optBlock[T <: SlackBlock]( condition: => Boolean )( block: => T ): SlackDslItemDef[T] =
+    optElement( condition, block )
+
+  @deprecated( message = "Use optionally() instead", "1.3.2" )
+  protected def optBlockEl[T <: SlackBlockElement]( condition: => Boolean )( blockElement: => T ): SlackDslItemDef[T] =
+    optElement( condition, blockElement )
+
+  @deprecated( message = "Use optionally() instead", "1.3.2" )
+  protected def optSectionField[T <: SlackBlockText]( condition: => Boolean )( field: => T ): SlackDslItemDef[T] =
+    optElement( condition, field )
+
+  @deprecated( message = "Use optionally() instead", "1.3.2" )
+  protected def optChoiceItem[T <: SlackBlockText](
+      condition: => Boolean
+  )( item: => SlackBlockChoiceItem[T] ): SlackDslItemDef[SlackBlockChoiceItem[T]] =
+    optElement( condition, item )
+
+  @deprecated( message = "Use optionally() instead", "1.3.2" )
   protected def optChoiceGroup[T <: SlackBlockText](
       condition: => Boolean
   )( group: => SlackBlockOptionGroup[T] ): SlackDslItemDef[SlackBlockOptionGroup[T]] =
     optElement( condition, group )
-
-  protected def confirm = SlackBlockConfirmItem
-
 }

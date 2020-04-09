@@ -50,21 +50,22 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
               blocks(
                 dividerBlock(),
                 sectionBlock( text = md"Test: ${testCond}" ),
-                optBlock( testCond > 0 )( dividerBlock() ),
+                optionally( testCond > 0 )( dividerBlock() ),
                 sectionBlock(
                   text = md"Test",
                   fields = sectionFields(
                     md"Test 1",
                     md"Test 2",
                     pt"Test 3",
-                    optSectionField( testCond > 0 )( pt"Test 3" )
+                    optionally( testCond > 0 )( pt"Test 3" )
                   ),
                   accessory = image( "https://example.net/image.png", alt_text = "test image" )
                 ),
                 actionsBlock(
                   elements = blockElements(
                     button( text = pt"test button", action_id = "-" ),
-                    button( text = pt"test button", action_id = "-" )
+                    button( text = pt"test button", action_id = "-" ),
+                    optionally( testCond > 0 )( button( text = pt"test button", action_id = "-" ) )
                   )
                 ),
                 sectionBlock(
@@ -103,7 +104,7 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
                     action_id = "-",
                     options = choiceItems(
                       choiceItem( text = pt"test-menu-item", value = "" ),
-                      optChoiceItem( testCond > 0 )( choiceItem( text = pt"test-menu-item2", value = "" ) )
+                      optionally( testCond > 0 )( choiceItem( text = pt"test-menu-item2", value = "" ) )
                     ),
                     confirm = confirm(
                       title = pt"Test title",
@@ -148,7 +149,8 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
                 sectionBlock(
                   fields = sectionFields(
                     md"*Average Rating*\n1.0",
-                    md"*Updated*\n${formatDate( Instant.now() )}"
+                    md"*Updated*\n${formatDate( Instant.now() )}",
+                    optionally( testCond > 0 )( md"*Rating:* cool" )
                   )
                 ),
                 contextBlock(
