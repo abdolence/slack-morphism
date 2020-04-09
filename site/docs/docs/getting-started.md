@@ -8,7 +8,7 @@ permalink: docs/getting-started
 Add the following to your `build.sbt`:
 
 ```scala
-libraryDependencies += "org.latestbit" %% "slack-morphism-client" % "1.3.1"
+libraryDependencies += "org.latestbit" %% "slack-morphism-client" % "1.3.2"
 ```
 
 or if you'd like to start with a full-featured example and template of a Slack bot, which supports:
