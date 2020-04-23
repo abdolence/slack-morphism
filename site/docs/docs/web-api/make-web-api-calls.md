@@ -205,7 +205,7 @@ We make a first async call, find some result in the first response, and
 getting the response result of a next async call. 
 
 ```scala
-EitherT( client.channels.list( SlackApiChannelsListRequest() ) ).flatMap { channelsResp =>
+EitherT( slackApiClient.conversations.list( SlackApiConversationsListRequest() ) ).flatMap { channelsResp =>
   channelsResp.channels
     .find( _.flags.is_general.contains( true ) )
     .map { generalChannel =>

@@ -30,6 +30,11 @@ import org.latestbit.slack.morphism.codecs.implicits._
  */
 trait SlackApiImClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
 
+  @deprecated(
+    message =
+      "Slack deprecates all of these methods that preceded the Conversations API: https://api.slack.com/changelog/2020-01-deprecating-antecedents-to-the-conversations-api",
+    since = "1.3.4"
+  )
   object im {
 
     /**
