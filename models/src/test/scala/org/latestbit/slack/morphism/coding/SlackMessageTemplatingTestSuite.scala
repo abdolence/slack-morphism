@@ -63,8 +63,14 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
                 ),
                 actionsBlock(
                   elements = blockElements(
-                    button( text = pt"test button", action_id = "-" ),
-                    button( text = pt"test button", action_id = "-" ),
+                    button( text = pt"test button 1", action_id = "-" ),
+                    button( text = pt"test button 2", action_id = "-" ),
+                    button(
+                      text = pt"test button 3",
+                      action_id = "-",
+                      confirm =
+                        confirm( title = pt"confirm dialog title", text = md"Hey", confirm = pt"Ok", deny = pt"Cancel" )
+                    ),
                     optionally( testCond > 0 )( button( text = pt"test button", action_id = "-" ) )
                   )
                 ),

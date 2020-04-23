@@ -34,7 +34,7 @@ class ScrollablePublisherTestsSuite( env: TestEnvironment, publisherShutdownTime
     extends PublisherVerification[Int]( env, publisherShutdownTimeout )
     with TestNGSuiteLike {
 
-  def this() {
+  def this() = {
     this( new TestEnvironment( 1500 ), 1000 )
   }
 

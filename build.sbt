@@ -8,7 +8,7 @@ import sbt.Package.ManifestAttributes
 
 name := "slack-morphism-root"
 
-ThisBuild / version := "1.3.2"
+ThisBuild / version := "1.3.3"
 
 ThisBuild / description := "Open Type-Safe Reactive Client with Blocks Templating for Slack"
 
@@ -20,11 +20,11 @@ ThisBuild / licenses := Seq(
   ( "Apache License v2.0", url( "http://www.apache.org/licenses/LICENSE-2.0.html" ) )
 )
 
-ThisBuild / crossScalaVersions := Seq( "2.13.1", "2.12.11" )
+ThisBuild / crossScalaVersions := Seq( "2.13.2", "2.12.11" )
 
 ThisBuild / scalaVersion := (ThisBuild / crossScalaVersions).value.head
 
-ThisBuild / sbtVersion := "1.3.8"
+ThisBuild / sbtVersion := "1.3.9"
 
 ThisBuild / scalacOptions ++= Seq( "-feature" )
 
@@ -73,7 +73,7 @@ ThisBuild / scalacOptions ++= Seq(
   "-Ywarn-numeric-widen",
   "-Ywarn-value-discard"
 ) ++ (CrossVersion.partialVersion( (ThisBuild / scalaVersion).value ) match {
-  case Some( ( 2, n ) ) if n >= 13 => Seq( "-Xsource:2.14" )
+  case Some( ( 2, n ) ) if n >= 13 => Seq( "-Xsource:3" )
   case Some( ( 2, n ) ) if n < 13  => Seq( "-Ypartial-unification" )
   case _                           => Seq()
 })

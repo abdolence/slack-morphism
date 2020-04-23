@@ -89,7 +89,8 @@ case class SlackBlockConfirmItem(
     title: SlackBlockPlainText,
     text: SlackBlockText,
     confirm: SlackBlockPlainText,
-    deny: SlackBlockPlainText
+    deny: SlackBlockPlainText,
+    style: Option[String] = None
 )
 
 /**

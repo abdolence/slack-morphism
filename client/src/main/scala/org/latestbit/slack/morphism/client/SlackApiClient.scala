@@ -106,7 +106,7 @@ object SlackApiClient {
     Resource.make( Monad[F].pure( client ) ) { client => Monad[F].pure( client.shutdown() ) }
   }
 
-  case class SlackApiClientBuildOptions[F[_] : SlackApiClientBackend.BackendType] private (
+  case class SlackApiClientBuildOptions[F[_] : SlackApiClientBackend.BackendType] private[client] (
       sttpBackend: SlackApiClientBackend.SttpBackendType[F],
       throttler: SlackApiRateThrottler[F] = SlackApiRateThrottler.createEmptyThrottler[F]()
   ) {
