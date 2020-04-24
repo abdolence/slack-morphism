@@ -28,7 +28,10 @@ import org.asynchttpclient.util.HttpConstants.Methods
 import org.latestbit.slack.morphism.codecs.implicits._
 import org.latestbit.slack.morphism.client.reqresp.channels._
 import org.latestbit.slack.morphism.client.reqresp.chat._
-import org.latestbit.slack.morphism.client.reqresp.conversations.SlackApiConversationsListRequest
+import org.latestbit.slack.morphism.client.reqresp.conversations.{
+  SlackApiConversationsListRequest,
+  SlackApiConversationsListResponse
+}
 import org.latestbit.slack.morphism.client.reqresp.events.SlackApiEventMessageReply
 import org.latestbit.slack.morphism.client.reqresp.test._
 import org.latestbit.slack.morphism.common._
@@ -93,10 +96,10 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
 
     implicit val testingBackend: SlackApiClientBackend.SttpBackendType[Future] =
       SttpBackendStub.asynchronousFuture
-        .whenRequestMatches( _.uri.path.contains( "channels.list" ) )
+        .whenRequestMatches( _.uri.path.contains( "conversations.list" ) )
         .thenRespondWrapped(
           createJsonResponseStub(
-            SlackApiChannelsListResponse(
+            SlackApiConversationsListResponse(
               channels = List(
                 SlackChannelInfo(
                   id = "channel-id",
