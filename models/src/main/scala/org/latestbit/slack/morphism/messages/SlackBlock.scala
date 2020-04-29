@@ -41,7 +41,7 @@ case class SlackSectionBlock(
     accessory: Option[SlackSectionBlockElement] = None,
     override val block_id: Option[String] = None
 ) extends SlackBlock {
-  require( text.nonEmpty || fields.nonEmpty, "Either `text` or `fields` should be defined" )
+  require( text.nonEmpty || fields.exists( _.nonEmpty ), "Either `text` or `fields` should be defined" )
 }
 
 /**
