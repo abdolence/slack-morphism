@@ -196,6 +196,7 @@ case class SlackBlockConversationListSelectElement(
     placeholder: SlackBlockPlainText,
     action_id: String,
     initial_conversation: Option[String] = None,
+    default_to_current_conversation: Option[Boolean] = None,
     confirm: Option[SlackBlockConfirmItem] = None,
     response_url_enabled: Option[Boolean] = None,
     filter: Option[SlackConversationListFilter] = None
@@ -211,6 +212,7 @@ case class SlackBlockMultiConversationListSelectElement(
     placeholder: SlackBlockPlainText,
     action_id: String,
     initial_conversations: Option[NonEmptyList[String]] = None,
+    default_to_current_conversation: Option[Boolean] = None,
     confirm: Option[SlackBlockConfirmItem] = None,
     max_selected_items: Option[Long] = None,
     filter: Option[SlackConversationListFilter] = None
