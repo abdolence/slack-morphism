@@ -185,9 +185,7 @@ val client = SlackApiClient
 you need to specify <code class="highlighter-rouge">maxRetries</code> in rate control params (default value is 0):</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>val params = SlackApiRateControlParams.StandardLimits.DEFAULT_PARAMS.copy(
-      globalMaxRateLimit = Some(
-         maxRetries = 3 // retry maximum 3 times
-      )
+      maxRetries = 3 // retry maximum 3 times
 )
 </code></pre></div></div>
 
@@ -198,11 +196,10 @@ to delay your request at least that value.</p>
 <p>Using rate control parameters, you can also enable automatic retrying for other errors additionally to <code class="highlighter-rouge">SlackApiRateLimitedError</code>:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>val params =  SlackApiRateControlParams.StandardLimits.DEFAULT_PARAMS.copy(
-      globalMaxRateLimit = Some(
-            maxRetries = 3 // to retry maximum 3 times,
-            retryFor = Set( classOf[SlackApiRateLimitedError], classOf[SlackApiConnectionError] )
-      )
+    maxRetries = 3 // to retry maximum 3 times,
+    retryFor = Set( classOf[SlackApiRateLimitedError], classOf[SlackApiConnectionError] )
 )
+
 </code></pre></div></div>
 </section>
 			</div>
