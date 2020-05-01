@@ -122,8 +122,7 @@ depends on some user defined condition (a predicate):
 * `optionally` - single optional item (block, block element, section field, choice item, choice group)
 * `optBlocks` - optional list of blocks
 
-The `optionally` function evaluates lazily a second parameter (only if condition is true), 
-so it might be useful as well.
+The `optionally` function evaluates lazily its second parameter, so it might be useful as well to know.
 
 You can use them in Scala as:
 
