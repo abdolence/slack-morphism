@@ -72,9 +72,7 @@ you need to specify `maxRetries` in rate control params (default value is 0):
 
 ```
 val params = SlackApiRateControlParams.StandardLimits.DEFAULT_PARAMS.copy(
-      globalMaxRateLimit = Some(
-         maxRetries = 3 // retry maximum 3 times
-      )
+      maxRetries = 3 // retry maximum 3 times
 )
 ```
 
@@ -86,9 +84,8 @@ Using rate control parameters, you can also enable automatic retrying for other 
 
 ```
 val params =  SlackApiRateControlParams.StandardLimits.DEFAULT_PARAMS.copy(
-      globalMaxRateLimit = Some(
-            maxRetries = 3 // to retry maximum 3 times,
-            retryFor = Set( classOf[SlackApiRateLimitedError], classOf[SlackApiConnectionError] )
-      )
+    maxRetries = 3 // to retry maximum 3 times,
+    retryFor = Set( classOf[SlackApiRateLimitedError], classOf[SlackApiConnectionError] )
 )
+
 ```
