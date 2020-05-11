@@ -173,6 +173,7 @@ val baseDependencies =
       "com.softwaremill.sttp.client" %% "async-http-client-backend-future" % sttpVersion,
       "com.softwaremill.sttp.client" %% "async-http-client-backend-cats" % sttpVersion,
       "com.softwaremill.sttp.client" %% "async-http-client-backend-monix" % sttpVersion,
+      "com.softwaremill.sttp.client" %% "http4s-backend" % sttpVersion,
       "ch.qos.logback" % "logback-classic" % logbackVersion
         exclude ("org.slf4j", "slf4j-api"),
       "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion

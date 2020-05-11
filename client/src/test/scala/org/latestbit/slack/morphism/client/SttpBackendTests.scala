@@ -18,6 +18,7 @@
 
 package org.latestbit.slack.morphism.client
 
+import org.http4s.client.Client
 import org.latestbit.slack.morphism.client.ratectrl.SlackApiRateThrottler
 import org.latestbit.slack.morphism.client.reqresp.test.SlackApiTestRequest
 import org.scalatest.flatspec.AsyncFlatSpec
@@ -114,6 +115,42 @@ class SttpBackendTests extends AsyncFlatSpec {
         case Left( ex: SlackApiResponseError ) => assert( ex.errorCode !== null )
         case Left( ex )                        => fail( ex )
       }
+
+  }
+
+  it should "able to try to connect using the http4s sttp backend" in {
+    import cats._
+    import cats.implicits._
+    import cats.effect._
+    import cats.effect.implicits._
+    import org.http4s.client.blaze.BlazeClientBuilder
+    import sttp.client.http4s.Http4sBackend
+
+    implicit val cs: ContextShift[IO] = IO.contextShift( scala.concurrent.ExecutionContext.global )
+
+    def createHttp4sClient(): Resource[IO, ( Blocker, Client[IO] )] = {
+      for {
+        blocker <- Blocker[IO]
+        httpClient <- BlazeClientBuilder[IO]( blocker.blockingContext ).resource
+      } yield ( blocker, httpClient )
+    }
+
+    implicit val testApiUserToken = SlackApiUserToken( "test-token", Some( "test-scope" ) )
+    (
+      createHttp4sClient()
+        .use {
+          case ( blocker, httpClient ) =>
+            val backend = Http4sBackend.usingClient( httpClient, blocker )
+            val client = SlackApiClient.build[IO]( backend ).create()
+            client.api.test( SlackApiTestRequest() )
+        }
+        .unsafeToFuture()
+        .map {
+          case Right( resp )                     => fail( s"Unexpected resp: ${resp}" )
+          case Left( ex: SlackApiResponseError ) => assert( ex.errorCode !== null )
+          case Left( ex )                        => fail( ex )
+        }
+    )
 
   }
 
