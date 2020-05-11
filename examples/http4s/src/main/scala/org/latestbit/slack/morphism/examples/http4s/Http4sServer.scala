@@ -1,9 +1,8 @@
 package org.latestbit.slack.morphism.examples.http4s
 
-import cats.effect.{ ConcurrentEffect, ContextShift, ExitCode, IO, LiftIO, Timer }
+import cats.effect.{ Blocker, ConcurrentEffect, ContextShift, ExitCode, IO, LiftIO, Timer }
 import cats.implicits._
 import cats.effect.implicits._
-
 import fs2.Stream
 import org.http4s.client.blaze.BlazeClientBuilder
 import org.http4s.implicits._
@@ -24,7 +23,14 @@ object Http4sServer {
   )( implicit T: Timer[F], C: ContextShift[F] ): Stream[F, Nothing] = {
     for {
       httpClient <- BlazeClientBuilder[F]( global ).stream
-      slackApiClient <- Stream.resource( SlackApiClient.build[F]( Http4sBackend.usingClient( httpClient ) ).resource() )
+      blocker <- Stream.resource( Blocker[F] )
+      slackApiClient <- Stream.resource(
+                         SlackApiClient
+                           .build[F](
+                             Http4sBackend.usingClient( httpClient, blocker )
+                           )
+                           .resource()
+                       )
       tokensDb <- Stream.resource( SlackTokensDb.open[F]( config ) )
 
       // Combine Service Routes into an HttpApp.
