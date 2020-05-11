@@ -8,7 +8,7 @@ import sbt.Package.ManifestAttributes
 
 name := "slack-morphism-root"
 
-ThisBuild / version := "1.3.4"
+ThisBuild / version := "1.3.5-SNAPSHOT"
 
 ThisBuild / description := "Open Type-Safe Reactive Client with Blocks Templating for Slack"
 
@@ -107,7 +107,7 @@ val catsVersion = "2.1.1"
 val catsEffectVersion = "2.1.2"
 val circeVersion = "0.13.0"
 val scalaCollectionsCompatVersion = "2.1.3"
-val sttpVersion = "2.0.6"
+val sttpVersion = "2.1.1"
 val circeAdtCodecVersion = "0.9.1"
 
 // For tests
