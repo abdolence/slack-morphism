@@ -18,7 +18,6 @@
 
 package org.latestbit.slack.morphism.client
 
-import org.http4s.client.Client
 import org.latestbit.slack.morphism.client.ratectrl.SlackApiRateThrottler
 import org.latestbit.slack.morphism.client.reqresp.test.SlackApiTestRequest
 import org.scalatest.flatspec.AsyncFlatSpec
@@ -119,12 +118,10 @@ class SttpBackendTests extends AsyncFlatSpec {
   }
 
   it should "able to try to connect using the http4s sttp backend" in {
-    import cats._
-    import cats.implicits._
     import cats.effect._
-    import cats.effect.implicits._
     import org.http4s.client.blaze.BlazeClientBuilder
     import sttp.client.http4s.Http4sBackend
+    import org.http4s.client.Client
 
     implicit val cs: ContextShift[IO] = IO.contextShift( scala.concurrent.ExecutionContext.global )
 
