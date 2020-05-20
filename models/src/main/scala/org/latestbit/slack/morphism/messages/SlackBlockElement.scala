@@ -304,7 +304,7 @@ case class SlackBlockPlainInputElement(
 case class SlackBlockRadioButtonsElement(
     action_id: String,
     options: NonEmptyList[SlackBlockChoiceItem[SlackBlockText]],
-    initial_options: Option[NonEmptyList[SlackBlockChoiceItem[SlackBlockText]]] = None,
+    initial_option: Option[SlackBlockChoiceItem[SlackBlockText]] = None,
     confirm: Option[SlackBlockConfirmItem] = None
 ) extends SlackBlockElement
     with SlackSectionBlockElement
