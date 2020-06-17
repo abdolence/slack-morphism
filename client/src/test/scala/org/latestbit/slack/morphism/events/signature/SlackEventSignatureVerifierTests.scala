@@ -86,4 +86,19 @@ class SlackEventSignatureVerifierTests extends AnyFlatSpec with ScalaCheckDriven
       case Left( er ) => fail( er )
     }
   }
+
+  val TEST_SECRET = "d058b0b8f3f91e4446ad981890c9b6c16b2acc85367e30a2d76b8a95e525c02a";
+  val TEST_HASH = "v0=37ca0519af8b621f18b13586fc72488ebb159fc730a5d1718dd823dec69dea95";
+  val TEST_BODY = "test-body";
+  val TEST_TS = "test-ts";
+
+  signatureVerifier.verify(
+    TEST_SECRET,
+    receivedHash = TEST_HASH,
+    timestamp = TEST_TS,
+    body = TEST_BODY
+  ) match {
+    case Right( _ ) => succeed
+    case Left( er ) => fail( er )
+  }
 }
