@@ -27,7 +27,7 @@ case class SlackApiChatUpdateRequest(
     channel: String,
     text: String,
     ts: String,
-    as_user: String,
+    as_user: Option[String] = None,
     blocks: Option[List[SlackBlock]] = None,
     link_names: Option[Boolean] = None,
     parse: Option[String] = None
