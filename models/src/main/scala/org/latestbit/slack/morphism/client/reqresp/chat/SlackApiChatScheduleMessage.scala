@@ -18,7 +18,7 @@
 
 package org.latestbit.slack.morphism.client.reqresp.chat
 
-import org.latestbit.slack.morphism.common.SlackDateTimeAsStr
+import org.latestbit.slack.morphism.common.SlackDateTime
 import org.latestbit.slack.morphism.messages.SlackBlock
 
 /**
@@ -27,7 +27,7 @@ import org.latestbit.slack.morphism.messages.SlackBlock
 case class SlackApiChatScheduleMessageRequest(
     channel: String,
     text: String,
-    post_at: SlackDateTimeAsStr,
+    post_at: SlackDateTime,
     as_user: Option[Boolean] = None,
     blocks: Option[List[SlackBlock]] = None,
     icon_emoji: Option[String] = None,
@@ -47,5 +47,5 @@ case class SlackApiChatScheduleMessageRequest(
 case class SlackApiChatScheduleMessageResponse(
     channel: String,
     scheduled_message_id: String,
-    post_at: SlackDateTimeAsStr
+    post_at: SlackDateTime
 )

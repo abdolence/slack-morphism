@@ -18,7 +18,7 @@
 
 package org.latestbit.slack.morphism.client.reqresp.chat
 
-import org.latestbit.slack.morphism.common.{ SlackApiResponseMetadata, SlackDateTime, SlackDateTimeAsStr }
+import org.latestbit.slack.morphism.common.{ SlackApiResponseMetadata, SlackDateTime }
 import org.latestbit.slack.morphism.client.streaming.SlackApiScrollableResponse
 
 /**
@@ -48,6 +48,6 @@ case class SlackApiChatScheduledMessagesListResponse(
 case class SlackApiChatScheduledMessageInfo(
     id: String,
     channel_id: String,
-    post_at: SlackDateTimeAsStr,
+    post_at: SlackDateTime,
     date_created: SlackDateTime
 )
