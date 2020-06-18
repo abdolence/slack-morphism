@@ -83,7 +83,11 @@ object SlackChannelInfo {
   /**
    * Auxiliary data type for channel topic and purpose
    */
-  case class SlackChannelDetails( value: String, creator: String, last_set: SlackDateTime )
+  case class SlackChannelDetails(
+      value: String,
+      creator: Option[String] = None,
+      last_set: Option[SlackDateTime] = None
+  )
   type SlackTopicInfo = SlackChannelDetails
   type SlackPurposeInfo = SlackChannelDetails
 }
