@@ -145,7 +145,7 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
 
     /**
      * Scrolling support for
-     * https://api.slack.com/methods/conversations.list
+     * https://api.slack.com/methods/users.list
      */
     def listScroller( req: SlackApiUsersListRequest )(
         implicit slackApiToken: SlackApiToken,
