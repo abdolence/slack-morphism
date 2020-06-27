@@ -43,11 +43,6 @@ ThisBuild / publishTo := {
 }
 
 ThisBuild / pomExtra := (
-  <scm>
-    <url>https://github.com/abdolence/slack-morphism</url>
-    <connection>scm:git:https://github.com/abdolence/slack-morphism</connection>
-    <developerConnection>scm:git:https://github.com/abdolence/slack-morphism</developerConnection>
-  </scm>
   <developers>
     <developer>
         <id>abdolence</id>
