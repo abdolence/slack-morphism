@@ -120,15 +120,18 @@ Look at [Slack recommendations](https://api.slack.com/docs/oauth-safety).
 
 ```scala
 import org.latestbit.slack.morphism.client._
-import org.latestbit.slack.morphism.client.reqresp.chat.SlackApiChatPostMessageRequest
+import org.latestbit.slack.morphism.common._
+import org.latestbit.slack.morphism.client.reqresp.chat._
 
 import sttp.client.akkahttp.AkkaHttpBackend
+import scala.concurrent._
+import cats.instances.future._
 
 implicit val sttpBackend = AkkaHttpBackend()
 
 val client = SlackApiClient.create[Future]()
 
-implicit val slackApiToken: SlackApiToken = SlackApiBotToken("xoxb-89.....")
+implicit val slackApiToken: SlackApiToken = SlackApiBotToken(SlackAccessTokenValue("xoxb-89....."))
 
 client.chat.postMessage(
     SlackApiChatPostMessageRequest(
@@ -221,7 +224,7 @@ EitherT( slackApiClient.conversations.list( SlackApiConversationsListRequest() )
       }
     }
     .getOrElse(
-      EitherT[Future, SlackApiClientError, Option[String]](
+      EitherT[Future, SlackApiClientError, Option[SlackTs]](
         Future.successful( None.asRight )
       )
     )

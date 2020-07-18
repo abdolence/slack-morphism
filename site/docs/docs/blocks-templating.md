@@ -131,7 +131,7 @@ You can use them in Scala as:
 sectionBlock(
   text = md"Test 2",
   accessory = overflow(
-    action_id = "-",
+    action_id = SlackActionId("-"),
     options = choiceItems(
       choiceItem( text = pt"test-menu-item 1", value = "1" ),
       choiceItem( text = pt"test-menu-item 2", value = "2" ),
@@ -227,7 +227,7 @@ class MyWelcomeMessageTemplateExample( userId: String ) extends SlackMessageTemp
       imageBlock( image_url = "https://www.gstatic.com/webp/gallery3/2_webp_ll.png", alt_text = "Test Image" ),
       actionsBlock(
         blockElements(
-          button( text = pt"Simple", action_id = "simple-message-button" )
+          button( text = pt"Simple", action_id = SlackActionId("simple-message-button" ))
         )
       )
     )
