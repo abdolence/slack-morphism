@@ -1564,6 +1564,18 @@ package object codecs {
     implicit val decoderSlackApiConversationsUnarchiveResponse: Decoder[SlackApiConversationsUnarchiveResponse] =
       deriveDecoder[SlackApiConversationsUnarchiveResponse]
 
+    implicit val encoderSlackApiConversationsMarkRequest: Encoder.AsObject[SlackApiConversationsMarkRequest] =
+      deriveEncoder[SlackApiConversationsMarkRequest]
+
+    implicit val decoderSlackApiConversationsMarkRequest: Decoder[SlackApiConversationsMarkRequest] =
+      deriveDecoder[SlackApiConversationsMarkRequest]
+
+    implicit val encoderSlackApiConversationsMarkResponse: Encoder.AsObject[SlackApiConversationsMarkResponse] =
+      deriveEncoder[SlackApiConversationsMarkResponse]
+
+    implicit val decoderSlackApiConversationsMarkResponse: Decoder[SlackApiConversationsMarkResponse] =
+      deriveDecoder[SlackApiConversationsMarkResponse]
+
     implicit val encoderSlackApiDndEndDndRequest: Encoder.AsObject[SlackApiDndEndDndRequest] =
       deriveEncoder[SlackApiDndEndDndRequest]
 
@@ -2001,6 +2013,7 @@ package object codecs {
 
     implicit val decoderSlackApiViewsUpdateResponse: Decoder[SlackApiViewsUpdateResponse] =
       deriveDecoder[SlackApiViewsUpdateResponse]
+
   }
 
   object implicits extends CirceCodecs {}

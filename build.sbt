@@ -8,7 +8,7 @@ import sbt.Package.ManifestAttributes
 
 name := "slack-morphism-root"
 
-ThisBuild / version := "1.3.6"
+ThisBuild / version := "1.3.7"
 
 ThisBuild / description := "Open Type-Safe Reactive Client with Blocks Templating for Slack"
 
@@ -20,7 +20,7 @@ ThisBuild / licenses := Seq(
   ( "Apache License v2.0", url( "http://www.apache.org/licenses/LICENSE-2.0.html" ) )
 )
 
-ThisBuild / crossScalaVersions := Seq( "2.13.2", "2.12.11" )
+ThisBuild / crossScalaVersions := Seq( "2.13.3", "2.12.12" )
 
 ThisBuild / scalaVersion := (ThisBuild / crossScalaVersions).value.head
 

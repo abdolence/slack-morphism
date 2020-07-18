@@ -23,7 +23,7 @@ import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client.reqresp.conversations._
 import org.latestbit.slack.morphism.messages.SlackMessage
 import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
-import org.latestbit.slack.morphism.common.{ SlackBasicChannelInfo, SlackChannelInfo, SlackChannelProfile }
+import org.latestbit.slack.morphism.common._
 import org.latestbit.slack.morphism.codecs.implicits._
 
 /**
@@ -453,8 +453,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     }
 
     /**
-	   * https://api.slack.com/methods/conversations.unarchive
-	   */
+     * https://api.slack.com/methods/conversations.unarchive
+     */
     def unarchive( req: SlackApiConversationsUnarchiveRequest )(
         implicit slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
@@ -467,6 +467,24 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
         "conversations.unarchive",
         req,
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
+      )
+    }
+
+    /**
+     * https://api.slack.com/methods/conversations.mark
+     */
+    def unarchive( req: SlackApiConversationsMarkRequest )(
+        implicit slackApiToken: SlackApiToken,
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiConversationsMarkResponse]] = {
+
+      http.post[
+        SlackApiConversationsMarkRequest,
+        SlackApiConversationsMarkResponse
+      ](
+        "conversations.unarchive",
+        req,
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
       )
     }
 
