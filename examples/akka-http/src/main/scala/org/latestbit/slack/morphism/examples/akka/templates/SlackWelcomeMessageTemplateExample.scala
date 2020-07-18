@@ -21,9 +21,10 @@ package org.latestbit.slack.morphism.examples.akka.templates
 import java.time.Instant
 
 import org.latestbit.slack.morphism.client.templating.{ SlackMessageTemplate, SlackTextFormatters }
+import org.latestbit.slack.morphism.common.{ SlackActionId, SlackUserId }
 import org.latestbit.slack.morphism.messages.SlackBlock
 
-class SlackWelcomeMessageTemplateExample( userId: String ) extends SlackMessageTemplate {
+class SlackWelcomeMessageTemplateExample( userId: SlackUserId ) extends SlackMessageTemplate {
 
   override def renderPlainText(): String =
     s"Hey ${formatSlackUserId( userId )}"
@@ -44,7 +45,7 @@ class SlackWelcomeMessageTemplateExample( userId: String ) extends SlackMessageT
       imageBlock( image_url = "https://www.gstatic.com/webp/gallery3/2_webp_ll.png", alt_text = "Test Image" ),
       actionsBlock(
         blockElements(
-          button( text = pt"Simple", action_id = "simple-message-button" )
+          button( text = pt"Simple", action_id = SlackActionId( "simple-message-button" ) )
         )
       )
     )

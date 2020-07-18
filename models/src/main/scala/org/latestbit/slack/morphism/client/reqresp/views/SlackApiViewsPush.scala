@@ -18,12 +18,13 @@
 
 package org.latestbit.slack.morphism.client.reqresp.views
 
+import org.latestbit.slack.morphism.common.SlackTriggerId
 import org.latestbit.slack.morphism.views.{ SlackStatefulView, SlackView }
 
 /**
  * Request of https://api.slack.com/methods/views.push
  */
-case class SlackApiViewsPushRequest( trigger_id: String, view: SlackView )
+case class SlackApiViewsPushRequest( trigger_id: SlackTriggerId, view: SlackView )
 
 /**
  * Response of https://api.slack.com/methods/views.push

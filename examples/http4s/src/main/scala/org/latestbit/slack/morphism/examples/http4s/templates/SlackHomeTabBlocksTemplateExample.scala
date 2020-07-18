@@ -21,11 +21,12 @@ package org.latestbit.slack.morphism.examples.http4s.templates
 import java.time.Instant
 
 import org.latestbit.slack.morphism.client.templating.SlackBlocksTemplate
+import org.latestbit.slack.morphism.common.{ SlackActionId, SlackUserId }
 import org.latestbit.slack.morphism.messages.SlackBlock
 
 case class SlackHomeNewsItem( title: String, body: String, published: Instant )
 
-class SlackHomeTabBlocksTemplateExample( latestNews: List[SlackHomeNewsItem], userId: String )
+class SlackHomeTabBlocksTemplateExample( latestNews: List[SlackHomeNewsItem], userId: SlackUserId )
     extends SlackBlocksTemplate {
 
   override def renderBlocks(): List[SlackBlock] =
@@ -44,7 +45,7 @@ class SlackHomeTabBlocksTemplateExample( latestNews: List[SlackHomeNewsItem], us
         imageBlock( image_url = "https://www.gstatic.com/webp/gallery/4.png", alt_text = "Test Image" ),
         actionsBlock(
           blockElements(
-            button( text = pt"Simple", action_id = "simple-home-button" )
+            button( text = pt"Simple", action_id = SlackActionId( "simple-home-button" ) )
           )
         )
       ),

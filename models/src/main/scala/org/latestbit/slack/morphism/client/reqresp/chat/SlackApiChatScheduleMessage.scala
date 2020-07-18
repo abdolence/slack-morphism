@@ -18,14 +18,14 @@
 
 package org.latestbit.slack.morphism.client.reqresp.chat
 
-import org.latestbit.slack.morphism.common.SlackDateTime
+import org.latestbit.slack.morphism.common._
 import org.latestbit.slack.morphism.messages.SlackBlock
 
 /**
  * Request of https://api.slack.com/methods/chat.scheduleMessage
  */
 case class SlackApiChatScheduleMessageRequest(
-    channel: String,
+    channel: SlackChannelId,
     text: String,
     post_at: SlackDateTime,
     as_user: Option[Boolean] = None,
@@ -34,7 +34,7 @@ case class SlackApiChatScheduleMessageRequest(
     icon_url: Option[String] = None,
     link_names: Option[Boolean] = None,
     parse: Option[String] = None,
-    thread_ts: Option[String] = None,
+    thread_ts: Option[SlackTs] = None,
     username: Option[String] = None,
     reply_broadcast: Option[Boolean] = None,
     unfurl_links: Option[Boolean] = None,
@@ -45,7 +45,7 @@ case class SlackApiChatScheduleMessageRequest(
  * Response of https://api.slack.com/methods/chat.scheduleMessage
  */
 case class SlackApiChatScheduleMessageResponse(
-    channel: String,
+    channel: SlackChannelId,
     scheduled_message_id: String,
     post_at: SlackDateTime
 )

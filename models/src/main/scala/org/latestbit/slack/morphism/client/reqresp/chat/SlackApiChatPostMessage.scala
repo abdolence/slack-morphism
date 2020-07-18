@@ -18,13 +18,14 @@
 
 package org.latestbit.slack.morphism.client.reqresp.chat
 
+import org.latestbit.slack.morphism.common._
 import org.latestbit.slack.morphism.messages._
 
 /**
  * Request of https://api.slack.com/methods/chat.postMessage
  */
 case class SlackApiChatPostMessageRequest(
-    channel: String,
+    channel: SlackChannelId,
     text: String,
     as_user: Option[Boolean] = None,
     blocks: Option[List[SlackBlock]] = None,
@@ -32,7 +33,7 @@ case class SlackApiChatPostMessageRequest(
     icon_url: Option[String] = None,
     link_names: Option[Boolean] = None,
     parse: Option[String] = None,
-    thread_ts: Option[String] = None,
+    thread_ts: Option[SlackTs] = None,
     username: Option[String] = None,
     reply_broadcast: Option[Boolean] = None,
     unfurl_links: Option[Boolean] = None,
@@ -42,4 +43,4 @@ case class SlackApiChatPostMessageRequest(
 /**
  * Response of https://api.slack.com/methods/chat.postMessage
  */
-case class SlackApiChatPostMessageResponse( ts: String, message: SlackMessage )
+case class SlackApiChatPostMessageResponse( ts: SlackTs, message: SlackMessage )

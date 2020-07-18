@@ -18,12 +18,13 @@
 
 package org.latestbit.slack.morphism.client.reqresp.views
 
+import org.latestbit.slack.morphism.common.SlackUserId
 import org.latestbit.slack.morphism.views.{ SlackStatefulView, SlackView }
 
 /**
  * Request of https://api.slack.com/methods/views.publish
  */
-case class SlackApiViewsPublishRequest( user_id: String, view: SlackView, hash: Option[String] = None )
+case class SlackApiViewsPublishRequest( user_id: SlackUserId, view: SlackView, hash: Option[String] = None )
 
 /**
  * Response of https://api.slack.com/methods/views.publish

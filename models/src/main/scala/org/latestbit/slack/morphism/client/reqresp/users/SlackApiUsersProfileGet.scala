@@ -18,12 +18,12 @@
 
 package org.latestbit.slack.morphism.client.reqresp.users
 
-import org.latestbit.slack.morphism.common.SlackUserProfile
+import org.latestbit.slack.morphism.common._
 
 /**
  * Request of https://api.slack.com/methods/users.profile.get
  */
-case class SlackApiUsersProfileGetRequest( user: Option[String] = None, include_locale: Option[Boolean] = None )
+case class SlackApiUsersProfileGetRequest( user: Option[SlackUserId] = None, include_locale: Option[Boolean] = None )
 
 /**
  * Response of https://api.slack.com/methods/users.profile.get

@@ -42,7 +42,7 @@ trait SlackApiTeamClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       http.get[SlackApiTeamInfoResponse](
         "team.info",
         Map(
-          "team" -> req.team
+          "team" -> req.team.map( _.value )
         ),
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
       )

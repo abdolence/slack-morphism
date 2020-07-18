@@ -30,32 +30,6 @@ trait SlackApiOAuthClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
 
   object oauth {
 
-    /**
-     * https://api.slack.com/methods/oauth.access
-     */
-    def access(
-        clientId: String,
-        clientSecret: String,
-        code: String,
-        redirectUri: Option[String] = None
-    )(
-        implicit backendType: SlackApiClientBackend.BackendType[F]
-    ): F[Either[SlackApiClientError, SlackOAuthV1AccessTokenResponse]] = {
-
-      sendSlackRequest[SlackOAuthV1AccessTokenResponse](
-        createSlackHttpApiRequest().auth
-          .basic(
-            user = clientId,
-            password = clientSecret
-          )
-          .get(
-            getSlackMethodAbsoluteUri( "oauth.access" )
-              .param( "code", code )
-              .param( "redirect_uri", redirectUri )
-          )
-      )
-    }
-
     object v2 {
 
       /**

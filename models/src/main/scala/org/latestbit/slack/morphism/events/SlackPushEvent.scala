@@ -18,9 +18,8 @@
 
 package org.latestbit.slack.morphism.events
 
-import io.circe._
 import org.latestbit.circe.adt.codec._
-import org.latestbit.slack.morphism.common.SlackDateTime
+import org.latestbit.slack.morphism.common._
 
 /**
  * Incoming Slack push event
@@ -41,7 +40,7 @@ case class SlackUrlVerificationEvent( challenge: String ) extends SlackPushEvent
  */
 @JsonAdt( "event_callback" )
 case class SlackEventCallback(
-    team_id: String,
+    team_id: SlackTeamId,
     api_app_id: String,
     event: SlackEventCallbackBody,
     event_id: String,
@@ -54,5 +53,5 @@ case class SlackEventCallback(
  * https://api.slack.com/events-api#rate_limiting_event
  */
 @JsonAdt( "app_rate_limited" )
-case class SlackAppRateLimitedEvent( team_id: String, minute_rate_limited: SlackDateTime, api_app_id: String )
+case class SlackAppRateLimitedEvent( team_id: SlackTeamId, minute_rate_limited: SlackDateTime, api_app_id: SlackAppId )
     extends SlackPushEvent

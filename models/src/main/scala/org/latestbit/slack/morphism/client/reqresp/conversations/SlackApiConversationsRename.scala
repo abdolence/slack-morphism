@@ -18,13 +18,13 @@
 
 package org.latestbit.slack.morphism.client.reqresp.conversations
 
-import org.latestbit.slack.morphism.common.SlackChannelInfo
+import org.latestbit.slack.morphism.common._
 
 /**
  * Request of https://api.slack.com/methods/conversations.rename
  */
 case class SlackApiConversationsRenameRequest(
-    channel: String,
+    channel: SlackChannelId,
     name: String
 )
 

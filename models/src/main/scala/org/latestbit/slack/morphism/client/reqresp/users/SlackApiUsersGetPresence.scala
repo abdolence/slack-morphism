@@ -18,12 +18,12 @@
 
 package org.latestbit.slack.morphism.client.reqresp.users
 
-import org.latestbit.slack.morphism.common.SlackDateTime
+import org.latestbit.slack.morphism.common._
 
 /**
  * Request of https://api.slack.com/methods/users.getPresence
  */
-case class SlackApiUsersGetPresenceRequest( user: String )
+case class SlackApiUsersGetPresenceRequest( user: SlackUserId )
 
 /**
  * Response of https://api.slack.com/methods/users.getPresence

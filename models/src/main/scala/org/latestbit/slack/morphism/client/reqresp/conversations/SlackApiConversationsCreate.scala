@@ -18,7 +18,7 @@
 
 package org.latestbit.slack.morphism.client.reqresp.conversations
 
-import org.latestbit.slack.morphism.common.SlackChannelInfo
+import org.latestbit.slack.morphism.common.{ SlackChannelInfo, SlackUserId }
 
 /**
  * Request of https://api.slack.com/methods/conversations.create
@@ -26,7 +26,7 @@ import org.latestbit.slack.morphism.common.SlackChannelInfo
 case class SlackApiConversationsCreateRequest(
     name: String,
     is_private: Option[Boolean] = None,
-    user_ds: Option[Set[String]] = None
+    user_ds: Option[Set[SlackUserId]] = None
 )
 
 /**

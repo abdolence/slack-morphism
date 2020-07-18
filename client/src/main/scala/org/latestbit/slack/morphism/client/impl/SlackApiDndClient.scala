@@ -71,7 +71,7 @@ trait SlackApiDndClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       http.get[SlackApiDndInfoResponse](
         "dnd.info",
         Map(
-          "user" -> req.user
+          "user" -> req.user.map( _.value )
         ),
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
       )

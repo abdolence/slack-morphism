@@ -18,12 +18,14 @@
 
 package org.latestbit.slack.morphism.client.reqresp.chat
 
+import org.latestbit.slack.morphism.common._
+
 /**
  * Request of https://api.slack.com/methods/chat.delete
  */
-case class SlackApiChatDeleteRequest( channel: String, ts: String, as_user: Option[Boolean] = None )
+case class SlackApiChatDeleteRequest( channel: SlackChannelId, ts: SlackTs, as_user: Option[Boolean] = None )
 
 /**
  * Response of https://api.slack.com/methods/chat.delete
  */
-case class SlackApiChatDeleteResponse( channel: String, ts: String )
+case class SlackApiChatDeleteResponse( channel: SlackChannelId, ts: SlackTs )

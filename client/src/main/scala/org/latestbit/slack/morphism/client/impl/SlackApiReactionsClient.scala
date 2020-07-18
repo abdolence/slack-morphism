@@ -22,8 +22,8 @@ import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client.reqresp.reactions._
 import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
-
 import org.latestbit.slack.morphism.codecs.implicits._
+import org.latestbit.slack.morphism.common.SlackCursorId
 
 /**
  * Support for Slack test API methods
@@ -58,7 +58,7 @@ trait SlackApiReactionsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       http.get[SlackApiReactionsGetResponse](
         "reactions.get",
         Map(
-          "channel" -> Option( req.channel ),
+          "channel" -> Option( req.channel.value ),
           "timestamp" -> Option( req.timestamp ),
           "full" -> req.full.map( _.toString() )
         ),
@@ -77,10 +77,10 @@ trait SlackApiReactionsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       http.get[SlackApiReactionsListResponse](
         "reactions.list",
         Map(
-          "cursor" -> req.cursor,
+          "cursor" -> req.cursor.map( _.value ),
           "full" -> req.full.map( _.toString() ),
           "limit" -> req.limit.map( _.toString() ),
-          "user" -> req.user
+          "user" -> req.user.map( _.value )
         ),
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
       )
@@ -93,8 +93,8 @@ trait SlackApiReactionsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     def listScroller( req: SlackApiReactionsListRequest )(
         implicit slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
-    ): SlackApiResponseScroller[F, SlackApiReactionsListItem, String, SlackApiReactionsListResponse] = {
-      new SlackApiResponseScroller[F, SlackApiReactionsListItem, String, SlackApiReactionsListResponse](
+    ): SlackApiResponseScroller[F, SlackApiReactionsListItem, SlackCursorId, SlackApiReactionsListResponse] = {
+      new SlackApiResponseScroller[F, SlackApiReactionsListItem, SlackCursorId, SlackApiReactionsListResponse](
         initialLoader = { () => list( req ) },
         batchLoader = { cursor =>
           list(

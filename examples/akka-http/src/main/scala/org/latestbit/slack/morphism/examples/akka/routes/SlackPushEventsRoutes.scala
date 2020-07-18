@@ -38,6 +38,7 @@ import org.latestbit.slack.morphism.examples.akka.db.SlackTokensDb
 import org.latestbit.slack.morphism.examples.akka.templates._
 import org.latestbit.slack.morphism.views.SlackHomeView
 import cats.instances.future._
+import org.latestbit.slack.morphism.common._
 import org.latestbit.slack.morphism.examples.akka.config.AppConfig
 
 class SlackPushEventsRoutes(
@@ -84,7 +85,7 @@ class SlackPushEventsRoutes(
     )
   }
 
-  private def updateHomeTab( userId: String )( implicit slackApiToken: SlackApiToken ) = {
+  private def updateHomeTab( userId: SlackUserId )( implicit slackApiToken: SlackApiToken ) = {
     onSuccess(
       slackApiClient.views.publish(
         SlackApiViewsPublishRequest(
@@ -109,7 +110,7 @@ class SlackPushEventsRoutes(
     }
   }
 
-  private def sendWelcomeMessage( channelId: String, userId: String )(
+  private def sendWelcomeMessage( channelId: SlackChannelId, userId: SlackUserId )(
       implicit slackApiToken: SlackApiToken
   ): Route = {
     onComplete(

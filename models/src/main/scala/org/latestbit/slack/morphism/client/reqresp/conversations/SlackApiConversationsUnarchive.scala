@@ -18,10 +18,12 @@
 
 package org.latestbit.slack.morphism.client.reqresp.conversations
 
+import org.latestbit.slack.morphism.common._
+
 /**
  * Request of https://api.slack.com/methods/conversations.unarchive
  */
-case class SlackApiConversationsUnarchiveRequest( channel: String )
+case class SlackApiConversationsUnarchiveRequest( channel: SlackChannelId )
 
 /**
  * Response of https://api.slack.com/methods/conversations.unarchive

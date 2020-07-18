@@ -18,13 +18,13 @@
 
 package org.latestbit.slack.morphism.client.reqresp.conversations
 
-import org.latestbit.slack.morphism.common.SlackChannelInfo
+import org.latestbit.slack.morphism.common._
 
 /**
  * Request of https://api.slack.com/methods/conversations.info
  */
 case class SlackApiConversationsInfoRequest(
-    channel: String,
+    channel: SlackChannelId,
     include_locale: Option[Boolean] = None,
     include_num_members: Option[Boolean] = None
 )

@@ -18,8 +18,15 @@
 
 package org.latestbit.slack.morphism.client.reqresp.oauth
 
+import org.latestbit.slack.morphism.common.SlackChannelId
+
 /**
  * Incoming Webhook information in OAuth responses
  * https://api.slack.com/messaging/webhooks
  */
-case class SlackOAuthIncomingWebHook( channel: String, channel_id: String, configuration_url: String, url: String )
+case class SlackOAuthIncomingWebHook(
+    channel: String,
+    channel_id: SlackChannelId,
+    configuration_url: String,
+    url: String
+)

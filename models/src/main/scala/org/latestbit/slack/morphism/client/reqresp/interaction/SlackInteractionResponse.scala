@@ -18,6 +18,7 @@
 
 package org.latestbit.slack.morphism.client.reqresp.interaction
 
+import org.latestbit.slack.morphism.common._
 import org.latestbit.slack.morphism.messages.SlackBlock
 
 /**
@@ -27,7 +28,7 @@ import org.latestbit.slack.morphism.messages.SlackBlock
  */
 case class SlackInteractionResponse(
     text: Option[String] = None,
-    thread_ts: Option[String] = None,
+    thread_ts: Option[SlackTs] = None,
     blocks: Option[List[SlackBlock]] = None,
     response_type: Option[String] = None,
     replace_original: Option[Boolean] = None,

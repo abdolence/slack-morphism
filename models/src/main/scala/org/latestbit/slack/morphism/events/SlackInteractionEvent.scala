@@ -43,9 +43,9 @@ sealed trait SlackInteractionEvent {
 case class SlackInteractionBlockActionEvent(
     override val team: SlackBasicTeamInfo,
     user: Option[SlackBasicUserInfo] = None,
-    api_app_id: String,
+    api_app_id: SlackAppId,
     container: SlackInteractionActionContainer,
-    trigger_id: String,
+    trigger_id: SlackTriggerId,
     channel: Option[SlackBasicChannelInfo] = None,
     message: Option[SlackMessage] = None,
     view: Option[SlackView] = None,
@@ -58,7 +58,7 @@ case class SlackInteractionDialogueSubmissionEvent(
     override val team: SlackBasicTeamInfo,
     user: SlackBasicUserInfo,
     channel: Option[SlackBasicChannelInfo] = None,
-    callback_id: Option[String] = None,
+    callback_id: Option[SlackCallbackId] = None,
     state: Option[String] = None,
     submission: Map[String, String]
 ) extends SlackInteractionEvent
@@ -72,8 +72,8 @@ case class SlackInteractionMessageActionEvent(
     user: SlackBasicUserInfo,
     channel: Option[SlackBasicChannelInfo] = None,
     message: Option[SlackMessage] = None,
-    callback_id: String,
-    trigger_id: String,
+    callback_id: SlackCallbackId,
+    trigger_id: SlackTriggerId,
     response_url: String,
     actions: Option[List[SlackInteractionActionInfo]] = None
 ) extends SlackInteractionEvent
@@ -85,8 +85,8 @@ case class SlackInteractionMessageActionEvent(
 case class SlackInteractionShortcutEvent(
     override val team: SlackBasicTeamInfo,
     user: SlackBasicUserInfo,
-    callback_id: String,
-    trigger_id: String,
+    callback_id: SlackCallbackId,
+    trigger_id: SlackTriggerId,
     actions: Option[List[SlackInteractionActionInfo]] = None
 ) extends SlackInteractionEvent
 
@@ -114,8 +114,8 @@ sealed trait SlackInteractionActionContainer
 
 @JsonAdt( "message" )
 case class SlackInteractionActionMessageContainer(
-    message_ts: String,
-    channel_id: Option[String] = None,
+    message_ts: SlackTs,
+    channel_id: Option[SlackChannelId] = None,
     is_ephemeral: Option[Boolean] = None,
     is_app_unfurl: Option[Boolean] = None
 ) extends SlackInteractionActionContainer
@@ -127,7 +127,7 @@ case class SlackInteractionActionViewContainer(
 
 case class SlackInteractionActionInfo(
     `type`: String,
-    action_id: String,
+    action_id: SlackActionId,
     block_id: Option[String] = None,
     text: Option[SlackBlockText] = None,
     value: Option[String] = None,

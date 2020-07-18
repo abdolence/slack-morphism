@@ -18,6 +18,7 @@
 
 package org.latestbit.slack.morphism.client.reqresp.events
 
+import org.latestbit.slack.morphism.common._
 import org.latestbit.slack.morphism.messages.{ SlackBlock, SlackMessage }
 
 /**
@@ -35,6 +36,6 @@ case class SlackApiEventMessageReply(
  * Response for posting event reply
  */
 case class SlackApiEventMessageReplyResponse(
-    channel: Option[String] = None,
+    channel: Option[SlackChannelId] = None,
     message: Option[SlackMessage] = None
 )

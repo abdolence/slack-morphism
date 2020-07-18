@@ -25,6 +25,7 @@ import org.latestbit.slack.morphism.client.reqresp.chat._
 import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
 import sttp.client._
 import org.latestbit.slack.morphism.codecs.implicits._
+import org.latestbit.slack.morphism.common.SlackCursorId
 
 /**
  * Support for Slack Chat API methods
@@ -77,8 +78,8 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       http.get[SlackApiChatGetPermalinkResponse](
         "chat.getPermalink",
         Map(
-          "channel" -> Option( req.channel ),
-          "message_ts" -> Option( req.message_ts )
+          "channel" -> Option( req.channel.value ),
+          "message_ts" -> Option( req.message_ts.value )
         )
       )
     }
@@ -255,13 +256,13 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       ): SlackApiResponseScroller[
         F,
         SlackApiChatScheduledMessageInfo,
-        String,
+        SlackCursorId,
         SlackApiChatScheduledMessagesListResponse
       ] = {
         new SlackApiResponseScroller[
           F,
           SlackApiChatScheduledMessageInfo,
-          String,
+          SlackCursorId,
           SlackApiChatScheduledMessagesListResponse
         ](
           initialLoader = { () => list( req ) },

@@ -18,10 +18,12 @@
 
 package org.latestbit.slack.morphism.client.reqresp.pins
 
+import org.latestbit.slack.morphism.common.SlackChannelId
+
 /**
  * Request of https://api.slack.com/methods/pins.remove
  */
-case class SlackApiPinsRemoveRequest( channel: String, timestamp: String )
+case class SlackApiPinsRemoveRequest( channel: SlackChannelId, timestamp: String )
 
 /**
  * Response of https://api.slack.com/methods/pins.remove

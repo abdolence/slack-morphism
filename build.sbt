@@ -8,7 +8,7 @@ import sbt.Package.ManifestAttributes
 
 name := "slack-morphism-root"
 
-ThisBuild / version := "1.3.7"
+ThisBuild / version := "2.0.0-SNAPSHOT"
 
 ThisBuild / description := "Open Type-Safe Reactive Client with Blocks Templating for Slack"
 
@@ -146,6 +146,7 @@ val baseDependencies =
     Seq(
       "io.circe" %% "circe-core",
       "io.circe" %% "circe-generic",
+      "io.circe" %% "circe-generic-extras",
       "io.circe" %% "circe-parser"
     ).map(
       _ % circeVersion

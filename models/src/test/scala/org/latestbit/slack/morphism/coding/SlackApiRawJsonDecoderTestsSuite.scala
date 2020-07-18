@@ -112,54 +112,55 @@ class SlackApiRawJsonDecoderTestsSuite extends AnyFlatSpec with CirceCodecs {
     val expectedResponse = SlackApiConversationsHistoryResponse(
       messages = List(
         SlackChannelJoinMessage(
-          ts = "1583334580.006700",
+          ts = SlackTs( "1583334580.006700" ),
           text = Some( "<@UID> has joined the channel" ),
-          user = "UID",
-          inviter = Some( "OTHERID" )
+          user = SlackUserId( "UID" ),
+          inviter = Some( SlackUserId( "OTHERID" ) )
         ),
         SlackChannelPurposeMessage(
-          ts = "1584535359.001300",
+          ts = SlackTs( "1584535359.001300" ),
           text = Some( "<@UID> set the channel purpose: purpose-text" ),
-          user = "UID",
+          user = SlackUserId( "UID" ),
           purpose = Some( "purpose-text" )
         ),
         SlackChannelTopicMessage(
-          ts = "1584535194.000900",
+          ts = SlackTs( "1584535194.000900" ),
           text = Some( "<@UID> set the channel topic: topic-text" ),
-          user = "UID",
+          user = SlackUserId( "UID" ),
           topic = Some( "topic-text" )
         ),
         SlackChannelNameMessage(
-          ts = "1584537248.001900",
+          ts = SlackTs( "1584537248.001900" ),
           text = Some( "<@UID> has renamed the channel from \"test\" to \"test2\"" ),
-          user = "UID",
+          user = SlackUserId( "UID" ),
           old_name = Some( "test" ),
           name = "test2"
         ),
         SlackBotAddMessage(
-          ts = "1584537248.001900",
+          ts = SlackTs( "1584537248.001900" ),
           text = Some( "added an integration to this channel: <https://org.slack.com/services/bot-id|bot-name>" ),
-          user = "UID",
-          bot_id = Some( "bot-id" ),
+          user = SlackUserId( "UID" ),
+          bot_id = Some( SlackBotId( "bot-id" ) ),
           bot_link = Some( "<https://org.slack.com/services/bot-id|bot-name>" )
         ),
         SlackBotRemoveMessage(
-          ts = "1584537248.001900",
+          ts = SlackTs( "1584537248.001900" ),
           text = Some( "removed an integration from this channel: <https://org.slack.com/services/bot-id|bot-name>" ),
-          user = "UID",
-          bot_id = Some( "bot-id" ),
+          user = SlackUserId( "UID" ),
+          bot_id = Some( SlackBotId( "bot-id" ) ),
           bot_link = Some( "<https://org.slack.com/services/bot-id|bot-name>" )
         ),
         SlackChannelJoinMessage(
-          ts = "1585252947.004300",
+          ts = SlackTs( "1585252947.004300" ),
           text = Some( "<@UID> has joined the channel" ),
-          user = "UID1",
-          inviter = Some( "UID2" )
+          user = SlackUserId( "UID1" ),
+          inviter = Some( SlackUserId( "UID2" ) )
         )
       ),
       has_more = Some( true ),
       pin_count = Some( 0 ),
-      response_metadata = Some( SlackApiResponseMetadata( Some( "bmV4dF90czoxNTgyOTA3MjU3MDA0NjAw" ), None, None ) )
+      response_metadata =
+        Some( SlackApiResponseMetadata( Some( SlackCursorId( "bmV4dF90czoxNTgyOTA3MjU3MDA0NjAw" ) ), None, None ) )
     )
 
     val result = decode[SlackApiConversationsHistoryResponse]( jsonResponse )

@@ -18,12 +18,12 @@
 
 package org.latestbit.slack.morphism.client.reqresp.team
 
-import org.latestbit.slack.morphism.common.SlackTeamInfo
+import org.latestbit.slack.morphism.common._
 
 /**
  * Request of https://api.slack.com/methods/team.info
  */
-case class SlackApiTeamInfoRequest( team: Option[String] = None )
+case class SlackApiTeamInfoRequest( team: Option[SlackTeamId] = None )
 
 /**
  * Response of https://api.slack.com/methods/team.info

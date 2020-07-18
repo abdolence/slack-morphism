@@ -18,6 +18,7 @@
 
 package org.latestbit.slack.morphism.client.reqresp.chat
 
+import org.latestbit.slack.morphism.common._
 import org.latestbit.slack.morphism.messages.SlackBlock
 
 /**
@@ -27,7 +28,7 @@ import org.latestbit.slack.morphism.messages.SlackBlock
 case class SlackApiPostWebHookRequest(
     text: String,
     blocks: Option[List[SlackBlock]] = None,
-    thread_ts: Option[String] = None
+    thread_ts: Option[SlackTs] = None
 )
 
 /**

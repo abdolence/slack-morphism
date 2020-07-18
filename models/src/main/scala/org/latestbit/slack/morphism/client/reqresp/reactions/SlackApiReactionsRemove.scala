@@ -18,10 +18,12 @@
 
 package org.latestbit.slack.morphism.client.reqresp.reactions
 
+import org.latestbit.slack.morphism.common.SlackChannelId
+
 /**
  * Request of https://api.slack.com/methods/reactions.remove
  */
-case class SlackApiReactionsRemoveRequest( channel: String, name: String, timestamp: String )
+case class SlackApiReactionsRemoveRequest( channel: SlackChannelId, name: String, timestamp: String )
 
 /**
  * Response of https://api.slack.com/methods/reactions.remove

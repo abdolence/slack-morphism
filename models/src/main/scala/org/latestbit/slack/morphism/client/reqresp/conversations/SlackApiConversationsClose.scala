@@ -18,10 +18,12 @@
 
 package org.latestbit.slack.morphism.client.reqresp.conversations
 
+import org.latestbit.slack.morphism.common._
+
 /**
  * Request of https://api.slack.com/methods/conversations.close
  */
-case class SlackApiConversationsCloseRequest( channel: String )
+case class SlackApiConversationsCloseRequest( channel: SlackChannelId )
 
 /**
  * Response of https://api.slack.com/methods/conversations.close

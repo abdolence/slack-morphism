@@ -19,16 +19,15 @@
 package org.latestbit.slack.morphism.messages
 
 import cats.data.NonEmptyList
-import io.circe._
-import io.circe.generic.semiauto._
 import org.latestbit.circe.adt.codec._
+import org.latestbit.slack.morphism.common._
 
 /**
  * Blocks are a series of components that can be combined to create visually rich and compellingly interactive messages and views.
  * https://api.slack.com/reference/block-kit/blocks
  */
 sealed trait SlackBlock {
-  val block_id: Option[String]
+  val block_id: Option[SlackBlockId]
 }
 
 /**
@@ -39,7 +38,7 @@ case class SlackSectionBlock(
     text: Option[SlackBlockText] = None,
     fields: Option[List[SlackBlockText]] = None,
     accessory: Option[SlackSectionBlockElement] = None,
-    override val block_id: Option[String] = None
+    override val block_id: Option[SlackBlockId] = None
 ) extends SlackBlock {
   require( text.nonEmpty || fields.exists( _.nonEmpty ), "Either `text` or `fields` should be defined" )
 }
@@ -48,7 +47,7 @@ case class SlackSectionBlock(
  * https://api.slack.com/reference/block-kit/blocks#divider
  */
 @JsonAdt( "divider" )
-case class SlackDividerBlock( override val block_id: Option[String] = None ) extends SlackBlock
+case class SlackDividerBlock( override val block_id: Option[SlackBlockId] = None ) extends SlackBlock
 
 /**
  * https://api.slack.com/reference/block-kit/blocks#image
@@ -58,7 +57,7 @@ case class SlackImageBlock(
     image_url: String,
     alt_text: String,
     title: Option[SlackBlockPlainText] = None,
-    override val block_id: Option[String] = None
+    override val block_id: Option[SlackBlockId] = None
 ) extends SlackBlock
 
 /**
@@ -67,7 +66,7 @@ case class SlackImageBlock(
 @JsonAdt( "actions" )
 case class SlackActionsBlock(
     elements: NonEmptyList[SlackActionBlockElement],
-    override val block_id: Option[String] = None
+    override val block_id: Option[SlackBlockId] = None
 ) extends SlackBlock
 
 /**
@@ -76,7 +75,7 @@ case class SlackActionsBlock(
 @JsonAdt( "context" )
 case class SlackContextBlock(
     elements: NonEmptyList[SlackContextBlockElement],
-    override val block_id: Option[String] = None
+    override val block_id: Option[SlackBlockId] = None
 ) extends SlackBlock
 
 /**
@@ -88,7 +87,7 @@ case class SlackInputBlock(
     element: SlackInputBlockElement,
     hint: Option[SlackBlockPlainText] = None,
     optional: Option[Boolean] = None,
-    override val block_id: Option[String] = None
+    override val block_id: Option[SlackBlockId] = None
 ) extends SlackBlock
 
 /**
@@ -98,9 +97,11 @@ case class SlackInputBlock(
 case class SlackFileBlock(
     external_id: String,
     source: String = "remote",
-    override val block_id: Option[String] = None
+    override val block_id: Option[SlackBlockId] = None
 ) extends SlackBlock
 
 @JsonAdt( "rich_text" )
-case class SlackRichTextBlock( elements: List[SlackRichBlockElement], override val block_id: Option[String] = None )
-    extends SlackBlock
+case class SlackRichTextBlock(
+    elements: List[SlackRichBlockElement],
+    override val block_id: Option[SlackBlockId] = None
+) extends SlackBlock

@@ -18,7 +18,7 @@
 
 package org.latestbit.slack.morphism.client.reqresp.reactions
 
-import org.latestbit.slack.morphism.common.SlackApiResponseMetadata
+import org.latestbit.slack.morphism.common._
 import org.latestbit.slack.morphism.messages.SlackMessage
 import org.latestbit.slack.morphism.client.streaming.SlackApiScrollableResponse
 
@@ -26,9 +26,9 @@ import org.latestbit.slack.morphism.client.streaming.SlackApiScrollableResponse
  * Request of https://api.slack.com/methods/reactions.list
  */
 case class SlackApiReactionsListRequest(
-    cursor: Option[String] = None,
+    cursor: Option[SlackCursorId] = None,
     limit: Option[Long] = None,
-    user: Option[String] = None,
+    user: Option[SlackUserId] = None,
     full: Option[Boolean] = None
 )
 
@@ -38,10 +38,10 @@ case class SlackApiReactionsListRequest(
 case class SlackApiReactionsListResponse(
     override val items: List[SlackApiReactionsListItem] = List(),
     response_metadata: Option[SlackApiResponseMetadata] = None
-) extends SlackApiScrollableResponse[SlackApiReactionsListItem, String] {
+) extends SlackApiScrollableResponse[SlackApiReactionsListItem, SlackCursorId] {
 
-  override def getLatestPos: Option[String] = response_metadata.flatMap( _.next_cursor )
+  override def getLatestPos: Option[SlackCursorId] = response_metadata.flatMap( _.next_cursor )
 
 }
 
-case class SlackApiReactionsListItem( channel: String, message: SlackMessage )
+case class SlackApiReactionsListItem( channel: SlackChannelId, message: SlackMessage )

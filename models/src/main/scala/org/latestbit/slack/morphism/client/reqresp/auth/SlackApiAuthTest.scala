@@ -18,15 +18,17 @@
 
 package org.latestbit.slack.morphism.client.reqresp.auth
 
+import org.latestbit.slack.morphism.common._
+
 /**
  * Response of https://api.slack.com/methods/auth.test
  */
 //noinspection ScalaFileName
 case class SlackApiAuthTestResponse(
     url: Option[String] = None,
-    team: Option[String] = None,
-    user: Option[String] = None,
-    team_id: String,
-    user_id: String,
-    bot_id: Option[String] = None
+    team: Option[SlackTeamId] = None,
+    user: Option[SlackUserId] = None,
+    team_id: SlackTeamId,
+    user_id: SlackUserId,
+    bot_id: Option[SlackBotId] = None
 )

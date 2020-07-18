@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Abdulla Abdurakhmanov (abdulla@latestbit.com)
+ * Copyright 2020 Abdulla Abdurakhmanov (abdulla@latestbit.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,6 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.reqresp.channels
+package org.latestbit.slack.morphism.common
 
-/**
- * Request of https://api.slack.com/methods/channels.setPurpose
- */
-case class SlackApiChannelsSetPurposeRequest(
-    channel: String,
-    purpose: String,
-    name_tagging: Option[Boolean] = None
-)
-
-/**
- * Response of https://api.slack.com/methods/channels.setPurpose
- */
-case class SlackApiChannelsSetPurposeResponse( purpose: Option[String] = None )
+case class SlackCursorId( value: String ) extends AnyVal

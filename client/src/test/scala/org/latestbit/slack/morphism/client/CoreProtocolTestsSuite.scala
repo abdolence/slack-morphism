@@ -26,12 +26,8 @@ import io.circe._
 import io.circe.syntax._
 import org.asynchttpclient.util.HttpConstants.Methods
 import org.latestbit.slack.morphism.codecs.implicits._
-import org.latestbit.slack.morphism.client.reqresp.channels._
 import org.latestbit.slack.morphism.client.reqresp.chat._
-import org.latestbit.slack.morphism.client.reqresp.conversations.{
-  SlackApiConversationsListRequest,
-  SlackApiConversationsListResponse
-}
+import org.latestbit.slack.morphism.client.reqresp.conversations._
 import org.latestbit.slack.morphism.client.reqresp.events.SlackApiEventMessageReply
 import org.latestbit.slack.morphism.client.reqresp.test._
 import org.latestbit.slack.morphism.common._
@@ -102,7 +98,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
             SlackApiConversationsListResponse(
               channels = List(
                 SlackChannelInfo(
-                  id = "channel-id",
+                  id = SlackChannelId( "channel-id" ),
                   name = Some( "general" ),
                   flags = SlackChannelFlags(
                     is_general = Some( true )
@@ -117,10 +113,10 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
         .thenRespondWrapped(
           createJsonResponseStub(
             SlackApiChatPostMessageResponse(
-              ts = "message-ts",
+              ts = SlackTs( "message-ts" ),
               message = SlackUserMessage(
-                ts = "message-ts",
-                user = "user-id"
+                ts = SlackTs( "message-ts" ),
+                user = SlackUserId( "user-id" )
               )
             )
           )
@@ -131,7 +127,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
     SlackApiToken
       .createFrom(
         SlackApiToken.TokenTypes.BOT,
-        "xoxb-89....."
+        SlackAccessTokenValue( "xoxb-89....." )
       )
       .map { implicit slackApiToken: SlackApiToken =>
         EitherT( slackApiClient.conversations.list( SlackApiConversationsListRequest() ) )
@@ -150,7 +146,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
                 ).map { resp => resp.ts.some }
               }
               .getOrElse(
-                EitherT[Future, SlackApiClientError, Option[String]](
+                EitherT[Future, SlackApiClientError, Option[SlackTs]](
                   Future.successful( None.asRight )
                 )
               )
@@ -158,7 +154,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
           .value
           .map {
             case Right( Some( res ) ) => {
-              assert( res == "message-ts" )
+              assert( res.value == "message-ts" )
 
             }
             case Right( _ )  => fail()

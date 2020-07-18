@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Abdulla Abdurakhmanov (abdulla@latestbit.com)
+ * Copyright 2020 Abdulla Abdurakhmanov (abdulla@latestbit.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,6 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.reqresp.im
+package org.latestbit.slack.morphism.common
 
-/**
- * Request of https://api.slack.com/methods/im.mark
- */
-case class SlackApiImMarkRequest( channel: String, ts: String )
-
-/**
- * Response of https://api.slack.com/methods/im.mark
- */
-case class SlackApiImMarkResponse()
+case class SlackScheduledMessageId( value: String ) extends AnyVal

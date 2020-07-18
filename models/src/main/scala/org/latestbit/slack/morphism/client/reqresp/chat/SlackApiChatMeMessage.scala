@@ -18,12 +18,14 @@
 
 package org.latestbit.slack.morphism.client.reqresp.chat
 
+import org.latestbit.slack.morphism.common._
+
 /**
  * Request of https://api.slack.com/methods/chat.meMessage
  */
-case class SlackApiChatMeMessageRequest( channel: String, text: String )
+case class SlackApiChatMeMessageRequest( channel: SlackChannelId, text: String )
 
 /**
  * Response of https://api.slack.com/methods/chat.meMessage
  */
-case class SlackApiChatMeMessageResponse( channel: String, ts: String )
+case class SlackApiChatMeMessageResponse( channel: SlackChannelId, ts: SlackTs )

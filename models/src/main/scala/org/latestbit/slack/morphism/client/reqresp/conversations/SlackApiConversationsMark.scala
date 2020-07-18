@@ -18,10 +18,12 @@
 
 package org.latestbit.slack.morphism.client.reqresp.conversations
 
+import org.latestbit.slack.morphism.common._
+
 /**
  * Request of https://api.slack.com/methods/conversations.mark
  */
-case class SlackApiConversationsMarkRequest( channel: String, ts: String )
+case class SlackApiConversationsMarkRequest( channel: SlackChannelId, ts: SlackTs )
 
 /**
  * Response of https://api.slack.com/methods/conversations.mark

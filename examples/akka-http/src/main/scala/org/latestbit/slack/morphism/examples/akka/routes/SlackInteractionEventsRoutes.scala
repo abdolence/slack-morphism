@@ -33,6 +33,7 @@ import org.latestbit.slack.morphism.examples.akka.templates._
 
 import scala.concurrent.{ ExecutionContext, Future }
 import cats.instances.future._
+import org.latestbit.slack.morphism.common.{ SlackTeamId, SlackTriggerId }
 import org.latestbit.slack.morphism.examples.akka.config.AppConfig
 
 class SlackInteractionEventsRoutes(
@@ -65,7 +66,7 @@ class SlackInteractionEventsRoutes(
     }
   }
 
-  private def showDummyModal( triggerId: String )( implicit slackApiToken: SlackApiToken ) = {
+  private def showDummyModal( triggerId: SlackTriggerId )( implicit slackApiToken: SlackApiToken ) = {
     val modalTemplateExample = new SlackModalTemplateExample()
     onSuccess(
       slackApiClient.views.open(
@@ -86,8 +87,8 @@ class SlackInteractionEventsRoutes(
     }
   }
 
-  def removeTokens( workspaceId: String, re: SlackTokensRevokedEvent ) = {
-    slackTokensDb ! SlackTokensDb.RemoveTokens( workspaceId, re.tokens.oauth.toSet ++ re.tokens.bot.toSet )
+  def removeTokens( teamId: SlackTeamId, re: SlackTokensRevokedEvent ) = {
+    slackTokensDb ! SlackTokensDb.RemoveTokens( teamId, re.tokens.oauth.toSet ++ re.tokens.bot.toSet )
     complete( StatusCodes.OK )
   }
 

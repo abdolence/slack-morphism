@@ -18,12 +18,13 @@
 
 package org.latestbit.slack.morphism.client.reqresp.reactions
 
+import org.latestbit.slack.morphism.common.SlackChannelId
 import org.latestbit.slack.morphism.messages.SlackMessage
 
 /**
  * Request of https://api.slack.com/methods/reactions.get
  */
-case class SlackApiReactionsGetRequest( channel: String, timestamp: String, full: Option[Boolean] = None )
+case class SlackApiReactionsGetRequest( channel: SlackChannelId, timestamp: String, full: Option[Boolean] = None )
 
 /**
  * Response of https://api.slack.com/methods/reactions.get

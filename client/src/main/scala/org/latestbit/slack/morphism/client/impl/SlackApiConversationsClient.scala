@@ -100,12 +100,12 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       ](
         "conversations.history",
         Map(
-          "channel" -> Option( req.channel ),
-          "cursor" -> req.cursor,
+          "channel" -> Option( req.channel.value ),
+          "cursor" -> req.cursor.map( _.value ),
           "inclusive" -> req.inclusive.map( _.toString() ),
-          "latest" -> req.latest,
+          "latest" -> req.latest.map( _.value ),
           "limit" -> req.latest.map( _.toString() ),
-          "oldest" -> req.oldest
+          "oldest" -> req.oldest.map( _.value )
         ),
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
       )
@@ -118,8 +118,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     def historyScroller( req: SlackApiConversationsHistoryRequest )(
         implicit slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
-    ): SlackApiResponseScroller[F, SlackMessage, String, SlackApiConversationsHistoryResponse] = {
-      new SlackApiResponseScroller[F, SlackMessage, String, SlackApiConversationsHistoryResponse](
+    ): SlackApiResponseScroller[F, SlackMessage, SlackCursorId, SlackApiConversationsHistoryResponse] = {
+      new SlackApiResponseScroller[F, SlackMessage, SlackCursorId, SlackApiConversationsHistoryResponse](
         initialLoader = { () => history( req ) },
         batchLoader = { cursor =>
           history(
@@ -146,7 +146,7 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       ](
         "conversations.info",
         Map(
-          "channel" -> Option( req.channel ),
+          "channel" -> Option( req.channel.value ),
           "include_locale" -> req.include_locale.map( _.toString() ),
           "include_num_members" -> req.include_num_members.map( _.toString() )
         ),
@@ -239,7 +239,7 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       ](
         "conversations.list",
         Map(
-          "cursor" -> req.cursor,
+          "cursor" -> req.cursor.map( _.value ),
           "exclude_archived" -> req.exclude_archived.map( _.toString() ),
           "limit" -> req.limit.map( _.toString() ),
           "types" -> req.types.map( _.toList.map( _.value ).mkString( "," ) )
@@ -255,8 +255,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     def listScroller( req: SlackApiConversationsListRequest )(
         implicit slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
-    ): SlackApiResponseScroller[F, SlackChannelInfo, String, SlackApiConversationsListResponse] = {
-      new SlackApiResponseScroller[F, SlackChannelInfo, String, SlackApiConversationsListResponse](
+    ): SlackApiResponseScroller[F, SlackChannelInfo, SlackCursorId, SlackApiConversationsListResponse] = {
+      new SlackApiResponseScroller[F, SlackChannelInfo, SlackCursorId, SlackApiConversationsListResponse](
         initialLoader = { () => list( req ) },
         batchLoader = { cursor =>
           list(
@@ -282,8 +282,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       ](
         "conversations.members",
         Map(
-          "channel" -> Option( req.channel ),
-          "cursor" -> req.cursor,
+          "channel" -> Option( req.channel.value ),
+          "cursor" -> req.cursor.map( _.value ),
           "limit" -> req.limit.map( _.toString() )
         ),
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_4 ) ) )
@@ -297,8 +297,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     def membersScroller( req: SlackApiConversationsMembersRequest )(
         implicit slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
-    ): SlackApiResponseScroller[F, String, String, SlackApiConversationsMembersResponse] = {
-      new SlackApiResponseScroller[F, String, String, SlackApiConversationsMembersResponse](
+    ): SlackApiResponseScroller[F, SlackUserId, SlackCursorId, SlackApiConversationsMembersResponse] = {
+      new SlackApiResponseScroller[F, SlackUserId, SlackCursorId, SlackApiConversationsMembersResponse](
         initialLoader = { () => members( req ) },
         batchLoader = { cursor =>
           members(
@@ -381,12 +381,12 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       ](
         "conversations.replies",
         Map(
-          "channel" -> Option( req.channel ),
-          "ts" -> Option( req.ts ),
-          "cursor" -> req.cursor,
+          "channel" -> Option( req.channel.value ),
+          "ts" -> Option( req.ts.value ),
+          "cursor" -> req.cursor.map( _.value ),
           "inclusive" -> req.inclusive.map( _.toString() ),
-          "latest" -> req.latest,
-          "oldest" -> req.oldest,
+          "latest" -> req.latest.map( _.value ),
+          "oldest" -> req.oldest.map( _.value ),
           "limit" -> req.limit.map( _.toString() )
         ),
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
@@ -400,8 +400,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     def repliesScroller( req: SlackApiConversationsRepliesRequest )(
         implicit slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
-    ): SlackApiResponseScroller[F, SlackMessage, String, SlackApiConversationsRepliesResponse] = {
-      new SlackApiResponseScroller[F, SlackMessage, String, SlackApiConversationsRepliesResponse](
+    ): SlackApiResponseScroller[F, SlackMessage, SlackCursorId, SlackApiConversationsRepliesResponse] = {
+      new SlackApiResponseScroller[F, SlackMessage, SlackCursorId, SlackApiConversationsRepliesResponse](
         initialLoader = { () => replies( req ) },
         batchLoader = { cursor =>
           replies(

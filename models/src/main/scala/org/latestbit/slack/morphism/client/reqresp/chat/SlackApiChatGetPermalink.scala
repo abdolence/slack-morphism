@@ -18,12 +18,14 @@
 
 package org.latestbit.slack.morphism.client.reqresp.chat
 
+import org.latestbit.slack.morphism.common._
+
 /**
  * Request of https://api.slack.com/methods/chat.getPermalink
  */
-case class SlackApiChatGetPermalinkRequest( channel: String, message_ts: String )
+case class SlackApiChatGetPermalinkRequest( channel: SlackChannelId, message_ts: SlackTs )
 
 /**
  * Response of https://api.slack.com/methods/chat.getPermalink
  */
-case class SlackApiChatGetPermalinkResponse( channel: String, permalink: String )
+case class SlackApiChatGetPermalinkResponse( channel: SlackChannelId, permalink: String )

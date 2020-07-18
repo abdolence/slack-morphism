@@ -18,11 +18,13 @@
 
 package org.latestbit.slack.morphism.client.reqresp.chat
 
+import org.latestbit.slack.morphism.common._
+
 /**
  * Request of https://api.slack.com/methods/chat.deleteScheduledMessage
  */
 case class SlackApiChatDeleteScheduledMessageRequest(
-    channel: String,
+    channel: SlackChannelId,
     scheduled_message: String,
     as_user: Option[Boolean] = None
 )

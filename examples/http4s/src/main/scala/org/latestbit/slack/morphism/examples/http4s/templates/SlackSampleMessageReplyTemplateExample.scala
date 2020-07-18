@@ -21,6 +21,7 @@ package org.latestbit.slack.morphism.examples.http4s.templates
 import java.time.Instant
 
 import org.latestbit.slack.morphism.client.templating.{ SlackMessageTemplate, SlackTextFormatters }
+import org.latestbit.slack.morphism.common.SlackActionId
 import org.latestbit.slack.morphism.messages.SlackBlock
 
 class SlackSampleMessageReplyTemplateExample( replyToMessage: String ) extends SlackMessageTemplate {
@@ -42,7 +43,7 @@ class SlackSampleMessageReplyTemplateExample( replyToMessage: String ) extends S
       ),
       actionsBlock(
         blockElements(
-          button( text = pt"Simple", action_id = "simple-message-button" )
+          button( text = pt"Simple", action_id = SlackActionId( "simple-message-button" ) )
         )
       )
     )

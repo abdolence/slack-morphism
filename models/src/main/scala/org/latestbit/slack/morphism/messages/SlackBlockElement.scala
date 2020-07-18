@@ -20,7 +20,7 @@ package org.latestbit.slack.morphism.messages
 
 import cats.data.NonEmptyList
 import org.latestbit.circe.adt.codec._
-import org.latestbit.slack.morphism.common.SlackConversationType
+import org.latestbit.slack.morphism.common._
 
 /**
  * Block elements can be used inside of section, context, and actions layout blocks. Inputs can only be used inside of input blocks.
@@ -73,7 +73,7 @@ case class SlackBlockImageElement( image_url: String, alt_text: String )
 @JsonAdt( "button" )
 case class SlackBlockButtonElement(
     text: SlackBlockPlainText,
-    action_id: String,
+    action_id: SlackActionId,
     url: Option[String] = None,
     value: Option[String] = None,
     style: Option[String] = None,
@@ -105,7 +105,7 @@ sealed trait SlackBlockSelectElement extends SlackBlockElement
 @JsonAdt( "static_select" )
 case class SlackBlockStaticSelectElement(
     placeholder: SlackBlockPlainText,
-    action_id: String,
+    action_id: SlackActionId,
     options: Option[NonEmptyList[SlackBlockChoiceItem[SlackBlockPlainText]]] = None,
     option_groups: Option[NonEmptyList[SlackBlockOptionGroup[SlackBlockPlainText]]] = None,
     initial_option: Option[SlackBlockChoiceItem[SlackBlockPlainText]] = None,
@@ -122,7 +122,7 @@ case class SlackBlockStaticSelectElement(
 @JsonAdt( "multi_static_select" )
 case class SlackBlockMultiStaticSelectElement(
     placeholder: SlackBlockPlainText,
-    action_id: String,
+    action_id: SlackActionId,
     options: Option[NonEmptyList[SlackBlockChoiceItem[SlackBlockPlainText]]] = None,
     option_groups: Option[NonEmptyList[SlackBlockOptionGroup[SlackBlockPlainText]]] = None,
     initial_options: Option[NonEmptyList[SlackBlockChoiceItem[SlackBlockPlainText]]] = None,
@@ -140,7 +140,7 @@ case class SlackBlockMultiStaticSelectElement(
 @JsonAdt( "external_select" )
 case class SlackBlockExternalSelectElement(
     placeholder: SlackBlockPlainText,
-    action_id: String,
+    action_id: SlackActionId,
     initial_option: Option[SlackBlockChoiceItem[SlackBlockPlainText]] = None,
     confirm: Option[SlackBlockConfirmItem] = None
 ) extends SlackBlockSelectElement
@@ -153,7 +153,7 @@ case class SlackBlockExternalSelectElement(
 @JsonAdt( "multi_external_select" )
 case class SlackBlockMultiExternalSelectElement(
     placeholder: SlackBlockPlainText,
-    action_id: String,
+    action_id: SlackActionId,
     initial_options: Option[NonEmptyList[SlackBlockChoiceItem[SlackBlockPlainText]]] = None,
     confirm: Option[SlackBlockConfirmItem] = None,
     max_selected_items: Option[Long] = None
@@ -167,7 +167,7 @@ case class SlackBlockMultiExternalSelectElement(
 @JsonAdt( "users_select" )
 case class SlackBlockUsersListSelectElement(
     placeholder: SlackBlockPlainText,
-    action_id: String,
+    action_id: SlackActionId,
     initial_user: Option[String] = None,
     confirm: Option[SlackBlockConfirmItem] = None
 ) extends SlackBlockSelectElement
@@ -180,7 +180,7 @@ case class SlackBlockUsersListSelectElement(
 @JsonAdt( "multi_users_select" )
 case class SlackBlockMultiUsersListSelectElement(
     placeholder: SlackBlockPlainText,
-    action_id: String,
+    action_id: SlackActionId,
     initial_users: Option[NonEmptyList[String]] = None,
     confirm: Option[SlackBlockConfirmItem] = None,
     max_selected_items: Option[Long] = None
@@ -194,7 +194,7 @@ case class SlackBlockMultiUsersListSelectElement(
 @JsonAdt( "conversations_select" )
 case class SlackBlockConversationListSelectElement(
     placeholder: SlackBlockPlainText,
-    action_id: String,
+    action_id: SlackActionId,
     initial_conversation: Option[String] = None,
     default_to_current_conversation: Option[Boolean] = None,
     confirm: Option[SlackBlockConfirmItem] = None,
@@ -210,7 +210,7 @@ case class SlackBlockConversationListSelectElement(
 @JsonAdt( "multi_conversations_select" )
 case class SlackBlockMultiConversationListSelectElement(
     placeholder: SlackBlockPlainText,
-    action_id: String,
+    action_id: SlackActionId,
     initial_conversations: Option[NonEmptyList[String]] = None,
     default_to_current_conversation: Option[Boolean] = None,
     confirm: Option[SlackBlockConfirmItem] = None,
@@ -226,8 +226,8 @@ case class SlackBlockMultiConversationListSelectElement(
 @JsonAdt( "channels_select" )
 case class SlackBlockChannelsListSelectElement(
     placeholder: SlackBlockPlainText,
-    action_id: String,
-    initial_channel: Option[String] = None,
+    action_id: SlackActionId,
+    initial_channel: Option[SlackChannelId] = None,
     confirm: Option[SlackBlockConfirmItem] = None,
     response_url_enabled: Option[Boolean] = None
 ) extends SlackBlockSelectElement
@@ -240,7 +240,7 @@ case class SlackBlockChannelsListSelectElement(
 @JsonAdt( "multi_channels_select" )
 case class SlackBlockMultiChannelsListSelectElement(
     placeholder: SlackBlockPlainText,
-    action_id: String,
+    action_id: SlackActionId,
     initial_channels: Option[NonEmptyList[String]] = None,
     confirm: Option[SlackBlockConfirmItem] = None,
     max_selected_items: Option[Long] = None
@@ -253,7 +253,7 @@ case class SlackBlockMultiChannelsListSelectElement(
  */
 @JsonAdt( "overflow" )
 case class SlackBlockOverflowElement(
-    action_id: String,
+    action_id: SlackActionId,
     options: NonEmptyList[SlackBlockChoiceItem[SlackBlockPlainText]],
     confirm: Option[SlackBlockConfirmItem] = None
 ) extends SlackBlockSelectElement
@@ -272,7 +272,7 @@ case class SlackBlockOptionGroup[+T <: SlackBlockText](
  */
 @JsonAdt( "datepicker" )
 case class SlackBlockDatePickerElement(
-    action_id: String,
+    action_id: SlackActionId,
     placeholder: Option[SlackBlockPlainText] = None,
     initial_date: Option[String] = None,
     confirm: Option[SlackBlockConfirmItem] = None
@@ -286,7 +286,7 @@ case class SlackBlockDatePickerElement(
  */
 @JsonAdt( "plain_text_input" )
 case class SlackBlockPlainInputElement(
-    action_id: String,
+    action_id: SlackActionId,
     placeholder: Option[SlackBlockPlainText] = None,
     initial_value: Option[String] = None,
     multiline: Option[Boolean] = None,
@@ -302,7 +302,7 @@ case class SlackBlockPlainInputElement(
  */
 @JsonAdt( "radio_buttons" )
 case class SlackBlockRadioButtonsElement(
-    action_id: String,
+    action_id: SlackActionId,
     options: NonEmptyList[SlackBlockChoiceItem[SlackBlockText]],
     initial_option: Option[SlackBlockChoiceItem[SlackBlockText]] = None,
     confirm: Option[SlackBlockConfirmItem] = None
@@ -316,7 +316,7 @@ case class SlackBlockRadioButtonsElement(
  */
 @JsonAdt( "checkboxes" )
 case class SlackBlockCheckboxesElement(
-    action_id: String,
+    action_id: SlackActionId,
     options: NonEmptyList[SlackBlockChoiceItem[SlackBlockText]],
     initial_options: Option[NonEmptyList[SlackBlockChoiceItem[SlackBlockText]]] = None,
     confirm: Option[SlackBlockConfirmItem] = None

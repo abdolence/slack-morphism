@@ -27,14 +27,16 @@ import com.typesafe.scalalogging._
 import swaydb.IO.ApiIO
 import swaydb.data.slice.Slice
 import cats.implicits._
+import org.latestbit.slack.morphism.common.{ SlackAccessTokenValue, SlackTeamId, SlackUserId }
 import org.latestbit.slack.morphism.examples.akka.config.AppConfig
+import swaydb.serializers.Serializer
 
 import scala.concurrent.ExecutionContextExecutor
 
 object SlackTokensDb extends StrictLogging {
 
-  case class TokenRecord( tokenType: String, tokenValue: String, userId: String, scope: String )
-  case class TeamTokensRecord( teamId: String, tokens: List[TokenRecord] )
+  case class TokenRecord( tokenType: String, tokenValue: SlackAccessTokenValue, userId: SlackUserId, scope: String )
+  case class TeamTokensRecord( teamId: SlackTeamId, tokens: List[TokenRecord] )
 
   implicit object TeamTokensRecordSwayDbSerializer extends swaydb.serializers.Serializer[TeamTokensRecord] {
     import io.circe.parser._
@@ -53,12 +55,12 @@ object SlackTokensDb extends StrictLogging {
   sealed trait Command
   case class OpenDb( config: AppConfig ) extends Command
   case class Close() extends Command
-  case class InsertToken( teamId: String, tokenRecord: TokenRecord ) extends Command
-  case class RemoveTokens( teamId: String, users: Set[String] ) extends Command
-  case class ReadTokens( teamId: String, ref: akka.actor.typed.ActorRef[Option[TeamTokensRecord]] ) extends Command
+  case class InsertToken( teamId: SlackTeamId, tokenRecord: TokenRecord ) extends Command
+  case class RemoveTokens( teamId: SlackTeamId, users: Set[SlackUserId] ) extends Command
+  case class ReadTokens( teamId: SlackTeamId, ref: akka.actor.typed.ActorRef[Option[TeamTokensRecord]] ) extends Command
 
-  type FunctionType = PureFunction[String, TeamTokensRecord, Apply.Map[TeamTokensRecord]]
-  type SwayDbType = Map[String, TeamTokensRecord, FunctionType, ApiIO]
+  type FunctionType = PureFunction[SlackTeamId, TeamTokensRecord, Apply.Map[TeamTokensRecord]]
+  type SwayDbType = Map[SlackTeamId, TeamTokensRecord, FunctionType, ApiIO]
 
   val run: Behavior[Command] = runBehavior( None )
 
@@ -68,16 +70,22 @@ object SlackTokensDb extends StrictLogging {
       implicit val classicSystem = context.system.toClassic
       implicit val ec: ExecutionContextExecutor = context.system.executionContext
 
+      implicit val teamIdSerializer = new Serializer[SlackTeamId] {
+        override def write( data: SlackTeamId ): Slice[Byte] = StringSerializer.write( data.value )
+
+        override def read( data: Slice[Byte] ): SlackTeamId = SlackTeamId( StringSerializer.read( data ) )
+      }
+
       Behaviors.receiveMessage {
         case OpenDb( config ) => {
           logger.info( s"Opening sway db in ${config.databaseDir}" )
           val map: SwayDbType =
-            persistent.Map[String, TeamTokensRecord, FunctionType, IO.ApiIO]( dir = config.databaseDir ).get
+            persistent.Map[SlackTeamId, TeamTokensRecord, FunctionType, IO.ApiIO]( dir = config.databaseDir ).get
 
           runBehavior( Some( map ) )
         }
 
-        case InsertToken( teamId: String, tokenRecord ) => {
+        case InsertToken( teamId: SlackTeamId, tokenRecord ) => {
           swayMap.foreach { swayMap =>
             swayMap
               .get( key = teamId )
@@ -108,7 +116,7 @@ object SlackTokensDb extends StrictLogging {
           Behavior.same
         }
 
-        case RemoveTokens( teamId: String, users: Set[String] ) => {
+        case RemoveTokens( teamId: SlackTeamId, users: Set[SlackUserId] ) => {
           swayMap.foreach { swayMap =>
             swayMap
               .get( key = teamId )

@@ -56,7 +56,7 @@ trait SlackApiPinsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       http.get[SlackApiPinsListResponse](
         "pins.list",
         Map(
-          "channel" -> Option( req.channel )
+          "channel" -> Option( req.channel.value )
         ),
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
       )

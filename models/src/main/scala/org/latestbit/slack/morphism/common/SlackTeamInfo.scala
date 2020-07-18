@@ -22,7 +22,7 @@ package org.latestbit.slack.morphism.common
  * Slack Team info
  */
 case class SlackTeamInfo(
-    id: String,
+    id: SlackTeamId,
     name: Option[String] = None,
     domain: Option[String] = None,
     email_domain: Option[String] = None,
@@ -34,4 +34,4 @@ case class SlackTeamInfo(
 /**
  * Basic Slack team information
  */
-case class SlackBasicTeamInfo( id: String, name: Option[String] = None )
+case class SlackBasicTeamInfo( id: SlackTeamId, name: Option[String] = None )

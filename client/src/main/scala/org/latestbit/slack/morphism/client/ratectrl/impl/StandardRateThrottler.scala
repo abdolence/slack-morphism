@@ -24,6 +24,7 @@ import cats._
 import cats.implicits._
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.ratectrl._
+import org.latestbit.slack.morphism.common.SlackTeamId
 import org.latestbit.slack.morphism.concurrent
 import org.latestbit.slack.morphism.concurrent.AsyncTimerSupport
 import sttp.model.Uri
@@ -64,9 +65,9 @@ abstract class StandardRateThrottler[F[_] : SlackApiClientBackend.BackendType : 
 
   protected def currentTimeInMs(): Long
 
-  private def createOrGetWorkspaceMetrics( workspaceId: String, now: Long ): RateThrottlerWorkspaceMetrics = {
+  private def createOrGetWorkspaceMetrics( teamId: SlackTeamId, now: Long ): RateThrottlerWorkspaceMetrics = {
     workspaceMaxRateMetrics.getOrElseUpdate(
-      workspaceId,
+      teamId.value,
       RateThrottlerWorkspaceMetrics(
         params.workspaceMaxRateLimit.map( toRateMetric ),
         params.slackApiTierLimits.map {
@@ -134,7 +135,7 @@ abstract class StandardRateThrottler[F[_] : SlackApiClientBackend.BackendType : 
 
   private def calcWorkspaceDelays(
       now: Long,
-      workspaceId: String,
+      teamId: SlackTeamId,
       apiMethodUri: Option[Uri],
       methodRateControl: Option[SlackApiMethodRateControlParams]
   ): List[Long] = {
@@ -144,14 +145,14 @@ abstract class StandardRateThrottler[F[_] : SlackApiClientBackend.BackendType : 
       List()
     } else {
       val workspaceMetrics =
-        createOrGetWorkspaceMetrics( workspaceId, now )
+        createOrGetWorkspaceMetrics( teamId, now )
 
       val updatedWorkspaceGlobalMetric = workspaceMetrics.wholeWorkspaceMetric.map { metric => metric.update( now ) }
       val updatedTierMetric = calcWorkspaceTierMetric( now, methodRateControl, workspaceMetrics )
       val updatedSpecialLimitMetric = calcWorkspaceSpecialLimitMetric( now, methodRateControl, workspaceMetrics )
 
       workspaceMaxRateMetrics.update(
-        workspaceId,
+        teamId.value,
         workspaceMetrics.copy(
           wholeWorkspaceMetric = updatedWorkspaceGlobalMetric,
           tiers = updatedTierMetric
@@ -193,9 +194,7 @@ abstract class StandardRateThrottler[F[_] : SlackApiClientBackend.BackendType : 
         methodRateControl.flatMap( _.methodMinRateLimitDelay.map( _.toMillis ) )
       ).flatten ++ (apiToken
         .flatMap { tokenValue =>
-          tokenValue.workspaceId.map { workspaceId =>
-            calcWorkspaceDelays( now, workspaceId, apiMethodUri, methodRateControl )
-          }
+          tokenValue.teamId.map { teamId => calcWorkspaceDelays( now, teamId, apiMethodUri, methodRateControl ) }
         }
         .getOrElse( List() ) )).maxOption
 

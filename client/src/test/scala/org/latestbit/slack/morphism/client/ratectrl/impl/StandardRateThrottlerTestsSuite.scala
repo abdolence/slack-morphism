@@ -30,6 +30,7 @@ import scala.concurrent.{ Await, Future }
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 import cats.instances.future._
+import org.latestbit.slack.morphism.common.{ SlackAccessTokenValue, SlackTeamId }
 
 class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
 
@@ -133,8 +134,8 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
       override protected def currentTimeInMs(): Long = fakeCurrentTime
     }
 
-    val apiToken1 = SlackApiBotToken( "test-token-1", workspaceId = Some( "WID1" ) )
-    val apiToken2 = SlackApiBotToken( "test-token-2", workspaceId = Some( "WID2" ) )
+    val apiToken1 = SlackApiBotToken( SlackAccessTokenValue( "test-token-1" ), teamId = Some( SlackTeamId( "WID1" ) ) )
+    val apiToken2 = SlackApiBotToken( SlackAccessTokenValue( "test-token-2" ), teamId = Some( SlackTeamId( "WID2" ) ) )
 
     (1 to 20).foreach { idx =>
       throttler.throttle[String](
@@ -178,7 +179,7 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
       override protected def currentTimeInMs(): Long = 0L
     }
 
-    val apiToken1 = SlackApiBotToken( "test-token-1", workspaceId = Some( "WID1" ) )
+    val apiToken1 = SlackApiBotToken( SlackAccessTokenValue( "test-token-1" ), teamId = Some( SlackTeamId( "WID1" ) ) )
 
     (1 to 10).foreach { idx =>
       throttler.throttle[String](
@@ -204,7 +205,7 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
       override protected def currentTimeInMs(): Long = 0L
     }
 
-    val apiToken1 = SlackApiBotToken( "test-token-1", workspaceId = Some( "WID1" ) )
+    val apiToken1 = SlackApiBotToken( SlackAccessTokenValue( "test-token-1" ), teamId = Some( SlackTeamId( "WID1" ) ) )
 
     (1 to 10).foreach { idx =>
       throttler.throttle[String](
@@ -250,7 +251,12 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
       throttler.throttle[String](
         uri"http://example.net/",
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_1 ) ) ),
-        apiToken = Some( SlackApiBotToken( s"test-token-${idx}", workspaceId = Some( s"WID-${idx}" ) ) )
+        apiToken = Some(
+          SlackApiBotToken(
+            SlackAccessTokenValue( s"test-token-${idx}" ),
+            teamId = Some( SlackTeamId( s"WID-${idx}" ) )
+          )
+        )
       ) { () => Future.successful( Right( s"Valid res: ${idx}" ) ) }
     }
 

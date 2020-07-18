@@ -169,7 +169,7 @@ trait SlackApiHttpProtocolSupport[F[_]] extends SlackApiClientBackend[F] {
   ): F[Either[SlackApiClientError, RS]] = {
 
     sendSlackRequest[RS](
-      slackApiToken.map { token => request.auth.bearer( token.value ) }.getOrElse( request )
+      slackApiToken.map { token => request.auth.bearer( token.accessToken.value ) }.getOrElse( request )
     )
 
   }

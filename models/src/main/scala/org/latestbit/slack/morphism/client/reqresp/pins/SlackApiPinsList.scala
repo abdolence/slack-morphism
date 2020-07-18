@@ -18,17 +18,22 @@
 
 package org.latestbit.slack.morphism.client.reqresp.pins
 
-import org.latestbit.slack.morphism.common.SlackDateTime
+import org.latestbit.slack.morphism.common._
 import org.latestbit.slack.morphism.messages.SlackPinnedMessage
 
 /**
  * Request of https://api.slack.com/methods/pins.list
  */
-case class SlackApiPinsListRequest( channel: String )
+case class SlackApiPinsListRequest( channel: SlackChannelId )
 
 /**
  * Response of https://api.slack.com/methods/pins.list
  */
 case class SlackApiPinsListResponse( items: List[SlackPinItem] )
 
-case class SlackPinItem( channel: String, created: SlackDateTime, created_by: String, message: SlackPinnedMessage )
+case class SlackPinItem(
+    channel: SlackChannelId,
+    created: SlackDateTime,
+    created_by: String,
+    message: SlackPinnedMessage
+)

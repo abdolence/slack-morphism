@@ -26,6 +26,7 @@ import org.latestbit.slack.morphism.client.templating.{
   SlackBlocksTemplateDsl,
   SlackMessageTemplate
 }
+import org.latestbit.slack.morphism.common.SlackActionId
 import org.scalatest.flatspec.AnyFlatSpec
 
 class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
@@ -63,21 +64,21 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
                 ),
                 actionsBlock(
                   elements = blockElements(
-                    button( text = pt"test button 1", action_id = "-" ),
-                    button( text = pt"test button 2", action_id = "-" ),
+                    button( text = pt"test button 1", action_id = SlackActionId( "-" ) ),
+                    button( text = pt"test button 2", action_id = SlackActionId( "-" ) ),
                     button(
                       text = pt"test button 3",
-                      action_id = "-",
+                      action_id = SlackActionId( "-" ),
                       confirm =
                         confirm( title = pt"confirm dialog title", text = md"Hey", confirm = pt"Ok", deny = pt"Cancel" )
                     ),
-                    optionally( testCond > 0 )( button( text = pt"test button", action_id = "-" ) )
+                    optionally( testCond > 0 )( button( text = pt"test button", action_id = SlackActionId( "-" ) ) )
                   )
                 ),
                 sectionBlock(
                   text = md"Test 2",
                   accessory = overflow(
-                    action_id = "-",
+                    action_id = SlackActionId( "-" ),
                     options = choiceItems(
                       choiceItem( text = pt"test-menu-item", value = "" )
                     )
@@ -86,7 +87,7 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
                 sectionBlock(
                   text = md"Test Radio Buttons",
                   accessory = radioButtons(
-                    action_id = "-",
+                    action_id = SlackActionId( "-" ),
                     options = choiceItems(
                       choiceItem( text = md"test-menu-item1", value = "" ),
                       choiceItem( text = pt"test-menu-item2", value = "" )
@@ -96,7 +97,7 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
                 sectionBlock(
                   text = md"Test Checkboxes",
                   accessory = checkboxes(
-                    action_id = "-",
+                    action_id = SlackActionId( "-" ),
                     options = choiceItems(
                       choiceItem( text = md"test-menu-item1", value = "" ),
                       choiceItem( text = pt"test-menu-item2", value = "" )
@@ -107,7 +108,7 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
                   label = pt"Input",
                   element = staticSelect(
                     placeholder = pt"test",
-                    action_id = "-",
+                    action_id = SlackActionId( "-" ),
                     options = choiceItems(
                       choiceItem( text = pt"test-menu-item", value = "" ),
                       optionally( testCond > 0 )( choiceItem( text = pt"test-menu-item2", value = "" ) )
@@ -124,7 +125,7 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
                   label = pt"Input",
                   element = multiUsersSelect(
                     placeholder = pt"test",
-                    action_id = "-",
+                    action_id = SlackActionId( "-" ),
                     initial_users = choiceStrItems(
                       "test-user-1"
                     )

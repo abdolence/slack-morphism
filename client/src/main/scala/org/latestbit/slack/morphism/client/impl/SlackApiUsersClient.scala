@@ -22,7 +22,7 @@ import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client.reqresp.users._
 import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
-import org.latestbit.slack.morphism.common.{ SlackChannelInfo, SlackUserInfo }
+import org.latestbit.slack.morphism.common.{ SlackChannelInfo, SlackCursorId, SlackUserInfo }
 import org.latestbit.slack.morphism.codecs.implicits._
 
 /**
@@ -43,11 +43,11 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       http.get[SlackApiUsersConversationsResponse](
         "users.conversations",
         Map(
-          "cursor" -> req.cursor,
+          "cursor" -> req.cursor.map( _.value ),
           "exclude_archived" -> req.exclude_archived.map( _.toString() ),
           "limit" -> req.limit.map( _.toString() ),
           "types" -> req.types.map( _.mkString( "," ) ),
-          "user" -> req.user
+          "user" -> req.user.map( _.value )
         ),
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
       )
@@ -60,8 +60,8 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     def conversationsScroller( req: SlackApiUsersConversationsRequest )(
         implicit slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
-    ): SlackApiResponseScroller[F, SlackChannelInfo, String, SlackApiUsersConversationsResponse] = {
-      new SlackApiResponseScroller[F, SlackChannelInfo, String, SlackApiUsersConversationsResponse](
+    ): SlackApiResponseScroller[F, SlackChannelInfo, SlackCursorId, SlackApiUsersConversationsResponse] = {
+      new SlackApiResponseScroller[F, SlackChannelInfo, SlackCursorId, SlackApiUsersConversationsResponse](
         initialLoader = { () => conversations( req ) },
         batchLoader = { cursor =>
           conversations(
@@ -85,7 +85,7 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       http.get[SlackApiUsersGetPresenceResponse](
         "users.getPresence",
         Map(
-          "user" -> Option( req.user )
+          "user" -> Option( req.user.value )
         ),
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
       )
@@ -117,7 +117,7 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       http.get[SlackApiUsersInfoResponse](
         "users.info",
         Map(
-          "user" -> Option( req.user ),
+          "user" -> Option( req.user.value ),
           "include_locale" -> req.include_locale.map( _.toString() )
         ),
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_4 ) ) )
@@ -135,7 +135,7 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       http.get[SlackApiUsersListResponse](
         "users.list",
         Map(
-          "cursor" -> req.cursor,
+          "cursor" -> req.cursor.map( _.value ),
           "include_locale" -> req.include_locale.map( _.toString() ),
           "limit" -> req.limit.map( _.toString() )
         ),
@@ -150,8 +150,8 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     def listScroller( req: SlackApiUsersListRequest )(
         implicit slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
-    ): SlackApiResponseScroller[F, SlackUserInfo, String, SlackApiUsersListResponse] = {
-      new SlackApiResponseScroller[F, SlackUserInfo, String, SlackApiUsersListResponse](
+    ): SlackApiResponseScroller[F, SlackUserInfo, SlackCursorId, SlackApiUsersListResponse] = {
+      new SlackApiResponseScroller[F, SlackUserInfo, SlackCursorId, SlackApiUsersListResponse](
         initialLoader = { () => list( req ) },
         batchLoader = { cursor =>
           list(
@@ -209,7 +209,7 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
         http.get[SlackApiUsersProfileGetResponse](
           "users.profile.get",
           Map(
-            "user" -> req.user,
+            "user" -> req.user.map( _.value ),
             "include_locale" -> req.include_locale.map( _.toString() )
           ),
           methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_4 ) ) )

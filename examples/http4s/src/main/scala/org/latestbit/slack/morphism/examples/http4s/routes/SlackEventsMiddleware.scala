@@ -28,6 +28,7 @@ import org.http4s._
 import org.http4s.dsl.io._
 import org.http4s.implicits._
 import org.latestbit.slack.morphism.client.SlackApiToken
+import org.latestbit.slack.morphism.common.SlackTeamId
 import org.latestbit.slack.morphism.events.signature._
 import org.latestbit.slack.morphism.examples.http4s.config.AppConfig
 import org.latestbit.slack.morphism.examples.http4s.db.SlackTokensDb
@@ -120,13 +121,13 @@ trait SlackEventsMiddleware extends StrictLogging {
   }
 
   protected def extractSlackWorkspaceToken[F[_] : Sync](
-      workspaceId: String
+      teamId: SlackTeamId
   )(
       resp: SlackApiToken => F[Response[F]]
   )( implicit tokensDb: SlackTokensDb[F] ): F[Response[F]] =
     OptionT(
       tokensDb
-        .readTokens( workspaceId )
+        .readTokens( teamId )
         .map { tokensRecord =>
           tokensRecord
             .flatMap( record =>
@@ -135,7 +136,7 @@ trait SlackEventsMiddleware extends StrictLogging {
                   tokenType = lastToken.tokenType,
                   tokenValue = lastToken.tokenValue,
                   scope = Some( lastToken.scope ),
-                  workspaceId = Some( workspaceId )
+                  teamId = Some( teamId )
                 )
               }
             )
@@ -143,7 +144,7 @@ trait SlackEventsMiddleware extends StrictLogging {
     ).flatMapF { token => resp( token ).map( _.some ) }.getOrElseF {
       Sync[F]
         .delay(
-          logger.warn( "Token absent for: {}", workspaceId )
+          logger.warn( "Token absent for: {}", teamId )
         )
         .map( _ =>
           Response[F](

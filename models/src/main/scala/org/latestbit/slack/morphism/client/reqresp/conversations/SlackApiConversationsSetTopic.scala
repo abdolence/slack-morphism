@@ -18,10 +18,12 @@
 
 package org.latestbit.slack.morphism.client.reqresp.conversations
 
+import org.latestbit.slack.morphism.common._
+
 /**
  * Request of https://api.slack.com/methods/conversations.setTopic
  */
-case class SlackApiConversationsSetTopicRequest( channel: String, topic: String )
+case class SlackApiConversationsSetTopicRequest( channel: SlackChannelId, topic: String )
 
 /**
  * Response of https://api.slack.com/methods/conversations.setTopic

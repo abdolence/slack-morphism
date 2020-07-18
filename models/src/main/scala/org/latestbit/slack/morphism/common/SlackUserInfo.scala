@@ -22,8 +22,8 @@ package org.latestbit.slack.morphism.common
  * Slack User Info
  */
 case class SlackUserInfo(
-    id: String,
-    team_id: Option[String] = None,
+    id: SlackUserId,
+    team_id: Option[SlackTeamId] = None,
     name: Option[String] = None,
     deleted: Option[Boolean] = None,
     color: Option[String] = None,
@@ -41,7 +41,7 @@ case class SlackUserInfo(
  * Slack User Profile
  */
 case class SlackUserProfile(
-    id: Option[String] = None,
+    id: Option[SlackUserId] = None,
     avatar_hash: Option[String] = None,
     status_text: Option[String] = None,
     status_expiration: Option[SlackDateTime] = None,
@@ -51,7 +51,7 @@ case class SlackUserProfile(
     display_name_normalized: Option[String] = None,
     email: Option[String] = None,
     icon: Option[SlackIcon] = None,
-    team: Option[String] = None
+    team: Option[SlackTeamId] = None
 )
 
 /**
@@ -73,4 +73,4 @@ case class SlackUserFlags(
 /**
  * Slack Basic User Info
  */
-case class SlackBasicUserInfo( id: String, team_id: Option[String] = None, username: Option[String] = None )
+case class SlackBasicUserInfo( id: SlackUserId, team_id: Option[SlackTeamId] = None, username: Option[String] = None )

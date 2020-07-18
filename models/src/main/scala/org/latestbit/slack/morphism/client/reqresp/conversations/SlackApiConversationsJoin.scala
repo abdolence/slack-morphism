@@ -18,12 +18,12 @@
 
 package org.latestbit.slack.morphism.client.reqresp.conversations
 
-import org.latestbit.slack.morphism.common.{ SlackApiResponseMetadata, SlackChannelInfo }
+import org.latestbit.slack.morphism.common._
 
 /**
  * Request of https://api.slack.com/methods/conversations.join
  */
-case class SlackApiConversationsJoinRequest( channel: String )
+case class SlackApiConversationsJoinRequest( channel: SlackChannelId )
 
 /**
  * Response of https://api.slack.com/methods/conversations.join

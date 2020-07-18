@@ -19,6 +19,7 @@
 package org.latestbit.slack.morphism.examples.http4s.templates
 
 import org.latestbit.slack.morphism.client.templating.SlackModalViewTemplate
+import org.latestbit.slack.morphism.common.SlackActionId
 import org.latestbit.slack.morphism.messages._
 
 class SlackModalTemplateExample() extends SlackModalViewTemplate {
@@ -34,7 +35,7 @@ class SlackModalTemplateExample() extends SlackModalViewTemplate {
         text = md"Just a dummy window here, sorry",
         accessory = multiStaticSelect(
           placeholder = pt"With a dummy menu",
-          action_id = "-",
+          action_id = SlackActionId( "-" ),
           options = choiceItems(
             choiceItem( text = pt"First Option", value = "1" ),
             choiceItem( text = pt"Second Option", value = "2" ),
@@ -45,7 +46,7 @@ class SlackModalTemplateExample() extends SlackModalViewTemplate {
       inputBlock(
         label = pt"Dummy radio",
         element = radioButtons(
-          action_id = "-",
+          action_id = SlackActionId( "-" ),
           options = choiceItems(
             choiceItem( text = pt"Radio 1", value = "1" ),
             choiceItem( text = pt"Radio 2", value = "2" ),

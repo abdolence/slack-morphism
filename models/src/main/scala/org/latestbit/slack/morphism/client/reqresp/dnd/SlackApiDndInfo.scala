@@ -18,12 +18,12 @@
 
 package org.latestbit.slack.morphism.client.reqresp.dnd
 
-import org.latestbit.slack.morphism.common.SlackDateTime
+import org.latestbit.slack.morphism.common._
 
 /**
  * Request of https://api.slack.com/methods/dnd.info
  */
-case class SlackApiDndInfoRequest( user: Option[String] = None )
+case class SlackApiDndInfoRequest( user: Option[SlackUserId] = None )
 
 /**
  * Response of https://api.slack.com/methods/dnd.info

@@ -19,15 +19,15 @@
 package org.latestbit.slack.morphism.client.reqresp.conversations
 
 import cats.data.NonEmptyList
-import org.latestbit.slack.morphism.common.SlackChannelProfile
+import org.latestbit.slack.morphism.common._
 
 /**
  * Request of https://api.slack.com/methods/conversations.open
  */
 case class SlackApiConversationsOpenRequest(
-    channel: Option[String] = None,
+    channel: Option[SlackChannelId] = None,
     return_im: Option[Boolean] = None,
-    users: Option[NonEmptyList[String]] = None
+    users: Option[NonEmptyList[SlackUserId]] = None
 ) {
   require( (channel.isEmpty && users.nonEmpty) || (users.isEmpty && channel.nonEmpty) )
 }

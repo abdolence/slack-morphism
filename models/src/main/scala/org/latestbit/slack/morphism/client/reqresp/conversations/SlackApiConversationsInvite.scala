@@ -18,12 +18,12 @@
 
 package org.latestbit.slack.morphism.client.reqresp.conversations
 
-import org.latestbit.slack.morphism.common.SlackChannelInfo
+import org.latestbit.slack.morphism.common._
 
 /**
  * Request of https://api.slack.com/methods/conversations.invite
  */
-case class SlackApiConversationsInviteRequest( channel: String, users: List[String] )
+case class SlackApiConversationsInviteRequest( channel: SlackChannelId, users: List[String] )
 
 /**
  * Response of https://api.slack.com/methods/conversations.invite

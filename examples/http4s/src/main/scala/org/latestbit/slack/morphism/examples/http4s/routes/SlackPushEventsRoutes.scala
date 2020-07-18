@@ -31,6 +31,7 @@ import org.latestbit.slack.morphism.client.reqresp.chat._
 import org.latestbit.slack.morphism.client.reqresp.conversations.SlackApiConversationsHistoryRequest
 import org.latestbit.slack.morphism.client.reqresp.views.SlackApiViewsPublishRequest
 import org.latestbit.slack.morphism.codecs.CirceCodecs
+import org.latestbit.slack.morphism.common.{ SlackChannelId, SlackTeamId, SlackUserId }
 import org.latestbit.slack.morphism.events._
 import org.latestbit.slack.morphism.examples.http4s.config.AppConfig
 import org.latestbit.slack.morphism.examples.http4s.db.SlackTokensDb
@@ -130,7 +131,7 @@ class SlackPushEventsRoutes[F[_] : Sync](
       )
     }
 
-    def updateHomeTab( userId: String )( implicit apiToken: SlackApiToken ) = {
+    def updateHomeTab( userId: SlackUserId )( implicit apiToken: SlackApiToken ) = {
       slackApiClient.views
         .publish(
           SlackApiViewsPublishRequest(
@@ -155,7 +156,7 @@ class SlackPushEventsRoutes[F[_] : Sync](
         }
     }
 
-    def sendWelcomeMessage( channelId: String, userId: String )(
+    def sendWelcomeMessage( channelId: SlackChannelId, userId: SlackUserId )(
         implicit slackApiToken: SlackApiToken
     ): F[Response[F]] = {
       EitherT(
@@ -195,8 +196,8 @@ class SlackPushEventsRoutes[F[_] : Sync](
 
     }
 
-    def removeTokens( workspaceId: String, re: SlackTokensRevokedEvent ): F[Response[F]] = {
-      tokensDb.removeTokens( workspaceId, re.tokens.oauth.toSet ++ re.tokens.bot.toSet ).flatMap( _ => Ok() )
+    def removeTokens( teamId: SlackTeamId, re: SlackTokensRevokedEvent ): F[Response[F]] = {
+      tokensDb.removeTokens( teamId, re.tokens.oauth.toSet ++ re.tokens.bot.toSet ).flatMap( _ => Ok() )
     }
 
     HttpRoutes.of[F] {

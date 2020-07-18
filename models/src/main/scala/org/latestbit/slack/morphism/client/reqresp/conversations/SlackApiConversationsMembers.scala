@@ -18,15 +18,15 @@
 
 package org.latestbit.slack.morphism.client.reqresp.conversations
 
-import org.latestbit.slack.morphism.common.SlackApiResponseMetadata
+import org.latestbit.slack.morphism.common._
 import org.latestbit.slack.morphism.client.streaming.SlackApiScrollableResponse
 
 /**
  * Request of https://api.slack.com/methods/conversations.members
  */
 case class SlackApiConversationsMembersRequest(
-    channel: String,
-    cursor: Option[String] = None,
+    channel: SlackChannelId,
+    cursor: Option[SlackCursorId] = None,
     limit: Option[Int] = None
 )
 
@@ -34,11 +34,11 @@ case class SlackApiConversationsMembersRequest(
  * Response of https://api.slack.com/methods/conversations.members
  */
 case class SlackApiConversationsMembersResponse(
-    members: List[String],
+    members: List[SlackUserId],
     response_metadata: Option[SlackApiResponseMetadata] = None
-) extends SlackApiScrollableResponse[String, String] {
+) extends SlackApiScrollableResponse[SlackUserId, SlackCursorId] {
 
-  override def items: List[String] = members
-  override def getLatestPos: Option[String] = response_metadata.flatMap( _.next_cursor )
+  override def items: List[SlackUserId] = members
+  override def getLatestPos: Option[SlackCursorId] = response_metadata.flatMap( _.next_cursor )
 
 }

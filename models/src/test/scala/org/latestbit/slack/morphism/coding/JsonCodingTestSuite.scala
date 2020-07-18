@@ -24,7 +24,7 @@ import io.circe.{ Decoder, Encoder, Json }
 import io.circe.syntax._
 import io.circe.parser._
 import org.latestbit.circe.adt.codec._
-import org.latestbit.slack.morphism.common.SlackDateTime
+import org.latestbit.slack.morphism.common._
 import org.scalatest.flatspec.AnyFlatSpec
 
 case class TestModel( f1: String, f2: Long = 5, f3: Option[String] = None, f4: Option[Long] = None )
@@ -171,10 +171,10 @@ class JsonCodingTestSuite extends AnyFlatSpec {
     import org.latestbit.slack.morphism.codecs.implicits._
 
     val testModel: SlackMessageEvent = SlackUserMessage(
-      ts = "test",
-      channel = Some( "test-channek" ),
+      ts = SlackTs( "test" ),
+      channel = Some( SlackChannelId( "test-channek" ) ),
       text = Some( "Test Text" ),
-      user = "test-user"
+      user = SlackUserId( "test-user" )
     )
 
     val testJson = testModel.asJson.dropNullValues.noSpaces

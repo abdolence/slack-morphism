@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Abdulla Abdurakhmanov (abdulla@latestbit.com)
+ * Copyright 2020 Abdulla Abdurakhmanov (abdulla@latestbit.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,6 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.reqresp.channels
+package org.latestbit.slack.morphism.common
 
-import org.latestbit.slack.morphism.messages.SlackMessage
-
-/**
- * Request of https://api.slack.com/methods/channels.replies
- */
-case class SlackApiChannelsRepliesRequest(
-    channel: String,
-    thread_ts: String
-)
-
-/**
- * Response of https://api.slack.com/methods/channels.replies
- */
-case class SlackApiChannelsRepliesResponse( messages: List[SlackMessage] = List() )
+case class SlackTs( value: String ) extends AnyVal

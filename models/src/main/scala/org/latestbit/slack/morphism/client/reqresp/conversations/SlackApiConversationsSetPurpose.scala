@@ -18,11 +18,13 @@
 
 package org.latestbit.slack.morphism.client.reqresp.conversations
 
+import org.latestbit.slack.morphism.common._
+
 /**
  * Request of https://api.slack.com/methods/conversations.setPurpose
  */
 case class SlackApiConversationsSetPurposeRequest(
-    channel: String,
+    channel: SlackChannelId,
     purpose: String
 )
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Abdulla Abdurakhmanov (abdulla@latestbit.com)
+ * Copyright 2020 Abdulla Abdurakhmanov (abdulla@latestbit.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,6 @@
  *
  */
 
-package org.latestbit.slack.morphism.client.reqresp.channels
+package org.latestbit.slack.morphism.common
 
-import org.latestbit.slack.morphism.common.SlackChannelInfo
-
-/**
- * Request of https://api.slack.com/methods/channels.info
- */
-case class SlackApiChannelsInfoRequest( channel: String, include_locale: Option[Boolean] = None )
-
-/**
- * Response of https://api.slack.com/methods/channels.info
- */
-case class SlackApiChannelsInfoResponse( channel: SlackChannelInfo )
+case class SlackActionId( value: String ) extends AnyVal

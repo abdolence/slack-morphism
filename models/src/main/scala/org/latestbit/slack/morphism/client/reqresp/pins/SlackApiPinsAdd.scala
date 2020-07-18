@@ -18,10 +18,12 @@
 
 package org.latestbit.slack.morphism.client.reqresp.pins
 
+import org.latestbit.slack.morphism.common.SlackChannelId
+
 /**
  * Request of https://api.slack.com/methods/pins.add
  */
-case class SlackApiPinsAddRequest( channel: String, timestamp: String )
+case class SlackApiPinsAddRequest( channel: SlackChannelId, timestamp: String )
 
 /**
  * Response of https://api.slack.com/methods/pins.add

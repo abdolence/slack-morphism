@@ -20,6 +20,8 @@ package org.latestbit.slack.morphism.client.templating
 
 import java.time.Instant
 
+import org.latestbit.slack.morphism.common.{ SlackChannelId, SlackUserId }
+
 /**
  * Slack mark down/field formatters
  */
@@ -39,8 +41,8 @@ trait SlackTextFormatters {
    * @param channelId channel id
    * @return formatted channel id
    */
-  protected def formatSlackChannelId( channelId: String ) = {
-    s"<#${channelId}>"
+  protected def formatSlackChannelId( channelId: SlackChannelId ) = {
+    s"<#${channelId.value}>"
   }
 
   /**
@@ -48,7 +50,7 @@ trait SlackTextFormatters {
    * @param ids channel ids
    * @return formatted channel ids
    */
-  protected def formatSlackChannelIds( ids: Iterable[String] ) = {
+  protected def formatSlackChannelIds( ids: Iterable[SlackChannelId] ) = {
     ids.map( formatSlackChannelId ).mkString( ", " )
   }
 
@@ -57,17 +59,8 @@ trait SlackTextFormatters {
    * @param userId user id
    * @return formatted user id
    */
-  protected def formatSlackUserId( userId: String ) = {
-    s"<@${userId}>"
-  }
-
-  /**
-   * Format Slack Group Id
-   * @param groupId group id
-   * @return formatted group id
-   */
-  protected def formatSlackGroupId( groupId: String ) = {
-    s"<!subteam^${groupId}>"
+  protected def formatSlackUserId( userId: SlackUserId ) = {
+    s"<@${userId.value}>"
   }
 
   /**

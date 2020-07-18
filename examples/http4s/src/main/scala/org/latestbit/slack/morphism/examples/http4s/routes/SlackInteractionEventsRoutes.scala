@@ -27,6 +27,7 @@ import org.http4s.dsl.Http4sDsl
 import org.latestbit.slack.morphism.client.reqresp.views._
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.codecs.CirceCodecs
+import org.latestbit.slack.morphism.common.SlackTriggerId
 import org.latestbit.slack.morphism.events._
 import org.latestbit.slack.morphism.examples.http4s.config.AppConfig
 import org.latestbit.slack.morphism.examples.http4s.db.SlackTokensDb
@@ -69,7 +70,7 @@ class SlackInteractionEventsRoutes[F[_] : Sync](
       }
     }
 
-    def showDummyModal( triggerId: String )( implicit slackApiToken: SlackApiToken ) = {
+    def showDummyModal( triggerId: SlackTriggerId )( implicit slackApiToken: SlackApiToken ) = {
       val modalTemplateExample = new SlackModalTemplateExample()
       slackApiClient.views
         .open(

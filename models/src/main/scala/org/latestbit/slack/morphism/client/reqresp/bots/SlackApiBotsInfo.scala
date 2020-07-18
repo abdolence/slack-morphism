@@ -18,7 +18,7 @@
 
 package org.latestbit.slack.morphism.client.reqresp.bots
 
-import org.latestbit.slack.morphism.common.SlackDateTime
+import org.latestbit.slack.morphism.common._
 
 /**
  * Response of https://api.slack.com/methods/bots.info
@@ -30,11 +30,11 @@ case class SlackApiBotsInfo( bot: SlackApiBotsProfile )
  */
 
 case class SlackApiBotsProfile(
-    id: String,
+    id: SlackBotId,
     deleted: Option[Boolean] = None,
     name: String,
     updated: Option[SlackDateTime] = None,
-    app_id: String,
-    user_id: String,
+    app_id: SlackAppId,
+    user_id: SlackUserId,
     icons: Option[Map[String, String]] = None
 )

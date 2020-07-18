@@ -35,16 +35,16 @@ sealed trait SlackEventCallbackBody
  */
 @JsonAdt( "message" )
 sealed trait SlackMessageEvent extends SlackEventCallbackBody {
-  val ts: String
-  val channel: Option[String]
+  val ts: SlackTs
+  val channel: Option[SlackChannelId]
   val channel_type: Option[String]
   val hidden: Option[Boolean]
 }
 
 @JsonAdt( "message_changed" )
 case class SlackMessageChanged(
-    override val ts: String,
-    override val channel: Option[String],
+    override val ts: SlackTs,
+    override val channel: Option[SlackChannelId],
     override val channel_type: Option[String] = None,
     override val hidden: Option[Boolean] = None,
     message: SlackMessage
@@ -52,17 +52,17 @@ case class SlackMessageChanged(
 
 @JsonAdt( "message_deleted" )
 case class SlackMessageDeleted(
-    override val ts: String,
-    override val channel: Option[String] = None,
+    override val ts: SlackTs,
+    override val channel: Option[SlackChannelId] = None,
     override val channel_type: Option[String] = None,
     override val hidden: Option[Boolean] = None,
-    deleted_ts: String
+    deleted_ts: SlackTs
 ) extends SlackMessageEvent
 
 @JsonAdt( "message_replied" )
 case class SlackMessageReplied(
-    override val ts: String,
-    override val channel: Option[String] = None,
+    override val ts: SlackTs,
+    override val channel: Option[SlackChannelId] = None,
     override val channel_type: Option[String] = None,
     override val hidden: Option[Boolean] = None,
     message: SlackMessage
@@ -70,28 +70,28 @@ case class SlackMessageReplied(
 
 @JsonAdt( "thread_broadcast" )
 case class SlackMessageThreadBroadcast(
-    override val ts: String,
-    override val channel: Option[String] = None,
+    override val ts: SlackTs,
+    override val channel: Option[SlackChannelId] = None,
     override val channel_type: Option[String] = None,
     override val hidden: Option[Boolean] = None,
     message: SlackMessage
 ) extends SlackMessageEvent
 
 case class SlackMessageGeneralInfo(
-    ts: String,
-    channel: String,
+    ts: SlackTs,
+    channel: SlackChannelId,
     channel_type: Option[String],
-    thread_ts: Option[String] = None
+    thread_ts: Option[SlackTs] = None
 )
 
 @JsonAdtPassThrough
 sealed trait SlackMessage {
-  val ts: String
-  val channel: Option[String]
+  val ts: SlackTs
+  val channel: Option[SlackChannelId]
   val channel_type: Option[String]
   val text: Option[String]
   val blocks: Option[List[SlackBlock]]
-  val thread_ts: Option[String]
+  val thread_ts: Option[SlackTs]
   val reactions: Option[List[SlackMessageReaction]]
 }
 
@@ -101,10 +101,10 @@ sealed trait SlackPinnedMessage {
 }
 
 case class SlackUserMessage(
-    override val ts: String,
-    override val channel: Option[String] = None,
+    override val ts: SlackTs,
+    override val channel: Option[SlackChannelId] = None,
     override val channel_type: Option[String] = None,
-    override val thread_ts: Option[String] = None,
+    override val thread_ts: Option[SlackTs] = None,
     override val reactions: Option[List[SlackMessageReaction]] = None,
     edited: Option[SlackMessageEdited] = None,
     reply_count: Option[Long] = None,
@@ -114,17 +114,17 @@ case class SlackUserMessage(
     override val permalink: Option[String] = None,
     override val pinned_to: Option[List[String]] = None,
     override val hidden: Option[Boolean] = None,
-    user: String
+    user: SlackUserId
 ) extends SlackMessage
     with SlackPinnedMessage
     with SlackMessageEvent
 
 @JsonAdt( "bot_message" )
 case class SlackBotMessage(
-    override val ts: String,
-    override val channel: Option[String] = None,
+    override val ts: SlackTs,
+    override val channel: Option[SlackChannelId] = None,
     override val channel_type: Option[String] = None,
-    override val thread_ts: Option[String] = None,
+    override val thread_ts: Option[SlackTs] = None,
     override val reactions: Option[List[SlackMessageReaction]] = None,
     edited: Option[SlackMessageEdited] = None,
     reply_count: Option[Long] = None,
@@ -134,7 +134,7 @@ case class SlackBotMessage(
     override val permalink: Option[String] = None,
     override val pinned_to: Option[List[String]] = None,
     override val hidden: Option[Boolean] = None,
-    bot_id: String,
+    bot_id: SlackBotId,
     user: Option[String] = None
 ) extends SlackMessage
     with SlackPinnedMessage
@@ -142,10 +142,10 @@ case class SlackBotMessage(
 
 @JsonAdt( "me_message" )
 case class SlackMeMessage(
-    override val ts: String,
-    override val channel: Option[String] = None,
+    override val ts: SlackTs,
+    override val channel: Option[SlackChannelId] = None,
     override val channel_type: Option[String] = None,
-    override val thread_ts: Option[String] = None,
+    override val thread_ts: Option[SlackTs] = None,
     override val reactions: Option[List[SlackMessageReaction]] = None,
     edited: Option[SlackMessageEdited] = None,
     override val text: Option[String] = None,
@@ -153,15 +153,15 @@ case class SlackMeMessage(
     override val permalink: Option[String] = None,
     override val pinned_to: Option[List[String]] = None,
     override val hidden: Option[Boolean] = None,
-    user: String
+    user: SlackUserId
 ) extends SlackMessage
     with SlackPinnedMessage
     with SlackMessageEvent
 
 @JsonAdt( "channel_join" )
 case class SlackChannelJoinMessage(
-    override val ts: String,
-    override val channel: Option[String] = None,
+    override val ts: SlackTs,
+    override val channel: Option[SlackChannelId] = None,
     override val channel_type: Option[String] = None,
     override val reactions: Option[List[SlackMessageReaction]] = None,
     edited: Option[SlackMessageEdited] = None,
@@ -170,17 +170,17 @@ case class SlackChannelJoinMessage(
     override val text: Option[String] = None,
     override val blocks: Option[List[SlackBlock]] = None,
     override val hidden: Option[Boolean] = None,
-    user: String,
-    inviter: Option[String] = None
+    user: SlackUserId,
+    inviter: Option[SlackUserId] = None
 ) extends SlackMessage
     with SlackMessageEvent {
-  override val thread_ts: Option[String] = None
+  override val thread_ts: Option[SlackTs] = None
 }
 
 @JsonAdt( "bot_add" )
 case class SlackBotAddMessage(
-    override val ts: String,
-    override val channel: Option[String] = None,
+    override val ts: SlackTs,
+    override val channel: Option[SlackChannelId] = None,
     override val channel_type: Option[String] = None,
     override val reactions: Option[List[SlackMessageReaction]] = None,
     edited: Option[SlackMessageEdited] = None,
@@ -189,18 +189,18 @@ case class SlackBotAddMessage(
     override val text: Option[String] = None,
     override val blocks: Option[List[SlackBlock]] = None,
     override val hidden: Option[Boolean] = None,
-    user: String,
-    bot_id: Option[String] = None,
+    user: SlackUserId,
+    bot_id: Option[SlackBotId] = None,
     bot_link: Option[String] = None
 ) extends SlackMessage
     with SlackMessageEvent {
-  override val thread_ts: Option[String] = None
+  override val thread_ts: Option[SlackTs] = None
 }
 
 @JsonAdt( "bot_remove" )
 case class SlackBotRemoveMessage(
-    override val ts: String,
-    override val channel: Option[String] = None,
+    override val ts: SlackTs,
+    override val channel: Option[SlackChannelId] = None,
     override val channel_type: Option[String] = None,
     override val reactions: Option[List[SlackMessageReaction]] = None,
     edited: Option[SlackMessageEdited] = None,
@@ -209,18 +209,18 @@ case class SlackBotRemoveMessage(
     override val text: Option[String] = None,
     override val blocks: Option[List[SlackBlock]] = None,
     override val hidden: Option[Boolean] = None,
-    user: String,
-    bot_id: Option[String] = None,
+    user: SlackUserId,
+    bot_id: Option[SlackBotId] = None,
     bot_link: Option[String] = None
 ) extends SlackMessage
     with SlackMessageEvent {
-  override val thread_ts: Option[String] = None
+  override val thread_ts: Option[SlackTs] = None
 }
 
 @JsonAdt( "channel_topic" )
 case class SlackChannelTopicMessage(
-    override val ts: String,
-    override val channel: Option[String] = None,
+    override val ts: SlackTs,
+    override val channel: Option[SlackChannelId] = None,
     override val channel_type: Option[String] = None,
     override val reactions: Option[List[SlackMessageReaction]] = None,
     edited: Option[SlackMessageEdited] = None,
@@ -228,16 +228,16 @@ case class SlackChannelTopicMessage(
     replies: Option[List[SlackMessageReplyInfo]] = None,
     override val text: Option[String] = None,
     override val blocks: Option[List[SlackBlock]] = None,
-    user: String,
+    user: SlackUserId,
     topic: Option[String] = None
 ) extends SlackMessage {
-  override val thread_ts: Option[String] = None
+  override val thread_ts: Option[SlackTs] = None
 }
 
 @JsonAdt( "channel_purpose" )
 case class SlackChannelPurposeMessage(
-    override val ts: String,
-    override val channel: Option[String] = None,
+    override val ts: SlackTs,
+    override val channel: Option[SlackChannelId] = None,
     override val channel_type: Option[String] = None,
     override val reactions: Option[List[SlackMessageReaction]] = None,
     edited: Option[SlackMessageEdited] = None,
@@ -245,16 +245,16 @@ case class SlackChannelPurposeMessage(
     replies: Option[List[SlackMessageReplyInfo]] = None,
     override val text: Option[String] = None,
     override val blocks: Option[List[SlackBlock]] = None,
-    user: String,
+    user: SlackUserId,
     purpose: Option[String] = None
 ) extends SlackMessage {
-  override val thread_ts: Option[String] = None
+  override val thread_ts: Option[SlackTs] = None
 }
 
 @JsonAdt( "channel_name" )
 case class SlackChannelNameMessage(
-    override val ts: String,
-    override val channel: Option[String] = None,
+    override val ts: SlackTs,
+    override val channel: Option[SlackChannelId] = None,
     override val channel_type: Option[String] = None,
     override val reactions: Option[List[SlackMessageReaction]] = None,
     edited: Option[SlackMessageEdited] = None,
@@ -262,16 +262,16 @@ case class SlackChannelNameMessage(
     replies: Option[List[SlackMessageReplyInfo]] = None,
     override val text: Option[String] = None,
     override val blocks: Option[List[SlackBlock]] = None,
-    user: String,
+    user: SlackUserId,
     old_name: Option[String] = None,
     name: String
 ) extends SlackMessage {
-  override val thread_ts: Option[String] = None
+  override val thread_ts: Option[SlackTs] = None
 }
 
-case class SlackMessageEdited( user: String, ts: String )
+case class SlackMessageEdited( user: SlackUserId, ts: SlackTs )
 
-case class SlackMessageReplyInfo( user: String, ts: String )
+case class SlackMessageReplyInfo( user: SlackUserId, ts: SlackTs )
 
 case class SlackMessageReaction( count: Int, name: String, users: List[String] )
 
@@ -280,8 +280,8 @@ case class SlackMessageReaction( count: Int, name: String, users: List[String] )
  */
 @JsonAdt( "app_home_opened" )
 case class SlackAppHomeOpenedEvent(
-    user: String,
-    channel: String,
+    user: SlackUserId,
+    channel: SlackChannelId,
     tab: String,
     view: Option[SlackView] = None
 ) extends SlackEventCallbackBody
@@ -291,18 +291,18 @@ case class SlackAppHomeOpenedEvent(
  */
 @JsonAdt( "app_mention" )
 case class SlackAppMentionEvent(
-    override val ts: String,
-    override val channel: Option[String] = None,
+    override val ts: SlackTs,
+    override val channel: Option[SlackChannelId] = None,
     override val channel_type: Option[String] = None,
-    override val thread_ts: Option[String] = None,
+    override val thread_ts: Option[SlackTs] = None,
     override val reactions: Option[List[SlackMessageReaction]] = None,
     edited: Option[SlackMessageEdited] = None,
     reply_count: Option[Long] = None,
     replies: Option[List[SlackMessageReplyInfo]] = None,
     override val text: Option[String] = None,
     override val blocks: Option[List[SlackBlock]] = None,
-    user: String,
-    event_ts: String
+    user: SlackUserId,
+    event_ts: SlackTs
 ) extends SlackEventCallbackBody
     with SlackMessage
 
@@ -316,7 +316,8 @@ case class SlackAppUninstalledEvent() extends SlackEventCallbackBody
  * https://api.slack.com/events/channel_archive
  */
 @JsonAdt( "channel_archive" )
-case class SlackChannelArchiveEvent( channel: String, user: Option[String] = None ) extends SlackEventCallbackBody
+case class SlackChannelArchiveEvent( channel: SlackChannelId, user: Option[SlackUserId] = None )
+    extends SlackEventCallbackBody
 
 /**
  * https://api.slack.com/events/channel_created
@@ -328,45 +329,48 @@ case class SlackChannelCreatedEvent( channel: SlackChannelInfo ) extends SlackEv
  * https://api.slack.com/events/channel_deleted
  */
 @JsonAdt( "channel_deleted" )
-case class SlackChannelDeletedEvent( channel: String ) extends SlackEventCallbackBody
+case class SlackChannelDeletedEvent( channel: SlackChannelId ) extends SlackEventCallbackBody
 
 /**
  * https://api.slack.com/events/channel_history_changed
  */
 @JsonAdt( "channel_history_changed" )
-case class SlackChannelHistoryChangedEvent( latest: String, ts: String ) extends SlackEventCallbackBody
+case class SlackChannelHistoryChangedEvent( latest: String, ts: SlackTs ) extends SlackEventCallbackBody
 
 /**
  * https://api.slack.com/events/channel_left
  */
 @JsonAdt( "channel_left" )
-case class SlackChannelLeftEvent( channel: String ) extends SlackEventCallbackBody
+case class SlackChannelLeftEvent( channel: SlackChannelId ) extends SlackEventCallbackBody
 
 /**
  * https://api.slack.com/events/channel_rename
  */
 @JsonAdt( "channel_rename" )
-case class SlackChannelRenameEvent( id: String, name: String, created: SlackDateTime ) extends SlackEventCallbackBody
+case class SlackChannelRenameEvent( id: SlackChannelId, name: String, created: SlackDateTime )
+    extends SlackEventCallbackBody
 
 /**
  * https://api.slack.com/events/channel_shared
  */
 @JsonAdt( "channel_shared" )
-case class SlackChannelSharedEvent( connected_team_id: String, channel: String ) extends SlackEventCallbackBody
+case class SlackChannelSharedEvent( connected_team_id: SlackTeamId, channel: SlackChannelId )
+    extends SlackEventCallbackBody
 
 /**
  * https://api.slack.com/events/channel_unarchive
  */
 @JsonAdt( "channel_unarchive" )
-case class SlackChannelUnarchiveEvent( channel: String, user: Option[String] = None ) extends SlackEventCallbackBody
+case class SlackChannelUnarchiveEvent( channel: SlackChannelId, user: Option[String] = None )
+    extends SlackEventCallbackBody
 
 /**
  * https://api.slack.com/events/channel_unshared
  */
 @JsonAdt( "channel_unshared" )
 case class SlackChannelUnsharedEvent(
-    previously_connected_team_id: String,
-    channel: String,
+    previously_connected_team_id: SlackTeamId,
+    channel: SlackChannelId,
     is_ext_shared: Option[Boolean] = None
 ) extends SlackEventCallbackBody
 
@@ -374,7 +378,8 @@ case class SlackChannelUnsharedEvent(
  * https://api.slack.com/events/dnd_updated_user
  */
 @JsonAdt( "dnd_updated_user" )
-case class SlackDndUpdatedUserEvent( user: String, dnd_status: SlackApiDndInfoResponse ) extends SlackEventCallbackBody
+case class SlackDndUpdatedUserEvent( user: SlackUserId, dnd_status: SlackApiDndInfoResponse )
+    extends SlackEventCallbackBody
 
 /**
  * https://api.slack.com/events/emoji_changed
@@ -386,35 +391,35 @@ case class SlackEmojiChangedEvent( subtype: Option[String] = None, names: List[S
  * https://api.slack.com/events/im_close
  */
 @JsonAdt( "im_close" )
-case class SlackImCloseEvent( channel: String, user: String ) extends SlackEventCallbackBody
+case class SlackImCloseEvent( channel: SlackChannelId, user: SlackUserId ) extends SlackEventCallbackBody
 
 /**
  * https://api.slack.com/events/im_created
  */
 @JsonAdt( "im_created" )
-case class SlackImCreatedEvent( channel: SlackChannelInfo, user: String ) extends SlackEventCallbackBody
+case class SlackImCreatedEvent( channel: SlackChannelInfo, user: SlackUserId ) extends SlackEventCallbackBody
 
 /**
  * https://api.slack.com/events/im_history_changed
  */
 @JsonAdt( "im_history_changed" )
-case class SlackImHistoryChangedEvent( latest: String, ts: String ) extends SlackEventCallbackBody
+case class SlackImHistoryChangedEvent( latest: String, ts: SlackTs ) extends SlackEventCallbackBody
 
 /**
  * https://api.slack.com/events/im_open
  */
 @JsonAdt( "im_open" )
-case class SlackImOpenEvent( channel: String, user: String ) extends SlackEventCallbackBody
+case class SlackImOpenEvent( channel: SlackChannelId, user: SlackUserId ) extends SlackEventCallbackBody
 
 /**
  * https://api.slack.com/events/member_joined_channel
  */
 @JsonAdt( "member_joined_channel" )
 case class SlackMemberJoinedChannelEvent(
-    channel: String,
-    user: String,
+    channel: SlackChannelId,
+    user: SlackUserId,
     channel_type: Option[String] = None,
-    team: String,
+    team: SlackTeamId,
     inviter: Option[String] = None
 ) extends SlackEventCallbackBody
 
@@ -423,25 +428,26 @@ case class SlackMemberJoinedChannelEvent(
  */
 @JsonAdt( "member_left_channel" )
 case class SlackMemberLeftChannelEvent(
-    channel: String,
-    user: String,
+    channel: SlackChannelId,
+    user: SlackUserId,
     channel_type: Option[String] = None,
-    team: String
+    team: SlackTeamId
 ) extends SlackEventCallbackBody
 
 /**
  * https://api.slack.com/events/pin_added
  */
 @JsonAdt( "pin_added" )
-case class SlackPinAddedEvent( channel_id: String, user: String, item: SlackPinItem ) extends SlackEventCallbackBody
+case class SlackPinAddedEvent( channel_id: SlackChannelId, user: SlackUserId, item: SlackPinItem )
+    extends SlackEventCallbackBody
 
 /**
  * https://api.slack.com/events/pin_removed
  */
 @JsonAdt( "pin_removed" )
 case class SlackPinRemovedEvent(
-    channel_id: String,
-    user: String,
+    channel_id: SlackChannelId,
+    user: SlackUserId,
     item: SlackPinItem,
     has_pins: Option[Boolean] = None
 ) extends SlackEventCallbackBody
@@ -450,8 +456,12 @@ case class SlackPinRemovedEvent(
  * https://api.slack.com/events/reaction_added
  */
 @JsonAdt( "reaction_added" )
-case class SlackReactionAddedEvent( reaction: String, user: String, item_user: String, item: SlackMessageGeneralInfo )
-    extends SlackEventCallbackBody
+case class SlackReactionAddedEvent(
+    reaction: String,
+    user: SlackUserId,
+    item_user: SlackUserId,
+    item: SlackMessageGeneralInfo
+) extends SlackEventCallbackBody
 
 /**
  * https://api.slack.com/events/reaction_removed
@@ -459,8 +469,8 @@ case class SlackReactionAddedEvent( reaction: String, user: String, item_user: S
 @JsonAdt( "reaction_removed" )
 case class SlackReactionRemovedEvent(
     reaction: String,
-    user: String,
-    item_user: String,
+    user: SlackUserId,
+    item_user: SlackUserId,
     item: SlackMessageGeneralInfo
 ) extends SlackEventCallbackBody
 
@@ -482,7 +492,7 @@ case class SlackTeamRenameEvent( name: String ) extends SlackEventCallbackBody
 @JsonAdt( "tokens_revoked" )
 case class SlackTokensRevokedEvent( tokens: SlackRevokedTokens ) extends SlackEventCallbackBody
 
-case class SlackRevokedTokens( oauth: List[String] = List(), bot: List[String] = List() )
+case class SlackRevokedTokens( oauth: List[SlackUserId] = List(), bot: List[SlackUserId] = List() )
 
 /**
  * https://api.slack.com/events/user_change

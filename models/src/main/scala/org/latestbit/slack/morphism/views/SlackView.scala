@@ -21,6 +21,7 @@ package org.latestbit.slack.morphism.views
 import io.circe._
 import io.circe.generic.semiauto._
 import org.latestbit.circe.adt.codec._
+import org.latestbit.slack.morphism.common._
 import org.latestbit.slack.morphism.messages.{ SlackBlock, SlackBlockPlainText }
 
 /**
@@ -36,7 +37,7 @@ case class SlackModalView(
     close: Option[SlackBlockPlainText] = None,
     submit: Option[SlackBlockPlainText] = None,
     private_metadata: Option[String] = None,
-    callback_id: Option[String] = None,
+    callback_id: Option[SlackCallbackId] = None,
     clear_on_close: Option[Boolean] = None,
     notify_on_close: Option[Boolean] = None,
     hash: Option[String] = None,
@@ -47,19 +48,19 @@ case class SlackModalView(
 case class SlackHomeView(
     blocks: List[SlackBlock],
     private_metadata: Option[String] = None,
-    callback_id: Option[String] = None,
+    callback_id: Option[SlackCallbackId] = None,
     external_id: Option[String] = None
 ) extends SlackView
 
 case class SlackStatefulStateParams(
-    id: String,
-    team_id: String,
+    id: SlackViewId,
+    team_id: SlackTeamId,
     state: Option[SlackViewState] = None,
     hash: String,
-    previous_view_id: Option[String] = None,
-    root_view_id: Option[String] = None,
-    app_id: Option[String] = None,
-    bot_id: Option[String] = None
+    previous_view_id: Option[SlackViewId] = None,
+    root_view_id: Option[SlackViewId] = None,
+    app_id: Option[SlackAppId] = None,
+    bot_id: Option[SlackBotId] = None
 )
 
 case class SlackStatefulView(

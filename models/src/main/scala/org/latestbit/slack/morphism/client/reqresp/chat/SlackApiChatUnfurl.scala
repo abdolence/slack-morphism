@@ -18,12 +18,14 @@
 
 package org.latestbit.slack.morphism.client.reqresp.chat
 
+import org.latestbit.slack.morphism.common._
+
 /**
  * Request of https://api.slack.com/methods/chat.unfurl
  */
 case class SlackApiChatUnfurlRequest(
-    channel: String,
-    ts: String,
+    channel: SlackChannelId,
+    ts: SlackTs,
     unfurls: Map[String, SlackApiChatUnfurlMapItem],
     user_auth_message: Option[String] = None,
     user_auth_required: Option[Boolean] = None,

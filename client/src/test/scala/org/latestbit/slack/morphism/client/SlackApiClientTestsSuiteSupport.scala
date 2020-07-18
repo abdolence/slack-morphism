@@ -23,6 +23,7 @@ import java.util.Base64
 import io.circe.syntax._
 import io.circe._
 import org.latestbit.slack.morphism.client.impl.SlackApiHttpProtocolSupport
+import org.latestbit.slack.morphism.common.SlackAccessTokenValue
 import sttp.client._
 import sttp.model._
 
@@ -31,7 +32,8 @@ import scala.concurrent.{ ExecutionContext, Future }
 
 trait SlackApiClientTestsSuiteSupport {
 
-  protected implicit val testApiUserToken = SlackApiUserToken( "test-token", Some( "test-scope" ) )
+  protected implicit val testApiUserToken =
+    SlackApiUserToken( SlackAccessTokenValue( "test-token" ), Some( "test-scope" ) )
 
   protected def createJsonResponseStub[RS](
       response: RS

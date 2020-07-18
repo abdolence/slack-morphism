@@ -26,16 +26,18 @@ import com.typesafe.scalalogging.StrictLogging
 import org.latestbit.slack.morphism.examples.http4s.config.AppConfig
 import cats.effect._
 import cats.effect.IO
+import org.latestbit.slack.morphism.common.{ SlackAccessTokenValue, SlackTeamId, SlackUserId }
 import swaydb.{ IO => _, Set => _, _ }
 import swaydb.serializers.Default._
 import swaydb.cats.effect.Tag._
+import swaydb.serializers.Serializer
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class SlackTokensDb[F[_] : ConcurrentEffect]( storage: SlackTokensDb.SwayDbType ) extends StrictLogging {
   import SlackTokensDb._
 
-  def insertToken( teamId: String, tokenRecord: TokenRecord ): F[Unit] = {
+  def insertToken( teamId: SlackTeamId, tokenRecord: TokenRecord ): F[Unit] = {
     LiftIO[F].liftIO(
       storage
         .get( key = teamId )
@@ -61,7 +63,7 @@ class SlackTokensDb[F[_] : ConcurrentEffect]( storage: SlackTokensDb.SwayDbType 
     )
   }
 
-  def removeTokens( teamId: String, users: Set[String] ): F[Unit] = {
+  def removeTokens( teamId: SlackTeamId, users: Set[SlackUserId] ): F[Unit] = {
     LiftIO[F].liftIO[Unit](
       storage
         .get( key = teamId )
@@ -82,7 +84,7 @@ class SlackTokensDb[F[_] : ConcurrentEffect]( storage: SlackTokensDb.SwayDbType 
     )
   }
 
-  def readTokens( teamId: String ): F[Option[TeamTokensRecord]] = {
+  def readTokens( teamId: SlackTeamId ): F[Option[TeamTokensRecord]] = {
     LiftIO[F].liftIO(
       storage.get( key = teamId )
     )
@@ -95,8 +97,8 @@ class SlackTokensDb[F[_] : ConcurrentEffect]( storage: SlackTokensDb.SwayDbType 
 }
 
 object SlackTokensDb extends StrictLogging {
-  case class TokenRecord( tokenType: String, tokenValue: String, userId: String, scope: String )
-  case class TeamTokensRecord( teamId: String, tokens: List[TokenRecord] )
+  case class TokenRecord( tokenType: String, tokenValue: SlackAccessTokenValue, userId: SlackUserId, scope: String )
+  case class TeamTokensRecord( teamId: SlackTeamId, tokens: List[TokenRecord] )
 
   implicit object TeamTokensRecordSwayDbSerializer extends swaydb.serializers.Serializer[TeamTokensRecord] {
     import io.circe.parser._
@@ -112,16 +114,22 @@ object SlackTokensDb extends StrictLogging {
     }
   }
 
-  private type FunctionType = PureFunction[String, TeamTokensRecord, Apply.Map[TeamTokensRecord]]
-  private type SwayDbType = swaydb.Map[String, TeamTokensRecord, FunctionType, IO]
+  private type FunctionType = PureFunction[SlackTeamId, TeamTokensRecord, Apply.Map[TeamTokensRecord]]
+  private type SwayDbType = swaydb.Map[SlackTeamId, TeamTokensRecord, FunctionType, IO]
 
   private def openDb[F[_] : ConcurrentEffect]( config: AppConfig ): F[SlackTokensDb[F]] = {
     implicit val cs = IO.contextShift( global )
 
+    implicit val teamIdSerializer = new Serializer[SlackTeamId] {
+      override def write( data: SlackTeamId ): Slice[Byte] = StringSerializer.write( data.value )
+
+      override def read( data: Slice[Byte] ): SlackTeamId = SlackTeamId( StringSerializer.read( data ) )
+    }
+
     implicitly[ConcurrentEffect[F]]
       .delay {
         logger.info( s"Opening database in dir: '${config.databaseDir}''" )
-        persistent.Map[String, TeamTokensRecord, FunctionType, IO]( dir = config.databaseDir ).get
+        persistent.Map[SlackTeamId, TeamTokensRecord, FunctionType, IO]( dir = config.databaseDir ).get
       }
       .map( storage => new SlackTokensDb[F]( storage ) )
   }

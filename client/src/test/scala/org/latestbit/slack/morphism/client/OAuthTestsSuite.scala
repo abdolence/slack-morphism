@@ -18,66 +18,29 @@
 
 package org.latestbit.slack.morphism.client
 
-import io.circe.generic.auto._
 import org.latestbit.slack.morphism.client.reqresp.oauth._
-import org.latestbit.slack.morphism.common.SlackTeamInfo
+import org.latestbit.slack.morphism.common._
 import org.scalatest.flatspec.AsyncFlatSpec
 import sttp.client.testing.SttpBackendStub
 import sttp.model.HeaderNames
-
-import scala.concurrent.Future
 import cats.instances.future._
+import org.latestbit.slack.morphism.codecs.CirceCodecs
 
-class OAuthTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuiteSupport {
-
-  it should "get Slack OAuth v1 access codes" in {
-
-    val mockResponse = SlackOAuthV1AccessTokenResponse(
-      access_token = "access-token-value",
-      scope = "something:something,anything:anything",
-      team_id = "test-team-id"
-    )
-    val mockClientId = "test-client-id"
-    val mockClientSecret = "test-client-secret"
-
-    implicit val testingBackend =
-      SttpBackendStub.asynchronousFuture
-        .whenRequestMatches { req =>
-          req.headers.exists( header =>
-            header.is( HeaderNames.Authorization ) &&
-              header.value == createBasicCredentials( mockClientId, mockClientSecret )
-          )
-        }
-        .thenRespondWrapped(
-          createJsonResponseStub( mockResponse )
-        )
-    val slackApiClient = SlackApiClient.create()
-
-    slackApiClient.oauth
-      .access(
-        clientId = mockClientId,
-        clientSecret = mockClientSecret,
-        code = "test-code"
-      )
-      .map {
-        case Right( resp ) => assert( mockResponse === resp )
-        case Left( ex )    => fail( ex )
-      }
-  }
+class OAuthTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuiteSupport with CirceCodecs {
 
   it should "get Slack OAuth v2 access codes" in {
 
     val mockResponse = SlackOAuthV2AccessTokenResponse(
-      access_token = "access-token-value",
+      access_token = SlackAccessTokenValue( "access-token-value" ),
       token_type = "test-token-type",
       scope = "something:something,anything:anything",
       team = SlackTeamInfo(
-        id = "test-slack-workspace-id",
+        id = SlackTeamId( "test-slack-workspace-id" ),
         name = Some( "test-slack-workspace-name" )
       ),
-      app_id = "test-app-id",
+      app_id = SlackAppId( "test-app-id" ),
       authed_user = SlackOAuthV2AuthedUser(
-        id = "test-auth-user-id"
+        id = SlackUserId( "test-auth-user-id" )
       )
     )
     val mockClientId = "test-client-id"

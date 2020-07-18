@@ -38,6 +38,7 @@ import cats.Functor
 import cats.instances.option._
 import cats.implicits._
 import com.typesafe.scalalogging.StrictLogging
+import org.latestbit.slack.morphism.common.SlackTeamId
 import org.latestbit.slack.morphism.examples.akka.config.AppConfig
 
 trait AkkaHttpServerRoutesSupport extends org.latestbit.slack.morphism.codecs.CirceCodecs with StrictLogging {
@@ -81,7 +82,7 @@ trait AkkaHttpServerRoutesSupport extends org.latestbit.slack.morphism.codecs.Ci
 
   }
 
-  def getLastSlackTokenFromDb[T]( teamId: String )(
+  def getLastSlackTokenFromDb[T]( teamId: SlackTeamId )(
       implicit timeout: Timeout = 3.seconds,
       slackTokensDb: ActorRef[SlackTokensDb.Command],
       context: ActorContext[T]
@@ -97,13 +98,13 @@ trait AkkaHttpServerRoutesSupport extends org.latestbit.slack.morphism.codecs.Ci
           tokenType = lastToken.tokenType,
           tokenValue = lastToken.tokenValue,
           scope = Some( lastToken.scope ),
-          workspaceId = Some( teamId )
+          teamId = Some( teamId )
         )
       }
     } )
   }
 
-  def routeWithSlackApiToken[T, B]( teamId: String )( route: SlackApiToken => Route )(
+  def routeWithSlackApiToken[T, B]( teamId: SlackTeamId )( route: SlackApiToken => Route )(
       implicit timeout: Timeout = 3.seconds,
       slackTokensDb: ActorRef[SlackTokensDb.Command],
       context: ActorContext[T]
