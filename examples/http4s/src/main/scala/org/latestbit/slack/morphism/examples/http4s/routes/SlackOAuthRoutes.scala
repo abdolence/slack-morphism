@@ -37,7 +37,7 @@ class SlackOAuthRoutes[F[_] : Sync](
     config: AppConfig
 ) extends StrictLogging {
 
-  private val SLACK_AUTH_URL_V2 = uri"https://slack.com/oauth/v2/authorize"
+  private final val SlackAuthUrlV2 = uri"https://slack.com/oauth/v2/authorize"
 
   def routes(): HttpRoutes[F] = {
     val dsl = new Http4sDsl[F] {}
@@ -60,7 +60,7 @@ class SlackOAuthRoutes[F[_] : Sync](
         ).flatMap { case ( k, v ) => v.map( k -> _ ) }.toMap
 
         for {
-          resp <- TemporaryRedirect( Location( SLACK_AUTH_URL_V2.withQueryParams( baseParams ) ) )
+          resp <- TemporaryRedirect( Location( SlackAuthUrlV2.withQueryParams( baseParams ) ) )
         } yield resp
       }
 

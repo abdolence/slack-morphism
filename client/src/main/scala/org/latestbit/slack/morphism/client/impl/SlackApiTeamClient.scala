@@ -44,7 +44,7 @@ trait SlackApiTeamClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
         Map(
           "team" -> req.team.map( _.value )
         ),
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier3 ) ) )
       )
     }
 
@@ -63,7 +63,7 @@ trait SlackApiTeamClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
           Map(
             "visibility" -> req.visibility
           ),
-          methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
+          methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier3 ) ) )
         )
       }
 

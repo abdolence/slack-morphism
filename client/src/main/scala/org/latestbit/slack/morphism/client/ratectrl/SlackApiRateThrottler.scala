@@ -79,7 +79,7 @@ object SlackApiRateThrottler {
       ec: ExecutionContext,
       timerSupport: AsyncTimerSupport[F]
   ): SlackApiRateThrottler[F] = {
-    createStandardThrottler( SlackApiRateControlParams.StandardLimits.DEFAULT_PARAMS )
+    createStandardThrottler( SlackApiRateControlParams.StandardLimits.DefaultParams )
   }
 
   /**

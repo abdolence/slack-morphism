@@ -38,7 +38,7 @@ sealed abstract class SlackSignatureVerificationError( message: String, cause: O
  */
 case class SlackSignatureCryptoInitError( cause: Throwable )
     extends SlackSignatureVerificationError(
-      s"Unable to init crypto algorithm: ${SlackEventSignatureVerifier.SIGNING_ALGORITHM}",
+      s"Unable to init crypto algorithm: ${SlackEventSignatureVerifier.SigningAlgorithm}",
       Some( cause )
     )
 

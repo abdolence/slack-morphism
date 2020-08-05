@@ -66,8 +66,8 @@ trait AkkaHttpServerRoutesSupport extends org.latestbit.slack.morphism.codecs.Ci
   ) = {
     extractRequestEntity { requestEntity =>
       onSuccess( httpEntityToString( requestEntity, charset ) ) { requestBody =>
-        headerValueByName( SlackEventSignatureVerifier.HttpHeaderNames.SIGNED_TIMESTAMP ) { signedTimestamp =>
-          headerValueByName( SlackEventSignatureVerifier.HttpHeaderNames.SIGNED_HASH ).require(
+        headerValueByName( SlackEventSignatureVerifier.HttpHeaderNames.SignedTimestamp ) { signedTimestamp =>
+          headerValueByName( SlackEventSignatureVerifier.HttpHeaderNames.SignedHash ).require(
             receivedHash =>
               signatureVerifier
                 .verify( config.slackAppConfig.signingSecret, receivedHash, signedTimestamp, requestBody )

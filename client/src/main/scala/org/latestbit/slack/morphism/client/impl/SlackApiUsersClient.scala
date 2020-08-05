@@ -49,7 +49,7 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
           "types" -> req.types.map( _.mkString( "," ) ),
           "user" -> req.user.map( _.value )
         ),
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier3 ) ) )
       )
     }
 
@@ -87,7 +87,7 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
         Map(
           "user" -> Option( req.user.value )
         ),
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier3 ) ) )
       )
     }
 
@@ -102,7 +102,7 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       http.get[SlackApiUsersIdentityResponse](
         "users.identity",
         Map[String, Option[String]](),
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier3 ) ) )
       )
     }
 
@@ -120,7 +120,7 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
           "user" -> Option( req.user.value ),
           "include_locale" -> req.include_locale.map( _.toString() )
         ),
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_4 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier4 ) ) )
       )
     }
 
@@ -139,7 +139,7 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
           "include_locale" -> req.include_locale.map( _.toString() ),
           "limit" -> req.limit.map( _.toString() )
         ),
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier2 ) ) )
       )
     }
 
@@ -177,7 +177,7 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
         Map(
           "email" -> Option( req.email )
         ),
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier3 ) ) )
       )
     }
 
@@ -192,7 +192,7 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       http.post[SlackApiUsersSetPresenceRequest, SlackApiUsersSetPresenceResponse](
         "users.setPresence",
         req,
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier2 ) ) )
       )
     }
 
@@ -212,7 +212,7 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
             "user" -> req.user.map( _.value ),
             "include_locale" -> req.include_locale.map( _.toString() )
           ),
-          methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_4 ) ) )
+          methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier4 ) ) )
         )
       }
 
@@ -227,7 +227,7 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
         http.post[SlackApiUsersProfileSetRequest, SlackApiUsersProfileSetResponse](
           "users.profile.set",
           req,
-          methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
+          methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier3 ) ) )
         )
       }
 

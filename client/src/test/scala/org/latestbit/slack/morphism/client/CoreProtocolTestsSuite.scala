@@ -126,7 +126,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
 
     SlackApiToken
       .createFrom(
-        SlackApiToken.TokenTypes.BOT,
+        SlackApiToken.TokenTypes.Bot,
         SlackAccessTokenValue( "xoxb-89....." )
       )
       .map { implicit slackApiToken: SlackApiToken =>

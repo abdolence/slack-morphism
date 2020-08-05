@@ -39,7 +39,7 @@ trait SlackApiHttpProtocolSupport[F[_]] extends SlackApiClientBackend[F] {
   import SlackApiHttpProtocolSupport._
 
   protected type SlackApiEmptyType = JsonObject
-  protected val SLACK_EMPTY_REQUEST: SlackApiEmptyType = JsonObject()
+  protected final val SlackEmptyRequest: SlackApiEmptyType = JsonObject()
 
   protected def checkIfContentTypeIsJson( contentType: MediaType ) = {
     contentType.mainType == MediaType.ApplicationJson.mainType &&
@@ -179,7 +179,7 @@ trait SlackApiHttpProtocolSupport[F[_]] extends SlackApiClientBackend[F] {
   }
 
   protected def getSlackMethodAbsoluteUri( methodUri: String ): Uri =
-    uri"${SLACK_BASE_URI}/${methodUri}"
+    uri"${SlackBaseUri}/${methodUri}"
 
   protected def encodePostBody[RQ](
       request: RequestT[Empty, Either[String, String], Nothing],
@@ -190,8 +190,8 @@ trait SlackApiHttpProtocolSupport[F[_]] extends SlackApiClientBackend[F] {
       .body(
         StringBody(
           bodyAsStr,
-          SLACK_API_CHAR_ENCODING,
-          Some( MediaType.ApplicationJson.charset( SLACK_API_CHAR_ENCODING ) )
+          SlackApiCharEncoding,
+          Some( MediaType.ApplicationJson.charset( SlackApiCharEncoding ) )
         )
       )
   }
@@ -328,8 +328,8 @@ trait SlackApiHttpProtocolSupport[F[_]] extends SlackApiClientBackend[F] {
 }
 
 object SlackApiHttpProtocolSupport {
-  val SLACK_BASE_URI = "https://slack.com/api"
-  val SLACK_API_CHAR_ENCODING = "UTF-8"
+  final val SlackBaseUri = "https://slack.com/api"
+  final val SlackApiCharEncoding = "UTF-8"
 
   final val SlackJsonPrinter = SlackCirceJsonSettings.printer
 }

@@ -41,7 +41,7 @@ trait SlackApiEmojiClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       http.get[SlackApiEmojiListResponse](
         "emoji.list",
         Map[String, Option[String]](),
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier2 ) ) )
       )
     }
 

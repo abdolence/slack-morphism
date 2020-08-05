@@ -65,8 +65,8 @@ object SlackApiToken {
    * Type names of tokens
    */
   object TokenTypes {
-    val BOT = "bot"
-    val USER = "user"
+    final val Bot = "bot"
+    final val User = "user"
   }
 
   /**
@@ -84,8 +84,8 @@ object SlackApiToken {
       teamId: Option[SlackTeamId] = None
   ): Option[SlackApiToken] = {
     tokenType match {
-      case TokenTypes.BOT  => Some( SlackApiBotToken( tokenValue, scope, teamId ) )
-      case TokenTypes.USER => Some( SlackApiUserToken( tokenValue, scope, teamId ) )
+      case TokenTypes.Bot  => Some( SlackApiBotToken( tokenValue, scope, teamId ) )
+      case TokenTypes.User => Some( SlackApiUserToken( tokenValue, scope, teamId ) )
       case _               => None
     }
   }

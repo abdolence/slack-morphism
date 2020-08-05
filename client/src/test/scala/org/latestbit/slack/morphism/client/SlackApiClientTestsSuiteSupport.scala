@@ -86,9 +86,9 @@ trait SlackApiClientTestsSuiteSupport {
       new String(
         Base64.getEncoder.encode(
           s"$clientId:$clientSecret"
-            .getBytes( SlackApiHttpProtocolSupport.SLACK_API_CHAR_ENCODING )
+            .getBytes( SlackApiHttpProtocolSupport.SlackApiCharEncoding )
         ),
-        SlackApiHttpProtocolSupport.SLACK_API_CHAR_ENCODING
+        SlackApiHttpProtocolSupport.SlackApiCharEncoding
       )
   }
 }

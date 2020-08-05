@@ -88,7 +88,7 @@ class SlackCommandEventsRoutes(
                   SlackApiEventMessageReply(
                     text = commandReply.renderPlainText(),
                     blocks = commandReply.renderBlocks(),
-                    response_type = Some( SlackResponseTypes.EPHEMERAL )
+                    response_type = Some( SlackResponseTypes.Ephemeral )
                   )
                 )
                 .foreach {

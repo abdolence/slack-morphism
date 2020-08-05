@@ -45,7 +45,7 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       http.post[SlackApiChatDeleteRequest, SlackApiChatDeleteResponse](
         "chat.delete",
         req,
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier3 ) ) )
       )
     }
 
@@ -63,7 +63,7 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       ](
         "chat.deleteScheduledMessage",
         req,
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier3 ) ) )
       )
     }
 
@@ -95,7 +95,7 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       http.post[SlackApiChatMeMessageRequest, SlackApiChatMeMessageResponse](
         "chat.meMessage",
         req,
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier3 ) ) )
       )
     }
 
@@ -114,7 +114,7 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
         ](
           "chat.postEphemeral",
           req,
-          methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_4 ) ) )
+          methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier4 ) ) )
         )
         .map( handleSlackEmptyRes( SlackApiChatPostEphemeralResponse() ) )
     }
@@ -125,7 +125,7 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     def postMessage(
         req: SlackApiChatPostMessageRequest,
         rateControlLimit: SlackApiRateControlLimit =
-          SlackApiRateControlParams.StandardLimits.Specials.POST_CHANNEL_MESSAGE_LIMIT
+          SlackApiRateControlParams.StandardLimits.Specials.PostChannelMessageLimit
     )(
         implicit slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
@@ -156,8 +156,7 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     def postWebhookMessage(
         url: String,
         req: SlackApiPostWebHookRequest,
-        rateControlLimit: SlackApiRateControlLimit =
-          SlackApiRateControlParams.StandardLimits.Specials.INCOMING_HOOK_LIMIT
+        rateControlLimit: SlackApiRateControlLimit = SlackApiRateControlParams.StandardLimits.Specials.IncomingHookLimit
     )(
         implicit backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiPostWebHookResponse]] = {
@@ -192,7 +191,7 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       ](
         "chat.scheduleMessage",
         req,
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier3 ) ) )
       )
     }
 
@@ -207,7 +206,7 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       http.post[SlackApiChatUnfurlRequest, SlackApiChatUnfurlResponse](
         "chat.unfurl",
         req,
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier3 ) ) )
       )
     }
 
@@ -222,7 +221,7 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       http.post[SlackApiChatUpdateRequest, SlackApiChatUpdateResponse](
         "chat.update",
         req,
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier3 ) ) )
       )
     }
 
@@ -242,7 +241,7 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
         ](
           "chat.scheduledMessages.list",
           req,
-          methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
+          methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier3 ) ) )
         )
       }
 

@@ -42,7 +42,7 @@ class SlackEventSignatureVerifier() {
       timestamp: String,
       body: String
   ): Either[SlackSignatureCryptoInitError, String] = {
-    Try( Mac.getInstance( SIGNING_ALGORITHM ) ).toEither
+    Try( Mac.getInstance( SigningAlgorithm ) ).toEither
       .flatMap { mac =>
         val dataToSign = s"v0:${timestamp}:${body}"
         Try( signStrWithKeySecret( mac, signingSecret, dataToSign ) ).toEither.map { signedBytes =>
@@ -84,14 +84,14 @@ object SlackEventSignatureVerifier {
   /**
    * Slack Events API signature verification algorithm
    */
-  val SIGNING_ALGORITHM = "HmacSHA256"
+  final val SigningAlgorithm = "HmacSHA256"
 
   /**
    * Slack Events API HTTP header names with values to verify signature
    */
   object HttpHeaderNames {
-    val SIGNED_HASH = "x-slack-signature"
-    val SIGNED_TIMESTAMP = "x-slack-request-timestamp"
+    final val SignedHash = "x-slack-signature"
+    final val SignedTimestamp = "x-slack-request-timestamp"
   }
 
 }

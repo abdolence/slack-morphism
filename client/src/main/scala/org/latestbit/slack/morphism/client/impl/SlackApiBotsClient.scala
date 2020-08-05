@@ -43,7 +43,7 @@ trait SlackApiBotsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
         params = Map(
           "bot" -> bot
         ),
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier3 ) ) )
       )
     }
 

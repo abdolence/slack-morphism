@@ -38,7 +38,7 @@ class SlackSampleMessageReplyTemplateExample( replyToMessage: String ) extends S
       contextBlock(
         blockElements(
           md"I'm glad that you still remember me",
-          md"Current time is: ${formatDate( Instant.now(), SlackTextFormatters.SlackDateTimeFormats.DATE_LONG_PRETTY )}"
+          md"Current time is: ${formatDate( Instant.now(), SlackTextFormatters.SlackDateTimeFormats.DateLongPretty )}"
         )
       ),
       actionsBlock(

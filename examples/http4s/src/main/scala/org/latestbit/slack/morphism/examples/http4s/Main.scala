@@ -10,12 +10,12 @@ import com.monovore.decline.effect._
 import org.latestbit.slack.morphism.examples.http4s.config._
 
 object Main
-    extends CommandIOApp( name = Main.APP_NAME, version = Main.APP_VER, header = Main.APP_DESC_HEADER )
+    extends CommandIOApp( name = Main.AppName, version = Main.AppVer, header = Main.AppDescHeader )
     with StrictLogging {
 
-  final val APP_NAME = "Slack-Morphism-Example"
-  final val APP_VER = "0.1.0"
-  final val APP_DESC_HEADER = "Slack Morphism Example Bot For http4s"
+  final val AppName = "Slack-Morphism-Example"
+  final val AppVer = "0.1.0"
+  final val AppDescHeader = "Slack Morphism Example Bot For http4s"
 
   private val parseSlackConfigOpts: Opts[SlackAppConfig] = {
     (

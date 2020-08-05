@@ -73,7 +73,7 @@ trait SlackTextFormatters {
    */
   protected def formatDate(
       timestamp: Instant,
-      token_string: String = SlackTextFormatters.SlackDateTimeFormats.DEFAULT,
+      token_string: String = SlackTextFormatters.SlackDateTimeFormats.Default,
       link: Option[String] = None
   ): String = {
     val linkPart = link.map( value => s"^${value}" ).getOrElse( "" )
@@ -102,16 +102,16 @@ object SlackTextFormatters {
    * https://api.slack.com/reference/surfaces/formatting#date-formatting
    */
   object SlackDateTimeFormats {
-    final val DATE_NUM = "{date_num}"
-    final val DATE = "{date}"
-    final val DATE_SHORT = "{date_short}"
-    final val DATE_LONG = "{date_long}"
-    final val DATE_PRETTY = "{date_pretty}"
-    final val DATE_SHORT_PRETTY = "{date_short_pretty}"
-    final val DATE_LONG_PRETTY = "{date_long_pretty}"
-    final val TIME = "{time}"
-    final val TIME_SECS = "{time_secs}"
+    final val DateNum = "{date_num}"
+    final val Date = "{date}"
+    final val DateShort = "{date_short}"
+    final val DateLong = "{date_long}"
+    final val DatePretty = "{date_pretty}"
+    final val DateShortPretty = "{date_short_pretty}"
+    final val DateLongPretty = "{date_long_pretty}"
+    final val Time = "{time}"
+    final val TimeSecs = "{time_secs}"
 
-    final val DEFAULT = DATE_PRETTY
+    final val Default = DatePretty
   }
 }

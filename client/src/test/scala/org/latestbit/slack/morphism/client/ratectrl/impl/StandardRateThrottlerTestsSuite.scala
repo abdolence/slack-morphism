@@ -38,8 +38,8 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
     globalMaxRateLimit = Some( 50, 1.second ),
     workspaceMaxRateLimit = Some( 10, 1.second ),
     slackApiTierLimits = Map(
-      ( SlackApiRateControlParams.TIER_1, ( 5, 1.second ) ),
-      ( SlackApiRateControlParams.TIER_2, ( 2, 1.second ) )
+      ( SlackApiRateControlParams.Tier1, ( 5, 1.second ) ),
+      ( SlackApiRateControlParams.Tier2, ( 2, 1.second ) )
     )
   )
 
@@ -47,8 +47,8 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
     globalMaxRateLimit = Some( 50, 1.second ),
     workspaceMaxRateLimit = Some( 10, 1.second ),
     slackApiTierLimits = Map(
-      ( SlackApiRateControlParams.TIER_1, ( 5, 1.second ) ),
-      ( SlackApiRateControlParams.TIER_2, ( 2, 1.second ) )
+      ( SlackApiRateControlParams.Tier1, ( 5, 1.second ) ),
+      ( SlackApiRateControlParams.Tier2, ( 2, 1.second ) )
     ),
     maxRetries = 3,
     retryFor = Set( classOf[SlackApiRateLimitedError] )
@@ -185,7 +185,7 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
       throttler.throttle[String](
         uri"http://example.net/",
         apiToken = Some( apiToken1 ),
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_1 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier1 ) ) )
       ) { () => Future.successful( Right( s"Valid res: ${idx}" ) ) }
     }
   }
@@ -250,7 +250,7 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
     (1 to 10).foreach { idx =>
       throttler.throttle[String](
         uri"http://example.net/",
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_1 ) ) ),
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier1 ) ) ),
         apiToken = Some(
           SlackApiBotToken(
             SlackAccessTokenValue( s"test-token-${idx}" ),
@@ -264,7 +264,7 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
     assert( throttler.getWorkspaceMetricsCacheSize() === 10 )
     cleanCommand.run()
     assert( throttler.getWorkspaceMetricsCacheSize() === 10 )
-    fakeCurrentTime = StandardRateThrottler.WORKSPACE_METRICS_CLEANER_MAX_OLD_MSEC + 1
+    fakeCurrentTime = StandardRateThrottler.WorkspaceMetricsCleanerMaxOldInMs + 1
     cleanCommand.run()
     assert( throttler.getWorkspaceMetricsCacheSize() === 0 )
 

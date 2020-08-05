@@ -42,7 +42,7 @@ trait SlackApiAppsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       http.post[SlackApiUninstallRequest, SlackApiUninstallResponse](
         "apps.uninstall",
         req,
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_1 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier1 ) ) )
       )
     }
   }

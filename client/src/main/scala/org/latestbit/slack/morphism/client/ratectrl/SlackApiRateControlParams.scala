@@ -57,10 +57,10 @@ case class SlackApiRateControlParams(
 
 object SlackApiRateControlParams {
 
-  final val TIER_1 = 1
-  final val TIER_2 = 2
-  final val TIER_3 = 3
-  final val TIER_4 = 4
+  final val Tier1 = 1
+  final val Tier2 = 2
+  final val Tier3 = 3
+  final val Tier4 = 4
 
   /**
    * Rate limits according to
@@ -68,20 +68,20 @@ object SlackApiRateControlParams {
    */
   object StandardLimits {
 
-    final val TIER_MAP = Map[Int, SlackApiRateControlLimit](
-      ( TIER_1, ( 1, 1.minute ) ),
-      ( TIER_2, ( 20, 1.minute ) ),
-      ( TIER_3, ( 50, 1.minute ) ),
-      ( TIER_4, ( 100, 1.minute ) )
+    final val TierMap = Map[Int, SlackApiRateControlLimit](
+      ( Tier1, ( 1, 1.minute ) ),
+      ( Tier2, ( 20, 1.minute ) ),
+      ( Tier3, ( 50, 1.minute ) ),
+      ( Tier4, ( 100, 1.minute ) )
     )
 
-    final val DEFAULT_PARAMS = SlackApiRateControlParams(
-      slackApiTierLimits = TIER_MAP
+    final val DefaultParams = SlackApiRateControlParams(
+      slackApiTierLimits = TierMap
     )
 
     object Specials {
-      final val POST_CHANNEL_MESSAGE_LIMIT = SlackApiRateControlLimit( 1, 1.second )
-      final val INCOMING_HOOK_LIMIT = SlackApiRateControlLimit( 1, 1.second )
+      final val PostChannelMessageLimit = SlackApiRateControlLimit( 1, 1.second )
+      final val IncomingHookLimit = SlackApiRateControlLimit( 1, 1.second )
     }
 
   }

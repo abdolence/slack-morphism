@@ -22,6 +22,6 @@ package org.latestbit.slack.morphism.common
  * Slack message response types (for actions and commands with response_url)
  */
 object SlackResponseTypes {
-  val IN_CHANNEL = "in_channel"
-  val EPHEMERAL = "ephemeral"
+  final val InChannel = "in_channel"
+  final val Ephemeral = "ephemeral"
 }

@@ -40,7 +40,7 @@ trait SlackApiAuthClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
 
       http.post[SlackApiEmptyType, SlackApiAuthTestResponse](
         "auth.test",
-        SLACK_EMPTY_REQUEST
+        SlackEmptyRequest
       )
     }
 
@@ -55,7 +55,7 @@ trait SlackApiAuthClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       http.post[SlackApiAuthRevokeRequest, SlackApiAuthRevokeResponse](
         "auth.revoke",
         req,
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier3 ) ) )
       )
     }
 

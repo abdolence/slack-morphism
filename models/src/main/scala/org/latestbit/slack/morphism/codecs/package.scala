@@ -308,7 +308,7 @@ package object codecs {
       // Our custom JSON structure
       val baseObject =
         JsonObject(
-          "type" -> SLACK_TYPE_VALUE.asJson,
+          "type" -> SlackTypeValue.asJson,
           "subtype" -> subTypeValue.asJson
         )
 
@@ -324,7 +324,7 @@ package object codecs {
     ): Decoder.Result[T] = {
       cursor.get[Option[String]]( "type" ).flatMap {
 
-        case Some( typeFieldValue ) if typeFieldValue == SLACK_TYPE_VALUE =>
+        case Some( typeFieldValue ) if typeFieldValue == SlackTypeValue =>
           cursor.get[Option[String]]( "subtype" ).flatMap {
             case Some( subTypeValue ) =>
               converter.fromJsonObject(
@@ -669,7 +669,7 @@ package object codecs {
         messageDecoderDefinition[SlackMessage] { cursor: HCursor => cursor.as[SlackUserMessage] }
       }
 
-    val SLACK_TYPE_VALUE = "message"
+    final val SlackTypeValue = "message"
 
     implicit val encoderPinnedMessage: Encoder.AsObject[SlackPinnedMessage] =
       JsonTaggedAdtCodec.createEncoderDefinition[SlackPinnedMessage](

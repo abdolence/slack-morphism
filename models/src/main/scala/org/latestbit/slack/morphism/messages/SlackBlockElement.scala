@@ -338,8 +338,8 @@ case class SlackBlockRichTextList() extends SlackBlockElement with SlackRichBloc
 case class SlackBlockRichTextQuote() extends SlackBlockElement with SlackRichBlockElement
 
 object SlackBlockTextTypes {
-  final val MARK_DOWN = "mrkdwn"
-  final val PLAIN_TEXT = "plain_text"
+  final val MarkDown = "mrkdwn"
+  final val PlainText = "plain_text"
 }
 
 /**
@@ -351,7 +351,7 @@ sealed trait SlackBlockText extends SlackBlockElement with SlackContextBlockElem
 /**
  * 'plain_text' type of https://api.slack.com/reference/block-kit/composition-objects#text
  */
-@JsonAdt( SlackBlockTextTypes.PLAIN_TEXT )
+@JsonAdt( SlackBlockTextTypes.PlainText )
 case class SlackBlockPlainText(
     text: String,
     emoji: Option[Boolean] = None
@@ -360,7 +360,7 @@ case class SlackBlockPlainText(
 /**
  * 'mrkdwn' type of https://api.slack.com/reference/block-kit/composition-objects#text
  */
-@JsonAdt( SlackBlockTextTypes.MARK_DOWN )
+@JsonAdt( SlackBlockTextTypes.MarkDown )
 case class SlackBlockMarkDownText(
     text: String,
     verbatim: Option[Boolean] = None

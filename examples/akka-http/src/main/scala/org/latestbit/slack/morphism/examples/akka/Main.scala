@@ -29,8 +29,8 @@ import scala.concurrent.duration._
 
 object Main extends App with StrictLogging {
 
-  val APP_NAME = "Slack-Morphism-Example"
-  val APP_VER = "0.1.0"
+  val AppName = "Slack-Morphism-Example"
+  val AppVer = "0.1.0"
 
   private def addShutdownHook( hook: () => Unit ) = {
     Runtime.getRuntime.addShutdownHook( new Thread() {
@@ -61,8 +61,8 @@ object Main extends App with StrictLogging {
   }
 
   private def createParser() = {
-    new scopt.OptionParser[AppConfig]( APP_NAME ) {
-      head( APP_NAME, APP_VER )
+    new scopt.OptionParser[AppConfig]( AppName ) {
+      head( AppName, AppVer )
       opt[String]( "host" ).abbr( "h" ).text( "HTTP Server Host" ).action { ( v, c ) => c.copy( httpServerHost = v ) }
       opt[Int]( "port" ).abbr( "p" ).text( "HTTP Server Port" ).action { ( v, c ) => c.copy( httpServerPort = v ) }
       opt[String]( "slack-app-id" ).abbr( "aid" ).text( "Slack App Id" ).required().action { ( v, c ) =>

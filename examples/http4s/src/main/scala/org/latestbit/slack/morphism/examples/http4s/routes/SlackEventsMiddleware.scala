@@ -46,8 +46,8 @@ trait SlackEventsMiddleware extends StrictLogging {
       .flatMap { body =>
         Sync[F].delay(
           (
-            req.headers.get( SlackEventSignatureVerifier.HttpHeaderNames.SIGNED_HASH.ci ),
-            req.headers.get( SlackEventSignatureVerifier.HttpHeaderNames.SIGNED_TIMESTAMP.ci )
+            req.headers.get( SlackEventSignatureVerifier.HttpHeaderNames.SignedHash.ci ),
+            req.headers.get( SlackEventSignatureVerifier.HttpHeaderNames.SignedTimestamp.ci )
           ) match {
             case ( Some( receivedHash ), Some( signedTimestamp ) ) => {
               slackSignatureVerifier

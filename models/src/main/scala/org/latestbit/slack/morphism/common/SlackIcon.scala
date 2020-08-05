@@ -33,7 +33,7 @@ case class SlackIcon(
 
 object SlackIcon {
 
-  val ICON_PREFIX = "image_"
+  final val IconPrefix = "image_"
 
   implicit val slackUserInfoEncoder: Encoder.AsObject[SlackIcon] = (model: SlackIcon) => {
     val baseObject =
@@ -45,7 +45,7 @@ object SlackIcon {
     model.images.foldLeft( baseObject ) {
       case ( wholeObj, ( res, link ) ) =>
         wholeObj.add(
-          s"${ICON_PREFIX}${res}",
+          s"${IconPrefix}${res}",
           link.asJson
         )
     }
@@ -57,7 +57,7 @@ object SlackIcon {
       cursor.keys
         .map { cursorKeys =>
           cursorKeys
-            .filter { key => key.startsWith( ICON_PREFIX ) }
+            .filter { key => key.startsWith( IconPrefix ) }
             .flatMap { key =>
               key.split( '_' ).toList match {
                 case _ :: res :: _ if res.forall( _.isDigit ) => {

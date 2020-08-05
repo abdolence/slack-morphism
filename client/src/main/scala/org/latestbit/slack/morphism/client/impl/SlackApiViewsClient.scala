@@ -42,7 +42,7 @@ trait SlackApiViewsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       http.post[SlackApiViewsOpenRequest, SlackApiViewsOpenResponse](
         "views.open",
         req,
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_4 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier4 ) ) )
       )
     }
 
@@ -57,7 +57,7 @@ trait SlackApiViewsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       http.post[SlackApiViewsPublishRequest, SlackApiViewsPublishResponse](
         "views.publish",
         req,
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_4 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier4 ) ) )
       )
     }
 
@@ -72,7 +72,7 @@ trait SlackApiViewsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       http.post[SlackApiViewsPushRequest, SlackApiViewsPushResponse](
         "views.push",
         req,
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_4 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier4 ) ) )
       )
     }
 
@@ -87,7 +87,7 @@ trait SlackApiViewsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       http.post[SlackApiViewsUpdateRequest, SlackApiViewsUpdateResponse](
         "views.update",
         req,
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_4 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier4 ) ) )
       )
     }
 

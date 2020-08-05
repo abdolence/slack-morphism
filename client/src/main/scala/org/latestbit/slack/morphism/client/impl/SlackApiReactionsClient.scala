@@ -43,7 +43,7 @@ trait SlackApiReactionsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       http.post[SlackApiReactionsAddRequest, SlackApiReactionsAddResponse](
         "reactions.add",
         req,
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier2 ) ) )
       )
     }
 
@@ -62,7 +62,7 @@ trait SlackApiReactionsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
           "timestamp" -> Option( req.timestamp ),
           "full" -> req.full.map( _.toString() )
         ),
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_3 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier3 ) ) )
       )
     }
 
@@ -82,7 +82,7 @@ trait SlackApiReactionsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
           "limit" -> req.limit.map( _.toString() ),
           "user" -> req.user.map( _.value )
         ),
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier2 ) ) )
       )
     }
 
@@ -118,7 +118,7 @@ trait SlackApiReactionsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       http.post[SlackApiReactionsRemoveRequest, SlackApiReactionsRemoveResponse](
         "reactions.remove",
         req,
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier2 ) ) )
       )
     }
 

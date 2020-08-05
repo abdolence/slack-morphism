@@ -22,9 +22,9 @@ import scala.language.implicitConversions
 
 object ArrayExt {
 
-  private final val DIGITS_LOWER =
+  private final val DigitsLower =
     Array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' )
-  private final val DIGITS_UPPER = DIGITS_LOWER.map( _.toUpper )
+  private final val DigitsUpper = DigitsLower.map( _.toUpper )
 
   trait ArrayBytesSupport[T] {
     def toByte( value: T ): Byte
@@ -45,9 +45,9 @@ object ArrayExt {
 
       val currentDigits =
         if (lowerCased)
-          DIGITS_LOWER
+          DigitsLower
         else
-          DIGITS_UPPER
+          DigitsUpper
 
       array.indices.zip( outputArray.indices.by( 2 ) ).foreach {
         case ( i, j ) =>

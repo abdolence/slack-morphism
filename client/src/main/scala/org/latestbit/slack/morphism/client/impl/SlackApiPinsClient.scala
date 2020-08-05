@@ -41,7 +41,7 @@ trait SlackApiPinsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       http.post[SlackApiPinsAddRequest, SlackApiPinsAddResponse](
         "pins.add",
         req,
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier2 ) ) )
       )
     }
 
@@ -58,7 +58,7 @@ trait SlackApiPinsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
         Map(
           "channel" -> Option( req.channel.value )
         ),
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier2 ) ) )
       )
     }
 
@@ -73,7 +73,7 @@ trait SlackApiPinsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       http.post[SlackApiPinsRemoveRequest, SlackApiPinsRemoveResponse](
         "pins.remove",
         req,
-        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.TIER_2 ) ) )
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier2 ) ) )
       )
     }
 

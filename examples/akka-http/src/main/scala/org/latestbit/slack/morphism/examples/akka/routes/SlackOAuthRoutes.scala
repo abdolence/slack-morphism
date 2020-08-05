@@ -43,7 +43,7 @@ class SlackOAuthRoutes(
     with Directives {
 
   implicit val ec: ExecutionContext = ctx.system.executionContext
-  private val SLACK_AUTH_URL_V2 = "https://slack.com/oauth/v2/authorize"
+  private final val SlackAuthUrlV2 = "https://slack.com/oauth/v2/authorize"
 
   val routes: Route = {
     pathPrefix( "auth" ) {
@@ -57,7 +57,7 @@ class SlackOAuthRoutes(
             "redirect_uri" -> config.slackAppConfig.redirectUrl
           ).flatMap { case ( k, v ) => v.map( k -> _ ) }
 
-          val redirectUri = Uri( SLACK_AUTH_URL_V2 ).withQuery(
+          val redirectUri = Uri( SlackAuthUrlV2 ).withQuery(
             Query(
               baseParams: _*
             )
