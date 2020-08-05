@@ -43,6 +43,7 @@ trait SlackBlocksTemplateDsl extends SlackBlocksTemplateDslInternals {
   protected def fileBlock    = SlackFileBlock
   protected def actionsBlock = SlackActionsBlock
   protected def imageBlock   = SlackImageBlock
+  protected def headerBlock  = SlackHeaderBlock
   protected def richBlock    = SlackRichTextBlock
 
   protected def sectionFields( defs: SlackDslItemDef[SlackBlockText]* ): Option[List[SlackBlockText]] =

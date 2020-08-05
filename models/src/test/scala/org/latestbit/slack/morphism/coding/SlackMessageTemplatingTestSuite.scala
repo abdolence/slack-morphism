@@ -50,6 +50,7 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
             blocks(
               blocks(
                 dividerBlock(),
+                headerBlock( text = pt"Header" ),
                 sectionBlock( text = md"Test: ${testCond}" ),
                 optionally( testCond > 0 )( dividerBlock() ),
                 sectionBlock(

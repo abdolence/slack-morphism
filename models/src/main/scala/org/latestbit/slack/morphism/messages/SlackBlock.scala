@@ -100,6 +100,15 @@ case class SlackFileBlock(
     override val block_id: Option[SlackBlockId] = None
 ) extends SlackBlock
 
+/**
+ * https://api.slack.com/reference/block-kit/blocks#header
+ */
+@JsonAdt( "header" )
+case class SlackHeaderBlock(
+    text: SlackBlockPlainText,
+    override val block_id: Option[SlackBlockId] = None
+) extends SlackBlock
+
 @JsonAdt( "rich_text" )
 case class SlackRichTextBlock(
     elements: List[SlackRichBlockElement],
