@@ -246,7 +246,7 @@ depends on some user defined condition (a predicate):</p>
 <span class="nf">sectionBlock</span><span class="o">(</span>
   <span class="n">text</span> <span class="k">=</span> <span class="n">md</span><span class="s">"Test 2"</span><span class="o">,</span>
   <span class="n">accessory</span> <span class="k">=</span> <span class="nf">overflow</span><span class="o">(</span>
-    <span class="n">action_id</span> <span class="k">=</span> <span class="s">"-"</span><span class="o">,</span>
+    <span class="n">action_id</span> <span class="k">=</span> <span class="nc">SlackActionId</span><span class="o">(</span><span class="s">"-"</span><span class="o">),</span>
     <span class="n">options</span> <span class="k">=</span> <span class="nf">choiceItems</span><span class="o">(</span>
       <span class="nf">choiceItem</span><span class="o">(</span> <span class="n">text</span> <span class="k">=</span> <span class="n">pt</span><span class="s">"test-menu-item 1"</span><span class="o">,</span> <span class="n">value</span> <span class="k">=</span> <span class="s">"1"</span> <span class="o">),</span>
       <span class="nf">choiceItem</span><span class="o">(</span> <span class="n">text</span> <span class="k">=</span> <span class="n">pt</span><span class="s">"test-menu-item 2"</span><span class="o">,</span> <span class="n">value</span> <span class="k">=</span> <span class="s">"2"</span> <span class="o">),</span>
@@ -333,14 +333,14 @@ depends on some user defined condition (a predicate):</p>
       <span class="nf">contextBlock</span><span class="o">(</span>
         <span class="nf">blockElements</span><span class="o">(</span>
           <span class="n">md</span><span class="s">"This is an example of block message"</span><span class="o">,</span>
-          <span class="n">md</span><span class="s">"Current time is: ${formatDate( Instant.now(), SlackTextFormatters.SlackDateTimeFormats.DATE_LONG_PRETTY )}"</span>
+          <span class="n">md</span><span class="s">"Current time is: ${formatDate( Instant.now(), SlackTextFormatters.SlackDateTimeFormats.DateLongPretty )}"</span>
         <span class="o">)</span>
       <span class="o">),</span>
       <span class="nf">dividerBlock</span><span class="o">(),</span>
       <span class="nf">imageBlock</span><span class="o">(</span> <span class="n">image_url</span> <span class="k">=</span> <span class="s">"https://www.gstatic.com/webp/gallery3/2_webp_ll.png"</span><span class="o">,</span> <span class="n">alt_text</span> <span class="k">=</span> <span class="s">"Test Image"</span> <span class="o">),</span>
       <span class="nf">actionsBlock</span><span class="o">(</span>
         <span class="nf">blockElements</span><span class="o">(</span>
-          <span class="nf">button</span><span class="o">(</span> <span class="n">text</span> <span class="k">=</span> <span class="n">pt</span><span class="s">"Simple"</span><span class="o">,</span> <span class="n">action_id</span> <span class="k">=</span> <span class="s">"simple-message-button"</span> <span class="o">)</span>
+          <span class="nf">button</span><span class="o">(</span> <span class="n">text</span> <span class="k">=</span> <span class="n">pt</span><span class="s">"Simple"</span><span class="o">,</span> <span class="n">action_id</span> <span class="k">=</span> <span class="nc">SlackActionId</span><span class="o">(</span><span class="s">"simple-message-button"</span> <span class="o">))</span>
         <span class="o">)</span>
       <span class="o">)</span>
     <span class="o">)</span>
@@ -373,6 +373,7 @@ depends on some user defined condition (a predicate):</p>
       <li><code class="highlighter-rouge">fileBlock</code> : <a href="https://api.slack.com/reference/block-kit/blocks#file">“file”</a></li>
       <li><code class="highlighter-rouge">actionsBlock</code> : <a href="https://api.slack.com/reference/block-kit/blocks#actions">“actions”</a></li>
       <li><code class="highlighter-rouge">imageBlock</code> : <a href="https://api.slack.com/reference/block-kit/blocks#image">“image”</a></li>
+      <li><code class="highlighter-rouge">headerBlock</code> : <a href="https://api.slack.com/reference/block-kit/blocks#header">“image”</a></li>
     </ul>
   </li>
   <li><code class="highlighter-rouge">blockElements</code> : list of elements of block (not all blocks support all these elements, it would be checked at the compile time):

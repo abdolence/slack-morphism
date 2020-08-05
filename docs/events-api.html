@@ -194,10 +194,10 @@ which provides you <code class="highlighter-rouge">verify()</code>:</p>
 <p>To verify event request you need:</p>
 <ul>
   <li>A complete HTTP request body</li>
-  <li>The following HTTP header values from request:
+  <li>The following HTTP headers from request (header names constants):
     <ul>
-      <li>SlackEventSignatureVerifier.HttpHeaderNames.SIGNED_TIMESTAMP</li>
-      <li>SlackEventSignatureVerifier.HttpHeaderNames.SIGNED_HASH</li>
+      <li>SlackEventSignatureVerifier.HttpHeaderNames.SignedTimestamp</li>
+      <li>SlackEventSignatureVerifier.HttpHeaderNames.SignedHash</li>
     </ul>
   </li>
   <li>Your signing secret from your Slack app profile</li>

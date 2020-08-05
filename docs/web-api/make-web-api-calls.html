@@ -234,15 +234,18 @@ You should securely and properly store all of Slack tokens.
 Look at <a href="https://api.slack.com/docs/oauth-safety">Slack recommendations</a>.</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client._</span>
-<span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client.reqresp.chat.SlackApiChatPostMessageRequest</span>
+<span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.common._</span>
+<span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client.reqresp.chat._</span>
 
 <span class="k">import</span> <span class="nn">sttp.client.akkahttp.AkkaHttpBackend</span>
+<span class="k">import</span> <span class="nn">scala.concurrent._</span>
+<span class="k">import</span> <span class="nn">cats.instances.future._</span>
 
 <span class="k">implicit</span> <span class="k">val</span> <span class="nv">sttpBackend</span> <span class="k">=</span> <span class="nc">AkkaHttpBackend</span><span class="o">()</span>
 
 <span class="k">val</span> <span class="nv">client</span> <span class="k">=</span> <span class="nv">SlackApiClient</span><span class="o">.</span><span class="py">create</span><span class="o">[</span><span class="kt">Future</span><span class="o">]()</span>
 
-<span class="k">implicit</span> <span class="k">val</span> <span class="nv">slackApiToken</span><span class="k">:</span> <span class="kt">SlackApiToken</span> <span class="o">=</span> <span class="nc">SlackApiBotToken</span><span class="o">(</span><span class="s">"xoxb-89....."</span><span class="o">)</span>
+<span class="k">implicit</span> <span class="k">val</span> <span class="nv">slackApiToken</span><span class="k">:</span> <span class="kt">SlackApiToken</span> <span class="o">=</span> <span class="nc">SlackApiBotToken</span><span class="o">(</span><span class="nc">SlackAccessTokenValue</span><span class="o">(</span><span class="s">"xoxb-89....."</span><span class="o">))</span>
 
 <span class="nv">client</span><span class="o">.</span><span class="py">chat</span><span class="o">.</span><span class="py">postMessage</span><span class="o">(</span>
     <span class="nc">SlackApiChatPostMessageRequest</span><span class="o">(</span>
@@ -332,7 +335,7 @@ getting the response result of a next async call.</p>
       <span class="o">}</span>
     <span class="o">}</span>
     <span class="o">.</span><span class="py">getOrElse</span><span class="o">(</span>
-      <span class="nc">EitherT</span><span class="o">[</span><span class="kt">Future</span>, <span class="kt">SlackApiClientError</span>, <span class="kt">Option</span><span class="o">[</span><span class="kt">String</span><span class="o">]](</span>
+      <span class="nc">EitherT</span><span class="o">[</span><span class="kt">Future</span>, <span class="kt">SlackApiClientError</span>, <span class="kt">Option</span><span class="o">[</span><span class="kt">SlackTs</span><span class="o">]](</span>
         <span class="nv">Future</span><span class="o">.</span><span class="py">successful</span><span class="o">(</span> <span class="nv">None</span><span class="o">.</span><span class="py">asRight</span> <span class="o">)</span>
       <span class="o">)</span>
     <span class="o">)</span>
