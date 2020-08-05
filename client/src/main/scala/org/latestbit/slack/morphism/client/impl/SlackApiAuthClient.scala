@@ -33,8 +33,8 @@ trait SlackApiAuthClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/auth.test
      */
-    def test()(
-        implicit slackApiToken: SlackApiToken,
+    def test()( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiAuthTestResponse]] = {
 
@@ -47,8 +47,8 @@ trait SlackApiAuthClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/auth.revoke
      */
-    def revoke( req: SlackApiAuthRevokeRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def revoke( req: SlackApiAuthRevokeRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiAuthRevokeResponse]] = {
 

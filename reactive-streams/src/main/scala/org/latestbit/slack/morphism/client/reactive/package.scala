@@ -27,7 +27,9 @@ import scala.language.implicitConversions
 
 package object reactive {
 
-  implicit class SlackClientReactiveStreamsScroller[F[_] : SlackApiClientBackend.BackendType, IT, PT, SR <: SlackApiScrollableResponse[
+  implicit class SlackClientReactiveStreamsScroller[F[
+      _
+  ] : SlackApiClientBackend.BackendType, IT, PT, SR <: SlackApiScrollableResponse[
     IT,
     PT
   ]](

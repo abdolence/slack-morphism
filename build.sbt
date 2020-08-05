@@ -102,7 +102,7 @@ val catsVersion = "2.1.1"
 val catsEffectVersion = "2.1.2"
 val circeVersion = "0.13.0"
 val scalaCollectionsCompatVersion = "2.1.3"
-val sttpVersion = "2.1.1"
+val sttpVersion = "2.2.3"
 val circeAdtCodecVersion = "0.9.1"
 
 // For tests
@@ -125,7 +125,7 @@ val http4sVersion = "0.21.1"
 val declineVersion = "1.0.0"
 
 // For fs2 integration module
-val fs2Version = "2.2.1"
+val fs2Version = "2.4.2"
 
 // For reactive-streams integration module
 val reactiveStreamsVersion = "1.0.3"

@@ -85,10 +85,11 @@ private[concurrent] final class AsyncSeqIteratorImpl[F[_] : Monad, I, A, P] priv
     ()
   }
 
-  override def filter( f: A => Boolean ): AsyncSeqIterator[F, I, A] = new AsyncSeqIteratorImpl(
-    initial,
-    toValue.andThen( _.filter( f ) ),
-    getPos,
-    producer
-  )
+  override def filter( f: A => Boolean ): AsyncSeqIterator[F, I, A] =
+    new AsyncSeqIteratorImpl(
+      initial,
+      toValue.andThen( _.filter( f ) ),
+      getPos,
+      producer
+    )
 }

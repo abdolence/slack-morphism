@@ -19,12 +19,12 @@
 package org.latestbit.slack.morphism
 
 package object messages {
-  type SlackMessage = events.SlackMessage
-  type SlackPinnedMessage = events.SlackPinnedMessage
-  type SlackUserMessage = events.SlackUserMessage
-  type SlackBotMessage = events.SlackBotMessage
-  type SlackMeMessage = events.SlackMeMessage
-  type SlackChannelJoinMessage = events.SlackChannelJoinMessage
-  type SlackChannelTopicMessage = events.SlackChannelTopicMessage
+  type SlackMessage               = events.SlackMessage
+  type SlackPinnedMessage         = events.SlackPinnedMessage
+  type SlackUserMessage           = events.SlackUserMessage
+  type SlackBotMessage            = events.SlackBotMessage
+  type SlackMeMessage             = events.SlackMeMessage
+  type SlackChannelJoinMessage    = events.SlackChannelJoinMessage
+  type SlackChannelTopicMessage   = events.SlackChannelTopicMessage
   type SlackChannelPurposeMessage = events.SlackChannelPurposeMessage
 }

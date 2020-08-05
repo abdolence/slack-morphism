@@ -20,7 +20,6 @@ package org.latestbit.slack.morphism.examples.akka.config
 
 /**
  * Example config
- *
  */
 case class AppConfig(
     httpServerHost: String = "0.0.0.0",

@@ -90,9 +90,10 @@ class SlackTokensDb[F[_] : ConcurrentEffect]( storage: SlackTokensDb.SwayDbType 
     )
   }
 
-  private def close(): F[Unit] = LiftIO[F].liftIO {
-    IO( logger.info( s"Closing tokens database" ) ).flatMap( _ => storage.close() )
-  }
+  private def close(): F[Unit] =
+    LiftIO[F].liftIO {
+      IO( logger.info( s"Closing tokens database" ) ).flatMap( _ => storage.close() )
+    }
 
 }
 
@@ -115,7 +116,7 @@ object SlackTokensDb extends StrictLogging {
   }
 
   private type FunctionType = PureFunction[SlackTeamId, TeamTokensRecord, Apply.Map[TeamTokensRecord]]
-  private type SwayDbType = swaydb.Map[SlackTeamId, TeamTokensRecord, FunctionType, IO]
+  private type SwayDbType   = swaydb.Map[SlackTeamId, TeamTokensRecord, FunctionType, IO]
 
   private def openDb[F[_] : ConcurrentEffect]( config: AppConfig ): F[SlackTokensDb[F]] = {
     implicit val cs = IO.contextShift( global )

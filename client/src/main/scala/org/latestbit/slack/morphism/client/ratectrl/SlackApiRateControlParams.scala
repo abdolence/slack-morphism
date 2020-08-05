@@ -81,7 +81,7 @@ object SlackApiRateControlParams {
 
     object Specials {
       final val PostChannelMessageLimit = SlackApiRateControlLimit( 1, 1.second )
-      final val IncomingHookLimit = SlackApiRateControlLimit( 1, 1.second )
+      final val IncomingHookLimit       = SlackApiRateControlLimit( 1, 1.second )
     }
 
   }

@@ -65,7 +65,7 @@ object SlackApiToken {
    * Type names of tokens
    */
   object TokenTypes {
-    final val Bot = "bot"
+    final val Bot  = "bot"
     final val User = "user"
   }
 

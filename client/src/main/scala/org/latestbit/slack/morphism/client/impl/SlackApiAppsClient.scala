@@ -34,8 +34,8 @@ trait SlackApiAppsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/apps.uninstall
      */
-    def uninstall( req: SlackApiUninstallRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def uninstall( req: SlackApiUninstallRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiUninstallResponse]] = {
 

@@ -35,19 +35,19 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/users.conversations
      */
-    def conversations( req: SlackApiUsersConversationsRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def conversations( req: SlackApiUsersConversationsRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiUsersConversationsResponse]] = {
 
       http.get[SlackApiUsersConversationsResponse](
         "users.conversations",
         Map(
-          "cursor" -> req.cursor.map( _.value ),
+          "cursor"           -> req.cursor.map( _.value ),
           "exclude_archived" -> req.exclude_archived.map( _.toString() ),
-          "limit" -> req.limit.map( _.toString() ),
-          "types" -> req.types.map( _.mkString( "," ) ),
-          "user" -> req.user.map( _.value )
+          "limit"            -> req.limit.map( _.toString() ),
+          "types"            -> req.types.map( _.mkString( "," ) ),
+          "user"             -> req.user.map( _.value )
         ),
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier3 ) ) )
       )
@@ -57,8 +57,8 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
      * Scrolling support for
      * https://api.slack.com/methods/conversations.list
      */
-    def conversationsScroller( req: SlackApiUsersConversationsRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def conversationsScroller( req: SlackApiUsersConversationsRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): SlackApiResponseScroller[F, SlackChannelInfo, SlackCursorId, SlackApiUsersConversationsResponse] = {
       new SlackApiResponseScroller[F, SlackChannelInfo, SlackCursorId, SlackApiUsersConversationsResponse](
@@ -77,8 +77,8 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/users.getPresence
      */
-    def getPresence( req: SlackApiUsersGetPresenceRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def getPresence( req: SlackApiUsersGetPresenceRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiUsersGetPresenceResponse]] = {
 
@@ -94,8 +94,8 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/users.identity
      */
-    def identity()(
-        implicit slackApiToken: SlackApiToken,
+    def identity()( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiUsersIdentityResponse]] = {
 
@@ -109,15 +109,15 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/users.info
      */
-    def info( req: SlackApiUsersInfoRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def info( req: SlackApiUsersInfoRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiUsersInfoResponse]] = {
 
       http.get[SlackApiUsersInfoResponse](
         "users.info",
         Map(
-          "user" -> Option( req.user.value ),
+          "user"           -> Option( req.user.value ),
           "include_locale" -> req.include_locale.map( _.toString() )
         ),
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier4 ) ) )
@@ -127,17 +127,17 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/users.list
      */
-    def list( req: SlackApiUsersListRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def list( req: SlackApiUsersListRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiUsersListResponse]] = {
 
       http.get[SlackApiUsersListResponse](
         "users.list",
         Map(
-          "cursor" -> req.cursor.map( _.value ),
+          "cursor"         -> req.cursor.map( _.value ),
           "include_locale" -> req.include_locale.map( _.toString() ),
-          "limit" -> req.limit.map( _.toString() )
+          "limit"          -> req.limit.map( _.toString() )
         ),
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier2 ) ) )
       )
@@ -147,8 +147,8 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
      * Scrolling support for
      * https://api.slack.com/methods/users.list
      */
-    def listScroller( req: SlackApiUsersListRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def listScroller( req: SlackApiUsersListRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): SlackApiResponseScroller[F, SlackUserInfo, SlackCursorId, SlackApiUsersListResponse] = {
       new SlackApiResponseScroller[F, SlackUserInfo, SlackCursorId, SlackApiUsersListResponse](
@@ -167,8 +167,8 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/users.lookupByEmail
      */
-    def lookupByEmail( req: SlackApiUsersLookupByEmailRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def lookupByEmail( req: SlackApiUsersLookupByEmailRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiUsersLookupByEmailResponse]] = {
 
@@ -184,8 +184,8 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/users.setPresence
      */
-    def setPresence( req: SlackApiUsersSetPresenceRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def setPresence( req: SlackApiUsersSetPresenceRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiUsersSetPresenceResponse]] = {
 
@@ -201,15 +201,15 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       /**
        * https://api.slack.com/methods/users.profile.get
        */
-      def get( req: SlackApiUsersProfileGetRequest )(
-          implicit slackApiToken: SlackApiToken,
+      def get( req: SlackApiUsersProfileGetRequest )( implicit
+          slackApiToken: SlackApiToken,
           backendType: SlackApiClientBackend.BackendType[F]
       ): F[Either[SlackApiClientError, SlackApiUsersProfileGetResponse]] = {
 
         http.get[SlackApiUsersProfileGetResponse](
           "users.profile.get",
           Map(
-            "user" -> req.user.map( _.value ),
+            "user"           -> req.user.map( _.value ),
             "include_locale" -> req.include_locale.map( _.toString() )
           ),
           methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier4 ) ) )
@@ -219,8 +219,8 @@ trait SlackApiUsersClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       /**
        * https://api.slack.com/methods/users.profile.set
        */
-      def set( req: SlackApiUsersProfileSetRequest )(
-          implicit slackApiToken: SlackApiToken,
+      def set( req: SlackApiUsersProfileSetRequest )( implicit
+          slackApiToken: SlackApiToken,
           backendType: SlackApiClientBackend.BackendType[F]
       ): F[Either[SlackApiClientError, SlackApiUsersProfileSetResponse]] = {
 

@@ -31,8 +31,8 @@ trait SlackApiHttpRateControlSupport[F[_]] extends SlackApiHttpProtocolSupport[F
       request: Request[Either[String, String], Nothing],
       methodRateControl: Option[SlackApiMethodRateControlParams],
       slackApiToken: Option[SlackApiToken]
-  )(
-      implicit decoder: Decoder[RS],
+  )( implicit
+      decoder: Decoder[RS],
       backendType: SlackApiClientBackend.BackendType[F]
   ): F[Either[SlackApiClientError, RS]] = {
 

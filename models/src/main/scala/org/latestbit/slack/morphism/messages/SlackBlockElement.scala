@@ -338,7 +338,7 @@ case class SlackBlockRichTextList() extends SlackBlockElement with SlackRichBloc
 case class SlackBlockRichTextQuote() extends SlackBlockElement with SlackRichBlockElement
 
 object SlackBlockTextTypes {
-  final val MarkDown = "mrkdwn"
+  final val MarkDown  = "mrkdwn"
   final val PlainText = "plain_text"
 }
 

@@ -33,8 +33,8 @@ trait SlackApiPinsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/pins.add
      */
-    def add( req: SlackApiPinsAddRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def add( req: SlackApiPinsAddRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiPinsAddResponse]] = {
 
@@ -48,8 +48,8 @@ trait SlackApiPinsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/pins.list
      */
-    def list( req: SlackApiPinsListRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def list( req: SlackApiPinsListRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiPinsListResponse]] = {
 
@@ -65,8 +65,8 @@ trait SlackApiPinsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/pins.remove
      */
-    def remove( req: SlackApiPinsRemoveRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def remove( req: SlackApiPinsRemoveRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiPinsRemoveResponse]] = {
 

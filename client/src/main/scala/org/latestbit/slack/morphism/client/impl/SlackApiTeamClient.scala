@@ -34,8 +34,8 @@ trait SlackApiTeamClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/team.info
      */
-    def info( req: SlackApiTeamInfoRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def info( req: SlackApiTeamInfoRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiTeamInfoResponse]] = {
 
@@ -53,8 +53,8 @@ trait SlackApiTeamClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       /**
        * https://api.slack.com/methods/team.profile.get
        */
-      def get( req: SlackApiTeamProfileGetRequest )(
-          implicit slackApiToken: SlackApiToken,
+      def get( req: SlackApiTeamProfileGetRequest )( implicit
+          slackApiToken: SlackApiToken,
           backendType: SlackApiClientBackend.BackendType[F]
       ): F[Either[SlackApiClientError, SlackApiTeamProfileGetResponse]] = {
 

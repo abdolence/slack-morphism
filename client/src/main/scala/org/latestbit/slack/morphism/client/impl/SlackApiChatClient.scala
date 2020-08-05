@@ -37,8 +37,8 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/chat.delete
      */
-    def delete( req: SlackApiChatDeleteRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def delete( req: SlackApiChatDeleteRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiChatDeleteResponse]] = {
 
@@ -52,8 +52,8 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/chat.deleteScheduledMessage
      */
-    def deleteScheduledMessage( req: SlackApiChatDeleteScheduledMessageRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def deleteScheduledMessage( req: SlackApiChatDeleteScheduledMessageRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiChatDeleteScheduledMessageResponse]] = {
 
@@ -70,15 +70,15 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/chat.getPermalink
      */
-    def getPermalink( req: SlackApiChatGetPermalinkRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def getPermalink( req: SlackApiChatGetPermalinkRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiChatGetPermalinkResponse]] = {
 
       http.get[SlackApiChatGetPermalinkResponse](
         "chat.getPermalink",
         Map(
-          "channel" -> Option( req.channel.value ),
+          "channel"    -> Option( req.channel.value ),
           "message_ts" -> Option( req.message_ts.value )
         )
       )
@@ -87,8 +87,8 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/chat.meMessage
      */
-    def meMessage( req: SlackApiChatMeMessageRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def meMessage( req: SlackApiChatMeMessageRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiChatMeMessageResponse]] = {
 
@@ -102,8 +102,8 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/chat.postEphemeral
      */
-    def postEphemeral( req: SlackApiChatPostEphemeralRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def postEphemeral( req: SlackApiChatPostEphemeralRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiChatPostEphemeralResponse]] = {
 
@@ -126,8 +126,8 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
         req: SlackApiChatPostMessageRequest,
         rateControlLimit: SlackApiRateControlLimit =
           SlackApiRateControlParams.StandardLimits.Specials.PostChannelMessageLimit
-    )(
-        implicit slackApiToken: SlackApiToken,
+    )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiChatPostMessageResponse]] = {
 
@@ -157,8 +157,8 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
         url: String,
         req: SlackApiPostWebHookRequest,
         rateControlLimit: SlackApiRateControlLimit = SlackApiRateControlParams.StandardLimits.Specials.IncomingHookLimit
-    )(
-        implicit backendType: SlackApiClientBackend.BackendType[F]
+    )( implicit
+        backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiPostWebHookResponse]] = {
 
       sendManagedSlackHttpRequest[SlackApiPostWebHookResponse](
@@ -180,8 +180,8 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/chat.scheduleMessage
      */
-    def scheduleMessage( req: SlackApiChatScheduleMessageRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def scheduleMessage( req: SlackApiChatScheduleMessageRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiChatScheduleMessageResponse]] = {
 
@@ -198,8 +198,8 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/chat.unfurl
      */
-    def unfurl( req: SlackApiChatUnfurlRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def unfurl( req: SlackApiChatUnfurlRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiChatUnfurlResponse]] = {
 
@@ -213,8 +213,8 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/chat.update
      */
-    def update( req: SlackApiChatUpdateRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def update( req: SlackApiChatUpdateRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiChatUpdateResponse]] = {
 
@@ -230,8 +230,8 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       /**
        * https://api.slack.com/methods/chat.scheduledMessages.list
        */
-      def list( req: SlackApiChatScheduledMessagesListRequest )(
-          implicit slackApiToken: SlackApiToken,
+      def list( req: SlackApiChatScheduledMessagesListRequest )( implicit
+          slackApiToken: SlackApiToken,
           backendType: SlackApiClientBackend.BackendType[F]
       ): F[Either[SlackApiClientError, SlackApiChatScheduledMessagesListResponse]] = {
 
@@ -246,11 +246,11 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       }
 
       /**
-	     * Scrolling support for
-	     * https://api.slack.com/methods/chat.scheduledMessages.list
-	     */
-      def listScroller( req: SlackApiChatScheduledMessagesListRequest )(
-          implicit slackApiToken: SlackApiToken,
+       * Scrolling support for
+       * https://api.slack.com/methods/chat.scheduledMessages.list
+       */
+      def listScroller( req: SlackApiChatScheduledMessagesListRequest )( implicit
+          slackApiToken: SlackApiToken,
           backendType: SlackApiClientBackend.BackendType[F]
       ): SlackApiResponseScroller[
         F,

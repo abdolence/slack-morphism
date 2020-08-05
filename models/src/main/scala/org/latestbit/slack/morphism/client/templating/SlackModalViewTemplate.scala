@@ -27,7 +27,7 @@ import org.latestbit.slack.morphism.views.SlackModalView
 trait SlackModalViewTemplate extends SlackBlocksTemplate {
   def titleText(): SlackBlockPlainText
   def submitText(): Option[SlackBlockPlainText] = None
-  def closeText(): Option[SlackBlockPlainText] = None
+  def closeText(): Option[SlackBlockPlainText]  = None
 
   def toModalView() = {
     SlackModalView(

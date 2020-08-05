@@ -35,11 +35,11 @@ object SlackIcon {
 
   final val IconPrefix = "image_"
 
-  implicit val slackUserInfoEncoder: Encoder.AsObject[SlackIcon] = (model: SlackIcon) => {
+  implicit val slackUserInfoEncoder: Encoder.AsObject[SlackIcon] = ( model: SlackIcon) => {
     val baseObject =
       JsonObject(
         "image_original" -> model.image_original.asJson,
-        "image_default" -> model.image_default.asJson
+        "image_default"  -> model.image_default.asJson
       )
 
     model.images.foldLeft( baseObject ) {
@@ -51,7 +51,7 @@ object SlackIcon {
     }
   }
 
-  implicit val slackUserInfoDecoder: Decoder[SlackIcon] = (cursor: HCursor) => {
+  implicit val slackUserInfoDecoder: Decoder[SlackIcon] = ( cursor: HCursor) => {
 
     def cursorToImages(): List[( Int, String )] = {
       cursor.keys
@@ -73,7 +73,7 @@ object SlackIcon {
 
     for {
       image_original <- cursor.downField( "image_original" ).as[Option[String]]
-      image_default <- cursor.downField( "image_default" ).as[Option[Boolean]]
+      image_default  <- cursor.downField( "image_default" ).as[Option[Boolean]]
     } yield SlackIcon(
       image_original,
       image_default,

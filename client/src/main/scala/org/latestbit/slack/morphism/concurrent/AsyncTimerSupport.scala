@@ -43,8 +43,8 @@ trait AsyncTimerSupport[F[_]] {
    * @tparam A delayed result type
    * @return an effect in the specified monad
    */
-  def delayed[A]( effect: () => F[A], duration: FiniteDuration, scheduledExecutor: ScheduledExecutorService )(
-      implicit ec: ExecutionContext
+  def delayed[A]( effect: () => F[A], duration: FiniteDuration, scheduledExecutor: ScheduledExecutorService )( implicit
+      ec: ExecutionContext
   ): F[A]
 
 }
@@ -57,8 +57,8 @@ object AsyncTimerSupport {
         effect: () => Future[A],
         duration: FiniteDuration,
         scheduledExecutor: ScheduledExecutorService
-    )(
-        implicit ec: ExecutionContext
+    )( implicit
+        ec: ExecutionContext
     ): Future[A] = {
       val promise = Promise[A]()
       scheduledExecutor.schedule(
@@ -80,11 +80,11 @@ object AsyncTimerSupport {
         effect: () => F[A],
         duration: FiniteDuration,
         scheduledExecutor: ScheduledExecutorService
-    )(
-        implicit ec: ExecutionContext
+    )( implicit
+        ec: ExecutionContext
     ): F[A] = {
       implicit val timer = IO.timer( ec, scheduledExecutor )
-      implicit val cs = IO.contextShift( ec )
+      implicit val cs    = IO.contextShift( ec )
 
       LiftIO[F].liftIO( IO.sleep( duration ).start ).flatMap { _ => effect() }
 

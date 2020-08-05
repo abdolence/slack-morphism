@@ -102,15 +102,15 @@ object SlackTextFormatters {
    * https://api.slack.com/reference/surfaces/formatting#date-formatting
    */
   object SlackDateTimeFormats {
-    final val DateNum = "{date_num}"
-    final val Date = "{date}"
-    final val DateShort = "{date_short}"
-    final val DateLong = "{date_long}"
-    final val DatePretty = "{date_pretty}"
+    final val DateNum         = "{date_num}"
+    final val Date            = "{date}"
+    final val DateShort       = "{date_short}"
+    final val DateLong        = "{date_long}"
+    final val DatePretty      = "{date_pretty}"
     final val DateShortPretty = "{date_short_pretty}"
-    final val DateLongPretty = "{date_long_pretty}"
-    final val Time = "{time}"
-    final val TimeSecs = "{time_secs}"
+    final val DateLongPretty  = "{date_long_pretty}"
+    final val Time            = "{time}"
+    final val TimeSecs        = "{time_secs}"
 
     final val Default = DatePretty
   }

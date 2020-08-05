@@ -59,8 +59,8 @@ trait AkkaHttpServerRoutesSupport extends org.latestbit.slack.morphism.codecs.Ci
     )
   }
 
-  def extractSlackSignedRequest( route: String => Route, charset: HttpCharset = HttpCharsets.`UTF-8` )(
-      implicit ec: ExecutionContext,
+  def extractSlackSignedRequest( route: String => Route, charset: HttpCharset = HttpCharsets.`UTF-8` )( implicit
+      ec: ExecutionContext,
       materializer: ActorMaterializer,
       config: AppConfig
   ) = {
@@ -82,15 +82,15 @@ trait AkkaHttpServerRoutesSupport extends org.latestbit.slack.morphism.codecs.Ci
 
   }
 
-  def getLastSlackTokenFromDb[T]( teamId: SlackTeamId )(
-      implicit timeout: Timeout = 3.seconds,
+  def getLastSlackTokenFromDb[T]( teamId: SlackTeamId )( implicit
+      timeout: Timeout = 3.seconds,
       slackTokensDb: ActorRef[SlackTokensDb.Command],
       context: ActorContext[T]
   ): Future[Option[SlackApiToken]] = {
-    implicit val scheduler = context.system.scheduler
+    implicit val scheduler            = context.system.scheduler
     implicit val ec: ExecutionContext = context.system.executionContext
 
-    (slackTokensDb ? { ref: ActorRef[Option[SlackTokensDb.TeamTokensRecord]] =>
+    ( slackTokensDb ? { ref: ActorRef[Option[SlackTokensDb.TeamTokensRecord]] =>
       SlackTokensDb.ReadTokens( teamId, ref )
     }).map( _.flatMap { record =>
       record.tokens.lastOption.flatMap { lastToken =>
@@ -104,8 +104,8 @@ trait AkkaHttpServerRoutesSupport extends org.latestbit.slack.morphism.codecs.Ci
     } )
   }
 
-  def routeWithSlackApiToken[T, B]( teamId: SlackTeamId )( route: SlackApiToken => Route )(
-      implicit timeout: Timeout = 3.seconds,
+  def routeWithSlackApiToken[T, B]( teamId: SlackTeamId )( route: SlackApiToken => Route )( implicit
+      timeout: Timeout = 3.seconds,
       slackTokensDb: ActorRef[SlackTokensDb.Command],
       context: ActorContext[T]
   ): Route = {

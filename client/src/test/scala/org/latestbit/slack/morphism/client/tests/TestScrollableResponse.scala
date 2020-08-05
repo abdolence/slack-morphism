@@ -30,7 +30,7 @@ case class TestScrollableResponse(
     cursor: Option[String]
 ) extends SlackApiScrollableResponse[Int, String] {
 
-  override def items: List[Int] = values
+  override def items: List[Int]             = values
   override def getLatestPos: Option[String] = cursor
 }
 
@@ -38,27 +38,27 @@ object TestScrollableResponse {
 
   val testBatches: Seq[TestScrollableResponse] = IndexedSeq(
     TestScrollableResponse(
-      values = (0 to 9).toList,
+      values = ( 0 to 9).toList,
       cursor = Some( "1" )
     ),
     TestScrollableResponse(
-      values = (10 to 19).toList,
+      values = ( 10 to 19).toList,
       cursor = Some( "2" )
     ),
     TestScrollableResponse(
-      values = (20 to 29).toList,
+      values = ( 20 to 29).toList,
       cursor = Some( "3" )
     ),
     TestScrollableResponse(
-      values = (30 to 39).toList,
+      values = ( 30 to 39).toList,
       cursor = None
     )
   )
 
   val testFoldedBatchesResults = testBatches.flatMap( _.values ).toList
 
-  def createTestScrollableResponse()(
-      implicit ec: ExecutionContext
+  def createTestScrollableResponse()( implicit
+      ec: ExecutionContext
   ): SlackApiResponseScroller[Future, Int, String, TestScrollableResponse] = {
 
     def initialResponseLoader(): Future[Either[SlackApiClientError, TestScrollableResponse]] = {

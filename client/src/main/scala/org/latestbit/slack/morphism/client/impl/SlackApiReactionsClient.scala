@@ -35,8 +35,8 @@ trait SlackApiReactionsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/reactions.add
      */
-    def add( req: SlackApiReactionsAddRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def add( req: SlackApiReactionsAddRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiReactionsAddResponse]] = {
 
@@ -50,17 +50,17 @@ trait SlackApiReactionsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/reactions.get
      */
-    def get( req: SlackApiReactionsGetRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def get( req: SlackApiReactionsGetRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiReactionsGetResponse]] = {
 
       http.get[SlackApiReactionsGetResponse](
         "reactions.get",
         Map(
-          "channel" -> Option( req.channel.value ),
+          "channel"   -> Option( req.channel.value ),
           "timestamp" -> Option( req.timestamp ),
-          "full" -> req.full.map( _.toString() )
+          "full"      -> req.full.map( _.toString() )
         ),
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier3 ) ) )
       )
@@ -69,8 +69,8 @@ trait SlackApiReactionsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/reactions.list
      */
-    def list( req: SlackApiReactionsListRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def list( req: SlackApiReactionsListRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiReactionsListResponse]] = {
 
@@ -78,9 +78,9 @@ trait SlackApiReactionsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
         "reactions.list",
         Map(
           "cursor" -> req.cursor.map( _.value ),
-          "full" -> req.full.map( _.toString() ),
-          "limit" -> req.limit.map( _.toString() ),
-          "user" -> req.user.map( _.value )
+          "full"   -> req.full.map( _.toString() ),
+          "limit"  -> req.limit.map( _.toString() ),
+          "user"   -> req.user.map( _.value )
         ),
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier2 ) ) )
       )
@@ -90,8 +90,8 @@ trait SlackApiReactionsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
      * Scrolling support for
      * https://api.slack.com/methods/reactions.list
      */
-    def listScroller( req: SlackApiReactionsListRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def listScroller( req: SlackApiReactionsListRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): SlackApiResponseScroller[F, SlackApiReactionsListItem, SlackCursorId, SlackApiReactionsListResponse] = {
       new SlackApiResponseScroller[F, SlackApiReactionsListItem, SlackCursorId, SlackApiReactionsListResponse](
@@ -110,8 +110,8 @@ trait SlackApiReactionsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/reactions.remove
      */
-    def remove( req: SlackApiReactionsRemoveRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def remove( req: SlackApiReactionsRemoveRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiReactionsRemoveResponse]] = {
 

@@ -163,12 +163,13 @@ object AsyncSeqIterator {
         toValue: I => A,
         getPos: I => Option[P],
         producer: P => F[I]
-    ): AsyncSeqIterator[F, I, A] = new AsyncSeqIteratorImpl[F, I, A, P](
-      initial,
-      toValue.andThen( Some.apply ),
-      getPos,
-      producer
-    )
+    ): AsyncSeqIterator[F, I, A] =
+      new AsyncSeqIteratorImpl[F, I, A, P](
+        initial,
+        toValue.andThen( Some.apply ),
+        getPos,
+        producer
+      )
   }
 
   /**

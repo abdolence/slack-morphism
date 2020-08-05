@@ -41,8 +41,8 @@ import cats.instances.future._
 import org.latestbit.slack.morphism.common._
 import org.latestbit.slack.morphism.examples.akka.config.AppConfig
 
-class SlackPushEventsRoutes(
-    implicit ctx: ActorContext[_],
+class SlackPushEventsRoutes( implicit
+    ctx: ActorContext[_],
     materializer: ActorMaterializer,
     config: AppConfig,
     slackApiClient: SlackApiClientT[Future],
@@ -110,8 +110,8 @@ class SlackPushEventsRoutes(
     }
   }
 
-  private def sendWelcomeMessage( channelId: SlackChannelId, userId: SlackUserId )(
-      implicit slackApiToken: SlackApiToken
+  private def sendWelcomeMessage( channelId: SlackChannelId, userId: SlackUserId )( implicit
+      slackApiToken: SlackApiToken
   ): Route = {
     onComplete(
       slackApiClient.conversations
@@ -157,64 +157,67 @@ class SlackPushEventsRoutes(
     ) { statusCode => complete( statusCode ) }
   }
 
-  def onEvent( event: SlackPushEvent ): Route = event match {
-    case urlVerEv: SlackUrlVerificationEvent => {
-      logger.info( s"Received a challenge request:\n${urlVerEv.challenge}" )
-      complete(
-        StatusCodes.OK,
-        HttpEntity(
-          ContentTypes.`text/plain(UTF-8)`,
-          urlVerEv.challenge
+  def onEvent( event: SlackPushEvent ): Route =
+    event match {
+      case urlVerEv: SlackUrlVerificationEvent => {
+        logger.info( s"Received a challenge request:\n${urlVerEv.challenge}" )
+        complete(
+          StatusCodes.OK,
+          HttpEntity(
+            ContentTypes.`text/plain(UTF-8)`,
+            urlVerEv.challenge
+          )
         )
-      )
-    }
-    case callbackEvent: SlackEventCallback => {
-      routeWithSlackApiToken( callbackEvent.team_id ) { implicit slackApiToken =>
-        callbackEvent.event match {
-          case body: SlackAppHomeOpenedEvent => {
-            logger.info( s"User opened home: ${body}" )
+      }
+      case callbackEvent: SlackEventCallback => {
+        routeWithSlackApiToken( callbackEvent.team_id ) { implicit slackApiToken =>
+          callbackEvent.event match {
+            case body: SlackAppHomeOpenedEvent => {
+              logger.info( s"User opened home: ${body}" )
 
-            if (body.tab == "home")
-              updateHomeTab( body.user )
-            else {
-              sendWelcomeMessage( body.channel, body.user )
+              if (body.tab == "home")
+                updateHomeTab( body.user )
+              else {
+                sendWelcomeMessage( body.channel, body.user )
+              }
             }
-          }
-          case msg: SlackUserMessage => {
-            logger.info( s"Received a user message '${msg.text.getOrElse( "-" )}' in ${msg.channel.getOrElse( "-" )}" )
-            val template = new SlackSampleMessageReplyTemplateExample( msg.text.getOrElse( "" ) )
-            onSuccess(
-              slackApiClient.chat
-                .postMessage(
-                  SlackApiChatPostMessageRequest(
-                    channel = msg.channel.get,
-                    text = template.renderPlainText(),
-                    blocks = template.renderBlocks()
+            case msg: SlackUserMessage => {
+              logger.info(
+                s"Received a user message '${msg.text.getOrElse( "-" )}' in ${msg.channel.getOrElse( "-" )}"
+              )
+              val template = new SlackSampleMessageReplyTemplateExample( msg.text.getOrElse( "" ) )
+              onSuccess(
+                slackApiClient.chat
+                  .postMessage(
+                    SlackApiChatPostMessageRequest(
+                      channel = msg.channel.get,
+                      text = template.renderPlainText(),
+                      blocks = template.renderBlocks()
+                    )
                   )
-                )
-            ) {
-              case Right( resp ) => {
-                logger.info( s"Sent a reply message: ${resp}" )
-                complete( StatusCodes.OK )
-              }
-              case Left( err ) => {
-                logger.error( s"Unable to sent a reply message: ", err )
-                complete( StatusCodes.InternalServerError )
+              ) {
+                case Right( resp ) => {
+                  logger.info( s"Sent a reply message: ${resp}" )
+                  complete( StatusCodes.OK )
+                }
+                case Left( err ) => {
+                  logger.error( s"Unable to sent a reply message: ", err )
+                  complete( StatusCodes.InternalServerError )
+                }
               }
             }
-          }
-          case unknownBody: SlackEventCallbackBody => {
-            logger.warn( s"We don't handle this callback event we received in this example: ${unknownBody}" )
-            complete( StatusCodes.OK )
+            case unknownBody: SlackEventCallbackBody => {
+              logger.warn( s"We don't handle this callback event we received in this example: ${unknownBody}" )
+              complete( StatusCodes.OK )
+            }
           }
         }
       }
-    }
 
-    case pushEvent: SlackPushEvent => {
-      logger.warn( s"We don't handle this push event we received in this example: ${pushEvent}" )
-      complete( StatusCodes.OK )
+      case pushEvent: SlackPushEvent => {
+        logger.warn( s"We don't handle this push event we received in this example: ${pushEvent}" )
+        complete( StatusCodes.OK )
+      }
     }
-  }
 
 }

@@ -43,7 +43,7 @@ class OAuthTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuiteSupport
         id = SlackUserId( "test-auth-user-id" )
       )
     )
-    val mockClientId = "test-client-id"
+    val mockClientId     = "test-client-id"
     val mockClientSecret = "test-client-secret"
 
     implicit val testingBackend =

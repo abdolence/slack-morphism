@@ -53,21 +53,21 @@ object SlackTokensDb extends StrictLogging {
   }
 
   sealed trait Command
-  case class OpenDb( config: AppConfig ) extends Command
-  case class Close() extends Command
-  case class InsertToken( teamId: SlackTeamId, tokenRecord: TokenRecord ) extends Command
-  case class RemoveTokens( teamId: SlackTeamId, users: Set[SlackUserId] ) extends Command
+  case class OpenDb( config: AppConfig )                                                                 extends Command
+  case class Close()                                                                                     extends Command
+  case class InsertToken( teamId: SlackTeamId, tokenRecord: TokenRecord )                                extends Command
+  case class RemoveTokens( teamId: SlackTeamId, users: Set[SlackUserId] )                                extends Command
   case class ReadTokens( teamId: SlackTeamId, ref: akka.actor.typed.ActorRef[Option[TeamTokensRecord]] ) extends Command
 
   type FunctionType = PureFunction[SlackTeamId, TeamTokensRecord, Apply.Map[TeamTokensRecord]]
-  type SwayDbType = Map[SlackTeamId, TeamTokensRecord, FunctionType, ApiIO]
+  type SwayDbType   = Map[SlackTeamId, TeamTokensRecord, FunctionType, ApiIO]
 
   val run: Behavior[Command] = runBehavior( None )
 
   private def runBehavior( swayMap: Option[SwayDbType] ): Behavior[Command] = {
     Behaviors.setup { implicit context =>
-      implicit val system = context.system
-      implicit val classicSystem = context.system.toClassic
+      implicit val system                       = context.system
+      implicit val classicSystem                = context.system.toClassic
       implicit val ec: ExecutionContextExecutor = context.system.executionContext
 
       implicit val teamIdSerializer = new Serializer[SlackTeamId] {

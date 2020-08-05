@@ -41,7 +41,7 @@ case class SlackApiChatScheduledMessagesListResponse(
 ) extends SlackApiScrollableResponse[SlackApiChatScheduledMessageInfo, SlackCursorId] {
 
   override def items: List[SlackApiChatScheduledMessageInfo] = scheduled_messages
-  override def getLatestPos: Option[SlackCursorId] = response_metadata.flatMap( _.next_cursor )
+  override def getLatestPos: Option[SlackCursorId]           = response_metadata.flatMap( _.next_cursor )
 
 }
 

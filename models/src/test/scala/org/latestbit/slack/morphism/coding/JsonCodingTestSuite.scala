@@ -102,7 +102,7 @@ class JsonCodingTestSuite extends AnyFlatSpec {
     implicit val decoder: Decoder[TestEvent] = JsonTaggedAdtCodec.createDecoder[TestEvent]( "type" )
 
     val testModel: TestEvent = TestEvent1( "test-data" )
-    val json = testModel.asJson.dropNullValues.noSpaces
+    val json                 = testModel.asJson.dropNullValues.noSpaces
 
     decode[TestEvent](
       json
@@ -126,7 +126,7 @@ class JsonCodingTestSuite extends AnyFlatSpec {
 
     val testJson = testModel.asJson.dropNullValues.noSpaces
 
-    assert( !(testJson contains "value") )
+    assert( !( testJson contains "value") )
 
     decode[TestSlackInstant](
       testJson
@@ -143,7 +143,7 @@ class JsonCodingTestSuite extends AnyFlatSpec {
     import io.circe.generic.auto._
 
     val testIncorrectJson = """{}"""
-    val testJson = """{ "b1" : false, "b2" : true }"""
+    val testJson          = """{ "b1" : false, "b2" : true }"""
 
     decode[TestBool](
       testIncorrectJson
@@ -179,7 +179,7 @@ class JsonCodingTestSuite extends AnyFlatSpec {
 
     val testJson = testModel.asJson.dropNullValues.noSpaces
 
-    assert( !(testJson contains "SlackUserMessage") )
+    assert( !( testJson contains "SlackUserMessage") )
 
     decode[SlackMessageEvent](
       testJson

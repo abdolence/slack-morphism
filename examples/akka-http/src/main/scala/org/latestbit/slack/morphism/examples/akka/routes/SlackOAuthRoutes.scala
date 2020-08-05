@@ -32,8 +32,8 @@ import scala.concurrent.{ ExecutionContext, Future }
 import cats.instances.future._
 import org.latestbit.slack.morphism.examples.akka.config.AppConfig
 
-class SlackOAuthRoutes(
-    implicit ctx: ActorContext[_],
+class SlackOAuthRoutes( implicit
+    ctx: ActorContext[_],
     materializer: ActorMaterializer,
     config: AppConfig,
     slackApiClient: SlackApiClientT[Future],
@@ -43,7 +43,7 @@ class SlackOAuthRoutes(
     with Directives {
 
   implicit val ec: ExecutionContext = ctx.system.executionContext
-  private final val SlackAuthUrlV2 = "https://slack.com/oauth/v2/authorize"
+  private final val SlackAuthUrlV2  = "https://slack.com/oauth/v2/authorize"
 
   val routes: Route = {
     pathPrefix( "auth" ) {
@@ -52,8 +52,8 @@ class SlackOAuthRoutes(
 
           // Request a bot token scope with OAuth v2
           val baseParams = List[( String, Option[String] )](
-            "client_id" -> Option( config.slackAppConfig.clientId ),
-            "scope" -> Option( config.slackAppConfig.botScope ),
+            "client_id"    -> Option( config.slackAppConfig.clientId ),
+            "scope"        -> Option( config.slackAppConfig.botScope ),
             "redirect_uri" -> config.slackAppConfig.redirectUrl
           ).flatMap { case ( k, v ) => v.map( k -> _ ) }
 

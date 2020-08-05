@@ -42,8 +42,8 @@ trait LazyScalaCollectionSupport[F[_], IT, PT, SR <: SlackApiScrollableResponse[
    */
   def toSyncScroller(
       scrollerTimeout: FiniteDuration = 60.seconds
-  )(
-      implicit syncScrollerAwaiter: SyncScrollerAwaiter[F],
+  )( implicit
+      syncScrollerAwaiter: SyncScrollerAwaiter[F],
       monad: Monad[F]
   ): F[Either[SlackApiClientError, SyncStreamType]] = {
 

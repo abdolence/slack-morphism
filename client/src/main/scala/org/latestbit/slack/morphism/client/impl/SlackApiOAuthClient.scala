@@ -40,8 +40,8 @@ trait SlackApiOAuthClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
           clientSecret: String,
           code: String,
           redirectUri: Option[String] = None
-      )(
-          implicit backendType: SlackApiClientBackend.BackendType[F]
+      )( implicit
+          backendType: SlackApiClientBackend.BackendType[F]
       ): F[Either[SlackApiClientError, SlackOAuthV2AccessTokenResponse]] = {
 
         sendSlackRequest[SlackOAuthV2AccessTokenResponse](

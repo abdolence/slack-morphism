@@ -36,22 +36,22 @@ class SlackApiScrollableSubscriptionCommandChannel[F[_] : Monad, IT, PT, SR <: S
     subscriber: Subscriber[_ >: IT],
     scrollableResponse: SlackApiResponseScroller[F, IT, PT, SR],
     maxItems: Option[Long] = None
-)(
-    implicit ec: ExecutionContext,
+)( implicit
+    ec: ExecutionContext,
     ctxshift: ContextShift[IO]
 ) {
   import SlackApiScrollableSubscriptionCommandChannel._
 
-  @volatile private var commandBuffer: Vector[Command] = Vector()
+  @volatile private var commandBuffer: Vector[Command]   = Vector()
   @volatile private var notifyAsyncCommandCb: () => Unit = _
-  private val statusLock = new ReentrantLock()
+  private val statusLock                                 = new ReentrantLock()
 
   private def consumerTask( channel: CommandChannel, currentState: ConsumerState[F, IT, PT, SR] ): IO[Unit] = {
     channel.take.flatMap {
       case RequestElements( n ) => {
         for {
           updatedState <- pumpNextBatchAsync( n, currentState )
-          _ <- consumerTask( channel, updatedState )
+          _            <- consumerTask( channel, updatedState )
         } yield ()
       }
       case Close => {
@@ -65,13 +65,13 @@ class SlackApiScrollableSubscriptionCommandChannel[F[_] : Monad, IT, PT, SR <: S
       command <- takeNewCommand()
       producer = channel.put( command )
       fp <- producer.start
-      _ <- fp.join
+      _  <- fp.join
       _ <- (
-            command match {
-              case Close => IO.unit
-              case _     => producerCommandLoop( channel )
-            }
-          )
+               command match {
+                 case Close => IO.unit
+                 case _     => producerCommandLoop( channel )
+               }
+           )
     } yield ()
   }
 
@@ -219,12 +219,12 @@ class SlackApiScrollableSubscriptionCommandChannel[F[_] : Monad, IT, PT, SR <: S
   }
 
   def start(): Unit = {
-    (for {
+    ( for {
       channel <- MVar[IO].empty[Command]
       consumer = consumerTask( channel, ConsumerState( Some( scrollableResponse.toAsyncScroller() ) ) )
       fc <- consumer.start
-      _ <- producerCommandLoop( channel )
-      _ <- fc.join
+      _  <- producerCommandLoop( channel )
+      _  <- fc.join
     } yield ()).unsafeRunAsyncAndForget()
   }
 
@@ -238,7 +238,7 @@ object SlackApiScrollableSubscriptionCommandChannel {
 
   sealed trait Command
   case class RequestElements( n: Long ) extends Command
-  case object Close extends Command
+  case object Close                     extends Command
 
   type CommandChannel = MVar[IO, Command]
 

@@ -33,8 +33,8 @@ trait SlackApiBotsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/bots.info
      */
-    def info( bot: Option[String] = None )(
-        implicit slackApiToken: SlackApiToken,
+    def info( bot: Option[String] = None )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiBotsInfo]] = {
 

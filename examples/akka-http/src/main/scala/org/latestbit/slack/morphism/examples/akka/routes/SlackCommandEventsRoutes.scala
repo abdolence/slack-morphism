@@ -36,8 +36,8 @@ import cats.instances.future._
 import org.latestbit.slack.morphism.client.reqresp.events.SlackApiEventMessageReply
 import org.latestbit.slack.morphism.examples.akka.config.AppConfig
 
-class SlackCommandEventsRoutes(
-    implicit ctx: ActorContext[_],
+class SlackCommandEventsRoutes( implicit
+    ctx: ActorContext[_],
     materializer: ActorMaterializer,
     config: AppConfig,
     slackApiClient: SlackApiClientT[Future],
@@ -66,16 +66,16 @@ class SlackCommandEventsRoutes(
             "trigger_id"
           ) {
             case (
-                team_id,
-                team_domain,
-                channel_id,
-                channel_name,
-                user_id,
-                user_name,
-                command,
-                text,
-                response_url,
-                trigger_id
+                  team_id,
+                  team_domain,
+                  channel_id,
+                  channel_name,
+                  user_id,
+                  user_name,
+                  command,
+                  text,
+                  response_url,
+                  trigger_id
                 ) =>
               // Sending additional reply using response_url
               val commandReply = new SlackSampleMessageReplyTemplateExample(

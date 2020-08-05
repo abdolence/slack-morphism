@@ -67,7 +67,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
               statusText = "OK",
               code = StatusCode.Ok,
               body = JsonObject(
-                "ok" -> false.asJson,
+                "ok"    -> false.asJson,
                 "error" -> "slack-test-error".asJson
               ).asJson.dropNullValues.noSpaces,
               headers = Seq(

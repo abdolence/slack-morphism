@@ -51,7 +51,7 @@ abstract class StandardRateThrottler[F[_] : SlackApiClientBackend.BackendType : 
   startWorkspaceMetricsCleanerService()
 
   private def toRateMetric( rateLimit: SlackApiRateControlLimit ) = {
-    val rateLimitInMs = rateLimit.toRateLimitInMs()
+    val rateLimitInMs     = rateLimit.toRateLimitInMs()
     val rateLimitCapacity = rateLimit.per.toMillis / rateLimitInMs
 
     RateThrottlerMetric(
@@ -139,17 +139,19 @@ abstract class StandardRateThrottler[F[_] : SlackApiClientBackend.BackendType : 
       apiMethodUri: Option[Uri],
       methodRateControl: Option[SlackApiMethodRateControlParams]
   ): List[Long] = {
-    if (params.workspaceMaxRateLimit.isEmpty &&
-        params.slackApiTierLimits.isEmpty &&
-        methodRateControl.forall( _.specialRateLimit.isEmpty )) {
+    if (
+      params.workspaceMaxRateLimit.isEmpty &&
+      params.slackApiTierLimits.isEmpty &&
+      methodRateControl.forall( _.specialRateLimit.isEmpty )
+    ) {
       List()
     } else {
       val workspaceMetrics =
         createOrGetWorkspaceMetrics( teamId, now )
 
       val updatedWorkspaceGlobalMetric = workspaceMetrics.wholeWorkspaceMetric.map { metric => metric.update( now ) }
-      val updatedTierMetric = calcWorkspaceTierMetric( now, methodRateControl, workspaceMetrics )
-      val updatedSpecialLimitMetric = calcWorkspaceSpecialLimitMetric( now, methodRateControl, workspaceMetrics )
+      val updatedTierMetric            = calcWorkspaceTierMetric( now, methodRateControl, workspaceMetrics )
+      val updatedSpecialLimitMetric    = calcWorkspaceSpecialLimitMetric( now, methodRateControl, workspaceMetrics )
 
       workspaceMaxRateMetrics.update(
         teamId.value,
@@ -186,13 +188,13 @@ abstract class StandardRateThrottler[F[_] : SlackApiClientBackend.BackendType : 
     val now = currentTimeInMs()
 
     synchronized {
-      (List(
+      ( List(
         Option( globalMaxRateMetric ).map { metric =>
           globalMaxRateMetric = metric.update( now )
           globalMaxRateMetric.delay
         },
         methodRateControl.flatMap( _.methodMinRateLimitDelay.map( _.toMillis ) )
-      ).flatten ++ (apiToken
+      ).flatten ++ ( apiToken
         .flatMap { tokenValue =>
           tokenValue.teamId.map { teamId => calcWorkspaceDelays( now, teamId, apiMethodUri, methodRateControl ) }
         }
@@ -285,8 +287,10 @@ abstract class StandardRateThrottler[F[_] : SlackApiClientBackend.BackendType : 
     calcDelay( Some( uri ), methodRateControl, apiToken ) match {
       case Some( delay ) if delay > 0 => {
 
-        if (methodRateControl.forall( _.methodMaxRateLimitDelay.forall( _.toMillis > delay ) ) &&
-            params.maxDelayTimeout.forall( _.toMillis > delay )) {
+        if (
+          methodRateControl.forall( _.methodMaxRateLimitDelay.forall( _.toMillis > delay ) ) &&
+          params.maxDelayTimeout.forall( _.toMillis > delay )
+        ) {
           promiseDelayedRequest[RS]( delay, request )
             .flatMap( retryIfNecessary[RS]( uri, apiToken, methodRateControl, request ) )
         } else {
@@ -309,9 +313,9 @@ abstract class StandardRateThrottler[F[_] : SlackApiClientBackend.BackendType : 
 }
 
 object StandardRateThrottler {
-  final val WorkspaceMetricsCleanerInitialDelayInSecs = 5 * 60 // 5 min delay
-  final val WorkspaceMetricsCleanerIntervalInSecs = 2 * 60 // 2 min interval
-  final val WorkspaceMetricsCleanerMaxOldInMs = 60 * 60 * 1000 // clean everything more than 1 hour old
+  final val WorkspaceMetricsCleanerInitialDelayInSecs = 5 * 60         // 5 min delay
+  final val WorkspaceMetricsCleanerIntervalInSecs     = 2 * 60         // 2 min interval
+  final val WorkspaceMetricsCleanerMaxOldInMs         = 60 * 60 * 1000 // clean everything more than 1 hour old
 
 }
 

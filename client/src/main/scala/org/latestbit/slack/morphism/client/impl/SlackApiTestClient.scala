@@ -32,8 +32,8 @@ trait SlackApiTestClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/api.test
      */
-    def test( req: SlackApiTestRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def test( req: SlackApiTestRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiTestResponse]] = {
 

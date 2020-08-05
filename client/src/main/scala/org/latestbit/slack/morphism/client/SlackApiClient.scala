@@ -53,10 +53,9 @@ object SlackApiClient {
    * } yield result
    *
    * }}}
-   *
    */
-  def create[F[_] : SlackApiClientBackend.BackendType]()(
-      implicit sttpBackend: SlackApiClientBackend.SttpBackendType[F]
+  def create[F[_] : SlackApiClientBackend.BackendType]()( implicit
+      sttpBackend: SlackApiClientBackend.SttpBackendType[F]
   ) = SlackApiClientBuildOptions( sttpBackend ).create()
 
   /**
@@ -76,8 +75,8 @@ object SlackApiClient {
    * @tparam F scala.concurrent.Future or cats.effect.IO
    * @return an instance builder
    */
-  def build[F[_] : SlackApiClientBackend.BackendType](
-      implicit sttpBackend: SlackApiClientBackend.SttpBackendType[F]
+  def build[F[_] : SlackApiClientBackend.BackendType]( implicit
+      sttpBackend: SlackApiClientBackend.SttpBackendType[F]
   ): SlackApiClientBuildOptions[F] = SlackApiClientBuildOptions( sttpBackend )
 
   /**
@@ -116,9 +115,10 @@ object SlackApiClient {
      * @param throttler a throttler implementation
      * @return a builder with options
      */
-    def withThrottler( throttler: SlackApiRateThrottler[F] ): SlackApiClientBuildOptions[F] = copy(
-      throttler = throttler
-    )
+    def withThrottler( throttler: SlackApiRateThrottler[F] ): SlackApiClientBuildOptions[F] =
+      copy(
+        throttler = throttler
+      )
 
     /**
      * Create a client instance with the specified options

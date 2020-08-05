@@ -74,8 +74,8 @@ object SlackApiRateThrottler {
    * accordingly to https://api.slack.com/docs/rate-limits
    * @return a throttler implementation
    */
-  def createStandardThrottler[F[_]]()(
-      implicit backendType: SlackApiClientBackend.BackendType[F],
+  def createStandardThrottler[F[_]]()( implicit
+      backendType: SlackApiClientBackend.BackendType[F],
       ec: ExecutionContext,
       timerSupport: AsyncTimerSupport[F]
   ): SlackApiRateThrottler[F] = {
@@ -88,8 +88,8 @@ object SlackApiRateThrottler {
    */
   def createStandardThrottler[F[_]](
       params: SlackApiRateControlParams
-  )(
-      implicit backendType: SlackApiClientBackend.BackendType[F],
+  )( implicit
+      backendType: SlackApiClientBackend.BackendType[F],
       ec: ExecutionContext,
       timerSupport: AsyncTimerSupport[F]
   ): SlackApiRateThrottler[F] = {

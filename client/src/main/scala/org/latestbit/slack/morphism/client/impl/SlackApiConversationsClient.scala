@@ -36,8 +36,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/conversations.archive
      */
-    def archive( req: SlackApiConversationsArchiveRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def archive( req: SlackApiConversationsArchiveRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiConversationsArchiveResponse]] = {
 
@@ -54,8 +54,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/conversations.close
      */
-    def close( req: SlackApiConversationsCloseRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def close( req: SlackApiConversationsCloseRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiConversationsCloseResponse]] = {
 
@@ -72,8 +72,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/conversations.create
      */
-    def create( req: SlackApiConversationsCreateRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def create( req: SlackApiConversationsCreateRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiConversationsCreateResponse]] = {
 
@@ -90,8 +90,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/conversations.history
      */
-    def history( req: SlackApiConversationsHistoryRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def history( req: SlackApiConversationsHistoryRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiConversationsHistoryResponse]] = {
 
@@ -100,12 +100,12 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       ](
         "conversations.history",
         Map(
-          "channel" -> Option( req.channel.value ),
-          "cursor" -> req.cursor.map( _.value ),
+          "channel"   -> Option( req.channel.value ),
+          "cursor"    -> req.cursor.map( _.value ),
           "inclusive" -> req.inclusive.map( _.toString() ),
-          "latest" -> req.latest.map( _.value ),
-          "limit" -> req.latest.map( _.toString() ),
-          "oldest" -> req.oldest.map( _.value )
+          "latest"    -> req.latest.map( _.value ),
+          "limit"     -> req.latest.map( _.toString() ),
+          "oldest"    -> req.oldest.map( _.value )
         ),
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier3 ) ) )
       )
@@ -115,8 +115,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
      * Scrolling support for
      * https://api.slack.com/methods/conversations.history
      */
-    def historyScroller( req: SlackApiConversationsHistoryRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def historyScroller( req: SlackApiConversationsHistoryRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): SlackApiResponseScroller[F, SlackMessage, SlackCursorId, SlackApiConversationsHistoryResponse] = {
       new SlackApiResponseScroller[F, SlackMessage, SlackCursorId, SlackApiConversationsHistoryResponse](
@@ -136,8 +136,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/conversations.info
      */
-    def info( req: SlackApiConversationsInfoRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def info( req: SlackApiConversationsInfoRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiConversationsInfoResponse]] = {
 
@@ -146,8 +146,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       ](
         "conversations.info",
         Map(
-          "channel" -> Option( req.channel.value ),
-          "include_locale" -> req.include_locale.map( _.toString() ),
+          "channel"             -> Option( req.channel.value ),
+          "include_locale"      -> req.include_locale.map( _.toString() ),
           "include_num_members" -> req.include_num_members.map( _.toString() )
         ),
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier3 ) ) )
@@ -157,8 +157,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/conversations.invite
      */
-    def invite( req: SlackApiConversationsInviteRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def invite( req: SlackApiConversationsInviteRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiConversationsInviteResponse]] = {
 
@@ -175,8 +175,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/conversations.join
      */
-    def join( req: SlackApiConversationsJoinRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def join( req: SlackApiConversationsJoinRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiConversationsJoinResponse]] = {
 
@@ -193,8 +193,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/conversations.kick
      */
-    def kick( req: SlackApiConversationsKickRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def kick( req: SlackApiConversationsKickRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiConversationsKickResponse]] = {
 
@@ -211,8 +211,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/conversations.leave
      */
-    def leave( req: SlackApiConversationsLeaveRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def leave( req: SlackApiConversationsLeaveRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiConversationsLeaveResponse]] = {
 
@@ -229,8 +229,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/conversations.list
      */
-    def list( req: SlackApiConversationsListRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def list( req: SlackApiConversationsListRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiConversationsListResponse]] = {
 
@@ -239,10 +239,10 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       ](
         "conversations.list",
         Map(
-          "cursor" -> req.cursor.map( _.value ),
+          "cursor"           -> req.cursor.map( _.value ),
           "exclude_archived" -> req.exclude_archived.map( _.toString() ),
-          "limit" -> req.limit.map( _.toString() ),
-          "types" -> req.types.map( _.toList.map( _.value ).mkString( "," ) )
+          "limit"            -> req.limit.map( _.toString() ),
+          "types"            -> req.types.map( _.toList.map( _.value ).mkString( "," ) )
         ),
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier2 ) ) )
       )
@@ -252,8 +252,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
      * Scrolling support for
      * https://api.slack.com/methods/conversations.list
      */
-    def listScroller( req: SlackApiConversationsListRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def listScroller( req: SlackApiConversationsListRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): SlackApiResponseScroller[F, SlackChannelInfo, SlackCursorId, SlackApiConversationsListResponse] = {
       new SlackApiResponseScroller[F, SlackChannelInfo, SlackCursorId, SlackApiConversationsListResponse](
@@ -272,8 +272,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/conversations.members
      */
-    def members( req: SlackApiConversationsMembersRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def members( req: SlackApiConversationsMembersRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiConversationsMembersResponse]] = {
 
@@ -283,8 +283,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
         "conversations.members",
         Map(
           "channel" -> Option( req.channel.value ),
-          "cursor" -> req.cursor.map( _.value ),
-          "limit" -> req.limit.map( _.toString() )
+          "cursor"  -> req.cursor.map( _.value ),
+          "limit"   -> req.limit.map( _.toString() )
         ),
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier4 ) ) )
       )
@@ -294,8 +294,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
      * Scrolling support for
      * https://api.slack.com/methods/conversations.members
      */
-    def membersScroller( req: SlackApiConversationsMembersRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def membersScroller( req: SlackApiConversationsMembersRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): SlackApiResponseScroller[F, SlackUserId, SlackCursorId, SlackApiConversationsMembersResponse] = {
       new SlackApiResponseScroller[F, SlackUserId, SlackCursorId, SlackApiConversationsMembersResponse](
@@ -316,8 +316,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
      * https://api.slack.com/methods/conversations.open
      * return_im is set to None
      */
-    def open( req: SlackApiConversationsOpenRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def open( req: SlackApiConversationsOpenRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiConversationsOpenResponse[SlackBasicChannelInfo]]] = {
 
@@ -335,8 +335,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
      * https://api.slack.com/methods/conversations.open
      * return_im is set to Some(true)
      */
-    def openFullProfile( req: SlackApiConversationsOpenRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def openFullProfile( req: SlackApiConversationsOpenRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiConversationsOpenResponse[SlackChannelInfo]]] = {
 
@@ -351,10 +351,10 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     }
 
     /**
-	   * https://api.slack.com/methods/conversations.rename
-	   */
-    def rename( req: SlackApiConversationsRenameRequest )(
-        implicit slackApiToken: SlackApiToken,
+     * https://api.slack.com/methods/conversations.rename
+     */
+    def rename( req: SlackApiConversationsRenameRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiConversationsRenameResponse]] = {
 
@@ -371,8 +371,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/conversations.replies
      */
-    def replies( req: SlackApiConversationsRepliesRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def replies( req: SlackApiConversationsRepliesRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiConversationsRepliesResponse]] = {
 
@@ -381,13 +381,13 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       ](
         "conversations.replies",
         Map(
-          "channel" -> Option( req.channel.value ),
-          "ts" -> Option( req.ts.value ),
-          "cursor" -> req.cursor.map( _.value ),
+          "channel"   -> Option( req.channel.value ),
+          "ts"        -> Option( req.ts.value ),
+          "cursor"    -> req.cursor.map( _.value ),
           "inclusive" -> req.inclusive.map( _.toString() ),
-          "latest" -> req.latest.map( _.value ),
-          "oldest" -> req.oldest.map( _.value ),
-          "limit" -> req.limit.map( _.toString() )
+          "latest"    -> req.latest.map( _.value ),
+          "oldest"    -> req.oldest.map( _.value ),
+          "limit"     -> req.limit.map( _.toString() )
         ),
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier3 ) ) )
       )
@@ -397,8 +397,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
      * Scrolling support for
      * https://api.slack.com/methods/conversations.replies
      */
-    def repliesScroller( req: SlackApiConversationsRepliesRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def repliesScroller( req: SlackApiConversationsRepliesRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): SlackApiResponseScroller[F, SlackMessage, SlackCursorId, SlackApiConversationsRepliesResponse] = {
       new SlackApiResponseScroller[F, SlackMessage, SlackCursorId, SlackApiConversationsRepliesResponse](
@@ -419,8 +419,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/conversations.setPurpose
      */
-    def setPurpose( req: SlackApiConversationsSetPurposeRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def setPurpose( req: SlackApiConversationsSetPurposeRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiConversationsSetPurposeResponse]] = {
 
@@ -437,8 +437,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/conversations.setTopic
      */
-    def setTopic( req: SlackApiConversationsSetTopicRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def setTopic( req: SlackApiConversationsSetTopicRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiConversationsSetTopicResponse]] = {
 
@@ -455,8 +455,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/conversations.unarchive
      */
-    def unarchive( req: SlackApiConversationsUnarchiveRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def unarchive( req: SlackApiConversationsUnarchiveRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiConversationsUnarchiveResponse]] = {
 
@@ -473,8 +473,8 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/conversations.mark
      */
-    def unarchive( req: SlackApiConversationsMarkRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def unarchive( req: SlackApiConversationsMarkRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiConversationsMarkResponse]] = {
 

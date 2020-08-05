@@ -81,11 +81,11 @@ class SttpBackendTests extends AsyncFlatSpec {
       for {
         backend <- AsyncHttpClientCatsBackend[IO]()
         client <- IO(
-                   SlackApiClient
-                     .build[IO]( backend )
-                     .withThrottler( SlackApiRateThrottler.createStandardThrottler() )
-                     .create()
-                 )
+                    SlackApiClient
+                      .build[IO]( backend )
+                      .withThrottler( SlackApiRateThrottler.createStandardThrottler() )
+                      .create()
+                  )
         result <- client.api.test( SlackApiTestRequest() )
       } yield result
     ).unsafeToFuture()
@@ -128,7 +128,7 @@ class SttpBackendTests extends AsyncFlatSpec {
 
     def createHttp4sClient(): Resource[IO, ( Blocker, Client[IO] )] = {
       for {
-        blocker <- Blocker[IO]
+        blocker    <- Blocker[IO]
         httpClient <- BlazeClientBuilder[IO]( blocker.blockingContext ).resource
       } yield ( blocker, httpClient )
     }
@@ -139,7 +139,7 @@ class SttpBackendTests extends AsyncFlatSpec {
         .use {
           case ( blocker, httpClient ) =>
             val backend = Http4sBackend.usingClient( httpClient, blocker )
-            val client = SlackApiClient.build[IO]( backend ).create()
+            val client  = SlackApiClient.build[IO]( backend ).create()
             client.api.test( SlackApiTestRequest() )
         }
         .unsafeToFuture()
@@ -148,7 +148,7 @@ class SttpBackendTests extends AsyncFlatSpec {
           case Left( ex: SlackApiResponseError ) => assert( ex.errorCode !== null )
           case Left( ex )                        => fail( ex )
         }
-    )
+      )
 
   }
 

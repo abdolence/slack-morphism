@@ -23,7 +23,9 @@ import fs2.Stream
 
 package object fs2s {
 
-  implicit class SlackClientFS2Scroller[F[_] : SlackApiClientBackend.BackendType, IT, PT, SR <: SlackApiScrollableResponse[
+  implicit class SlackClientFS2Scroller[F[
+      _
+  ] : SlackApiClientBackend.BackendType, IT, PT, SR <: SlackApiScrollableResponse[
     IT,
     PT
   ]](

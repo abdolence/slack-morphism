@@ -13,8 +13,8 @@ object Main
     extends CommandIOApp( name = Main.AppName, version = Main.AppVer, header = Main.AppDescHeader )
     with StrictLogging {
 
-  final val AppName = "Slack-Morphism-Example"
-  final val AppVer = "0.1.0"
+  final val AppName       = "Slack-Morphism-Example"
+  final val AppVer        = "0.1.0"
   final val AppDescHeader = "Slack Morphism Example Bot For http4s"
 
   private val parseSlackConfigOpts: Opts[SlackAppConfig] = {
@@ -32,18 +32,18 @@ object Main
           short = "bot-scope",
           help = "Slack OAuth Install Scope for a bot token"
         )
-        .withDefault( SlackAppConfig.defaultScope )
+        .withDefault( SlackAppConfig.DefaultScope )
     ).mapN( SlackAppConfig.apply )
   }
 
   private val parseAppConfigOpts: Opts[AppConfig] = {
     (
-      Opts.option[String]( long = "host", short = "h", help = "HTTP Server Host" ).withDefault( AppConfig.defaultHost ),
-      Opts.option[Int]( long = "port", short = "p", help = "HTTP Server Port" ).withDefault( AppConfig.defaultPort ),
+      Opts.option[String]( long = "host", short = "h", help = "HTTP Server Host" ).withDefault( AppConfig.DefaultHost ),
+      Opts.option[Int]( long = "port", short = "p", help = "HTTP Server Port" ).withDefault( AppConfig.DefaultPort ),
       parseSlackConfigOpts,
       Opts
         .option[String]( long = "sway-db-path", short = "dbpath", help = "Path to data for SwayDb" )
-        .withDefault( AppConfig.defaultDatabaseDir )
+        .withDefault( AppConfig.DefaultDatabaseDir )
     ).mapN( AppConfig.apply )
   }
 

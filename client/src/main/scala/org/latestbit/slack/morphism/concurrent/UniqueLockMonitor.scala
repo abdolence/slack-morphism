@@ -55,7 +55,6 @@ import java.util.concurrent.locks.Lock
  *
  * @note this class isn't reentrant and isn't supposed to be shared across threads or used as a field.
  *       This class should be used as a stack/method local variable with try-with-resources.
- *
  */
 final class UniqueLockMonitor private ( private var monitorOnLock: Lock, private var isLocked: Boolean )
     extends AutoCloseable {
@@ -91,7 +90,6 @@ final class UniqueLockMonitor private ( private var monitorOnLock: Lock, private
   /**
    * Release/take a lock from monitor, so it wouldn't be unlocked automatically in close.
    * You can't use lock/unlock after releasing a monitor.
-   *
    */
   def release(): Lock = {
     require( monitorOnLock != null, "Monitor has been already released" )

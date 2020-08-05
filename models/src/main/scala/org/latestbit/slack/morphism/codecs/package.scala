@@ -121,7 +121,7 @@ package object codecs {
       deriveDecoder[SlackApiResponseMetadata]
 
     implicit val encoderSlackBasicTeamInfo: Encoder.AsObject[SlackBasicTeamInfo] = deriveEncoder[SlackBasicTeamInfo]
-    implicit val decoderSlackBasicTeamInfo: Decoder[SlackBasicTeamInfo] = deriveDecoder[SlackBasicTeamInfo]
+    implicit val decoderSlackBasicTeamInfo: Decoder[SlackBasicTeamInfo]          = deriveDecoder[SlackBasicTeamInfo]
 
     implicit val encoderSlackBasicEnterpriseInfo: Encoder.AsObject[SlackBasicEnterpriseInfo] =
       deriveEncoder[SlackBasicEnterpriseInfo]
@@ -134,10 +134,10 @@ package object codecs {
     implicit val decoderSlackTeamProfileField: Decoder[SlackTeamProfileField] = deriveDecoder[SlackTeamProfileField]
 
     implicit val encoderSlackTeamProfile: Encoder.AsObject[SlackTeamProfile] = deriveEncoder[SlackTeamProfile]
-    implicit val decoderSlackTeamProfile: Decoder[SlackTeamProfile] = deriveDecoder[SlackTeamProfile]
+    implicit val decoderSlackTeamProfile: Decoder[SlackTeamProfile]          = deriveDecoder[SlackTeamProfile]
 
     implicit val encoderSlackTeamInfo: Encoder.AsObject[SlackTeamInfo] = deriveEncoder[SlackTeamInfo]
-    implicit val decoderSlackTeamInfo: Decoder[SlackTeamInfo] = deriveDecoder[SlackTeamInfo]
+    implicit val decoderSlackTeamInfo: Decoder[SlackTeamInfo]          = deriveDecoder[SlackTeamInfo]
 
     implicit val encoderSlackBasicChannelInfo: Encoder.AsObject[SlackBasicChannelInfo] =
       deriveEncoder[SlackBasicChannelInfo]
@@ -150,7 +150,7 @@ package object codecs {
       deriveDecoder[SlackChannelDetails]
 
     implicit val encoderSlackChannelFlags: Encoder.AsObject[SlackChannelFlags] = deriveEncoder[SlackChannelFlags]
-    implicit val decoderSlackChannelFlags: Decoder[SlackChannelFlags] = deriveDecoder[SlackChannelFlags]
+    implicit val decoderSlackChannelFlags: Decoder[SlackChannelFlags]          = deriveDecoder[SlackChannelFlags]
 
     implicit val encoderSlackChannelLastState: Encoder.AsObject[SlackChannelCurrentState] =
       deriveEncoder[SlackChannelCurrentState]
@@ -158,44 +158,45 @@ package object codecs {
     implicit val decoderSlackChannelLastState: Decoder[SlackChannelCurrentState] =
       deriveDecoder[SlackChannelCurrentState]
 
-    def createSlackChannelInfoEncoder()(
-        implicit flagsEncoder: Encoder.AsObject[SlackChannelFlags],
+    def createSlackChannelInfoEncoder()( implicit
+        flagsEncoder: Encoder.AsObject[SlackChannelFlags],
         lastStateEncoder: Encoder.AsObject[SlackChannelCurrentState]
-    ): Encoder.AsObject[SlackChannelInfo] = (model: SlackChannelInfo) => {
-      JsonObject(
-        "id" -> model.id.asJson,
-        "name" -> model.name.asJson,
-        "created" -> model.created.asJson,
-        "unlinked" -> model.unlinked.asJson,
-        "name_normalized" -> model.name_normalized.asJson,
-        "topic" -> model.topic.asJson,
-        "purpose" -> model.purpose.asJson,
-        "previous_names" -> model.previous_names.asJson,
-        "priority" -> model.priority.asJson,
-        "num_members" -> model.num_members.asJson,
-        "locale" -> model.locale.asJson
-      ).deepMerge( flagsEncoder.encodeObject( model.flags ) )
-        .deepMerge( lastStateEncoder.encodeObject( model.lastState ) )
-    }
+    ): Encoder.AsObject[SlackChannelInfo] =
+      ( model: SlackChannelInfo) => {
+        JsonObject(
+          "id"              -> model.id.asJson,
+          "name"            -> model.name.asJson,
+          "created"         -> model.created.asJson,
+          "unlinked"        -> model.unlinked.asJson,
+          "name_normalized" -> model.name_normalized.asJson,
+          "topic"           -> model.topic.asJson,
+          "purpose"         -> model.purpose.asJson,
+          "previous_names"  -> model.previous_names.asJson,
+          "priority"        -> model.priority.asJson,
+          "num_members"     -> model.num_members.asJson,
+          "locale"          -> model.locale.asJson
+        ).deepMerge( flagsEncoder.encodeObject( model.flags ) )
+          .deepMerge( lastStateEncoder.encodeObject( model.lastState ) )
+      }
 
     implicit val slackChannelInfoEncoder = createSlackChannelInfoEncoder()
 
-    implicit val slackChannelInfoDecoder: Decoder[SlackChannelInfo] = (c: HCursor) => {
+    implicit val slackChannelInfoDecoder: Decoder[SlackChannelInfo] = ( c: HCursor) => {
       for {
-        id <- c.downField( "id" ).as[SlackChannelId]
-        name <- c.downField( "name" ).as[Option[String]]
-        created <- c.downField( "created" ).as[SlackDateTime]
-        creator <- c.downField( "creator" ).as[Option[String]]
-        unlinked <- c.downField( "unlinked" ).as[Option[Long]]
+        id              <- c.downField( "id" ).as[SlackChannelId]
+        name            <- c.downField( "name" ).as[Option[String]]
+        created         <- c.downField( "created" ).as[SlackDateTime]
+        creator         <- c.downField( "creator" ).as[Option[String]]
+        unlinked        <- c.downField( "unlinked" ).as[Option[Long]]
         name_normalized <- c.downField( "name_normalized" ).as[Option[String]]
-        topic <- c.downField( "topic" ).as[Option[SlackTopicInfo]]
-        purpose <- c.downField( "purpose" ).as[Option[SlackPurposeInfo]]
-        previous_names <- c.downField( "previous_names" ).as[Option[List[String]]]
-        priority <- c.downField( "priority" ).as[Option[Long]]
-        num_members <- c.downField( "num_members" ).as[Option[Long]]
-        locale <- c.downField( "locale" ).as[Option[String]]
-        flags <- c.as[SlackChannelFlags]
-        lastState <- c.as[SlackChannelCurrentState]
+        topic           <- c.downField( "topic" ).as[Option[SlackTopicInfo]]
+        purpose         <- c.downField( "purpose" ).as[Option[SlackPurposeInfo]]
+        previous_names  <- c.downField( "previous_names" ).as[Option[List[String]]]
+        priority        <- c.downField( "priority" ).as[Option[Long]]
+        num_members     <- c.downField( "num_members" ).as[Option[Long]]
+        locale          <- c.downField( "locale" ).as[Option[String]]
+        flags           <- c.as[SlackChannelFlags]
+        lastState       <- c.as[SlackChannelCurrentState]
       } yield SlackChannelInfo(
         id,
         name,
@@ -214,85 +215,89 @@ package object codecs {
       )
     }
 
-    def createUserProfileEncoder(): Encoder.AsObject[SlackUserProfile] = (model: SlackUserProfile) => {
-      implicit val encoderSlackUserProfile: Encoder.AsObject[SlackUserProfile] = deriveEncoder[SlackUserProfile]
+    def createUserProfileEncoder(): Encoder.AsObject[SlackUserProfile] =
+      ( model: SlackUserProfile) => {
+        implicit val encoderSlackUserProfile: Encoder.AsObject[SlackUserProfile] = deriveEncoder[SlackUserProfile]
 
-      model.icon
-        .map { icon =>
-          encoderSlackUserProfile.encodeObject( model.copy( icon = None ) ).deepMerge( icon.asJsonObject )
-        }
-        .getOrElse(
-          encoderSlackUserProfile.encodeObject( model )
-        )
-    }
+        model.icon
+          .map { icon =>
+            encoderSlackUserProfile.encodeObject( model.copy( icon = None ) ).deepMerge( icon.asJsonObject )
+          }
+          .getOrElse(
+            encoderSlackUserProfile.encodeObject( model )
+          )
+      }
 
-    def createDecoderUserProfile(): Decoder[SlackUserProfile] = (cursor: HCursor) => {
-      for {
-        icon <- cursor.as[SlackIcon]
-        baseUserInfo <- cursor.as[SlackUserProfile]( deriveDecoder[SlackUserProfile] )
-      } yield baseUserInfo.copy( icon = Option( icon ) )
-    }
+    def createDecoderUserProfile(): Decoder[SlackUserProfile] =
+      ( cursor: HCursor) => {
+        for {
+          icon         <- cursor.as[SlackIcon]
+          baseUserInfo <- cursor.as[SlackUserProfile]( deriveDecoder[SlackUserProfile] )
+        } yield baseUserInfo.copy( icon = Option( icon ) )
+      }
 
     implicit val encoderUserProfile: Encoder.AsObject[SlackUserProfile] = createUserProfileEncoder()
-    implicit val decoderUserProfile: Decoder[SlackUserProfile] = createDecoderUserProfile()
+    implicit val decoderUserProfile: Decoder[SlackUserProfile]          = createDecoderUserProfile()
 
     implicit val encoderSlackUserFlags: Encoder.AsObject[SlackUserFlags] = deriveEncoder[SlackUserFlags]
-    implicit val decoderSlackUserFlags: Decoder[SlackUserFlags] = deriveDecoder[SlackUserFlags]
+    implicit val decoderSlackUserFlags: Decoder[SlackUserFlags]          = deriveDecoder[SlackUserFlags]
 
-    def createSlackUserInfoEncoder(): Encoder.AsObject[SlackUserInfo] = (model: SlackUserInfo) => {
-      JsonObject(
-        "id" -> model.id.asJson,
-        "team_id" -> model.team_id.asJson,
-        "name" -> model.name.asJson,
-        "deleted" -> model.deleted.asJson,
-        "color" -> model.color.asJson,
-        "real_name" -> model.real_name.asJson,
-        "tz" -> model.tz.asJson,
-        "tz_label" -> model.tz_label.asJson,
-        "tz_offset" -> model.tz_offset.asJson,
-        "profile" -> model.profile.asJson,
-        "updated" -> model.updated.asJson,
-        "locale" -> model.locale.asJson
-      ).deepMerge( encoderSlackUserFlags.encodeObject( model.flags ) )
-    }
+    def createSlackUserInfoEncoder(): Encoder.AsObject[SlackUserInfo] =
+      ( model: SlackUserInfo) => {
+        JsonObject(
+          "id"        -> model.id.asJson,
+          "team_id"   -> model.team_id.asJson,
+          "name"      -> model.name.asJson,
+          "deleted"   -> model.deleted.asJson,
+          "color"     -> model.color.asJson,
+          "real_name" -> model.real_name.asJson,
+          "tz"        -> model.tz.asJson,
+          "tz_label"  -> model.tz_label.asJson,
+          "tz_offset" -> model.tz_offset.asJson,
+          "profile"   -> model.profile.asJson,
+          "updated"   -> model.updated.asJson,
+          "locale"    -> model.locale.asJson
+        ).deepMerge( encoderSlackUserFlags.encodeObject( model.flags ) )
+      }
 
-    def createSlackUserInfoDecoder(): Decoder[SlackUserInfo] = (c: HCursor) => {
-      for {
-        id <- c.downField( "id" ).as[SlackUserId]
-        team_id <- c.downField( "team_id" ).as[Option[SlackTeamId]]
-        name <- c.downField( "name" ).as[Option[String]]
-        deleted <- c.downField( "deleted" ).as[Option[Boolean]]
-        color <- c.downField( "color" ).as[Option[String]]
-        real_name <- c.downField( "real_name" ).as[Option[String]]
-        tz <- c.downField( "tz" ).as[Option[String]]
-        tz_label <- c.downField( "tz_label" ).as[Option[String]]
-        tz_offset <- c.downField( "tz_offset" ).as[Option[Int]]
-        updated <- c.downField( "updated" ).as[Option[SlackDateTime]]
-        locale <- c.downField( "locale" ).as[Option[String]]
-        profile <- c.downField( "profile" ).as[Option[SlackUserProfile]]
-        flags <- c.as[SlackUserFlags]
-      } yield SlackUserInfo(
-        id,
-        team_id,
-        name,
-        deleted,
-        color,
-        real_name,
-        tz,
-        tz_label,
-        tz_offset,
-        updated,
-        locale,
-        profile,
-        flags
-      )
-    }
+    def createSlackUserInfoDecoder(): Decoder[SlackUserInfo] =
+      ( c: HCursor) => {
+        for {
+          id        <- c.downField( "id" ).as[SlackUserId]
+          team_id   <- c.downField( "team_id" ).as[Option[SlackTeamId]]
+          name      <- c.downField( "name" ).as[Option[String]]
+          deleted   <- c.downField( "deleted" ).as[Option[Boolean]]
+          color     <- c.downField( "color" ).as[Option[String]]
+          real_name <- c.downField( "real_name" ).as[Option[String]]
+          tz        <- c.downField( "tz" ).as[Option[String]]
+          tz_label  <- c.downField( "tz_label" ).as[Option[String]]
+          tz_offset <- c.downField( "tz_offset" ).as[Option[Int]]
+          updated   <- c.downField( "updated" ).as[Option[SlackDateTime]]
+          locale    <- c.downField( "locale" ).as[Option[String]]
+          profile   <- c.downField( "profile" ).as[Option[SlackUserProfile]]
+          flags     <- c.as[SlackUserFlags]
+        } yield SlackUserInfo(
+          id,
+          team_id,
+          name,
+          deleted,
+          color,
+          real_name,
+          tz,
+          tz_label,
+          tz_offset,
+          updated,
+          locale,
+          profile,
+          flags
+        )
+      }
 
     implicit val encoderUserInfo = createSlackUserInfoEncoder()
     implicit val decoderUserInfo = createSlackUserInfoDecoder()
 
     implicit val encoderSlackUserBasicInfo: Encoder.AsObject[SlackBasicUserInfo] = deriveEncoder[SlackBasicUserInfo]
-    implicit val decoderSlackUserBasicInfo: Decoder[SlackBasicUserInfo] = deriveDecoder[SlackBasicUserInfo]
+    implicit val decoderSlackUserBasicInfo: Decoder[SlackBasicUserInfo]          = deriveDecoder[SlackBasicUserInfo]
 
     def messageEncoderDefinition[T]( converter: JsonTaggedAdtEncoder[T], obj: T ): JsonObject = {
       // converting our case classes accordingly to obj instance type
@@ -308,7 +313,7 @@ package object codecs {
       // Our custom JSON structure
       val baseObject =
         JsonObject(
-          "type" -> SlackTypeValue.asJson,
+          "type"    -> SlackTypeValue.asJson,
           "subtype" -> subTypeValue.asJson
         )
 
@@ -382,22 +387,22 @@ package object codecs {
     implicit val decoderSlackRichBlockElement: Decoder[SlackRichBlockElement] =
       JsonTaggedAdtCodec.createDecoder[SlackRichBlockElement]( "type" )
 
-    implicit val encoderSlackInputBlock: Encoder.AsObject[SlackInputBlock] = deriveEncoder[SlackInputBlock]
-    implicit val decoderSlackInputBlock: Decoder[SlackInputBlock] = deriveDecoder[SlackInputBlock]
-    implicit val encoderSlackSectionBlock: Encoder.AsObject[SlackSectionBlock] = deriveEncoder[SlackSectionBlock]
-    implicit val decoderSlackSectionBlock: Decoder[SlackSectionBlock] = deriveDecoder[SlackSectionBlock]
+    implicit val encoderSlackInputBlock: Encoder.AsObject[SlackInputBlock]       = deriveEncoder[SlackInputBlock]
+    implicit val decoderSlackInputBlock: Decoder[SlackInputBlock]                = deriveDecoder[SlackInputBlock]
+    implicit val encoderSlackSectionBlock: Encoder.AsObject[SlackSectionBlock]   = deriveEncoder[SlackSectionBlock]
+    implicit val decoderSlackSectionBlock: Decoder[SlackSectionBlock]            = deriveDecoder[SlackSectionBlock]
     implicit val encoderSlackRichTextBlock: Encoder.AsObject[SlackRichTextBlock] = deriveEncoder[SlackRichTextBlock]
-    implicit val decoderSlackRichTextBlock: Decoder[SlackRichTextBlock] = deriveDecoder[SlackRichTextBlock]
-    implicit val encoderSlackImageBlock: Encoder.AsObject[SlackImageBlock] = deriveEncoder[SlackImageBlock]
-    implicit val decoderSlackImageBlock: Decoder[SlackImageBlock] = deriveDecoder[SlackImageBlock]
-    implicit val encoderSlackDividerBlock: Encoder.AsObject[SlackDividerBlock] = deriveEncoder[SlackDividerBlock]
-    implicit val decoderSlackDividerBlock: Decoder[SlackDividerBlock] = deriveDecoder[SlackDividerBlock]
-    implicit val encoderSlackContextBlock: Encoder.AsObject[SlackContextBlock] = deriveEncoder[SlackContextBlock]
-    implicit val decoderSlackContextBlock: Decoder[SlackContextBlock] = deriveDecoder[SlackContextBlock]
-    implicit val encoderSlackFileBlock: Encoder.AsObject[SlackFileBlock] = deriveEncoder[SlackFileBlock]
-    implicit val decoderSlackFileBlock: Decoder[SlackFileBlock] = deriveDecoder[SlackFileBlock]
-    implicit val encoderSlackActionsBlock: Encoder.AsObject[SlackActionsBlock] = deriveEncoder[SlackActionsBlock]
-    implicit val decoderSlackActionsBlock: Decoder[SlackActionsBlock] = deriveDecoder[SlackActionsBlock]
+    implicit val decoderSlackRichTextBlock: Decoder[SlackRichTextBlock]          = deriveDecoder[SlackRichTextBlock]
+    implicit val encoderSlackImageBlock: Encoder.AsObject[SlackImageBlock]       = deriveEncoder[SlackImageBlock]
+    implicit val decoderSlackImageBlock: Decoder[SlackImageBlock]                = deriveDecoder[SlackImageBlock]
+    implicit val encoderSlackDividerBlock: Encoder.AsObject[SlackDividerBlock]   = deriveEncoder[SlackDividerBlock]
+    implicit val decoderSlackDividerBlock: Decoder[SlackDividerBlock]            = deriveDecoder[SlackDividerBlock]
+    implicit val encoderSlackContextBlock: Encoder.AsObject[SlackContextBlock]   = deriveEncoder[SlackContextBlock]
+    implicit val decoderSlackContextBlock: Decoder[SlackContextBlock]            = deriveDecoder[SlackContextBlock]
+    implicit val encoderSlackFileBlock: Encoder.AsObject[SlackFileBlock]         = deriveEncoder[SlackFileBlock]
+    implicit val decoderSlackFileBlock: Decoder[SlackFileBlock]                  = deriveDecoder[SlackFileBlock]
+    implicit val encoderSlackActionsBlock: Encoder.AsObject[SlackActionsBlock]   = deriveEncoder[SlackActionsBlock]
+    implicit val decoderSlackActionsBlock: Decoder[SlackActionsBlock]            = deriveDecoder[SlackActionsBlock]
 
     implicit val encoderSlackBlock: Encoder[SlackBlock] = JsonTaggedAdtCodec.createEncoder[SlackBlock]( "type" )
     implicit val decoderSlackBlock: Decoder[SlackBlock] = JsonTaggedAdtCodec.createDecoder[SlackBlock]( "type" )
@@ -606,16 +611,16 @@ package object codecs {
 
     implicit val encoderSlackMessageReplyInfo: Encoder.AsObject[SlackMessageReplyInfo] =
       deriveEncoder[SlackMessageReplyInfo]
-    implicit val decoderSlackMessageReplyInfo: Decoder[SlackMessageReplyInfo] = deriveDecoder[SlackMessageReplyInfo]
+    implicit val decoderSlackMessageReplyInfo: Decoder[SlackMessageReplyInfo]    = deriveDecoder[SlackMessageReplyInfo]
     implicit val encoderSlackMessageEdited: Encoder.AsObject[SlackMessageEdited] = deriveEncoder[SlackMessageEdited]
-    implicit val decoderSlackMessageEdited: Decoder[SlackMessageEdited] = deriveDecoder[SlackMessageEdited]
+    implicit val decoderSlackMessageEdited: Decoder[SlackMessageEdited]          = deriveDecoder[SlackMessageEdited]
 
     implicit val encoderSlackUserMessage: Encoder.AsObject[SlackUserMessage] = deriveEncoder[SlackUserMessage]
-    implicit val decoderSlackUserMessage: Decoder[SlackUserMessage] = deriveDecoder[SlackUserMessage]
-    implicit val encoderSlackMeMessage: Encoder.AsObject[SlackMeMessage] = deriveEncoder[SlackMeMessage]
-    implicit val decoderSlackMeMessage: Decoder[SlackMeMessage] = deriveDecoder[SlackMeMessage]
-    implicit val encoderSlackBotMessage: Encoder.AsObject[SlackBotMessage] = deriveEncoder[SlackBotMessage]
-    implicit val decoderSlackBotMessage: Decoder[SlackBotMessage] = deriveDecoder[SlackBotMessage]
+    implicit val decoderSlackUserMessage: Decoder[SlackUserMessage]          = deriveDecoder[SlackUserMessage]
+    implicit val encoderSlackMeMessage: Encoder.AsObject[SlackMeMessage]     = deriveEncoder[SlackMeMessage]
+    implicit val decoderSlackMeMessage: Decoder[SlackMeMessage]              = deriveDecoder[SlackMeMessage]
+    implicit val encoderSlackBotMessage: Encoder.AsObject[SlackBotMessage]   = deriveEncoder[SlackBotMessage]
+    implicit val decoderSlackBotMessage: Decoder[SlackBotMessage]            = deriveDecoder[SlackBotMessage]
 
     implicit val encoderSlackChannelJoinMessage: Encoder.AsObject[SlackChannelJoinMessage] =
       deriveEncoder[SlackChannelJoinMessage]
@@ -716,34 +721,36 @@ package object codecs {
       }
 
     implicit val encoderSlackModalView: Encoder.AsObject[SlackModalView] = deriveEncoder[SlackModalView]
-    implicit val decoderSlackModalView: Decoder[SlackModalView] = deriveDecoder[SlackModalView]
-    implicit val encoderSlackHomeView: Encoder.AsObject[SlackHomeView] = deriveEncoder[SlackHomeView]
-    implicit val decoderSlackHomeView: Decoder[SlackHomeView] = deriveDecoder[SlackHomeView]
+    implicit val decoderSlackModalView: Decoder[SlackModalView]          = deriveDecoder[SlackModalView]
+    implicit val encoderSlackHomeView: Encoder.AsObject[SlackHomeView]   = deriveEncoder[SlackHomeView]
+    implicit val decoderSlackHomeView: Decoder[SlackHomeView]            = deriveDecoder[SlackHomeView]
 
     implicit val encoderSlackView: Encoder.AsObject[SlackView] = JsonTaggedAdtCodec.createEncoder[SlackView]( "type" )
-    implicit val decoderSlackView: Decoder[SlackView] = JsonTaggedAdtCodec.createDecoder[SlackView]( "type" )
+    implicit val decoderSlackView: Decoder[SlackView]          = JsonTaggedAdtCodec.createDecoder[SlackView]( "type" )
 
     implicit val encoderSlackViewState: Encoder.AsObject[SlackViewState] = deriveEncoder[SlackViewState]
-    implicit val decoderSlackViewState: Decoder[SlackViewState] = deriveDecoder[SlackViewState]
+    implicit val decoderSlackViewState: Decoder[SlackViewState]          = deriveDecoder[SlackViewState]
 
     implicit val encoderSlackStatefulViewParams: Encoder.AsObject[SlackStatefulStateParams] =
       deriveEncoder[SlackStatefulStateParams]
 
-    def createSlackStatefulViewEncoder(): Encoder.AsObject[SlackStatefulView] = (model: SlackStatefulView) => {
-      encoderSlackView
-        .encodeObject( model.view )
-        .deepMerge( encoderSlackStatefulViewParams.encodeObject( model.stateParams ) )
-    }
+    def createSlackStatefulViewEncoder(): Encoder.AsObject[SlackStatefulView] =
+      ( model: SlackStatefulView) => {
+        encoderSlackView
+          .encodeObject( model.view )
+          .deepMerge( encoderSlackStatefulViewParams.encodeObject( model.stateParams ) )
+      }
 
-    def createSlackStatefulViewDecoder(): Decoder[SlackStatefulView] = (cursor: HCursor) => {
-      for {
-        view <- cursor.as[SlackView]
-        stateParams <- cursor.as[SlackStatefulStateParams]( deriveDecoder[SlackStatefulStateParams] )
-      } yield SlackStatefulView(
-        stateParams,
-        view
-      )
-    }
+    def createSlackStatefulViewDecoder(): Decoder[SlackStatefulView] =
+      ( cursor: HCursor) => {
+        for {
+          view        <- cursor.as[SlackView]
+          stateParams <- cursor.as[SlackStatefulStateParams]( deriveDecoder[SlackStatefulStateParams] )
+        } yield SlackStatefulView(
+          stateParams,
+          view
+        )
+      }
 
     implicit val encoderSlackStatefulView = createSlackStatefulViewEncoder()
     implicit val decoderSlackStatefulView = createSlackStatefulViewDecoder()
@@ -1009,7 +1016,7 @@ package object codecs {
       deriveDecoder[SlackUrlVerificationEvent]
 
     implicit val encoderSlackEventCallback: Encoder.AsObject[SlackEventCallback] = deriveEncoder[SlackEventCallback]
-    implicit val decoderSlackEventCallback: Decoder[SlackEventCallback] = deriveDecoder[SlackEventCallback]
+    implicit val decoderSlackEventCallback: Decoder[SlackEventCallback]          = deriveDecoder[SlackEventCallback]
 
     implicit val encoderSlackAppRateLimitedEvent: Encoder.AsObject[SlackAppRateLimitedEvent] =
       deriveEncoder[SlackAppRateLimitedEvent]
@@ -1049,10 +1056,10 @@ package object codecs {
       deriveDecoder[SlackApiAuthTestResponse]
 
     implicit val encoderSlackApiBotsInfo: Encoder.AsObject[SlackApiBotsInfo] = deriveEncoder[SlackApiBotsInfo]
-    implicit val decoderSlackApiBotsInfo: Decoder[SlackApiBotsInfo] = deriveDecoder[SlackApiBotsInfo]
+    implicit val decoderSlackApiBotsInfo: Decoder[SlackApiBotsInfo]          = deriveDecoder[SlackApiBotsInfo]
 
     implicit val encoderSlackApiBotsProfile: Encoder.AsObject[SlackApiBotsProfile] = deriveEncoder[SlackApiBotsProfile]
-    implicit val decoderSlackApiBotsProfile: Decoder[SlackApiBotsProfile] = deriveDecoder[SlackApiBotsProfile]
+    implicit val decoderSlackApiBotsProfile: Decoder[SlackApiBotsProfile]          = deriveDecoder[SlackApiBotsProfile]
 
     implicit val encoderSlackApiChatDeleteRequest: Encoder.AsObject[SlackApiChatDeleteRequest] =
       deriveEncoder[SlackApiChatDeleteRequest]
@@ -1497,7 +1504,7 @@ package object codecs {
       deriveDecoder[SlackApiDndTeamInfoRequest]
 
     implicit val encoderSlackApiDndUserInfo: Encoder.AsObject[SlackApiDndUserInfo] = deriveEncoder[SlackApiDndUserInfo]
-    implicit val decoderSlackApiDndUserInfo: Decoder[SlackApiDndUserInfo] = deriveDecoder[SlackApiDndUserInfo]
+    implicit val decoderSlackApiDndUserInfo: Decoder[SlackApiDndUserInfo]          = deriveDecoder[SlackApiDndUserInfo]
 
     implicit val encoderSlackApiDndTeamInfoResponse: Encoder.AsObject[SlackApiDndTeamInfoResponse] =
       deriveEncoder[SlackApiDndTeamInfoResponse]
@@ -1652,7 +1659,7 @@ package object codecs {
       deriveDecoder[SlackApiTeamProfileGetResponse]
 
     implicit val encoderSlackApiTestRequest: Encoder.AsObject[SlackApiTestRequest] = deriveEncoder[SlackApiTestRequest]
-    implicit val decoderSlackApiTestRequest: Decoder[SlackApiTestRequest] = deriveDecoder[SlackApiTestRequest]
+    implicit val decoderSlackApiTestRequest: Decoder[SlackApiTestRequest]          = deriveDecoder[SlackApiTestRequest]
 
     implicit val encoderSlackApiTestResponse: Encoder.AsObject[SlackApiTestResponse] =
       deriveEncoder[SlackApiTestResponse]

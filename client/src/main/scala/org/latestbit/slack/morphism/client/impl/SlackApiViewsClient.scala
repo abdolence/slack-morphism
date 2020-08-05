@@ -34,8 +34,8 @@ trait SlackApiViewsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/views.open
      */
-    def open( req: SlackApiViewsOpenRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def open( req: SlackApiViewsOpenRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiViewsOpenResponse]] = {
 
@@ -49,8 +49,8 @@ trait SlackApiViewsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/views.publish
      */
-    def publish( req: SlackApiViewsPublishRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def publish( req: SlackApiViewsPublishRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiViewsPublishResponse]] = {
 
@@ -64,8 +64,8 @@ trait SlackApiViewsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/views.push
      */
-    def push( req: SlackApiViewsPushRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def push( req: SlackApiViewsPushRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiViewsPushResponse]] = {
 
@@ -79,8 +79,8 @@ trait SlackApiViewsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/views.update
      */
-    def update( req: SlackApiViewsUpdateRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def update( req: SlackApiViewsUpdateRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiViewsUpdateResponse]] = {
 

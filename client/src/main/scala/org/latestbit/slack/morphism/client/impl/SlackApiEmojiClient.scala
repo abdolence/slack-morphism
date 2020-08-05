@@ -33,8 +33,8 @@ trait SlackApiEmojiClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/emoji.list
      */
-    def list()(
-        implicit slackApiToken: SlackApiToken,
+    def list()( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiEmojiListResponse]] = {
 

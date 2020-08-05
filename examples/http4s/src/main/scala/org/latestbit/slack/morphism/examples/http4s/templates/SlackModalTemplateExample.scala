@@ -27,7 +27,7 @@ class SlackModalTemplateExample() extends SlackModalViewTemplate {
   override def titleText(): SlackBlockPlainText = pt"Test Modal"
 
   override def submitText(): Option[SlackBlockPlainText] = Some( pt"Submit" )
-  override def closeText(): Option[SlackBlockPlainText] = Some( pt"Cancel" )
+  override def closeText(): Option[SlackBlockPlainText]  = Some( pt"Cancel" )
 
   override def renderBlocks(): List[SlackBlock] =
     blocks(

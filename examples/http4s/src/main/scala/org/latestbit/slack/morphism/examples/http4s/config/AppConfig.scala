@@ -22,14 +22,14 @@ package org.latestbit.slack.morphism.examples.http4s.config
  * Example config model
  */
 case class AppConfig(
-    httpServerHost: String = AppConfig.defaultHost,
-    httpServerPort: Int = AppConfig.defaultPort,
+    httpServerHost: String = AppConfig.DefaultHost,
+    httpServerPort: Int = AppConfig.DefaultPort,
     slackAppConfig: SlackAppConfig,
-    databaseDir: String = AppConfig.defaultDatabaseDir
+    databaseDir: String = AppConfig.DefaultDatabaseDir
 )
 
 object AppConfig {
-  final val defaultHost = "0.0.0.0"
-  final val defaultPort = 8080
-  final val defaultDatabaseDir = "data"
+  final val DefaultHost        = "0.0.0.0"
+  final val DefaultPort        = 8080
+  final val DefaultDatabaseDir = "data"
 }

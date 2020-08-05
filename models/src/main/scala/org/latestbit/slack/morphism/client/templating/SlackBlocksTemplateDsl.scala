@@ -38,12 +38,12 @@ trait SlackBlocksTemplateDsl extends SlackBlocksTemplateDslInternals {
 
   protected def dividerBlock = SlackDividerBlock
   protected def sectionBlock = SlackSectionBlock
-  protected def inputBlock = SlackInputBlock
+  protected def inputBlock   = SlackInputBlock
   protected def contextBlock = SlackContextBlock
-  protected def fileBlock = SlackFileBlock
+  protected def fileBlock    = SlackFileBlock
   protected def actionsBlock = SlackActionsBlock
-  protected def imageBlock = SlackImageBlock
-  protected def richBlock = SlackRichTextBlock
+  protected def imageBlock   = SlackImageBlock
+  protected def richBlock    = SlackRichTextBlock
 
   protected def sectionFields( defs: SlackDslItemDef[SlackBlockText]* ): Option[List[SlackBlockText]] =
     noneIfEmptyList( defs.toList.flatten )
@@ -52,23 +52,23 @@ trait SlackBlocksTemplateDsl extends SlackBlocksTemplateDslInternals {
       defs: SlackDslItemDef[T]*
   ): NonEmptyList[T] = NonEmptyList.fromListUnsafe( defs.toList.flatten )
 
-  protected def button = SlackBlockButtonElement
-  protected def image = SlackBlockImageElement
+  protected def button     = SlackBlockButtonElement
+  protected def image      = SlackBlockImageElement
   protected def datePicker = SlackBlockDatePickerElement
 
   protected def overflow = SlackBlockOverflowElement
 
-  protected def usersSelect = SlackBlockUsersListSelectElement
+  protected def usersSelect         = SlackBlockUsersListSelectElement
   protected def conversationsSelect = SlackBlockConversationListSelectElement
-  protected def channelsSelect = SlackBlockChannelsListSelectElement
-  protected def staticSelect = SlackBlockStaticSelectElement
-  protected def externalSelect = SlackBlockExternalSelectElement
+  protected def channelsSelect      = SlackBlockChannelsListSelectElement
+  protected def staticSelect        = SlackBlockStaticSelectElement
+  protected def externalSelect      = SlackBlockExternalSelectElement
 
-  protected def multiUsersSelect = SlackBlockMultiUsersListSelectElement
+  protected def multiUsersSelect         = SlackBlockMultiUsersListSelectElement
   protected def multiConversationsSelect = SlackBlockMultiConversationListSelectElement
-  protected def multiChannelsSelect = SlackBlockMultiChannelsListSelectElement
-  protected def multiStaticSelect = SlackBlockMultiStaticSelectElement
-  protected def multiExternalSelect = SlackBlockMultiExternalSelectElement
+  protected def multiChannelsSelect      = SlackBlockMultiChannelsListSelectElement
+  protected def multiStaticSelect        = SlackBlockMultiStaticSelectElement
+  protected def multiExternalSelect      = SlackBlockMultiExternalSelectElement
 
   protected def radioButtons = SlackBlockRadioButtonsElement
 

@@ -50,48 +50,49 @@ class SlackPushEventsRoutes[F[_] : Sync](
     val dsl = new Http4sDsl[F] {}
     import dsl._
 
-    def onPushEvent( event: SlackPushEvent ) = event match {
-      case urlVerEv: SlackUrlVerificationEvent => {
-        logger.info( s"Received a challenge request:\n${urlVerEv.challenge}" )
-        Ok( urlVerEv.challenge )
-      }
-      case callbackEvent: SlackEventCallback => {
-        extractSlackWorkspaceToken[F]( callbackEvent.team_id ) { implicit slackApiToken =>
-          callbackEvent.event match {
-            case body: SlackAppHomeOpenedEvent => {
-              logger.info( s"User opened home: ${body}" )
+    def onPushEvent( event: SlackPushEvent ) =
+      event match {
+        case urlVerEv: SlackUrlVerificationEvent => {
+          logger.info( s"Received a challenge request:\n${urlVerEv.challenge}" )
+          Ok( urlVerEv.challenge )
+        }
+        case callbackEvent: SlackEventCallback => {
+          extractSlackWorkspaceToken[F]( callbackEvent.team_id ) { implicit slackApiToken =>
+            callbackEvent.event match {
+              case body: SlackAppHomeOpenedEvent => {
+                logger.info( s"User opened home: ${body}" )
 
-              if (body.tab == "home")
-                updateHomeTab( body.user )
-              else {
-                sendWelcomeMessage( body.channel, body.user )
+                if (body.tab == "home")
+                  updateHomeTab( body.user )
+                else {
+                  sendWelcomeMessage( body.channel, body.user )
+                }
               }
-            }
-            case msg: SlackUserMessage => {
-              logger.info(
-                s"Received a user message '${msg.text.getOrElse( "-" )}' in ${msg.channel.getOrElse( "-" )}"
-              )
-              sendReplyToMsg( msg )
-            }
+              case msg: SlackUserMessage => {
+                logger.info(
+                  s"Received a user message '${msg.text.getOrElse( "-" )}' in ${msg.channel.getOrElse( "-" )}"
+                )
+                sendReplyToMsg( msg )
+              }
 
-            case removeToken: SlackTokensRevokedEvent => {
-              removeTokens( callbackEvent.team_id, removeToken )
-            }
+              case removeToken: SlackTokensRevokedEvent => {
+                removeTokens( callbackEvent.team_id, removeToken )
+              }
 
-            case unknownBody: SlackEventCallbackBody => {
-              logger.warn( s"We don't handle this callback event we received in this example: ${unknownBody}" )
-              Ok()
+              case unknownBody: SlackEventCallbackBody => {
+                logger.warn( s"We don't handle this callback event we received in this example: ${unknownBody}" )
+                Ok()
+              }
             }
           }
         }
-      }
 
-      case pushEvent: SlackPushEvent => {
-        logger.warn( s"We don't handle this push event we received in this example: ${pushEvent}" )
-        Ok()
-      }
+        case pushEvent: SlackPushEvent => {
+          logger.warn( s"We don't handle this push event we received in this example: ${pushEvent}" )
+          Ok()
+        }
 
-    }
+      }
 
     def sendReplyToMsg( msg: SlackUserMessage )( implicit apiToken: SlackApiToken ) = {
       val template = new SlackSampleMessageReplyTemplateExample( msg.text.getOrElse( "" ) )
@@ -156,8 +157,8 @@ class SlackPushEventsRoutes[F[_] : Sync](
         }
     }
 
-    def sendWelcomeMessage( channelId: SlackChannelId, userId: SlackUserId )(
-        implicit slackApiToken: SlackApiToken
+    def sendWelcomeMessage( channelId: SlackChannelId, userId: SlackUserId )( implicit
+        slackApiToken: SlackApiToken
     ): F[Response[F]] = {
       EitherT(
         slackApiClient.conversations
@@ -165,25 +166,24 @@ class SlackPushEventsRoutes[F[_] : Sync](
             SlackApiConversationsHistoryRequest( channel = channelId, limit = Some( 5 ) )
           )
       ).map { channelHistoryResp =>
-          if (channelHistoryResp.messages.isEmpty) {
-            val template = new SlackWelcomeMessageTemplateExample( userId )
-            slackApiClient.chat
-              .postMessage(
-                SlackApiChatPostMessageRequest(
-                  channel = channelId,
-                  text = template.renderPlainText(),
-                  blocks = template.renderBlocks()
-                )
+        if (channelHistoryResp.messages.isEmpty) {
+          val template = new SlackWelcomeMessageTemplateExample( userId )
+          slackApiClient.chat
+            .postMessage(
+              SlackApiChatPostMessageRequest(
+                channel = channelId,
+                text = template.renderPlainText(),
+                blocks = template.renderBlocks()
               )
-              .map { publishResp =>
-                logger.info( s"Home view for ${userId} has been published: ${publishResp}" )
-                ()
-              }
-          } else {
-            ()
-          }
+            )
+            .map { publishResp =>
+              logger.info( s"Home view for ${userId} has been published: ${publishResp}" )
+              ()
+            }
+        } else {
+          ()
         }
-        .value
+      }.value
         .flatMap {
           case Right( _ ) => {
             Ok()

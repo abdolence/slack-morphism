@@ -41,7 +41,7 @@ trait SlackEventsMiddleware extends StrictLogging {
       config: AppConfig,
       req: Request[F]
   ): F[Either[SlackSignatureVerificationError, String]] = {
-    req.bodyAsText.compile
+    req.bodyText.compile
       .fold( "" )( _ ++ _ )
       .flatMap { body =>
         Sync[F].delay(

@@ -36,7 +36,7 @@ class SlackApiResponseScroller[F[_] : SlackApiClientBackend.BackendType, IT, PT,
     batchLoader: PT => F[Either[SlackApiClientError, SR]]
 ) extends LazyScalaCollectionSupport[F, IT, PT, SR] {
 
-  type AsyncItemType = Either[SlackApiClientError, SR]
+  type AsyncItemType  = Either[SlackApiClientError, SR]
   type AsyncValueType = Either[SlackApiClientError, Iterable[IT]]
 
   /**

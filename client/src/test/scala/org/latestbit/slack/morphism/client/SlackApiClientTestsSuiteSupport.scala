@@ -55,8 +55,8 @@ trait SlackApiClientTestsSuiteSupport {
     }
   }
 
-  protected def isExpectedJsonBody[RQ]( requestBody: RequestBody[_], expectedRequestBody: RQ )(
-      implicit encoder: Encoder.AsObject[RQ]
+  protected def isExpectedJsonBody[RQ]( requestBody: RequestBody[_], expectedRequestBody: RQ )( implicit
+      encoder: Encoder.AsObject[RQ]
   ): Boolean = {
     requestBody match {
       case StringBody( value, _, _ ) => {

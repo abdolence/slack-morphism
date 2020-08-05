@@ -30,7 +30,7 @@ import scala.concurrent.duration._
 object Main extends App with StrictLogging {
 
   val AppName = "Slack-Morphism-Example"
-  val AppVer = "0.1.0"
+  val AppVer  = "0.1.0"
 
   private def addShutdownHook( hook: () => Unit ) = {
     Runtime.getRuntime.addShutdownHook( new Thread() {

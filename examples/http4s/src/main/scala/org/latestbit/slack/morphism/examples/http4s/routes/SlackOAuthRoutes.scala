@@ -54,8 +54,8 @@ class SlackOAuthRoutes[F[_] : Sync](
     HttpRoutes.of[F] {
       case GET -> Root / basePath / "install" => {
         val baseParams: Map[String, String] = List[( String, Option[String] )](
-          "client_id" -> Option( config.slackAppConfig.clientId ),
-          "scope" -> Option( config.slackAppConfig.botScope ),
+          "client_id"    -> Option( config.slackAppConfig.clientId ),
+          "scope"        -> Option( config.slackAppConfig.botScope ),
           "redirect_uri" -> config.slackAppConfig.redirectUrl
         ).flatMap { case ( k, v ) => v.map( k -> _ ) }.toMap
 
@@ -76,22 +76,21 @@ class SlackOAuthRoutes[F[_] : Sync](
                 redirectUri = config.slackAppConfig.redirectUrl
               )
             ).flatMap { tokens =>
-                logger.info( s"Received OAuth access tokens: ${tokens}" )
-                EitherT(
-                  tokensDb
-                    .insertToken(
-                      teamId = tokens.team.id,
-                      SlackTokensDb.TokenRecord(
-                        tokenType = tokens.token_type,
-                        scope = tokens.scope,
-                        tokenValue = tokens.access_token,
-                        userId = tokens.bot_user_id.getOrElse( tokens.authed_user.id )
-                      )
+              logger.info( s"Received OAuth access tokens: ${tokens}" )
+              EitherT(
+                tokensDb
+                  .insertToken(
+                    teamId = tokens.team.id,
+                    SlackTokensDb.TokenRecord(
+                      tokenType = tokens.token_type,
+                      scope = tokens.scope,
+                      tokenValue = tokens.access_token,
+                      userId = tokens.bot_user_id.getOrElse( tokens.authed_user.id )
                     )
-                    .map( _.asRight[SlackApiError] )
-                )
-              }
-              .value
+                  )
+                  .map( _.asRight[SlackApiError] )
+              )
+            }.value
               .flatMap {
                 case Right( _ ) => {
                   Ok( "Installed" )

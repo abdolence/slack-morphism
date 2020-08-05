@@ -33,8 +33,8 @@ trait SlackApiDndClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/dnd.endDnd
      */
-    def endDnd()(
-        implicit slackApiToken: SlackApiUserToken,
+    def endDnd()( implicit
+        slackApiToken: SlackApiUserToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiDndEndDndResponse]] = {
 
@@ -48,8 +48,8 @@ trait SlackApiDndClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/dnd.endSnooze
      */
-    def endSnooze()(
-        implicit slackApiToken: SlackApiUserToken,
+    def endSnooze()( implicit
+        slackApiToken: SlackApiUserToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiDndEndSnoozeResponse]] = {
 
@@ -63,8 +63,8 @@ trait SlackApiDndClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/dnd.info
      */
-    def info( req: SlackApiDndInfoRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def info( req: SlackApiDndInfoRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiDndInfoResponse]] = {
 
@@ -80,8 +80,8 @@ trait SlackApiDndClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/dnd.setSnooze
      */
-    def setSnooze()(
-        implicit slackApiToken: SlackApiUserToken,
+    def setSnooze()( implicit
+        slackApiToken: SlackApiUserToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiDndSetSnoozeResponse]] = {
 
@@ -95,8 +95,8 @@ trait SlackApiDndClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     /**
      * https://api.slack.com/methods/dnd.teamInfo
      */
-    def teamInfo( req: SlackApiDndTeamInfoRequest )(
-        implicit slackApiToken: SlackApiToken,
+    def teamInfo( req: SlackApiDndTeamInfoRequest )( implicit
+        slackApiToken: SlackApiToken,
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiDndTeamInfoResponse]] = {
 

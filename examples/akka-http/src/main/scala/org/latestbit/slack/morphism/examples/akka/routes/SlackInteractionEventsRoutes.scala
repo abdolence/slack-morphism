@@ -36,8 +36,8 @@ import cats.instances.future._
 import org.latestbit.slack.morphism.common.{ SlackTeamId, SlackTriggerId }
 import org.latestbit.slack.morphism.examples.akka.config.AppConfig
 
-class SlackInteractionEventsRoutes(
-    implicit ctx: ActorContext[_],
+class SlackInteractionEventsRoutes( implicit
+    ctx: ActorContext[_],
     materializer: ActorMaterializer,
     config: AppConfig,
     slackApiClient: SlackApiClientT[Future],

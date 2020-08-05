@@ -89,8 +89,8 @@ trait SlackApiHttpProtocolSupport[F[_]] extends SlackApiClientBackend[F] {
     decode[SlackGeneralResponseParams]( body )
   }
 
-  protected def decodeSlackResponse[RS]( uri: Uri, response: Response[Either[String, String]] )(
-      implicit decoder: Decoder[RS]
+  protected def decodeSlackResponse[RS]( uri: Uri, response: Response[Either[String, String]] )( implicit
+      decoder: Decoder[RS]
   ): Either[SlackApiClientError, RS] = {
     val responseMediaType =
       response.contentType.map( MediaType.parse ).flatMap( _.toOption )
@@ -147,8 +147,8 @@ trait SlackApiHttpProtocolSupport[F[_]] extends SlackApiClientBackend[F] {
     }
   }
 
-  protected def sendSlackRequest[RS]( request: Request[Either[String, String], Nothing] )(
-      implicit decoder: Decoder[RS],
+  protected def sendSlackRequest[RS]( request: Request[Either[String, String], Nothing] )( implicit
+      decoder: Decoder[RS],
       backendType: SlackApiClientBackend.BackendType[F]
   ): F[Either[SlackApiClientError, RS]] = {
     request.send().map( response => decodeSlackResponse[RS]( request.uri, response ) ).recoverWith {
@@ -163,8 +163,8 @@ trait SlackApiHttpProtocolSupport[F[_]] extends SlackApiClientBackend[F] {
       request: Request[Either[String, String], Nothing],
       methodRateControl: Option[SlackApiMethodRateControlParams],
       slackApiToken: Option[SlackApiToken]
-  )(
-      implicit decoder: Decoder[RS],
+  )( implicit
+      decoder: Decoder[RS],
       backendType: SlackApiClientBackend.BackendType[F]
   ): F[Either[SlackApiClientError, RS]] = {
 
@@ -201,8 +201,8 @@ trait SlackApiHttpProtocolSupport[F[_]] extends SlackApiClientBackend[F] {
       request: RequestT[Empty, Either[String, String], Nothing],
       body: RQ,
       methodRateControl: Option[SlackApiMethodRateControlParams]
-  )(
-      implicit slackApiToken: SlackApiToken,
+  )( implicit
+      slackApiToken: SlackApiToken,
       encoder: Encoder[RQ],
       decoder: Decoder[RS],
       backendType: SlackApiClientBackend.BackendType[F]
@@ -221,8 +221,8 @@ trait SlackApiHttpProtocolSupport[F[_]] extends SlackApiClientBackend[F] {
       methodUri: String,
       body: RQ,
       methodRateControl: Option[SlackApiMethodRateControlParams]
-  )(
-      implicit slackApiToken: SlackApiToken,
+  )( implicit
+      slackApiToken: SlackApiToken,
       encoder: Encoder[RQ],
       decoder: Decoder[RS],
       backendType: SlackApiClientBackend.BackendType[F]
@@ -240,8 +240,8 @@ trait SlackApiHttpProtocolSupport[F[_]] extends SlackApiClientBackend[F] {
       request: RequestT[Empty, Either[String, String], Nothing],
       params: Map[String, Option[String]],
       methodRateControl: Option[SlackApiMethodRateControlParams]
-  )(
-      implicit slackApiToken: SlackApiToken,
+  )( implicit
+      slackApiToken: SlackApiToken,
       decoder: Decoder[RS],
       backendType: SlackApiClientBackend.BackendType[F]
   ): F[Either[SlackApiClientError, RS]] = {
@@ -293,8 +293,8 @@ trait SlackApiHttpProtocolSupport[F[_]] extends SlackApiClientBackend[F] {
         methodUri: String,
         params: Map[String, Option[String]] = Map(),
         methodRateControl: Option[SlackApiMethodRateControlParams] = None
-    )(
-        implicit slackApiToken: SlackApiToken,
+    )( implicit
+        slackApiToken: SlackApiToken,
         decoder: Decoder[RS],
         backendType: SlackApiClientBackend.BackendType[F],
         methodMaxRateLimitDelay: Option[FiniteDuration] = None
@@ -311,7 +311,8 @@ trait SlackApiHttpProtocolSupport[F[_]] extends SlackApiClientBackend[F] {
      * @return Decoded from JSON result
      */
     def post[RQ, RS]( methodUri: String, req: RQ, methodRateControl: Option[SlackApiMethodRateControlParams] = None )(
-        implicit slackApiToken: SlackApiToken,
+        implicit
+        slackApiToken: SlackApiToken,
         encoder: Encoder[RQ],
         decoder: Decoder[RS],
         backendType: SlackApiClientBackend.BackendType[F]
@@ -328,7 +329,7 @@ trait SlackApiHttpProtocolSupport[F[_]] extends SlackApiClientBackend[F] {
 }
 
 object SlackApiHttpProtocolSupport {
-  final val SlackBaseUri = "https://slack.com/api"
+  final val SlackBaseUri         = "https://slack.com/api"
   final val SlackApiCharEncoding = "UTF-8"
 
   final val SlackJsonPrinter = SlackCirceJsonSettings.printer

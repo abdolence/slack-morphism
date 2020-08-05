@@ -34,9 +34,9 @@ import scala.language.implicitConversions
 trait SlackBlocksTemplateDslInternals {
 
   protected sealed trait SlackDslItemDef[+T]
-  protected case class SlackDslSomeItem[+T]( item: () => T ) extends SlackDslItemDef[T]
+  protected case class SlackDslSomeItem[+T]( item: () => T )                     extends SlackDslItemDef[T]
   protected case class SlackDslSomeIterableOfItem[+T]( item: () => Iterable[T] ) extends SlackDslItemDef[T]
-  protected case object SlackDslNoneItem extends SlackDslItemDef[Nothing]
+  protected case object SlackDslNoneItem                                         extends SlackDslItemDef[Nothing]
 
   protected implicit final def slackBlockToDef( block: => SlackBlock ) =
     SlackDslSomeItem[SlackBlock]( () => block )
@@ -64,11 +64,12 @@ trait SlackBlocksTemplateDslInternals {
   protected implicit def slackBlocksListToOption( blocks: List[SlackBlock] ): Option[List[SlackBlock]] =
     noneIfEmptyList( blocks )
 
-  protected implicit def slackDslItemDefToIterable[T]( itemDef: SlackDslItemDef[T] ): Iterable[T] = itemDef match {
-    case SlackDslSomeItem( item )            => List( item() ) // We can't use Iterable.single( item() ) in Scala 2.12
-    case SlackDslSomeIterableOfItem( items ) => items()
-    case SlackDslNoneItem                    => Iterable.empty
-  }
+  protected implicit def slackDslItemDefToIterable[T]( itemDef: SlackDslItemDef[T] ): Iterable[T] =
+    itemDef match {
+      case SlackDslSomeItem( item )            => List( item() ) // We can't use Iterable.single( item() ) in Scala 2.12
+      case SlackDslSomeIterableOfItem( items ) => items()
+      case SlackDslNoneItem                    => Iterable.empty
+    }
 
   protected implicit final def slackDslListInnerItemsToListItems[T]( items: => Iterable[Iterable[T]] ) =
     SlackDslSomeIterableOfItem[T]( () => items.flatten )
@@ -98,10 +99,11 @@ trait SlackBlocksTemplateDslInternals {
     def pt( subs: Any* ) = plain( subs: _* )
   }
 
-  private[templating] def noneIfEmptyList[T]( xs: => List[T] ): Option[List[T]] = xs match {
-    case Nil => None
-    case xs  => Some( xs )
-  }
+  private[templating] def noneIfEmptyList[T]( xs: => List[T] ): Option[List[T]] =
+    xs match {
+      case Nil => None
+      case xs  => Some( xs )
+    }
 
   private[templating] def optElement[T]( condition: => Boolean, element: => T ): SlackDslItemDef[T] =
     if (condition)

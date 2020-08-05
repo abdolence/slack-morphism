@@ -41,7 +41,7 @@ import org.latestbit.slack.morphism.examples.akka.config.AppConfig
 object AkkaHttpServer extends StrictLogging {
   sealed trait Command
   case class Start( config: AppConfig ) extends Command
-  case class Stop() extends Command
+  case class Stop()                     extends Command
 
   val run: Behavior[Command] = runBehavior( None )
 
@@ -52,9 +52,9 @@ object AkkaHttpServer extends StrictLogging {
 
   private def runBehavior( serverState: Option[HttpServerState] ): Behavior[Command] =
     Behaviors.setup { implicit context =>
-      implicit val system = context.system
-      implicit val classicSystem = context.system.toClassic
-      implicit val materializer = ActorMaterializer()
+      implicit val system                       = context.system
+      implicit val classicSystem                = context.system.toClassic
+      implicit val materializer                 = ActorMaterializer()
       implicit val ec: ExecutionContextExecutor = context.system.executionContext
 
       Behaviors.receiveMessage {
@@ -71,10 +71,10 @@ object AkkaHttpServer extends StrictLogging {
 
           tokensDbRef ! SlackTokensDb.OpenDb( config )
 
-          val slackPushEventsRoute = new SlackPushEventsRoutes()
-          val slackOAuthRoute = new SlackOAuthRoutes()
+          val slackPushEventsRoute        = new SlackPushEventsRoutes()
+          val slackOAuthRoute             = new SlackOAuthRoutes()
           val slackInteractionEventsRoute = new SlackInteractionEventsRoutes()
-          val slackCommandEventsRoute = new SlackCommandEventsRoutes()
+          val slackCommandEventsRoute     = new SlackCommandEventsRoutes()
 
           val allRoutes: Route = {
             ignoreTrailingSlash {

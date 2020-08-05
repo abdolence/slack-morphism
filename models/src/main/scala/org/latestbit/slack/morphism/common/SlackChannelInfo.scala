@@ -88,7 +88,7 @@ object SlackChannelInfo {
       creator: Option[String] = None,
       last_set: Option[SlackDateTime] = None
   )
-  type SlackTopicInfo = SlackChannelDetails
+  type SlackTopicInfo   = SlackChannelDetails
   type SlackPurposeInfo = SlackChannelDetails
 }
 

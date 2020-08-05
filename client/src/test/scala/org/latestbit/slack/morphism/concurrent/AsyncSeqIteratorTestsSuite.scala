@@ -36,9 +36,10 @@ class AsyncSeqIteratorTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenProp
     Gen.choose( 1, maxSize ).flatMap { sz => Gen.listOfN( sz, g ) }
   }
 
-  def initialItem(): Future[MyItem] = Future.successful(
-    MyItem( "initial", Some( 1 ) )
-  )
+  def initialItem(): Future[MyItem] =
+    Future.successful(
+      MyItem( "initial", Some( 1 ) )
+    )
 
   def nextItem( position: Int ): Future[MyItem] = {
     if (position < 10) {
@@ -98,8 +99,8 @@ class AsyncSeqIteratorTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenProp
 
   it should "provide a foreach function" in {
     var testEffect: List[String] = List()
-    val testExecutor = Executors.newSingleThreadExecutor()
-    val testExecutorContext = ExecutionContext.fromExecutor( testExecutor )
+    val testExecutor             = Executors.newSingleThreadExecutor()
+    val testExecutorContext      = ExecutionContext.fromExecutor( testExecutor )
     createIterator()( testExecutorContext ).foreach { testIterRes =>
       testEffect = testEffect :+ testIterRes
       if (testIterRes == "last") {

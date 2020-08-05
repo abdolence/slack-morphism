@@ -44,7 +44,7 @@ case class SlackApiConversationsRepliesResponse(
     response_metadata: Option[SlackApiResponseMetadata] = None
 ) extends SlackApiScrollableResponse[SlackMessage, SlackCursorId] {
 
-  override def items: List[SlackMessage] = messages
+  override def items: List[SlackMessage]           = messages
   override def getLatestPos: Option[SlackCursorId] = response_metadata.flatMap( _.next_cursor )
 
 }
