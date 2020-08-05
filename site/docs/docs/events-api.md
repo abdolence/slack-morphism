@@ -76,9 +76,9 @@ which provides you `verify()`:
 
 To verify event request you need:
 * A complete HTTP request body
-* The following HTTP header values from request:
-    * SlackEventSignatureVerifier.HttpHeaderNames.SIGNED_TIMESTAMP
-    * SlackEventSignatureVerifier.HttpHeaderNames.SIGNED_HASH
+* The following HTTP headers from request (header names constants):
+    * SlackEventSignatureVerifier.HttpHeaderNames.SignedTimestamp
+    * SlackEventSignatureVerifier.HttpHeaderNames.SignedHash
 * Your signing secret from your Slack app profile
 
 ```scala
