@@ -51,7 +51,7 @@ import scala.concurrent.duration._
 import cats.instances.future._
 
 // Defining params based on standard Slack limits
-val params = SlackApiRateControlParams.StandardLimits.DEFAULT_PARAMS.copy(
+val params = SlackApiRateControlParams.StandardLimits.DefaultParams.copy(
       globalMaxRateLimit = Some(
          (100, 1.minute) // 100 requests per minute
       )
@@ -71,7 +71,7 @@ To enable automatic retry of Slack Web API method requests,
 you need to specify `maxRetries` in rate control params (default value is 0):
 
 ```
-val params = SlackApiRateControlParams.StandardLimits.DEFAULT_PARAMS.copy(
+val params = SlackApiRateControlParams.StandardLimits.DefaultParams.copy(
       maxRetries = 3 // retry maximum 3 times
 )
 ```
@@ -83,7 +83,7 @@ to delay your request at least that value.
 Using rate control parameters, you can also enable automatic retrying for other errors additionally to `SlackApiRateLimitedError`:
 
 ```
-val params =  SlackApiRateControlParams.StandardLimits.DEFAULT_PARAMS.copy(
+val params =  SlackApiRateControlParams.StandardLimits.DefaultParams.copy(
     maxRetries = 3 // to retry maximum 3 times,
     retryFor = Set( classOf[SlackApiRateLimitedError], classOf[SlackApiConnectionError] )
 )
