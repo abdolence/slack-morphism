@@ -403,6 +403,8 @@ package object codecs {
     implicit val decoderSlackFileBlock: Decoder[SlackFileBlock]                  = deriveDecoder[SlackFileBlock]
     implicit val encoderSlackActionsBlock: Encoder.AsObject[SlackActionsBlock]   = deriveEncoder[SlackActionsBlock]
     implicit val decoderSlackActionsBlock: Decoder[SlackActionsBlock]            = deriveDecoder[SlackActionsBlock]
+    implicit val encoderSlackHeaderBlock: Encoder.AsObject[SlackHeaderBlock]     = deriveEncoder[SlackHeaderBlock]
+    implicit val decoderSlackHeaderBlock: Decoder[SlackHeaderBlock]              = deriveDecoder[SlackHeaderBlock]
 
     implicit val encoderSlackBlock: Encoder[SlackBlock] = JsonTaggedAdtCodec.createEncoder[SlackBlock]( "type" )
     implicit val decoderSlackBlock: Decoder[SlackBlock] = JsonTaggedAdtCodec.createDecoder[SlackBlock]( "type" )
