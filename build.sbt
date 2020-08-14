@@ -120,7 +120,7 @@ val akkaHttpCirceVersion = "1.30.0"
 val logbackVersion       = "1.2.3"
 val scalaLoggingVersion  = "3.9.2"
 val scoptVersion         = "3.7.1"
-val swayDbVersion        = "0.11"
+val swayDbVersion        = "0.14.4"
 val http4sVersion        = "0.21.1"
 val declineVersion       = "1.0.0"
 
