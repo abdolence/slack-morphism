@@ -102,7 +102,7 @@ val catsVersion                   = "2.1.1"
 val catsEffectVersion             = "2.1.2"
 val circeVersion                  = "0.13.0"
 val scalaCollectionsCompatVersion = "2.1.3"
-val sttpVersion                   = "2.2.3"
+val sttpVersion                   = "2.2.4"
 val circeAdtCodecVersion          = "0.9.1"
 
 // For tests
@@ -110,19 +110,19 @@ val scalaTestVersion    = "3.1.0"
 val scalaCheckVersion   = "1.14.3"
 val scalaTestPlusCheck  = "3.1.1.1"
 val scalaTestPlusTestNG = "3.1.0.0" // reactive publishers tck testing
-val scalaCheckShapeless = "1.2.3"
+val scalaCheckShapeless = "1.2.5"
 val scalaMockVersion    = "4.4.0"
 
 // For full-featured examples we use additional libs
-val akkaVersion          = "2.5.27"
+val akkaVersion          = "2.5.31"
 val akkaHttpVersion      = "10.1.12"
-val akkaHttpCirceVersion = "1.30.0"
+val akkaHttpCirceVersion = "1.34.0"
 val logbackVersion       = "1.2.3"
 val scalaLoggingVersion  = "3.9.2"
 val scoptVersion         = "3.7.1"
 val swayDbVersion        = "0.11"
 val http4sVersion        = "0.21.1"
-val declineVersion       = "1.0.0"
+val declineVersion       = "1.2.0"
 
 // For fs2 integration module
 val fs2Version = "2.4.2"
