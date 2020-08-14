@@ -1,8 +1,7 @@
 package org.latestbit.slack.morphism.examples.http4s
 
-import cats.effect.{ Blocker, ConcurrentEffect, ContextShift, ExitCode, IO, LiftIO, Timer }
+import cats.effect.{ Blocker, ConcurrentEffect, ContextShift, Timer }
 import cats.implicits._
-import cats.effect.implicits._
 import fs2.Stream
 import org.http4s.client.blaze.BlazeClientBuilder
 import org.http4s.implicits._
@@ -45,9 +44,9 @@ object Http4sServer {
                 ).orNotFound
 
       // With Middlewares in place
-      finalHttpApp = Logger.httpApp( true, true )( httpApp )
+      finalHttpApp = Logger.httpApp( logHeaders = true, logBody = true )( httpApp )
 
-      exitCode <- BlazeServerBuilder[F]
+      exitCode <- BlazeServerBuilder[F]( global )
                     .bindHttp( config.httpServerPort, config.httpServerHost )
                     .withHttpApp( finalHttpApp )
                     .serve
