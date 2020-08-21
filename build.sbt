@@ -114,7 +114,7 @@ val scalaCheckShapeless = "1.2.5"
 val scalaMockVersion    = "5.0.0"
 
 // For full-featured examples we use additional libs
-val akkaVersion          = "2.5.31"
+val akkaVersion          = "2.6.8"
 val akkaHttpVersion      = "10.1.12"
 val akkaHttpCirceVersion = "1.34.0"
 val logbackVersion       = "1.2.3"
