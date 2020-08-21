@@ -91,11 +91,7 @@ object AkkaHttpServer extends StrictLogging {
             }
           }
 
-          val binding = Http().bindAndHandle(
-            allRoutes,
-            config.httpServerHost,
-            config.httpServerPort
-          )
+          val binding = Http().newServerAt(config.httpServerHost, config.httpServerPort).bindFlow(allRoutes)
 
           binding onComplete {
             case Success( bound ) =>
