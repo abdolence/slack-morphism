@@ -25,7 +25,6 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
-import akka.stream.typed.scaladsl._
 import com.typesafe.scalalogging._
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.examples.akka.db.SlackTokensDb
@@ -52,9 +51,8 @@ object AkkaHttpServer extends StrictLogging {
 
   private def runBehavior( serverState: Option[HttpServerState] ): Behavior[Command] =
     Behaviors.setup { implicit context =>
-      implicit val system                       = context.system
-      implicit val classicSystem                = context.system.toClassic
-      implicit val materializer                 = ActorMaterializer()
+      implicit val system = context.system
+
       implicit val ec: ExecutionContextExecutor = context.system.executionContext
 
       Behaviors.receiveMessage {
@@ -64,7 +62,7 @@ object AkkaHttpServer extends StrictLogging {
           )
           implicit val appConfig = config
           implicit val akkaSttpBackend: SlackApiClientBackend.SttpBackendType[Future] =
-            AkkaHttpBackend.usingActorSystem( classicSystem )
+            AkkaHttpBackend.usingActorSystem( context.system.toClassic )
           implicit val slackApiClient = SlackApiClient.create()
 
           implicit val tokensDbRef = context.spawnAnonymous( SlackTokensDb.run )
@@ -91,11 +89,14 @@ object AkkaHttpServer extends StrictLogging {
             }
           }
 
-          val binding = Http().bindAndHandle(
-            allRoutes,
-            config.httpServerHost,
-            config.httpServerPort
-          )
+          val binding = Http()
+            .newServerAt(
+              config.httpServerHost,
+              config.httpServerPort
+            )
+            .bindFlow(
+              allRoutes
+            )
 
           binding onComplete {
             case Success( bound ) =>
@@ -125,7 +126,7 @@ object AkkaHttpServer extends StrictLogging {
             }
             state.tokensDbRef ! SlackTokensDb.Close()
           }
-          Behavior.stopped
+          Behaviors.stopped
         }
       }
     }

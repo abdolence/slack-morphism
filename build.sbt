@@ -24,8 +24,6 @@ ThisBuild / crossScalaVersions := Seq( "2.13.3", "2.12.12" )
 
 ThisBuild / scalaVersion := ( ThisBuild / crossScalaVersions).value.head
 
-ThisBuild / sbtVersion := "1.3.9"
-
 ThisBuild / scalacOptions ++= Seq( "-feature" )
 
 ThisBuild / exportJars := true
@@ -114,8 +112,8 @@ val scalaCheckShapeless = "1.2.5"
 val scalaMockVersion    = "5.0.0"
 
 // For full-featured examples we use additional libs
-val akkaVersion          = "2.5.31"
-val akkaHttpVersion      = "10.1.12"
+val akkaVersion          = "2.6.8"
+val akkaHttpVersion      = "10.2.0"
 val akkaHttpCirceVersion = "1.34.0"
 val logbackVersion       = "1.2.3"
 val scalaLoggingVersion  = "3.9.2"
@@ -245,13 +243,10 @@ lazy val slackMorphismAkkaExample =
       name := "slack-morphism-akka",
       libraryDependencies ++= baseDependencies ++ Seq(
         "com.typesafe.akka" %% "akka-http"         % akkaHttpVersion,
-        "com.typesafe.akka" %% "akka-stream-typed" % akkaVersion
-          excludeAll (
-            ExclusionRule( organization = "org.reactivestreams" )
-          ),
-        "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion,
-        "com.github.scopt"  %% "scopt"            % scoptVersion,
-        "ch.qos.logback"     % "logback-classic"  % logbackVersion
+        "com.typesafe.akka" %% "akka-stream-typed" % akkaVersion,
+        "com.typesafe.akka" %% "akka-actor-typed"  % akkaVersion,
+        "com.github.scopt"  %% "scopt"             % scoptVersion,
+        "ch.qos.logback"     % "logback-classic"   % logbackVersion
           exclude ( "org.slf4j", "slf4j-api"),
         "com.typesafe.scala-logging" %% "scala-logging"   % scalaLoggingVersion,
         "de.heikoseeberger"          %% "akka-http-circe" % akkaHttpCirceVersion

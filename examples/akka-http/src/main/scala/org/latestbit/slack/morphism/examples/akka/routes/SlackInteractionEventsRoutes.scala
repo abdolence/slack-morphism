@@ -22,7 +22,6 @@ import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl._
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server._
-import akka.stream.typed.scaladsl.ActorMaterializer
 import com.typesafe.scalalogging._
 import io.circe.parser._
 import org.latestbit.slack.morphism.client.{ SlackApiClient, SlackApiClientT, SlackApiToken }
@@ -38,7 +37,6 @@ import org.latestbit.slack.morphism.examples.akka.config.AppConfig
 
 class SlackInteractionEventsRoutes( implicit
     ctx: ActorContext[_],
-    materializer: ActorMaterializer,
     config: AppConfig,
     slackApiClient: SlackApiClientT[Future],
     slackTokensDb: ActorRef[SlackTokensDb.Command]
@@ -47,6 +45,7 @@ class SlackInteractionEventsRoutes( implicit
     with Directives {
 
   implicit val ec: ExecutionContext = ctx.system.executionContext
+  implicit val actorSystem          = ctx.system
 
   val routes: Route = {
     path( "interaction" ) {

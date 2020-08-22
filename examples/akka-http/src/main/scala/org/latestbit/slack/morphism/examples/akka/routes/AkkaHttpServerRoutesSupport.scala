@@ -24,7 +24,6 @@ import akka.actor.typed.scaladsl.AskPattern._
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server._
 import akka.http.scaladsl.server.Directives._
-import akka.stream.typed.scaladsl.ActorMaterializer
 import akka.util.{ ByteString, Timeout }
 import io.circe.Encoder
 import io.circe.syntax._
@@ -48,7 +47,7 @@ trait AkkaHttpServerRoutesSupport extends org.latestbit.slack.morphism.codecs.Ci
   protected def httpEntityToString(
       entity: HttpEntity,
       charset: HttpCharset = HttpCharsets.`UTF-8`
-  )( implicit ec: ExecutionContext, materializer: ActorMaterializer ): Future[String] = {
+  )( implicit ec: ExecutionContext, system: ActorSystem[_] ): Future[String] = {
     entity.dataBytes.runFold( ByteString() )( _ ++ _ ).map { bs => bs.decodeString( charset.value ) }
   }
 
@@ -61,7 +60,7 @@ trait AkkaHttpServerRoutesSupport extends org.latestbit.slack.morphism.codecs.Ci
 
   def extractSlackSignedRequest( route: String => Route, charset: HttpCharset = HttpCharsets.`UTF-8` )( implicit
       ec: ExecutionContext,
-      materializer: ActorMaterializer,
+      system: ActorSystem[_],
       config: AppConfig
   ) = {
     extractRequestEntity { requestEntity =>

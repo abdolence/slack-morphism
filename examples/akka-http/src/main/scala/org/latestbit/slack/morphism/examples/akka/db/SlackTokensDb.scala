@@ -108,12 +108,12 @@ object SlackTokensDb extends StrictLogging {
                 swayMap.put( teamId, record )
               }
           }
-          Behavior.same
+          Behaviors.same
         }
 
         case ReadTokens( teamId, ref ) => {
           swayMap.foreach { swayMap => swayMap.get( key = teamId ).foreach { record => ref ! record } }
-          Behavior.same
+          Behaviors.same
         }
 
         case RemoveTokens( teamId: SlackTeamId, users: Set[SlackUserId] ) => {
@@ -129,11 +129,11 @@ object SlackTokensDb extends StrictLogging {
                 )
               } )
           }
-          Behavior.same
+          Behaviors.same
         }
 
         case Close() => {
-          Behavior.stopped
+          Behaviors.stopped
         }
       }
     }

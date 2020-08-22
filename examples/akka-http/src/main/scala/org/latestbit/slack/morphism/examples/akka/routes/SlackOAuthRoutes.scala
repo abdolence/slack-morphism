@@ -23,7 +23,6 @@ import akka.actor.typed.scaladsl.ActorContext
 import akka.http.scaladsl.model.Uri.Query
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server._
-import akka.stream.typed.scaladsl.ActorMaterializer
 import com.typesafe.scalalogging.StrictLogging
 import org.latestbit.slack.morphism.client.{ SlackApiClient, SlackApiClientT }
 import org.latestbit.slack.morphism.examples.akka.db.SlackTokensDb
@@ -34,7 +33,6 @@ import org.latestbit.slack.morphism.examples.akka.config.AppConfig
 
 class SlackOAuthRoutes( implicit
     ctx: ActorContext[_],
-    materializer: ActorMaterializer,
     config: AppConfig,
     slackApiClient: SlackApiClientT[Future],
     slackTokensDb: ActorRef[SlackTokensDb.Command]

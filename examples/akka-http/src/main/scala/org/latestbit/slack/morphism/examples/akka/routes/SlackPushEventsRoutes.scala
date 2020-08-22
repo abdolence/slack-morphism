@@ -24,7 +24,6 @@ import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.ActorContext
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server._
-import akka.stream.typed.scaladsl.ActorMaterializer
 import com.typesafe.scalalogging._
 import org.latestbit.slack.morphism.events._
 
@@ -43,7 +42,6 @@ import org.latestbit.slack.morphism.examples.akka.config.AppConfig
 
 class SlackPushEventsRoutes( implicit
     ctx: ActorContext[_],
-    materializer: ActorMaterializer,
     config: AppConfig,
     slackApiClient: SlackApiClientT[Future],
     slackTokensDb: ActorRef[SlackTokensDb.Command]
@@ -52,6 +50,7 @@ class SlackPushEventsRoutes( implicit
     with Directives {
 
   implicit val ec: ExecutionContext = ctx.system.executionContext
+  implicit val actorSystem          = ctx.system
 
   val routes: Route = {
     path( "push" ) {
