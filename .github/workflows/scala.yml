@@ -14,6 +14,6 @@ jobs:
     - name: Run tests
       run: sbt +test
       env:
-        - SBT_OPTS: "-Xmx2G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=2G -Xss10M -Duser.timezone=GMT"
+        SBT_OPTS: "-Xmx2G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=2G -Xss10M -Duser.timezone=GMT"
     - name: Check formatting
       run: sbt scalafmtCheckAll
