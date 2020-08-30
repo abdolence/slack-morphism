@@ -259,7 +259,7 @@ Available DSL terms:
     * `fileBlock` : ["file"](https://api.slack.com/reference/block-kit/blocks#file)
     * `actionsBlock` : ["actions"](https://api.slack.com/reference/block-kit/blocks#actions)
     * `imageBlock` : ["image"](https://api.slack.com/reference/block-kit/blocks#image)
-    * `headerBlock` : ["image"](https://api.slack.com/reference/block-kit/blocks#header)
+    * `headerBlock` : ["header"](https://api.slack.com/reference/block-kit/blocks#header)
 * `blockElements` : list of elements of block (not all blocks support all these elements, it would be checked at the compile time):
     * `button` : ["button"](https://api.slack.com/reference/block-kit/block-elements#button)
     * `image` : ["image"](https://api.slack.com/reference/block-kit/block-elements#image)
