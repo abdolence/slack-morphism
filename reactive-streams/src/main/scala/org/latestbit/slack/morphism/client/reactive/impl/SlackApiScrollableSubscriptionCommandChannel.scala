@@ -23,7 +23,7 @@ import java.util.concurrent.locks.ReentrantLock
 import cats.Monad
 import cats.effect._
 import cats.effect.concurrent.MVar
-import cats.implicits._
+import cats.syntax.all._
 import org.latestbit.slack.morphism.client.SlackApiClientError
 import org.latestbit.slack.morphism.client.streaming.{ SlackApiResponseScroller, SlackApiScrollableResponse }
 import org.latestbit.slack.morphism.concurrent.{ AsyncSeqIterator, UniqueLockMonitor }

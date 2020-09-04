@@ -23,7 +23,6 @@ import org.latestbit.slack.morphism.common._
 import org.scalatest.flatspec.AsyncFlatSpec
 import sttp.client.testing.SttpBackendStub
 import sttp.model.HeaderNames
-import cats.instances.future._
 import org.latestbit.slack.morphism.codecs.CirceCodecs
 
 class OAuthTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuiteSupport with CirceCodecs {

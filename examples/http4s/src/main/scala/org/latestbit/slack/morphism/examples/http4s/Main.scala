@@ -1,7 +1,7 @@
 package org.latestbit.slack.morphism.examples.http4s
 
 import cats.effect._
-import cats.implicits._
+import cats.syntax.all._
 import com.typesafe.scalalogging.StrictLogging
 
 import com.monovore.decline._

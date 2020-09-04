@@ -26,7 +26,7 @@ import akka.actor.typed.scaladsl.adapter._
 import com.typesafe.scalalogging._
 import swaydb.IO.ApiIO
 import swaydb.data.slice.Slice
-import cats.implicits._
+import cats.syntax.all._
 import org.latestbit.slack.morphism.common.{ SlackAccessTokenValue, SlackTeamId, SlackUserId }
 import org.latestbit.slack.morphism.examples.akka.config.AppConfig
 import swaydb.serializers.Serializer

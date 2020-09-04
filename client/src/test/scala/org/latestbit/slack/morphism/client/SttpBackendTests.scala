@@ -25,7 +25,6 @@ import org.scalatest.flatspec.AsyncFlatSpec
 
 class SttpBackendTests extends AsyncFlatSpec {
   "A Slack client" should "able to try to connect using a async http client network sttp backend" in {
-    import cats.instances.future._
     import sttp.client.asynchttpclient.future.AsyncHttpClientFutureBackend
 
     implicit val sttpBackend = AsyncHttpClientFutureBackend()

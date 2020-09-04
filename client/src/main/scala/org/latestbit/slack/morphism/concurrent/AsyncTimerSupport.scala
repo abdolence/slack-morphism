@@ -22,7 +22,7 @@ import scala.languageFeature.implicitConversions
 import java.util.concurrent.{ ScheduledExecutorService, TimeUnit }
 
 import cats.effect._
-import cats.implicits._
+import cats.syntax.all._
 
 import scala.concurrent.{ ExecutionContext, Future, Promise }
 import scala.concurrent.duration.FiniteDuration

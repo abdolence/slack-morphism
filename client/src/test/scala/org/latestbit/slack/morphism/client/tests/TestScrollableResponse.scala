@@ -23,7 +23,6 @@ import org.latestbit.slack.morphism.client.{ SlackApiClientError, SlackApiSystem
 import org.latestbit.slack.morphism.client.streaming.{ SlackApiResponseScroller, SlackApiScrollableResponse }
 
 import scala.concurrent.{ ExecutionContext, Future }
-import cats.instances.future._
 
 case class TestScrollableResponse(
     values: List[Int],

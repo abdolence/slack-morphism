@@ -19,8 +19,6 @@
 package org.latestbit.slack.morphism.client
 
 import java.time.Instant
-
-import cats.instances.future._
 import cats.data.EitherT
 import io.circe._
 import io.circe.syntax._
@@ -88,7 +86,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
   }
 
   it should "able to make some basic API calls" in {
-    import cats.implicits._
+    import cats.syntax.all._
 
     implicit val testingBackend: SlackApiClientBackend.SttpBackendType[Future] =
       SttpBackendStub.asynchronousFuture

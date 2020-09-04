@@ -20,7 +20,7 @@ package org.latestbit.slack.morphism.examples.http4s.routes
 
 import cats.data.EitherT
 import cats.effect.Sync
-import cats.implicits._
+import cats.syntax.all._
 import com.typesafe.scalalogging.StrictLogging
 import org.http4s._
 import org.http4s.implicits._

@@ -18,7 +18,7 @@
 
 package org.latestbit.slack.morphism.events.signature
 
-import cats.implicits._
+import cats.syntax.all._
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import org.latestbit.slack.morphism.ext.ArrayExt._

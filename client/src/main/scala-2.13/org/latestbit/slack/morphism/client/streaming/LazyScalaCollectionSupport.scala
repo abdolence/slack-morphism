@@ -19,7 +19,7 @@
 package org.latestbit.slack.morphism.client.streaming
 
 import cats._
-import cats.implicits._
+import cats.syntax.all._
 import org.latestbit.slack.morphism.client.SlackApiClientError
 import org.latestbit.slack.morphism.concurrent.SyncScrollerAwaiter
 

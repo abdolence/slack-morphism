@@ -36,7 +36,6 @@ import org.latestbit.slack.morphism.client.reqresp.views.SlackApiViewsPublishReq
 import org.latestbit.slack.morphism.examples.akka.db.SlackTokensDb
 import org.latestbit.slack.morphism.examples.akka.templates._
 import org.latestbit.slack.morphism.views.SlackHomeView
-import cats.instances.future._
 import org.latestbit.slack.morphism.common._
 import org.latestbit.slack.morphism.examples.akka.config.AppConfig
 

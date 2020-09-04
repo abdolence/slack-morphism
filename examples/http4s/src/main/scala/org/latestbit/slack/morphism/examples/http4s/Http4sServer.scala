@@ -1,7 +1,7 @@
 package org.latestbit.slack.morphism.examples.http4s
 
 import cats.effect.{ Blocker, ConcurrentEffect, ContextShift, Timer }
-import cats.implicits._
+import cats.syntax.all._
 import fs2.Stream
 import org.http4s.client.blaze.BlazeClientBuilder
 import org.http4s.implicits._

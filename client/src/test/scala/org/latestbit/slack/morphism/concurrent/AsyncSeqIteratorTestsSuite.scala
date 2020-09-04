@@ -20,7 +20,7 @@ package org.latestbit.slack.morphism.concurrent
 
 import java.util.concurrent.{ Executors, TimeUnit }
 
-import cats.implicits._
+import cats.syntax.all._
 import org.scalacheck._
 import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks

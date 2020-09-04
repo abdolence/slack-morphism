@@ -22,7 +22,7 @@ import java.time.{ LocalDateTime, ZoneId }
 
 import cats.data.EitherT
 import cats.effect.Sync
-import cats.implicits._
+import cats.syntax.all._
 import com.typesafe.scalalogging.StrictLogging
 import org.http4s._
 import org.http4s.dsl.Http4sDsl

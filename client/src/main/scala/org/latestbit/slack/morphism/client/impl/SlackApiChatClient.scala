@@ -18,7 +18,7 @@
 
 package org.latestbit.slack.morphism.client.impl
 
-import cats.implicits._
+import cats.syntax.all._
 import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.reqresp.chat._

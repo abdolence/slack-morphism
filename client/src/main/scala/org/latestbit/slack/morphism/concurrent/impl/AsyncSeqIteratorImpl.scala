@@ -19,7 +19,7 @@
 package org.latestbit.slack.morphism.concurrent.impl
 
 import cats.Monad
-import cats.implicits._
+import cats.syntax.all._
 import org.latestbit.slack.morphism.concurrent.AsyncSeqIterator
 
 private[concurrent] final class AsyncSeqIteratorImpl[F[_] : Monad, I, A, P] private[concurrent] (

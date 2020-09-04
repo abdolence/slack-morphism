@@ -29,7 +29,6 @@ import sttp.client._
 import scala.concurrent.{ Await, Future }
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
-import cats.instances.future._
 import org.latestbit.slack.morphism.common.{ SlackAccessTokenValue, SlackTeamId }
 
 class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {

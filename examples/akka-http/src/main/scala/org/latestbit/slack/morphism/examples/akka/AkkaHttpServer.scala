@@ -34,7 +34,6 @@ import sttp.client.akkahttp.AkkaHttpBackend
 import scala.concurrent.duration._
 import scala.concurrent.{ ExecutionContextExecutor, Future }
 import scala.util._
-import cats.instances.future._
 import org.latestbit.slack.morphism.examples.akka.config.AppConfig
 
 object AkkaHttpServer extends StrictLogging {

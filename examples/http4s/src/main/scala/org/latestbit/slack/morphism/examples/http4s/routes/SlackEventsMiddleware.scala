@@ -20,7 +20,7 @@ package org.latestbit.slack.morphism.examples.http4s.routes
 
 import cats.data.OptionT
 import cats.effect._
-import cats.implicits._
+import cats.syntax.all._
 import com.typesafe.scalalogging.StrictLogging
 import io.circe.Decoder
 import io.circe.parser._

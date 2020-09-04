@@ -26,8 +26,6 @@ import org.testng.annotations.Test
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
-
-import cats.instances.future._
 import scala.concurrent.Future
 
 class ScrollablePublisherTestsSuite( env: TestEnvironment, publisherShutdownTimeout: Long )

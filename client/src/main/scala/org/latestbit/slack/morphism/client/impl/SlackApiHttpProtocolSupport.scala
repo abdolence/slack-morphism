@@ -20,7 +20,7 @@ package org.latestbit.slack.morphism.client.impl
 
 import java.io.IOException
 
-import cats.implicits._
+import cats.syntax.all._
 import io.circe._
 import io.circe.parser._
 import io.circe.syntax._

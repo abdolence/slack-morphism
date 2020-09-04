@@ -20,7 +20,7 @@ package org.latestbit.slack.morphism.examples.http4s.db
 
 import cats.effect.{ Bracket, ConcurrentEffect, LiftIO, Resource }
 import swaydb.data.slice.Slice
-import cats.implicits._
+import cats.syntax.all._
 import cats.effect.implicits._
 import com.typesafe.scalalogging.StrictLogging
 import org.latestbit.slack.morphism.examples.http4s.config.AppConfig
