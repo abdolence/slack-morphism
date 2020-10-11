@@ -42,12 +42,11 @@ object SlackIcon {
         "image_default"  -> model.image_default.asJson
       )
 
-    model.images.foldLeft( baseObject ) {
-      case ( wholeObj, ( res, link ) ) =>
-        wholeObj.add(
-          s"${IconPrefix}${res}",
-          link.asJson
-        )
+    model.images.foldLeft( baseObject ) { case ( wholeObj, ( res, link ) ) =>
+      wholeObj.add(
+        s"${IconPrefix}${res}",
+        link.asJson
+      )
     }
   }
 

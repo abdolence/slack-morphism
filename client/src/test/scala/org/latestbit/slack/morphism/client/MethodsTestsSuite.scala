@@ -58,15 +58,13 @@ class MethodsTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenPropertyCheck
                 )
             ( sample, apiMethodCall( sample )( mockBackend ) )
           }
-          .traverse {
-            case ( sample, fa ) =>
-              fa.map( ( sample, _ ) )
+          .traverse { case ( sample, fa ) =>
+            fa.map( ( sample, _ ) )
           }
           .map { samplesWithRes =>
             assert(
-              samplesWithRes.forall {
-                case ( request, response ) =>
-                  reqRespAssertion( request, response ) == Succeeded
+              samplesWithRes.forall { case ( request, response ) =>
+                reqRespAssertion( request, response ) == Succeeded
               }
             )
           }

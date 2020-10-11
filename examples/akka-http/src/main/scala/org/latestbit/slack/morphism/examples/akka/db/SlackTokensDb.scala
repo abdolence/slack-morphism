@@ -91,9 +91,7 @@ object SlackTokensDb extends StrictLogging {
               .get( key = teamId )
               .map(
                 _.map( rec =>
-                  rec.copy(tokens =
-                    rec.tokens.filterNot( _.userId == tokenRecord.userId ) :+ tokenRecord
-                  )
+                  rec.copy( tokens = rec.tokens.filterNot( _.userId == tokenRecord.userId ) :+ tokenRecord )
                 ).getOrElse(
                   TeamTokensRecord(
                     teamId = teamId,

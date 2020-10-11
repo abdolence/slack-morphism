@@ -317,9 +317,8 @@ package object codecs {
           "subtype" -> subTypeValue.asJson
         )
 
-      jsonObj.toMap.foldLeft( baseObject ) {
-        case ( wholeObj, ( key, value ) ) =>
-          wholeObj.add( key, value )
+      jsonObj.toMap.foldLeft( baseObject ) { case ( wholeObj, ( key, value ) ) =>
+        wholeObj.add( key, value )
       }
     }
 

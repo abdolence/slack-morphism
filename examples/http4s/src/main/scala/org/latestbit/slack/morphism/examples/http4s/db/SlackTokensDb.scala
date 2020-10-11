@@ -42,18 +42,15 @@ class SlackTokensDb[F[_] : ConcurrentEffect]( storage: SlackTokensDb.SwayDbType 
       storage
         .get( key = teamId )
         .map(
-          _.map( rec =>
-            rec.copy(tokens =
-              rec.tokens.filterNot( _.userId == tokenRecord.userId ) :+ tokenRecord
-            )
-          ).getOrElse(
-            TeamTokensRecord(
-              teamId = teamId,
-              tokens = List(
-                tokenRecord
+          _.map( rec => rec.copy( tokens = rec.tokens.filterNot( _.userId == tokenRecord.userId ) :+ tokenRecord ) )
+            .getOrElse(
+              TeamTokensRecord(
+                teamId = teamId,
+                tokens = List(
+                  tokenRecord
+                )
               )
             )
-          )
         )
         .flatMap { record =>
           storage.put( teamId, record ).map { _ =>

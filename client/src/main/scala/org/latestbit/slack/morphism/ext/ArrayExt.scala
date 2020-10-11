@@ -49,11 +49,10 @@ object ArrayExt {
         else
           DigitsUpper
 
-      array.indices.zip( outputArray.indices.by( 2 ) ).foreach {
-        case ( i, j ) =>
-          val currentByte = abEv.toByte( array( i ) )
-          outputArray( j ) = currentDigits( ( 0xf0 & currentByte) >>> 4 )
-          outputArray( j + 1 ) = currentDigits( 0x0f & currentByte )
+      array.indices.zip( outputArray.indices.by( 2 ) ).foreach { case ( i, j ) =>
+        val currentByte = abEv.toByte( array( i ) )
+        outputArray( j ) = currentDigits( ( 0xf0 & currentByte) >>> 4 )
+        outputArray( j + 1 ) = currentDigits( 0x0f & currentByte )
       }
       new String( outputArray )
 

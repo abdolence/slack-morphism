@@ -67,10 +67,10 @@ class SlackApiScrollableSubscriptionCommandChannel[F[_] : Monad, IT, PT, SR <: S
       fp <- producer.start
       _  <- fp.join
       _ <- (
-               command match {
-                 case Close => IO.unit
-                 case _     => producerCommandLoop( channel )
-               }
+             command match {
+               case Close => IO.unit
+               case _     => producerCommandLoop( channel )
+             }
            )
     } yield ()
   }

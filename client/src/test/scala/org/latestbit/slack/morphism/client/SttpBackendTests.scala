@@ -136,11 +136,10 @@ class SttpBackendTests extends AsyncFlatSpec {
     implicit val testApiUserToken = SlackApiUserToken( SlackAccessTokenValue( "test-token" ), Some( "test-scope" ) )
     (
       createHttp4sClient()
-        .use {
-          case ( blocker, httpClient ) =>
-            val backend = Http4sBackend.usingClient( httpClient, blocker )
-            val client  = SlackApiClient.build[IO]( backend ).create()
-            client.api.test( SlackApiTestRequest() )
+        .use { case ( blocker, httpClient ) =>
+          val backend = Http4sBackend.usingClient( httpClient, blocker )
+          val client  = SlackApiClient.build[IO]( backend ).create()
+          client.api.test( SlackApiTestRequest() )
         }
         .unsafeToFuture()
         .map {

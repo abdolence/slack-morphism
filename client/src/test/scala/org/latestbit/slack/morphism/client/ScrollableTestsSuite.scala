@@ -43,9 +43,8 @@ class ScrollableTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuiteSu
   it should "be able to work as a async iterator" in {
     val asyncIterator = scrollableResponse.toAsyncScroller()
     asyncIterator
-      .foldLeft( List[Int]() ) {
-        case ( wholeList, futureRes ) =>
-          futureRes.map( wholeList ++ _ ).getOrElse( wholeList )
+      .foldLeft( List[Int]() ) { case ( wholeList, futureRes ) =>
+        futureRes.map( wholeList ++ _ ).getOrElse( wholeList )
       }
       .map { foldedResList => assert( foldedResList === testFoldedBatchesResults ) }
 
