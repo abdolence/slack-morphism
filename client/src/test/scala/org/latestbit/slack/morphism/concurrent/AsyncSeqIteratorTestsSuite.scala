@@ -64,17 +64,15 @@ class AsyncSeqIteratorTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenProp
 
   "iterating with AsyncIterator over generated async results" should "be in correct order" in {
     createIterator()
-      .foldLeft( List[String]() ) {
-        case ( all, itemValue ) =>
-          all :+ itemValue
+      .foldLeft( List[String]() ) { case ( all, itemValue ) =>
+        all :+ itemValue
       }
       .map { xs =>
         assert( xs.nonEmpty )
         assert( xs.headOption.contains( "initial" ) )
         assert( xs.lastOption.contains( "last" ) )
-        assert( xs.drop( 1 ).dropRight( 1 ).zipWithIndex.forall {
-          case ( x, idx ) =>
-            x.contains( s"next: ${idx + 1}" )
+        assert( xs.drop( 1 ).dropRight( 1 ).zipWithIndex.forall { case ( x, idx ) =>
+          x.contains( s"next: ${idx + 1}" )
         } )
       }
   }
@@ -82,17 +80,15 @@ class AsyncSeqIteratorTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenProp
   "AsyncIterator" should "provide a map function" in {
     createIterator()
       .map( _.toUpperCase )
-      .foldLeft( List[String]() ) {
-        case ( all, itemValue ) =>
-          all :+ itemValue
+      .foldLeft( List[String]() ) { case ( all, itemValue ) =>
+        all :+ itemValue
       }
       .map { xs =>
         assert( xs.nonEmpty )
         assert( xs.headOption.contains( "initial".toUpperCase ) )
         assert( xs.lastOption.contains( "last".toUpperCase ) )
-        assert( xs.drop( 1 ).dropRight( 1 ).zipWithIndex.forall {
-          case ( x, idx ) =>
-            x.contains( s"next: ${idx + 1}".toUpperCase )
+        assert( xs.drop( 1 ).dropRight( 1 ).zipWithIndex.forall { case ( x, idx ) =>
+          x.contains( s"next: ${idx + 1}".toUpperCase )
         } )
       }
   }
@@ -113,9 +109,8 @@ class AsyncSeqIteratorTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenProp
     assert( testEffect.nonEmpty )
     assert( testEffect.headOption.contains( "initial" ) )
     assert( testEffect.lastOption.contains( "last" ) )
-    assert( testEffect.drop( 1 ).dropRight( 1 ).zipWithIndex.forall {
-      case ( x, idx ) =>
-        x.contains( s"next: ${idx + 1}" )
+    assert( testEffect.drop( 1 ).dropRight( 1 ).zipWithIndex.forall { case ( x, idx ) =>
+      x.contains( s"next: ${idx + 1}" )
     } )
   }
 
@@ -123,9 +118,8 @@ class AsyncSeqIteratorTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenProp
     createIterator()
       .fmap( _.toUpperCase )
       .fproduct( _.length )
-      .foldLeft( List[String]() ) {
-        case ( all, ( itemValue, _ ) ) =>
-          all :+ itemValue
+      .foldLeft( List[String]() ) { case ( all, ( itemValue, _ ) ) =>
+        all :+ itemValue
       }
       .map { xs =>
         assert( xs.nonEmpty )
@@ -139,17 +133,15 @@ class AsyncSeqIteratorTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenProp
       .filter( _.startsWith( "NEXT" ) )
       .map( _.toLowerCase )
       .filter( _.startsWith( "next" ) )
-      .foldLeft( List[String]() ) {
-        case ( all, itemValue ) =>
-          all :+ itemValue
+      .foldLeft( List[String]() ) { case ( all, itemValue ) =>
+        all :+ itemValue
       }
       .map { xs =>
         assert( xs.nonEmpty )
         assert( !xs.headOption.contains( "initial" ) )
         assert( !xs.lastOption.contains( "last" ) )
-        assert( xs.zipWithIndex.forall {
-          case ( x, idx ) =>
-            x.contains( s"next: ${idx + 1}" )
+        assert( xs.zipWithIndex.forall { case ( x, idx ) =>
+          x.contains( s"next: ${idx + 1}" )
         } )
       }
   }

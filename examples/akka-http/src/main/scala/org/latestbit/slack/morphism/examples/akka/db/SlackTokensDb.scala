@@ -26,8 +26,8 @@ import akka.actor.typed.scaladsl.adapter._
 import com.typesafe.scalalogging._
 import swaydb.IO.ApiIO
 import swaydb.data.slice.Slice
-import cats.syntax.all._
-import org.latestbit.slack.morphism.common.{ SlackAccessTokenValue, SlackTeamId, SlackUserId }
+import cats.implicits._
+import org.latestbit.slack.morphism.common._
 import org.latestbit.slack.morphism.examples.akka.config.AppConfig
 import swaydb.serializers.Serializer
 
@@ -35,7 +35,12 @@ import scala.concurrent.ExecutionContextExecutor
 
 object SlackTokensDb extends StrictLogging {
 
-  case class TokenRecord( tokenType: String, tokenValue: SlackAccessTokenValue, userId: SlackUserId, scope: String )
+  case class TokenRecord(
+      tokenType: SlackApiTokenType,
+      tokenValue: SlackAccessTokenValue,
+      userId: SlackUserId,
+      scope: SlackApiTokenScope
+  )
   case class TeamTokensRecord( teamId: SlackTeamId, tokens: List[TokenRecord] )
 
   implicit object TeamTokensRecordSwayDbSerializer extends swaydb.serializers.Serializer[TeamTokensRecord] {
@@ -91,9 +96,7 @@ object SlackTokensDb extends StrictLogging {
               .get( key = teamId )
               .map(
                 _.map( rec =>
-                  rec.copy(tokens =
-                    rec.tokens.filterNot( _.userId == tokenRecord.userId ) :+ tokenRecord
-                  )
+                  rec.copy( tokens = rec.tokens.filterNot( _.userId == tokenRecord.userId ) :+ tokenRecord )
                 ).getOrElse(
                   TeamTokensRecord(
                     teamId = teamId,

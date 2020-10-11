@@ -70,9 +70,8 @@ abstract class StandardRateThrottler[F[_] : SlackApiClientBackend.BackendType : 
       teamId.value,
       RateThrottlerWorkspaceMetrics(
         params.workspaceMaxRateLimit.map( toRateMetric ),
-        params.slackApiTierLimits.map {
-          case ( tier, limit ) =>
-            ( tier, toRateMetric( limit ) )
+        params.slackApiTierLimits.map { case ( tier, limit ) =>
+          ( tier, toRateMetric( limit ) )
         },
         Map(),
         now
@@ -94,9 +93,8 @@ abstract class StandardRateThrottler[F[_] : SlackApiClientBackend.BackendType : 
 
     synchronized {
       workspaceMaxRateMetrics
-        .filter {
-          case ( _, metrics ) =>
-            now - metrics.updated > WorkspaceMetricsCleanerMaxOldInMs
+        .filter { case ( _, metrics ) =>
+          now - metrics.updated > WorkspaceMetricsCleanerMaxOldInMs
         }
         .keys
         .foreach( workspaceMaxRateMetrics.remove )
@@ -158,15 +156,13 @@ abstract class StandardRateThrottler[F[_] : SlackApiClientBackend.BackendType : 
         workspaceMetrics.copy(
           wholeWorkspaceMetric = updatedWorkspaceGlobalMetric,
           tiers = updatedTierMetric
-            .map {
-              case ( tier, metric ) =>
-                workspaceMetrics.tiers.updated( tier, metric )
+            .map { case ( tier, metric ) =>
+              workspaceMetrics.tiers.updated( tier, metric )
             }
             .getOrElse( workspaceMetrics.tiers ),
           specialLimits = updatedSpecialLimitMetric
-            .map {
-              case ( key, metric ) =>
-                workspaceMetrics.specialLimits.updated( key, metric )
+            .map { case ( key, metric ) =>
+              workspaceMetrics.specialLimits.updated( key, metric )
             }
             .getOrElse( workspaceMetrics.specialLimits )
         )

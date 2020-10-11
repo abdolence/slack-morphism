@@ -15,10 +15,13 @@
  *
  *
  */
+package org.latestbit.slack.morphism.events
 
-package org.latestbit.slack.morphism.common
+import org.latestbit.slack.morphism.common._
 
-/**
- * Basic information about enterprise
- */
-case class SlackBasicEnterpriseInfo( id: SlackEnterpriseId, name: Option[String] = None )
+case class SlackEventAuthorization(
+    enterprise_id: Option[SlackEnterpriseId] = None,
+    team_id: SlackTeamId,
+    user_id: SlackUserId,
+    is_bot: Boolean = false
+)

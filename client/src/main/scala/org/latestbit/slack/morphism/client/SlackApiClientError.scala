@@ -143,9 +143,8 @@ case class SlackApiDecodingError(
     httpResponseBody: Option[String] = None
 ) extends SlackApiClientError(
       uri = uri,
-      message =
-        s"Json codec error: '${coderError.getMessage}'." +
-          s"${httpResponseBody.map( text => s"\nReceived:\n${text}\n" ).getOrElse( "" )}",
+      message = s"Json codec error: '${coderError.getMessage}'." +
+        s"${httpResponseBody.map( text => s"\nReceived:\n${text}\n" ).getOrElse( "" )}",
       cause = Some( coderError )
     )
 

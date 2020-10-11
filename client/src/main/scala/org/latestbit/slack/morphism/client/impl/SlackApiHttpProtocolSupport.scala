@@ -247,9 +247,8 @@ trait SlackApiHttpProtocolSupport[F[_]] extends SlackApiClientBackend[F] {
   ): F[Either[SlackApiClientError, RS]] = {
 
     val filteredParams: Map[String, String] =
-      params.foldLeft( Map[String, String]() ) {
-        case ( acc, ( k, v ) ) =>
-          v.map( acc.updated( k, _ ) ).getOrElse( acc )
+      params.foldLeft( Map[String, String]() ) { case ( acc, ( k, v ) ) =>
+        v.map( acc.updated( k, _ ) ).getOrElse( acc )
       }
     sendManagedSlackHttpRequest[RS](
       request.get( getSlackMethodAbsoluteUri( methodUri ).params( filteredParams ) ),

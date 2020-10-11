@@ -26,7 +26,7 @@ import com.typesafe.scalalogging.StrictLogging
 import org.latestbit.slack.morphism.examples.http4s.config.AppConfig
 import cats.effect._
 import cats.effect.IO
-import org.latestbit.slack.morphism.common.{ SlackAccessTokenValue, SlackTeamId, SlackUserId }
+import org.latestbit.slack.morphism.common._
 import swaydb.{ IO => _, Set => _, _ }
 import swaydb.serializers.Default._
 import swaydb.cats.effect.Tag._
@@ -42,18 +42,15 @@ class SlackTokensDb[F[_] : ConcurrentEffect]( storage: SlackTokensDb.SwayDbType 
       storage
         .get( key = teamId )
         .map(
-          _.map( rec =>
-            rec.copy(tokens =
-              rec.tokens.filterNot( _.userId == tokenRecord.userId ) :+ tokenRecord
-            )
-          ).getOrElse(
-            TeamTokensRecord(
-              teamId = teamId,
-              tokens = List(
-                tokenRecord
+          _.map( rec => rec.copy( tokens = rec.tokens.filterNot( _.userId == tokenRecord.userId ) :+ tokenRecord ) )
+            .getOrElse(
+              TeamTokensRecord(
+                teamId = teamId,
+                tokens = List(
+                  tokenRecord
+                )
               )
             )
-          )
         )
         .flatMap { record =>
           storage.put( teamId, record ).map { _ =>
@@ -98,7 +95,13 @@ class SlackTokensDb[F[_] : ConcurrentEffect]( storage: SlackTokensDb.SwayDbType 
 }
 
 object SlackTokensDb extends StrictLogging {
-  case class TokenRecord( tokenType: String, tokenValue: SlackAccessTokenValue, userId: SlackUserId, scope: String )
+
+  case class TokenRecord(
+      tokenType: SlackApiTokenType,
+      tokenValue: SlackAccessTokenValue,
+      userId: SlackUserId,
+      scope: SlackApiTokenScope
+  )
   case class TeamTokensRecord( teamId: SlackTeamId, tokens: List[TokenRecord] )
 
   implicit object TeamTokensRecordSwayDbSerializer extends swaydb.serializers.Serializer[TeamTokensRecord] {

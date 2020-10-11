@@ -121,45 +121,39 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
         )
 
     val slackApiClient = SlackApiClient.create[Future]()
+    implicit val slackApiToken: SlackApiToken =
+      SlackApiToken.createFrom( SlackApiTokenType.Bot, SlackAccessTokenValue( "xoxb-89....." ) )
 
-    SlackApiToken
-      .createFrom(
-        SlackApiToken.TokenTypes.Bot,
-        SlackAccessTokenValue( "xoxb-89....." )
-      )
-      .map { implicit slackApiToken: SlackApiToken =>
-        EitherT( slackApiClient.conversations.list( SlackApiConversationsListRequest() ) )
-          .flatMap { channelsResp =>
-            channelsResp.channels
-              .find( _.flags.is_general.contains( true ) )
-              .map { generalChannel =>
-                EitherT(
-                  slackApiClient.chat
-                    .postMessage(
-                      SlackApiChatPostMessageRequest(
-                        channel = generalChannel.id,
-                        text = "Hello"
-                      )
-                    )
-                ).map { resp => resp.ts.some }
-              }
-              .getOrElse(
-                EitherT[Future, SlackApiClientError, Option[SlackTs]](
-                  Future.successful( None.asRight )
+    EitherT( slackApiClient.conversations.list( SlackApiConversationsListRequest() ) )
+      .flatMap { channelsResp =>
+        channelsResp.channels
+          .find( _.flags.is_general.contains( true ) )
+          .map { generalChannel =>
+            EitherT(
+              slackApiClient.chat
+                .postMessage(
+                  SlackApiChatPostMessageRequest(
+                    channel = generalChannel.id,
+                    text = "Hello"
+                  )
                 )
-              )
+            ).map { resp => resp.ts.some }
           }
-          .value
-          .map {
-            case Right( Some( res ) ) => {
-              assert( res.value == "message-ts" )
-
-            }
-            case Right( _ )  => fail()
-            case Left( err ) => fail( err )
-          }
+          .getOrElse(
+            EitherT[Future, SlackApiClientError, Option[SlackTs]](
+              Future.successful( None.asRight )
+            )
+          )
       }
-      .getOrElse( fail( "No token" ) )
+      .value
+      .map {
+        case Right( Some( res ) ) => {
+          assert( res.value == "message-ts" )
+
+        }
+        case Right( _ )  => fail()
+        case Left( err ) => fail( err )
+      }
   }
 
   it should "able to post event replies using response_url without tokens" in {

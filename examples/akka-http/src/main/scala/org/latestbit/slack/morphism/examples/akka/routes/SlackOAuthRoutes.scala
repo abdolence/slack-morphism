@@ -70,51 +70,50 @@ class SlackOAuthRoutes( implicit
       } ~
         get {
           path( "callback" ) {
-            parameters( "code".?, "error".?, "state".? ) {
-              case ( code, error, state ) =>
-                ( code, error ) match {
-                  case ( Some( oauthCode ), _ ) => {
-                    logger.info( s"Received OAuth access code: ${oauthCode}" )
-                    onSuccess(
-                      slackApiClient.oauth.v2.access(
-                        clientId = config.slackAppConfig.clientId,
-                        clientSecret = config.slackAppConfig.clientSecret,
-                        code = oauthCode,
-                        redirectUri = config.slackAppConfig.redirectUrl
-                      )
-                    ) {
-                      case Right( tokens ) => {
-                        logger.info( s"Received OAuth access tokens: ${tokens}" )
+            parameters( "code".?, "error".?, "state".? ) { case ( code, error, state ) =>
+              ( code, error ) match {
+                case ( Some( oauthCode ), _ ) => {
+                  logger.info( s"Received OAuth access code: ${oauthCode}" )
+                  onSuccess(
+                    slackApiClient.oauth.v2.access(
+                      clientId = config.slackAppConfig.clientId,
+                      clientSecret = config.slackAppConfig.clientSecret,
+                      code = oauthCode,
+                      redirectUri = config.slackAppConfig.redirectUrl
+                    )
+                  ) {
+                    case Right( tokens ) => {
+                      logger.info( s"Received OAuth access tokens: ${tokens}" )
 
-                        // In this example we store only a bot token, but is is common to store a user token as well
+                      // In this example we store only a bot token, but is is common to store a user token as well
 
-                        slackTokensDb ! SlackTokensDb.InsertToken(
-                          teamId = tokens.team.id,
-                          SlackTokensDb.TokenRecord(
-                            tokenType = tokens.token_type,
-                            scope = tokens.scope,
-                            tokenValue = tokens.access_token,
-                            userId = tokens.bot_user_id.getOrElse( tokens.authed_user.id )
-                          )
+                      slackTokensDb ! SlackTokensDb.InsertToken(
+                        teamId = tokens.team.id,
+                        SlackTokensDb.TokenRecord(
+                          tokenType = tokens.token_type,
+                          scope = tokens.scope,
+                          tokenValue = tokens.access_token,
+                          userId = tokens.bot_user_id.getOrElse( tokens.authed_user.id )
                         )
+                      )
 
-                        complete( StatusCodes.OK )
-                      }
-                      case Left( err ) => {
-                        logger.info( s"OAuth access error : ${err}" )
-                        complete( StatusCodes.InternalServerError )
-                      }
+                      complete( StatusCodes.OK )
+                    }
+                    case Left( err ) => {
+                      logger.info( s"OAuth access error : ${err}" )
+                      complete( StatusCodes.InternalServerError )
                     }
                   }
-                  case ( _, Some( error ) ) => {
-                    logger.info( s"OAuth error code: ${error}" )
-                    complete( StatusCodes.OK )
-                  }
-                  case _ => {
-                    logger.error( s"No OAuth code or error provided?" )
-                    complete( StatusCodes.InternalServerError )
-                  }
                 }
+                case ( _, Some( error ) ) => {
+                  logger.info( s"OAuth error code: ${error}" )
+                  complete( StatusCodes.OK )
+                }
+                case _ => {
+                  logger.error( s"No OAuth code or error provided?" )
+                  complete( StatusCodes.InternalServerError )
+                }
+              }
             }
           }
         }

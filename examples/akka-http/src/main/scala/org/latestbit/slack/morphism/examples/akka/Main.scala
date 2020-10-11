@@ -51,9 +51,8 @@ object Main extends App with StrictLogging {
       Behaviors.setup[Done] { ctx =>
         start( ctx )
 
-        Behaviors.receiveMessage {
-          case Done =>
-            Behaviors.stopped
+        Behaviors.receiveMessage { case Done =>
+          Behaviors.stopped
         }
       },
       "Slack-Morphism"

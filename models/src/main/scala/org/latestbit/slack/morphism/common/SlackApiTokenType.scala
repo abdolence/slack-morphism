@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Abdulla Abdurakhmanov (abdulla@latestbit.com)
+ * Copyright 2020 Abdulla Abdurakhmanov (abdulla@latestbit.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,31 @@
  *
  *
  */
-
 package org.latestbit.slack.morphism.common
 
+import org.latestbit.circe.adt.codec._
+
 /**
- * Basic information about enterprise
+ * Slack API token types.
  */
-case class SlackBasicEnterpriseInfo( id: SlackEnterpriseId, name: Option[String] = None )
+sealed trait SlackApiTokenType {
+  val name: String
+}
+
+object SlackApiTokenType {
+
+  @JsonAdt( "bot" )
+  case object Bot extends SlackApiTokenType {
+    override val name = "bot"
+  }
+
+  @JsonAdt( "user" )
+  case object User extends SlackApiTokenType {
+    override val name = "user"
+  }
+
+  @JsonAdt( "app" )
+  case object App extends SlackApiTokenType {
+    override val name = "app"
+  }
+}

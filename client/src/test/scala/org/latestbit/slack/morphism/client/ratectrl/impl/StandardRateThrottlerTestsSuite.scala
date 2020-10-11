@@ -66,14 +66,13 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
       .expects( *, *, TimeUnit.MILLISECONDS )
       .repeated( 50 )
       .times()
-      .onCall {
-        case ( _: Callable[_], delay: Long, _: TimeUnit ) =>
-          assert( delay === 20 + lastDelay )
-          lastDelay += 20
+      .onCall { case ( _: Callable[_], delay: Long, _: TimeUnit ) =>
+        assert( delay === 20 + lastDelay )
+        lastDelay += 20
 
-          val scheduledFuture = stub[ScheduledFuture[Unit]]
-          ( scheduledFuture.isDone _).when().returns( true )
-          scheduledFuture
+        val scheduledFuture = stub[ScheduledFuture[Unit]]
+        ( scheduledFuture.isDone _).when().returns( true )
+        scheduledFuture
 
       }
 
@@ -279,14 +278,13 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
       .expects( *, 5000, TimeUnit.MILLISECONDS )
       .repeated( 3 )
       .times()
-      .onCall {
-        case ( callable: Callable[_], _: Long, _: TimeUnit ) =>
-          val scheduledFuture = stub[ScheduledFuture[Unit]]
-          ( scheduledFuture.isDone _).when().returns( true )
-          ( scheduledFuture.get: () => Unit).when().returns {
-            val _ = callable.call()
-          }
-          scheduledFuture
+      .onCall { case ( callable: Callable[_], _: Long, _: TimeUnit ) =>
+        val scheduledFuture = stub[ScheduledFuture[Unit]]
+        ( scheduledFuture.isDone _).when().returns( true )
+        ( scheduledFuture.get: () => Unit).when().returns {
+          val _ = callable.call()
+        }
+        scheduledFuture
       }
 
     val throttler = new StandardRateThrottler[Future]( paramsWithRetries, scheduledExecutorMock ) {
@@ -326,14 +324,13 @@ class StandardRateThrottlerTestsSuite extends AnyFlatSpec with MockFactory {
       .expects( *, 5000, TimeUnit.MILLISECONDS )
       .repeated( 3 )
       .times()
-      .onCall {
-        case ( callable: Callable[_], _: Long, _: TimeUnit ) =>
-          val scheduledFuture = stub[ScheduledFuture[Unit]]
-          ( scheduledFuture.isDone _).when().returns( true )
-          ( scheduledFuture.get: () => Unit).when().returns {
-            val _ = callable.call()
-          }
-          scheduledFuture
+      .onCall { case ( callable: Callable[_], _: Long, _: TimeUnit ) =>
+        val scheduledFuture = stub[ScheduledFuture[Unit]]
+        ( scheduledFuture.isDone _).when().returns( true )
+        ( scheduledFuture.get: () => Unit).when().returns {
+          val _ = callable.call()
+        }
+        scheduledFuture
       }
 
     val throttler = new StandardRateThrottler[Future]( paramsWithRetries, scheduledExecutorMock ) {

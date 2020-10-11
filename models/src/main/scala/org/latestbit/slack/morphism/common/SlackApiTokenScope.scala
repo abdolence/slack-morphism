@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Abdulla Abdurakhmanov (abdulla@latestbit.com)
+ * Copyright 2020 Abdulla Abdurakhmanov (abdulla@latestbit.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,8 @@
  *
  *
  */
-
 package org.latestbit.slack.morphism.common
 
-/**
- * Basic information about enterprise
- */
-case class SlackBasicEnterpriseInfo( id: SlackEnterpriseId, name: Option[String] = None )
+case class SlackApiTokenScopePermission( value: String ) extends AnyVal
+
+case class SlackApiTokenScope( value: String ) extends AnyVal

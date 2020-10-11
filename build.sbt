@@ -8,7 +8,7 @@ import sbt.Package.ManifestAttributes
 
 name := "slack-morphism-root"
 
-ThisBuild / version := "2.0.2-SNAPSHOT"
+ThisBuild / version := "3.0.0"
 
 ThisBuild / description := "Open Type-Safe Reactive Client with Blocks Templating for Slack"
 
@@ -99,8 +99,8 @@ def priorTo2_13( scalaVersion: String ): Boolean =
 val catsVersion                   = "2.2.0"
 val catsEffectVersion             = "2.1.4"
 val circeVersion                  = "0.13.0"
-val scalaCollectionsCompatVersion = "2.1.6"
-val sttpVersion                   = "2.2.6"
+val scalaCollectionsCompatVersion = "2.2.0"
+val sttpVersion                   = "2.2.9"
 val circeAdtCodecVersion          = "0.9.1"
 
 // For tests
@@ -112,15 +112,15 @@ val scalaCheckShapeless = "1.2.5"
 val scalaMockVersion    = "5.0.0"
 
 // For full-featured examples we use additional libs
-val akkaVersion          = "2.6.8"
-val akkaHttpVersion      = "10.2.0"
-val akkaHttpCirceVersion = "1.34.0"
+val akkaVersion          = "2.6.10"
+val akkaHttpVersion      = "10.2.1"
+val akkaHttpCirceVersion = "1.35.0"
 val logbackVersion       = "1.2.3"
 val scalaLoggingVersion  = "3.9.2"
 val scoptVersion         = "3.7.1"
 val swayDbVersion        = "0.11"
 val http4sVersion        = "0.21.7"
-val declineVersion       = "1.2.0"
+val declineVersion       = "1.3.0"
 
 // For fs2 integration module
 val fs2Version = "2.4.4"
@@ -254,7 +254,10 @@ lazy val slackMorphismAkkaExample =
             ExclusionRule( organization = "com.typesafe.akka" ),
             ExclusionRule( organization = "io.circe" )
         ),
-        "com.softwaremill.sttp.client" %% "akka-http-backend" % sttpVersion,
+        "com.softwaremill.sttp.client" %% "akka-http-backend" % sttpVersion
+          excludeAll (
+            ExclusionRule( organization = "com.typesafe.akka" )
+          ),
         "io.swaydb"                    %% "swaydb"            % swayDbVersion
           excludeAll (
             ExclusionRule( organization = "org.scala-lang.modules" ),

@@ -37,10 +37,10 @@ object Http4sServer {
       // want to extract a segments not checked
       // in the underlying routes.
       httpApp = (
-                    new SlackOAuthRoutes[F]( slackApiClient, tokensDb, config ).routes() <+>
-                      new SlackPushEventsRoutes[F]( slackApiClient, tokensDb, config ).routes() <+>
-                      new SlackInteractionEventsRoutes[F]( slackApiClient, tokensDb, config ).routes() <+>
-                      new SlackCommandEventsRoutes[F]( slackApiClient, tokensDb, config ).routes()
+                  new SlackOAuthRoutes[F]( slackApiClient, tokensDb, config ).routes() <+>
+                    new SlackPushEventsRoutes[F]( slackApiClient, tokensDb, config ).routes() <+>
+                    new SlackInteractionEventsRoutes[F]( slackApiClient, tokensDb, config ).routes() <+>
+                    new SlackCommandEventsRoutes[F]( slackApiClient, tokensDb, config ).routes()
                 ).orNotFound
 
       // With Middlewares in place
