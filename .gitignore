@@ -71,5 +71,6 @@ tmp/**
 
 .metals/**
 metals.sbt
-project/.bloop/**
+**/.bloop/**
 project/project/**
+
