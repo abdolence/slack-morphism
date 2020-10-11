@@ -254,7 +254,10 @@ lazy val slackMorphismAkkaExample =
             ExclusionRule( organization = "com.typesafe.akka" ),
             ExclusionRule( organization = "io.circe" )
         ),
-        "com.softwaremill.sttp.client" %% "akka-http-backend" % sttpVersion,
+        "com.softwaremill.sttp.client" %% "akka-http-backend" % sttpVersion
+          excludeAll (
+            ExclusionRule( organization = "com.typesafe.akka" )
+          ),
         "io.swaydb"                    %% "swaydb"            % swayDbVersion
           excludeAll (
             ExclusionRule( organization = "org.scala-lang.modules" ),
