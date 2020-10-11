@@ -68,3 +68,8 @@ test-output/**
 data/**
 tmp/**
 **/QuickCheck.scala
+
+.metals/**
+metals.sbt
+project/.bloop/**
+project/project/**
