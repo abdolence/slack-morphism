@@ -99,7 +99,7 @@ def priorTo2_13( scalaVersion: String ): Boolean =
 val catsVersion                   = "2.1.1"
 val catsEffectVersion             = "2.1.4"
 val circeVersion                  = "0.13.0"
-val scalaCollectionsCompatVersion = "2.1.6"
+val scalaCollectionsCompatVersion = "2.2.0"
 val sttpVersion                   = "2.2.9"
 val circeAdtCodecVersion          = "0.9.1"
 
@@ -113,8 +113,8 @@ val scalaMockVersion    = "5.0.0"
 
 // For full-featured examples we use additional libs
 val akkaVersion          = "2.6.10"
-val akkaHttpVersion      = "10.2.0"
-val akkaHttpCirceVersion = "1.34.0"
+val akkaHttpVersion      = "10.2.1"
+val akkaHttpCirceVersion = "1.35.0"
 val logbackVersion       = "1.2.3"
 val scalaLoggingVersion  = "3.9.2"
 val scoptVersion         = "3.7.1"
