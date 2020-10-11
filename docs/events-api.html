@@ -157,10 +157,10 @@ full-featured bots for <a href="akka-http">Akka HTTP</a> and <a href="http4s">ht
 <p>and you can decode all of the Slack Events like:</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">decode</span><span class="o">[</span><span class="kt">SlackInteractionEvent</span><span class="o">](</span> <span class="n">requestBody</span> <span class="o">)</span> <span class="k">match</span> <span class="o">{</span>
-      <span class="k">case</span> <span class="nc">Right</span><span class="o">(</span> <span class="n">event</span> <span class="o">)</span> <span class="k">=&gt;</span> <span class="c1">// ...</span>
-      <span class="k">case</span> <span class="nc">Left</span><span class="o">(</span> <span class="n">ex</span> <span class="o">)</span> <span class="k">=&gt;</span> <span class="o">{</span>
-        <span class="nv">logger</span><span class="o">.</span><span class="py">error</span><span class="o">(</span> <span class="n">s</span><span class="s">"Can't decode push event from Slack: ${ex.toString}\n${requestBody}"</span> <span class="o">)</span>
-        <span class="nf">complete</span><span class="o">(</span> <span class="nv">StatusCodes</span><span class="o">.</span><span class="py">BadRequest</span> <span class="o">)</span>
+      <span class="k">case</span> <span class="nc">Right</span><span class="o">(</span> <span class="n">event</span> <span class="o">)</span> <span class="k">=&gt;</span> <span class="c1">// ...
+</span>      <span class="k">case</span> <span class="nc">Left</span><span class="o">(</span> <span class="n">ex</span> <span class="o">)</span> <span class="k">=&gt;</span> <span class="o">{</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="o">(</span> <span class="n">s</span><span class="s">"Can't decode push event from Slack: ${ex.toString}\n${requestBody}"</span> <span class="o">)</span>
+        <span class="n">complete</span><span class="o">(</span> <span class="nc">StatusCodes</span><span class="o">.</span><span class="nc">BadRequest</span> <span class="o">)</span>
       <span class="o">}</span>
     <span class="o">}</span>
 </code></pre></div></div>
@@ -203,18 +203,18 @@ which provides you <code class="highlighter-rouge">verify()</code>:</p>
   <li>Your signing secret from your Slack app profile</li>
 </ul>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="nv">signatureVerifier</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">SlackEventSignatureVerifier</span><span class="o">()</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="n">signatureVerifier</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">SlackEventSignatureVerifier</span><span class="o">()</span>
 
 <span class="n">signatureVerifier</span><span class="o">.</span>
-    <span class="nf">verify</span><span class="o">(</span>
-        <span class="nv">config</span><span class="o">.</span><span class="py">signingSecret</span><span class="o">,</span> 
+    <span class="n">verify</span><span class="o">(</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">signingSecret</span><span class="o">,</span> 
         <span class="n">receivedSignedHash</span><span class="o">,</span> 
         <span class="n">receivedSignedTimestamp</span><span class="o">,</span> 
         <span class="n">requestBody</span>
     <span class="o">)</span> <span class="k">match</span> <span class="o">{</span>
-        <span class="k">case</span> <span class="nc">Right</span><span class="o">(</span><span class="n">success</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="c1">// the signature is verified</span>
-        <span class="k">case</span> <span class="nc">Left</span><span class="o">(</span><span class="n">err</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="c1">// absent or wrong signature    </span>
-    <span class="o">}</span>
+        <span class="k">case</span> <span class="nc">Right</span><span class="o">(</span><span class="n">success</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="c1">// the signature is verified
+</span>        <span class="k">case</span> <span class="nc">Left</span><span class="o">(</span><span class="n">err</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="c1">// absent or wrong signature    
+</span>    <span class="o">}</span>
 </code></pre></div></div>
 </section>
 			</div>
