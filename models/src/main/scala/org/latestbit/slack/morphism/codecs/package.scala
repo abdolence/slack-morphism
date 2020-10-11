@@ -25,11 +25,10 @@ import org.latestbit.slack.morphism.common.SlackChannelInfo._
 import org.latestbit.slack.morphism.common._
 import org.latestbit.slack.morphism.messages._
 import org.latestbit.circe.adt.codec._
-import org.latestbit.slack.morphism.client.reqresp.dnd.SlackApiDndInfoResponse
-import org.latestbit.slack.morphism.client.reqresp.pins.SlackPinItem
 import org.latestbit.slack.morphism.events._
 import org.latestbit.slack.morphism.views._
 import org.latestbit.slack.morphism.client.reqresp.apps._
+import org.latestbit.slack.morphism.client.reqresp.apps.event._
 import org.latestbit.slack.morphism.client.reqresp.auth._
 import org.latestbit.slack.morphism.client.reqresp.bots._
 import org.latestbit.slack.morphism.client.reqresp.chat._
@@ -58,6 +57,9 @@ package object codecs {
 
     implicit val encoderSlackTeamId: Encoder[SlackTeamId] = deriveUnwrappedEncoder[SlackTeamId]
     implicit val decoderSlackTeamId: Decoder[SlackTeamId] = deriveUnwrappedDecoder[SlackTeamId]
+
+    implicit val encoderSlackEnterpriseId: Encoder[SlackEnterpriseId] = deriveUnwrappedEncoder[SlackEnterpriseId]
+    implicit val decoderSlackEnterpriseId: Decoder[SlackEnterpriseId] = deriveUnwrappedDecoder[SlackEnterpriseId]
 
     implicit val encoderSlackChannelId: Encoder[SlackChannelId] = deriveUnwrappedEncoder[SlackChannelId]
     implicit val decoderSlackChannelId: Decoder[SlackChannelId] = deriveUnwrappedDecoder[SlackChannelId]
@@ -98,11 +100,32 @@ package object codecs {
     implicit val encoderSlackCallbackId: Encoder[SlackCallbackId] = deriveUnwrappedEncoder[SlackCallbackId]
     implicit val decoderSlackCallbackId: Decoder[SlackCallbackId] = deriveUnwrappedDecoder[SlackCallbackId]
 
+    implicit val encoderSlackEventId: Encoder[SlackEventId] = deriveUnwrappedEncoder[SlackEventId]
+    implicit val decoderSlackEventId: Decoder[SlackEventId] = deriveUnwrappedDecoder[SlackEventId]
+
+    implicit val encoderSlackEventContext: Encoder[SlackEventContext] = deriveUnwrappedEncoder[SlackEventContext]
+    implicit val decoderSlackEventContext: Decoder[SlackEventContext] = deriveUnwrappedDecoder[SlackEventContext]
+
     implicit val encoderSlackAccessTokenValue: Encoder[SlackAccessTokenValue] =
       deriveUnwrappedEncoder[SlackAccessTokenValue]
 
     implicit val decoderSlackAccessTokenValue: Decoder[SlackAccessTokenValue] =
       deriveUnwrappedDecoder[SlackAccessTokenValue]
+
+    implicit val encoderSlackApiTokenScopePermission: Encoder[SlackApiTokenScopePermission] =
+      deriveUnwrappedEncoder[SlackApiTokenScopePermission]
+
+    implicit val decoderSlackApiTokenScopePermission: Decoder[SlackApiTokenScopePermission] =
+      deriveUnwrappedDecoder[SlackApiTokenScopePermission]
+
+    implicit val encoderSlackApiTokenScope: Encoder[SlackApiTokenScope] = deriveUnwrappedEncoder[SlackApiTokenScope]
+    implicit val decoderSlackApiTokenScope: Decoder[SlackApiTokenScope] = deriveUnwrappedDecoder[SlackApiTokenScope]
+
+    implicit val encoderSlackApiTokenType: Encoder[SlackApiTokenType] =
+      JsonTaggedAdtCodec.createPureEnumEncoder[SlackApiTokenType]()
+
+    implicit val decoderSlackApiTokenType: Decoder[SlackApiTokenType] =
+      JsonTaggedAdtCodec.createPureEnumDecoder[SlackApiTokenType]()
   }
 
   trait CirceCodecs extends CirceCommonTypesCodes {
@@ -1025,6 +1048,12 @@ package object codecs {
     implicit val decoderSlackAppRateLimitedEvent: Decoder[SlackAppRateLimitedEvent] =
       deriveDecoder[SlackAppRateLimitedEvent]
 
+    implicit val encoderSlackEventAuthorization: Encoder.AsObject[SlackEventAuthorization] =
+      deriveEncoder[SlackEventAuthorization]
+
+    implicit val decoderSlackEventAuthorization: Decoder[SlackEventAuthorization] =
+      deriveDecoder[SlackEventAuthorization]
+
     implicit val encoderPushEvent = JsonTaggedAdtCodec.createEncoder[SlackPushEvent]( "type" )
     implicit val decoderPushEvent = JsonTaggedAdtCodec.createDecoder[SlackPushEvent]( "type" )
 
@@ -1821,6 +1850,20 @@ package object codecs {
 
     implicit val decoderSlackApiViewsUpdateResponse: Decoder[SlackApiViewsUpdateResponse] =
       deriveDecoder[SlackApiViewsUpdateResponse]
+
+    implicit val encoderSlackApiEventAuthorizationsListRequest
+        : Encoder.AsObject[SlackApiEventAuthorizationsListRequest] =
+      deriveEncoder[SlackApiEventAuthorizationsListRequest]
+
+    implicit val decoderSlackApiEventAuthorizationsList: Decoder[SlackApiEventAuthorizationsListRequest] =
+      deriveDecoder[SlackApiEventAuthorizationsListRequest]
+
+    implicit val encoderSlackApiEventAuthorizationsListResponse
+        : Encoder.AsObject[SlackApiEventAuthorizationsListResponse] =
+      deriveEncoder[SlackApiEventAuthorizationsListResponse]
+
+    implicit val decoderSlackApiEventAuthorizationsListResponse: Decoder[SlackApiEventAuthorizationsListResponse] =
+      deriveDecoder[SlackApiEventAuthorizationsListResponse]
 
   }
 

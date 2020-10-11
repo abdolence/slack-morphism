@@ -8,7 +8,7 @@ import sbt.Package.ManifestAttributes
 
 name := "slack-morphism-root"
 
-ThisBuild / version := "2.0.2-SNAPSHOT"
+ThisBuild / version := "3.0.0-SNAPSHOT"
 
 ThisBuild / description := "Open Type-Safe Reactive Client with Blocks Templating for Slack"
 

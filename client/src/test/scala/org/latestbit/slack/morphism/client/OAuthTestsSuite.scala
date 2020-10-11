@@ -32,8 +32,8 @@ class OAuthTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuiteSupport
 
     val mockResponse = SlackOAuthV2AccessTokenResponse(
       access_token = SlackAccessTokenValue( "access-token-value" ),
-      token_type = "test-token-type",
-      scope = "something:something,anything:anything",
+      token_type = SlackApiTokenType.Bot,
+      scope = SlackApiTokenScope( "something:something,anything:anything" ),
       team = SlackTeamInfo(
         id = SlackTeamId( "test-slack-workspace-id" ),
         name = Some( "test-slack-workspace-name" )

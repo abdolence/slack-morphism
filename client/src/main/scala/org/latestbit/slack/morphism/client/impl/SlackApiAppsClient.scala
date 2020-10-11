@@ -23,6 +23,10 @@ import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client.reqresp.apps._
 import org.latestbit.slack.morphism.codecs.implicits._
+import org.latestbit.slack.morphism.client.reqresp.apps.event._
+import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
+import org.latestbit.slack.morphism.common._
+import org.latestbit.slack.morphism.events._
 
 /**
  * Support for Slack Apps API methods
@@ -44,6 +48,63 @@ trait SlackApiAppsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
         req,
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier1 ) ) )
       )
+    }
+
+    object event {
+
+      object authorizations {
+
+        /**
+         * https://api.slack.com/methods/apps.event.authorizations.list
+         */
+        def list( req: SlackApiEventAuthorizationsListRequest )( implicit
+            slackApiToken: SlackApiAppToken,
+            backendType: SlackApiClientBackend.BackendType[F]
+        ): F[Either[SlackApiClientError, SlackApiEventAuthorizationsListResponse]] = {
+
+          http.post[
+            SlackApiEventAuthorizationsListRequest,
+            SlackApiEventAuthorizationsListResponse
+          ](
+            "apps.event.authorizations.list",
+            req,
+            methodRateControl =
+              Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier4 ) ) )
+          )
+        }
+
+        /**
+         * Scrolling support for
+         * https://api.slack.com/methods/apps.event.authorizations.list
+         */
+        def listScroller( req: SlackApiEventAuthorizationsListRequest )( implicit
+            slackApiToken: SlackApiAppToken,
+            backendType: SlackApiClientBackend.BackendType[F]
+        ): SlackApiResponseScroller[
+          F,
+          SlackEventAuthorization,
+          SlackCursorId,
+          SlackApiEventAuthorizationsListResponse
+        ] = {
+          new SlackApiResponseScroller[
+            F,
+            SlackEventAuthorization,
+            SlackCursorId,
+            SlackApiEventAuthorizationsListResponse
+          ](
+            initialLoader = { () => list( req ) },
+            batchLoader = { cursor =>
+              list(
+                req.copy(
+                  cursor = Some( cursor ),
+                  limit = req.limit
+                )
+              )
+            }
+          )
+        }
+      }
+
     }
   }
 

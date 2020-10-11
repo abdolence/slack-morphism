@@ -43,9 +43,11 @@ case class SlackEventCallback(
     team_id: SlackTeamId,
     api_app_id: String,
     event: SlackEventCallbackBody,
-    event_id: String,
+    event_id: SlackEventId,
+    event_context: SlackEventContext,
     event_time: SlackDateTime,
-    authed_users: Option[Seq[String]] = None
+    authed_users: Option[Seq[SlackUserId]] = None,
+    authorizations: Option[List[SlackEventAuthorization]] = None
 ) extends SlackPushEvent
 
 /**

@@ -18,7 +18,8 @@
 
 package org.latestbit.slack.morphism.client
 
-import org.latestbit.slack.morphism.common.{ SlackAccessTokenValue, SlackTeamId }
+import org.latestbit.slack.morphism.common._
+import cats.data.NonEmptyList
 
 /**
  * Slack API token base representation
@@ -35,13 +36,17 @@ trait SlackApiToken {
   /**
    * Slack scope represented as a set of permissions
    */
-  val scopeSet: Set[String]
+  val permissions: Set[SlackApiTokenScopePermission]
 
   /**
    * Workspace/team id
    */
   val teamId: Option[SlackTeamId]
 
+  /**
+   * Token type
+   */
+  val tokenType: SlackApiTokenType
 }
 
 /**
@@ -55,18 +60,10 @@ object SlackApiToken {
    * @param scopeAsStr scope as a str
    * @return set of permissions
    */
-  private[client] def scopeToSet( scopeAsStr: Option[String] ): Set[String] = {
-    scopeAsStr
-      .map( _.split( ',' ).map( _.trim ).filterNot( _.isEmpty ).toSet )
+  private[client] def scopeToPermissionSet( scope: Option[SlackApiTokenScope] ): Set[SlackApiTokenScopePermission] = {
+    scope
+      .map( _.value.split( ',' ).map( _.trim ).filterNot( _.isEmpty ).map( SlackApiTokenScopePermission.apply ).toSet )
       .getOrElse( Set() )
-  }
-
-  /**
-   * Type names of tokens
-   */
-  object TokenTypes {
-    final val Bot  = "bot"
-    final val User = "user"
   }
 
   /**
@@ -78,15 +75,33 @@ object SlackApiToken {
    * @return an API token instance for Slack API client
    */
   def createFrom(
-      tokenType: String,
+      tokenType: SlackApiTokenType,
       tokenValue: SlackAccessTokenValue,
-      scope: Option[String] = None,
+      scope: Option[SlackApiTokenScope] = None,
       teamId: Option[SlackTeamId] = None
-  ): Option[SlackApiToken] = {
+  ): SlackApiToken = {
     tokenType match {
-      case TokenTypes.Bot  => Some( SlackApiBotToken( tokenValue, scope, teamId ) )
-      case TokenTypes.User => Some( SlackApiUserToken( tokenValue, scope, teamId ) )
-      case _               => None
+      case SlackApiTokenType.Bot  => SlackApiBotToken( tokenValue, scope, teamId )
+      case SlackApiTokenType.User => SlackApiUserToken( tokenValue, scope, teamId )
+      case SlackApiTokenType.App  => SlackApiAppToken( tokenValue, scope, teamId )
+    }
+  }
+
+  /**
+   * Find a required token in the list by type
+   *
+   * @param tokens token list
+   * @param tokenType a token has this typ
+   * @param permissions a token has those permissions (optionally)
+   */
+  def findFirst[A <: SlackApiToken](
+      tokens: Iterable[SlackApiToken],
+      tokenType: SlackApiTokenType,
+      permissions: Option[Set[SlackApiTokenScopePermission]] = None
+  ): Option[A] = {
+    tokens.collectFirst {
+      case token if permissions.forall( _.subsetOf( token.permissions ) ) && token.tokenType == tokenType =>
+        token.asInstanceOf[A]
     }
   }
 }
@@ -101,10 +116,11 @@ object SlackApiToken {
  */
 case class SlackApiUserToken(
     override val accessToken: SlackAccessTokenValue,
-    scope: Option[String] = None,
+    scope: Option[SlackApiTokenScope] = None,
     teamId: Option[SlackTeamId] = None
 ) extends SlackApiToken {
-  override val scopeSet: Set[String] = SlackApiToken.scopeToSet( scope )
+  override val permissions: Set[SlackApiTokenScopePermission] = SlackApiToken.scopeToPermissionSet( scope )
+  override val tokenType: SlackApiTokenType                   = SlackApiTokenType.User
 }
 
 /**
@@ -117,8 +133,26 @@ case class SlackApiUserToken(
  */
 case class SlackApiBotToken(
     override val accessToken: SlackAccessTokenValue,
-    scope: Option[String] = None,
+    scope: Option[SlackApiTokenScope] = None,
     teamId: Option[SlackTeamId] = None
 ) extends SlackApiToken {
-  override val scopeSet: Set[String] = SlackApiToken.scopeToSet( scope )
+  override val permissions: Set[SlackApiTokenScopePermission] = SlackApiToken.scopeToPermissionSet( scope )
+  override val tokenType: SlackApiTokenType                   = SlackApiTokenType.Bot
+}
+
+/**
+ * Slack API app token
+ * @group TokenDefs
+ *
+ * @param accessToken token value
+ * @param scope token scope in a string form
+ * @param teamId a workspace/team id for this token
+ */
+case class SlackApiAppToken(
+    override val accessToken: SlackAccessTokenValue,
+    scope: Option[SlackApiTokenScope] = None,
+    teamId: Option[SlackTeamId] = None
+) extends SlackApiToken {
+  override val permissions: Set[SlackApiTokenScopePermission] = SlackApiToken.scopeToPermissionSet( scope )
+  override val tokenType: SlackApiTokenType                   = SlackApiTokenType.App
 }

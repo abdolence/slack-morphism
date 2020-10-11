@@ -26,8 +26,8 @@ import org.latestbit.slack.morphism.common._
  */
 case class SlackOAuthV2AccessTokenResponse(
     access_token: SlackAccessTokenValue,
-    token_type: String,
-    scope: String,
+    token_type: SlackApiTokenType,
+    scope: SlackApiTokenScope,
     bot_user_id: Option[SlackUserId] = None,
     app_id: SlackAppId,
     team: SlackTeamInfo,
@@ -42,7 +42,7 @@ case class SlackOAuthV2AccessTokenResponse(
  */
 case class SlackOAuthV2AuthedUser(
     id: SlackUserId,
-    scope: Option[String] = None,
+    scope: Option[SlackApiTokenScope] = None,
     access_token: Option[SlackAccessTokenValue] = None,
-    token_type: Option[String] = None
+    token_type: Option[SlackApiTokenType] = None
 )

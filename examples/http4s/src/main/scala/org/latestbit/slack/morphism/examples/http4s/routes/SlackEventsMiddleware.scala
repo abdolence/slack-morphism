@@ -131,7 +131,7 @@ trait SlackEventsMiddleware extends StrictLogging {
         .map { tokensRecord =>
           tokensRecord
             .flatMap( record =>
-              record.tokens.lastOption.flatMap { lastToken =>
+              record.tokens.lastOption.map { lastToken =>
                 SlackApiToken.createFrom(
                   tokenType = lastToken.tokenType,
                   tokenValue = lastToken.tokenValue,
