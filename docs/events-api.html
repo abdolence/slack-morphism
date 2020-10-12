@@ -145,11 +145,11 @@ full-featured bots for <a href="akka-http">Akka HTTP</a> and <a href="http4s">ht
 </ul>
 
 <p>JSON encoders and decoders for <a href="http://circe.io/">Circe</a> available either using</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import org.latestbit.slack.morphism.codecs.implicits._
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import org.latestbit.slack.morphism.codecs.implicits._
 
 </code></pre></div></div>
 <p>or using a trait:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>trait MyHttpRoutesSupport extends org.latestbit.slack.morphism.codecs.CirceCodecs {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>trait MyHttpRoutesSupport extends org.latestbit.slack.morphism.codecs.CirceCodecs {
   ...
 }
 </code></pre></div></div>
@@ -157,10 +157,10 @@ full-featured bots for <a href="akka-http">Akka HTTP</a> and <a href="http4s">ht
 <p>and you can decode all of the Slack Events like:</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">decode</span><span class="o">[</span><span class="kt">SlackInteractionEvent</span><span class="o">](</span> <span class="n">requestBody</span> <span class="o">)</span> <span class="k">match</span> <span class="o">{</span>
-      <span class="k">case</span> <span class="nc">Right</span><span class="o">(</span> <span class="n">event</span> <span class="o">)</span> <span class="k">=&gt;</span> <span class="c1">// ...
-</span>      <span class="k">case</span> <span class="nc">Left</span><span class="o">(</span> <span class="n">ex</span> <span class="o">)</span> <span class="k">=&gt;</span> <span class="o">{</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="o">(</span> <span class="n">s</span><span class="s">"Can't decode push event from Slack: ${ex.toString}\n${requestBody}"</span> <span class="o">)</span>
-        <span class="n">complete</span><span class="o">(</span> <span class="nc">StatusCodes</span><span class="o">.</span><span class="nc">BadRequest</span> <span class="o">)</span>
+      <span class="k">case</span> <span class="nc">Right</span><span class="o">(</span> <span class="n">event</span> <span class="o">)</span> <span class="k">=&gt;</span> <span class="c1">// ...</span>
+      <span class="k">case</span> <span class="nc">Left</span><span class="o">(</span> <span class="n">ex</span> <span class="o">)</span> <span class="k">=&gt;</span> <span class="o">{</span>
+        <span class="nv">logger</span><span class="o">.</span><span class="py">error</span><span class="o">(</span> <span class="n">s</span><span class="s">"Can't decode push event from Slack: ${ex.toString}\n${requestBody}"</span> <span class="o">)</span>
+        <span class="nf">complete</span><span class="o">(</span> <span class="nv">StatusCodes</span><span class="o">.</span><span class="py">BadRequest</span> <span class="o">)</span>
       <span class="o">}</span>
     <span class="o">}</span>
 </code></pre></div></div>
@@ -170,10 +170,10 @@ full-featured bots for <a href="akka-http">Akka HTTP</a> and <a href="http4s">ht
 <p>There are some Slack events that provide you a response_url, and you can 
 post a message back using the specified url from those events.</p>
 
-<p>To help with these scenarios, you can use <code class="highlighter-rouge">SlackApiClient.events.reply()</code>, 
+<p>To help with these scenarios, you can use <code class="language-plaintext highlighter-rouge">SlackApiClient.events.reply()</code>, 
 which doesn’t require any tokens to work:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>client.events
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>client.events
     .reply(
       response_url = response_url,
       reply = SlackApiEventMessageReply(
@@ -189,7 +189,7 @@ which doesn’t require any tokens to work:</p>
 <h2 id="slack-events-signatures-verifier">Slack events signatures verifier</h2>
 
 <p>To verify requests from Slack using your signing secret, there is <a href="/api/org/latestbit/slack/morphism/events/signature/SlackEventSignatureVerifier.html">SlackEventSignatureVerifier</a>, 
-which provides you <code class="highlighter-rouge">verify()</code>:</p>
+which provides you <code class="language-plaintext highlighter-rouge">verify()</code>:</p>
 
 <p>To verify event request you need:</p>
 <ul>
@@ -203,18 +203,18 @@ which provides you <code class="highlighter-rouge">verify()</code>:</p>
   <li>Your signing secret from your Slack app profile</li>
 </ul>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="n">signatureVerifier</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">SlackEventSignatureVerifier</span><span class="o">()</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="nv">signatureVerifier</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">SlackEventSignatureVerifier</span><span class="o">()</span>
 
 <span class="n">signatureVerifier</span><span class="o">.</span>
-    <span class="n">verify</span><span class="o">(</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">signingSecret</span><span class="o">,</span> 
+    <span class="nf">verify</span><span class="o">(</span>
+        <span class="nv">config</span><span class="o">.</span><span class="py">signingSecret</span><span class="o">,</span> 
         <span class="n">receivedSignedHash</span><span class="o">,</span> 
         <span class="n">receivedSignedTimestamp</span><span class="o">,</span> 
         <span class="n">requestBody</span>
     <span class="o">)</span> <span class="k">match</span> <span class="o">{</span>
-        <span class="k">case</span> <span class="nc">Right</span><span class="o">(</span><span class="n">success</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="c1">// the signature is verified
-</span>        <span class="k">case</span> <span class="nc">Left</span><span class="o">(</span><span class="n">err</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="c1">// absent or wrong signature    
-</span>    <span class="o">}</span>
+        <span class="k">case</span> <span class="nc">Right</span><span class="o">(</span><span class="n">success</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="c1">// the signature is verified</span>
+        <span class="k">case</span> <span class="nc">Left</span><span class="o">(</span><span class="n">err</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="c1">// absent or wrong signature    </span>
+    <span class="o">}</span>
 </code></pre></div></div>
 </section>
 			</div>

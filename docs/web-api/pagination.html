@@ -153,25 +153,25 @@ Scrollers are completely optional.</p>
 
 <p>Async iterator implements:</p>
 <ul>
-  <li><code class="highlighter-rouge">foldLeft</code> for accumulating batching results if you need it (the implementation of AsyncSeqIterator doesn’t memoize like Stream/LazyList)</li>
-  <li><code class="highlighter-rouge">map</code> to transform results</li>
-  <li><code class="highlighter-rouge">foreach</code> to iterate with effects</li>
+  <li><code class="language-plaintext highlighter-rouge">foldLeft</code> for accumulating batching results if you need it (the implementation of AsyncSeqIterator doesn’t memoize like Stream/LazyList)</li>
+  <li><code class="language-plaintext highlighter-rouge">map</code> to transform results</li>
+  <li><code class="language-plaintext highlighter-rouge">foreach</code> to iterate with effects</li>
 </ul>
 
-<p>(It is implemented as a very simple and pure functor and provides <code class="highlighter-rouge">cats.Functor</code> instance as well).</p>
+<p>(It is implemented as a very simple and pure functor and provides <code class="language-plaintext highlighter-rouge">cats.Functor</code> instance as well).</p>
 
-<p>This is an example of using <code class="highlighter-rouge">foldLeft</code>:</p>
+<p>This is an example of using <code class="language-plaintext highlighter-rouge">foldLeft</code>:</p>
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-<span class="n">client</span><span class="o">.</span><span class="n">conversations</span><span class="o">.</span><span class="n">historyScroller</span><span class="o">(</span>
+<span class="nv">client</span><span class="o">.</span><span class="py">conversations</span><span class="o">.</span><span class="py">historyScroller</span><span class="o">(</span>
     <span class="nc">SlackApiConversationsHistoryRequest</span><span class="o">(</span>
-      <span class="n">channel</span> <span class="k">=</span> <span class="s">"C222...."</span> <span class="c1">// some channel id
-</span>    <span class="o">)</span>
+      <span class="n">channel</span> <span class="k">=</span> <span class="s">"C222...."</span> <span class="c1">// some channel id</span>
+    <span class="o">)</span>
   <span class="o">)</span>
-  <span class="o">.</span><span class="n">toAsyncScroller</span><span class="o">()</span>
-  <span class="o">.</span><span class="n">foldLeft</span><span class="o">(</span> <span class="nc">List</span><span class="o">[</span><span class="kt">SlackMessage</span><span class="o">]()</span> <span class="o">)</span> <span class="o">{</span>
-    <span class="c1">// futureRes here is a batch result defined as Either[SlackApiClientError, List[SlackMessage]]
-</span>    <span class="k">case</span> <span class="o">(</span> <span class="n">wholeList</span><span class="o">,</span> <span class="n">futureRes</span> <span class="o">)</span> <span class="k">=&gt;</span>
-      <span class="n">futureRes</span><span class="o">.</span><span class="n">map</span><span class="o">(</span> <span class="n">wholeList</span> <span class="o">++</span> <span class="k">_</span> <span class="o">).</span><span class="n">getOrElse</span><span class="o">(</span> <span class="n">wholeList</span> <span class="o">)</span>     
+  <span class="o">.</span><span class="py">toAsyncScroller</span><span class="o">()</span>
+  <span class="o">.</span><span class="py">foldLeft</span><span class="o">(</span> <span class="nc">List</span><span class="o">[</span><span class="kt">SlackMessage</span><span class="o">]()</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// futureRes here is a batch result defined as Either[SlackApiClientError, List[SlackMessage]]</span>
+    <span class="nf">case</span> <span class="o">(</span> <span class="n">wholeList</span><span class="o">,</span> <span class="n">futureRes</span> <span class="o">)</span> <span class="k">=&gt;</span>
+      <span class="nv">futureRes</span><span class="o">.</span><span class="py">map</span><span class="o">(</span> <span class="n">wholeList</span> <span class="o">++</span> <span class="k">_</span> <span class="o">).</span><span class="py">getOrElse</span><span class="o">(</span> <span class="n">wholeList</span> <span class="o">)</span>     
   <span class="o">}</span>
 </code></pre></div></div>
 
@@ -184,15 +184,15 @@ Scrollers are completely optional.</p>
 <p>Then you can use it as following:</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-<span class="c1">// Additional import for support FS2
-</span><span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client.fs2s._</span>
+<span class="c1">// Additional import for support FS2</span>
+<span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client.fs2s._</span>
 
-<span class="n">client</span><span class="o">.</span><span class="n">conversations</span><span class="o">.</span><span class="n">historyScroller</span><span class="o">(</span>
+<span class="nv">client</span><span class="o">.</span><span class="py">conversations</span><span class="o">.</span><span class="py">historyScroller</span><span class="o">(</span>
     <span class="nc">SlackApiConversationsHistoryRequest</span><span class="o">(</span>
-      <span class="n">channel</span> <span class="k">=</span> <span class="s">"C222...."</span> <span class="c1">// some channel id
-</span>    <span class="o">)</span>
+      <span class="n">channel</span> <span class="k">=</span> <span class="s">"C222...."</span> <span class="c1">// some channel id</span>
+    <span class="o">)</span>
   <span class="o">)</span>
-  <span class="o">.</span><span class="n">toFs2Scroller</span><span class="o">().</span><span class="n">compile</span><span class="o">.</span><span class="n">toList</span><span class="o">.</span><span class="n">unsafeRunSync</span><span class="o">()</span> 
+  <span class="o">.</span><span class="py">toFs2Scroller</span><span class="o">().</span><span class="py">compile</span><span class="o">.</span><span class="py">toList</span><span class="o">.</span><span class="py">unsafeRunSync</span><span class="o">()</span> 
 
 </code></pre></div></div>
 
@@ -206,31 +206,31 @@ Scrollers are completely optional.</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">org.reactivestreams.Publisher</span>
 
-<span class="k">import</span> <span class="nn">cats.instances.future._</span> <span class="c1">// or cats.implicits._ required
-</span><span class="k">import</span> <span class="nn">scala.concurrent.ExecutionContext.Implicits.global</span>
+<span class="k">import</span> <span class="nn">cats.instances.future._</span> <span class="c1">// or cats.implicits._ required</span>
+<span class="k">import</span> <span class="nn">scala.concurrent.ExecutionContext.Implicits.global</span>
 
-<span class="c1">// Additional import for support Reactive Streams
-</span><span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client.reactive._</span>
+<span class="c1">// Additional import for support Reactive Streams</span>
+<span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client.reactive._</span>
 
 
-<span class="k">val</span> <span class="n">publisher</span> <span class="k">:</span> <span class="kt">Publisher</span><span class="o">[</span><span class="kt">SlackMessage</span><span class="o">]</span> <span class="k">=</span> 
-    <span class="n">client</span><span class="o">.</span><span class="n">conversations</span><span class="o">.</span><span class="n">historyScroller</span><span class="o">(</span>
+<span class="k">val</span> <span class="nv">publisher</span> <span class="k">:</span> <span class="kt">Publisher</span><span class="o">[</span><span class="kt">SlackMessage</span><span class="o">]</span> <span class="k">=</span> 
+    <span class="nv">client</span><span class="o">.</span><span class="py">conversations</span><span class="o">.</span><span class="py">historyScroller</span><span class="o">(</span>
         <span class="nc">SlackApiConversationsHistoryRequest</span><span class="o">(</span>
-          <span class="n">channel</span> <span class="k">=</span> <span class="s">"C222...."</span> <span class="c1">// some channel id
-</span>        <span class="o">)</span>
+          <span class="n">channel</span> <span class="k">=</span> <span class="s">"C222...."</span> <span class="c1">// some channel id</span>
+        <span class="o">)</span>
       <span class="o">)</span>
-      <span class="o">.</span><span class="n">toPublisher</span><span class="o">()</span>
+      <span class="o">.</span><span class="py">toPublisher</span><span class="o">()</span>
 
-<span class="c1">// Now you can use it as any other publishers with your reactive frameworks (like Akka Streams, etc)
-</span>
-<span class="c1">// This is an example of Akka Streams
-// https://doc.akka.io/docs/akka/2.5.3/scala/stream/stream-integrations.html#integrating-with-reactive-streams
-</span><span class="k">import</span> <span class="nn">akka.stream._</span>
+<span class="c1">// Now you can use it as any other publishers with your reactive frameworks (like Akka Streams, etc)</span>
+
+<span class="c1">// This is an example of Akka Streams</span>
+<span class="c1">// https://doc.akka.io/docs/akka/2.5.3/scala/stream/stream-integrations.html#integrating-with-reactive-streams</span>
+<span class="k">import</span> <span class="nn">akka.stream._</span>
 <span class="k">import</span> <span class="nn">akka.stream.scaladsl._</span>
 
 <span class="nc">Source</span>
-    <span class="o">.</span><span class="n">fromPublisher</span><span class="o">(</span><span class="n">publisher</span><span class="o">)</span>
-    <span class="o">.</span><span class="n">runForeach</span><span class="o">(</span><span class="n">msg</span> <span class="k">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="n">msg</span><span class="o">))</span>
+    <span class="o">.</span><span class="py">fromPublisher</span><span class="o">(</span><span class="n">publisher</span><span class="o">)</span>
+    <span class="o">.</span><span class="py">runForeach</span><span class="o">(</span><span class="n">msg</span> <span class="k">=&gt;</span> <span class="nf">println</span><span class="o">(</span><span class="n">msg</span><span class="o">))</span>
 
 </code></pre></div></div>
 
@@ -246,19 +246,19 @@ Scrollers are completely optional.</p>
 <p>Don’t use this for huge load scenarios, and it rather was created for testing purposes.</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-<span class="c1">// Synchronous approach (all batches would be loaded with blocking)
-</span><span class="n">client</span><span class="o">.</span><span class="n">conversations</span><span class="o">.</span><span class="n">historyScroller</span><span class="o">(</span>
+<span class="c1">// Synchronous approach (all batches would be loaded with blocking)</span>
+<span class="nv">client</span><span class="o">.</span><span class="py">conversations</span><span class="o">.</span><span class="py">historyScroller</span><span class="o">(</span>
     <span class="nc">SlackApiConversationsHistoryRequest</span><span class="o">(</span>
-      <span class="n">channel</span> <span class="k">=</span> <span class="s">"C222...."</span> <span class="c1">// some channel id
-</span>    <span class="o">)</span>
+      <span class="n">channel</span> <span class="k">=</span> <span class="s">"C222...."</span> <span class="c1">// some channel id</span>
+    <span class="o">)</span>
   <span class="o">)</span>
-  <span class="o">.</span><span class="n">toSyncScroller</span><span class="o">(</span> <span class="mf">30.</span><span class="n">seconds</span> <span class="o">)</span>
-  <span class="o">.</span><span class="n">foreach</span> <span class="o">{</span>
+  <span class="o">.</span><span class="py">toSyncScroller</span><span class="o">(</span> <span class="mf">30.</span><span class="n">seconds</span> <span class="o">)</span>
+  <span class="o">.</span><span class="py">foreach</span> <span class="o">{</span>
     <span class="k">case</span> <span class="nc">Right</span><span class="o">(</span> <span class="n">results</span><span class="k">:</span> <span class="kt">LazyList</span><span class="o">[</span><span class="kt">SlackMessage</span><span class="o">]</span> <span class="o">)</span> <span class="k">=&gt;</span> <span class="o">{</span>
-      <span class="c1">// ... results are ready to scroll
-</span>    <span class="o">}</span>
-    <span class="k">case</span> <span class="nc">Left</span><span class="o">(</span> <span class="n">err</span> <span class="o">)</span> <span class="k">=&gt;</span> <span class="c1">// the first batch is failed here
-</span>  <span class="o">}</span>
+      <span class="c1">// ... results are ready to scroll</span>
+    <span class="o">}</span>
+    <span class="k">case</span> <span class="nc">Left</span><span class="o">(</span> <span class="n">err</span> <span class="o">)</span> <span class="k">=&gt;</span> <span class="c1">// the first batch is failed here</span>
+  <span class="o">}</span>
 
 </code></pre></div></div>
 </section>

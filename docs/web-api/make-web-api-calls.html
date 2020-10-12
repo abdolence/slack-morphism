@@ -124,7 +124,7 @@
 <h2 id="choose-an-http-client-backend">Choose an HTTP client backend</h2>
 
 <p>You have to choose a <a href="https://sttp.readthedocs.io/en/latest/backends/summary.html">sttp backend</a> 
-that supports <code class="highlighter-rouge">scala.concurrent.Future</code>, <code class="highlighter-rouge">cats.effect.Async/Effect</code>, <code class="highlighter-rouge">monix.eval.Task</code> response wrappers:</p>
+that supports <code class="language-plaintext highlighter-rouge">scala.concurrent.Future</code>, <code class="language-plaintext highlighter-rouge">cats.effect.Async/Effect</code>, <code class="language-plaintext highlighter-rouge">monix.eval.Task</code> response wrappers:</p>
 <ul>
   <li>AsyncHttpClientFutureBackend</li>
   <li>AsyncHttpClientCatsBackend</li>
@@ -138,12 +138,12 @@ that supports <code class="highlighter-rouge">scala.concurrent.Future</code>, <c
   <li>Http4sBackend</li>
 </ul>
 
-<p>Add a dependency of your choice to your <code class="highlighter-rouge">build.sbt</code>.</p>
+<p>Add a dependency of your choice to your <code class="language-plaintext highlighter-rouge">build.sbt</code>.</p>
 
 <p>For instance, for Akka Http backend this is:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"com.softwaremill.sttp.client" %% "akka-http-backend" % sttpVersion
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"com.softwaremill.sttp.client" %% "akka-http-backend" % sttpVersion
 </code></pre></div></div>
-<p>where <code class="highlighter-rouge">sttpVersion</code> should be 2.0+</p>
+<p>where <code class="language-plaintext highlighter-rouge">sttpVersion</code> should be 2.0+</p>
 
 <h2 id="create-a-client-to-slack-web-api-methods">Create a client to Slack Web API methods</h2>
 
@@ -152,67 +152,67 @@ to all available of Slack Web API methods.</p>
 
 <h3 id="future-backend">Future backend</h3>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Import Slack Morphism Client
-</span><span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client._</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Import Slack Morphism Client</span>
+<span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client._</span>
 
-<span class="c1">// Import STTP backend
-// We're using Akka Http for this example 
-</span><span class="k">import</span> <span class="nn">sttp.client.akkahttp.AkkaHttpBackend</span>
+<span class="c1">// Import STTP backend</span>
+<span class="c1">// We're using Akka Http for this example </span>
+<span class="k">import</span> <span class="nn">sttp.client.akkahttp.AkkaHttpBackend</span>
 
-<span class="c1">// Import support for scala.concurrent.Future implicits from cats (required if you use Future-based backend)
-// If you bump into compilation errors that `Future` isn't a `cats.Monad` or `cats.MonadError`, 
-// you probably forgot to import this.
-// Also, you can import all implicits from cats using `import cats.implicits._` instead of this 
-</span><span class="k">import</span> <span class="nn">cats.instances.future._</span>
+<span class="c1">// Import support for scala.concurrent.Future implicits from cats (required if you use Future-based backend)</span>
+<span class="c1">// If you bump into compilation errors that `Future` isn't a `cats.Monad` or `cats.MonadError`, </span>
+<span class="c1">// you probably forgot to import this.</span>
+<span class="c1">// Also, you can import all implicits from cats using `import cats.implicits._` instead of this </span>
+<span class="k">import</span> <span class="nn">cats.instances.future._</span>
 
-<span class="c1">// Creating an STTP backend
-</span><span class="k">implicit</span> <span class="k">val</span> <span class="n">sttpBackend</span> <span class="k">=</span> <span class="nc">AkkaHttpBackend</span><span class="o">()</span> <span class="c1">// this is a Future-based backend
-</span>
-<span class="c1">// Creating a client instance
-</span><span class="k">val</span> <span class="n">client</span> <span class="k">=</span> <span class="nc">SlackApiClient</span><span class="o">.</span><span class="n">create</span><span class="o">()</span> <span class="c1">// or similarly SlackApiClient.create[Future]()
-</span></code></pre></div></div>
+<span class="c1">// Creating an STTP backend</span>
+<span class="k">implicit</span> <span class="k">val</span> <span class="nv">sttpBackend</span> <span class="k">=</span> <span class="nc">AkkaHttpBackend</span><span class="o">()</span> <span class="c1">// this is a Future-based backend</span>
+
+<span class="c1">// Creating a client instance</span>
+<span class="k">val</span> <span class="nv">client</span> <span class="k">=</span> <span class="nv">SlackApiClient</span><span class="o">.</span><span class="py">create</span><span class="o">()</span> <span class="c1">// or similarly SlackApiClient.create[Future]()</span>
+</code></pre></div></div>
 
 <h3 id="cats-effect-backend">Cats Effect backend</h3>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Import Slack Morphism Client
-</span><span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client._</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Import Slack Morphism Client</span>
+<span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client._</span>
 
-<span class="c1">// Import STTP backend
-// We're using AsyncHttpClientCatsBackend for this example 
-</span><span class="k">import</span> <span class="nn">sttp.client.asynchttpclient.cats.AsyncHttpClientCatsBackend</span>
+<span class="c1">// Import STTP backend</span>
+<span class="c1">// We're using AsyncHttpClientCatsBackend for this example </span>
+<span class="k">import</span> <span class="nn">sttp.client.asynchttpclient.cats.AsyncHttpClientCatsBackend</span>
 
-<span class="c1">// Import support for cats-effect
-</span><span class="k">import</span> <span class="nn">cats.effect._</span>
+<span class="c1">// Import support for cats-effect</span>
+<span class="k">import</span> <span class="nn">cats.effect._</span>
 
-<span class="c1">// We should provide a ContextShift for Cats IO and STTP backend
-</span><span class="k">implicit</span> <span class="k">val</span> <span class="n">cs</span><span class="k">:</span> <span class="kt">ContextShift</span><span class="o">[</span><span class="kt">IO</span><span class="o">]</span> <span class="k">=</span> <span class="nc">IO</span><span class="o">.</span><span class="n">contextShift</span><span class="o">(</span> <span class="n">scala</span><span class="o">.</span><span class="n">concurrent</span><span class="o">.</span><span class="nc">ExecutionContext</span><span class="o">.</span><span class="n">global</span> <span class="o">)</span>
+<span class="c1">// We should provide a ContextShift for Cats IO and STTP backend</span>
+<span class="k">implicit</span> <span class="k">val</span> <span class="nv">cs</span><span class="k">:</span> <span class="kt">ContextShift</span><span class="o">[</span><span class="kt">IO</span><span class="o">]</span> <span class="k">=</span> <span class="nv">IO</span><span class="o">.</span><span class="py">contextShift</span><span class="o">(</span> <span class="nv">scala</span><span class="o">.</span><span class="py">concurrent</span><span class="o">.</span><span class="py">ExecutionContext</span><span class="o">.</span><span class="py">global</span> <span class="o">)</span>
 
 <span class="k">for</span> <span class="o">{</span>
-  <span class="n">backend</span> <span class="k">&lt;-</span> <span class="nc">AsyncHttpClientCatsBackend</span><span class="o">[</span><span class="kt">IO</span><span class="o">]()</span> <span class="c1">// Creating an STTP backend
-</span>  <span class="n">client</span> <span class="k">=</span> <span class="nc">SlackApiClient</span><span class="o">.</span><span class="n">build</span><span class="o">[</span><span class="kt">IO</span><span class="o">](</span> <span class="n">backend</span> <span class="o">).</span><span class="n">create</span><span class="o">()</span> <span class="c1">// Create a Slack API client
-</span>  <span class="n">result</span> <span class="k">&lt;-</span> <span class="n">client</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">test</span><span class="o">(</span> <span class="nc">SlackApiTestRequest</span><span class="o">()</span> <span class="o">)</span> <span class="c1">// call an example method inside IO monad
-</span><span class="o">}</span> <span class="k">yield</span> <span class="n">result</span>
+  <span class="n">backend</span> <span class="k">&lt;-</span> <span class="nc">AsyncHttpClientCatsBackend</span><span class="o">[</span><span class="kt">IO</span><span class="o">]()</span> <span class="c1">// Creating an STTP backend</span>
+  <span class="n">client</span> <span class="k">=</span> <span class="nv">SlackApiClient</span><span class="o">.</span><span class="py">build</span><span class="o">[</span><span class="kt">IO</span><span class="o">](</span> <span class="n">backend</span> <span class="o">).</span><span class="py">create</span><span class="o">()</span> <span class="c1">// Create a Slack API client</span>
+  <span class="n">result</span> <span class="k">&lt;-</span> <span class="nv">client</span><span class="o">.</span><span class="py">api</span><span class="o">.</span><span class="py">test</span><span class="o">(</span> <span class="nc">SlackApiTestRequest</span><span class="o">()</span> <span class="o">)</span> <span class="c1">// call an example method inside IO monad</span>
+<span class="o">}</span> <span class="k">yield</span> <span class="n">result</span>
 
 </code></pre></div></div>
 
 <h3 id="monix-backend">Monix backend</h3>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Import Slack Morphism Client
-</span><span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client._</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Import Slack Morphism Client</span>
+<span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client._</span>
 
-<span class="c1">// Import STTP backend
-</span><span class="k">import</span> <span class="nn">sttp.client.asynchttpclient.monix.AsyncHttpClientMonixBackend</span>
+<span class="c1">// Import STTP backend</span>
+<span class="k">import</span> <span class="nn">sttp.client.asynchttpclient.monix.AsyncHttpClientMonixBackend</span>
 
 
-<span class="c1">// Monix imports 
-</span><span class="k">import</span> <span class="nn">monix.eval._</span>
+<span class="c1">// Monix imports </span>
+<span class="k">import</span> <span class="nn">monix.eval._</span>
 <span class="k">import</span> <span class="nn">monix.execution.Scheduler.Implicits.global</span>
 
 <span class="k">for</span> <span class="o">{</span>
-  <span class="n">backend</span> <span class="k">&lt;-</span> <span class="nc">AsyncHttpClientMonixBackend</span><span class="o">()</span> <span class="c1">// Creating an STTP backend
-</span>  <span class="n">client</span> <span class="k">=</span> <span class="nc">SlackApiClient</span><span class="o">.</span><span class="n">build</span><span class="o">[</span><span class="kt">Task</span><span class="o">](</span> <span class="n">backend</span> <span class="o">).</span><span class="n">create</span><span class="o">()</span> <span class="c1">// Create a Slack API client
-</span>  <span class="n">result</span> <span class="k">&lt;-</span> <span class="n">client</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">test</span><span class="o">(</span> <span class="nc">SlackApiTestRequest</span><span class="o">()</span> <span class="o">)</span> <span class="c1">// call an example method inside Task monad
-</span><span class="o">}</span> <span class="k">yield</span> <span class="n">result</span>
+  <span class="n">backend</span> <span class="k">&lt;-</span> <span class="nc">AsyncHttpClientMonixBackend</span><span class="o">()</span> <span class="c1">// Creating an STTP backend</span>
+  <span class="n">client</span> <span class="k">=</span> <span class="nv">SlackApiClient</span><span class="o">.</span><span class="py">build</span><span class="o">[</span><span class="kt">Task</span><span class="o">](</span> <span class="n">backend</span> <span class="o">).</span><span class="py">create</span><span class="o">()</span> <span class="c1">// Create a Slack API client</span>
+  <span class="n">result</span> <span class="k">&lt;-</span> <span class="nv">client</span><span class="o">.</span><span class="py">api</span><span class="o">.</span><span class="py">test</span><span class="o">(</span> <span class="nc">SlackApiTestRequest</span><span class="o">()</span> <span class="o">)</span> <span class="c1">// call an example method inside Task monad</span>
+<span class="o">}</span> <span class="k">yield</span> <span class="n">result</span>
 
 </code></pre></div></div>
 
@@ -241,13 +241,13 @@ Look at <a href="https://api.slack.com/docs/oauth-safety">Slack recommendations<
 <span class="k">import</span> <span class="nn">scala.concurrent._</span>
 <span class="k">import</span> <span class="nn">cats.instances.future._</span>
 
-<span class="k">implicit</span> <span class="k">val</span> <span class="n">sttpBackend</span> <span class="k">=</span> <span class="nc">AkkaHttpBackend</span><span class="o">()</span>
+<span class="k">implicit</span> <span class="k">val</span> <span class="nv">sttpBackend</span> <span class="k">=</span> <span class="nc">AkkaHttpBackend</span><span class="o">()</span>
 
-<span class="k">val</span> <span class="n">client</span> <span class="k">=</span> <span class="nc">SlackApiClient</span><span class="o">.</span><span class="n">create</span><span class="o">[</span><span class="kt">Future</span><span class="o">]()</span>
+<span class="k">val</span> <span class="nv">client</span> <span class="k">=</span> <span class="nv">SlackApiClient</span><span class="o">.</span><span class="py">create</span><span class="o">[</span><span class="kt">Future</span><span class="o">]()</span>
 
-<span class="k">implicit</span> <span class="k">val</span> <span class="n">slackApiToken</span><span class="k">:</span> <span class="kt">SlackApiToken</span> <span class="o">=</span> <span class="nc">SlackApiBotToken</span><span class="o">(</span><span class="nc">SlackAccessTokenValue</span><span class="o">(</span><span class="s">"xoxb-89....."</span><span class="o">))</span>
+<span class="k">implicit</span> <span class="k">val</span> <span class="nv">slackApiToken</span><span class="k">:</span> <span class="kt">SlackApiToken</span> <span class="o">=</span> <span class="nc">SlackApiBotToken</span><span class="o">(</span><span class="nc">SlackAccessTokenValue</span><span class="o">(</span><span class="s">"xoxb-89....."</span><span class="o">))</span>
 
-<span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">postMessage</span><span class="o">(</span>
+<span class="nv">client</span><span class="o">.</span><span class="py">chat</span><span class="o">.</span><span class="py">postMessage</span><span class="o">(</span>
     <span class="nc">SlackApiChatPostMessageRequest</span><span class="o">(</span>
       <span class="n">channel</span> <span class="k">=</span> <span class="s">"#general"</span><span class="o">,</span>
       <span class="n">text</span> <span class="k">=</span> <span class="s">"Hello Slack"</span>
@@ -257,17 +257,17 @@ Look at <a href="https://api.slack.com/docs/oauth-safety">Slack recommendations<
 </code></pre></div></div>
 <p>As you might noticed here, Slack Morphism API mimics Slack Web API method names, so that
 <a href="https://api.slack.com/methods/chat.postMessage">https://slack.com/api/chat.postMessage</a> 
-is <code class="highlighter-rouge">client.chat.postMessage(...)</code>, or <a href="https://api.slack.com/methods/oauth.v2.access">https://api.slack.com/methods/oauth.v2.access</a> 
-is <code class="highlighter-rouge">client.oauth.v2.access(...)</code> etc.</p>
+is <code class="language-plaintext highlighter-rouge">client.chat.postMessage(...)</code>, or <a href="https://api.slack.com/methods/oauth.v2.access">https://api.slack.com/methods/oauth.v2.access</a> 
+is <code class="language-plaintext highlighter-rouge">client.oauth.v2.access(...)</code> etc.</p>
 
 <p>The complete list of all of the implemented Web API methods is available <a href="/api/org/latestbit/slack/morphism/client/SlackApiClientT.html">here</a>.</p>
 
-<p>There is also the auxiliary function <code class="highlighter-rouge">client.withToken</code> to help with implicit tokens in Scala for-comprehension:</p>
+<p>There is also the auxiliary function <code class="language-plaintext highlighter-rouge">client.withToken</code> to help with implicit tokens in Scala for-comprehension:</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="o">{</span>
         <span class="n">backend</span> <span class="k">&lt;-</span> <span class="nc">AsyncHttpClientCatsBackend</span><span class="o">[</span><span class="kt">IO</span><span class="o">]()</span>
-        <span class="n">client</span> <span class="k">=</span> <span class="nc">SlackApiClient</span><span class="o">.</span><span class="n">build</span><span class="o">[</span><span class="kt">IO</span><span class="o">](</span> <span class="n">backend</span> <span class="o">).</span><span class="n">create</span><span class="o">()</span>
-        <span class="n">result</span> <span class="k">&lt;-</span> <span class="n">client</span><span class="o">.</span><span class="n">withToken</span><span class="o">(</span> <span class="n">yourToken</span> <span class="o">)(</span> <span class="k">implicit</span> <span class="n">token</span> <span class="k">=&gt;</span> <span class="k">_</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">test</span><span class="o">(</span> <span class="nc">SlackApiTestRequest</span><span class="o">()</span> <span class="o">)</span> <span class="o">)</span>
+        <span class="n">client</span> <span class="k">=</span> <span class="nv">SlackApiClient</span><span class="o">.</span><span class="py">build</span><span class="o">[</span><span class="kt">IO</span><span class="o">](</span> <span class="n">backend</span> <span class="o">).</span><span class="py">create</span><span class="o">()</span>
+        <span class="n">result</span> <span class="k">&lt;-</span> <span class="nv">client</span><span class="o">.</span><span class="py">withToken</span><span class="o">(</span> <span class="n">yourToken</span> <span class="o">)(</span> <span class="k">implicit</span> <span class="n">token</span> <span class="k">=&gt;</span> <span class="nv">_</span><span class="o">.</span><span class="py">api</span><span class="o">.</span><span class="py">test</span><span class="o">(</span> <span class="nc">SlackApiTestRequest</span><span class="o">()</span> <span class="o">)</span> <span class="o">)</span>
 <span class="o">}</span> <span class="k">yield</span> <span class="n">result</span>
 </code></pre></div></div>
 
@@ -279,23 +279,23 @@ API for this scenario:</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">org.latestbit.slack.morphism.client._</span>
 
-<span class="c1">// Definition of your request and response as a case classes
-</span><span class="k">case</span> <span class="k">class</span> <span class="nc">YourRequest</span><span class="o">(...)</span>
+<span class="c1">// Definition of your request and response as a case classes</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">YourRequest</span><span class="o">(...)</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">YourResponse</span><span class="o">(...)</span>
 
-<span class="c1">// Definitions of JSON encoder/decoders
-</span><span class="k">import</span> <span class="nn">io.circe.generic.semiauto._</span>
+<span class="c1">// Definitions of JSON encoder/decoders</span>
+<span class="k">import</span> <span class="nn">io.circe.generic.semiauto._</span>
 
-<span class="k">implicit</span> <span class="k">val</span> <span class="n">yourRequestEncoder</span> <span class="k">=</span> <span class="n">deriveEncoder</span><span class="o">[</span><span class="kt">YourRequest</span><span class="o">]</span> 
-<span class="k">implicit</span> <span class="k">val</span> <span class="n">yourResponseDecoder</span> <span class="k">=</span> <span class="n">deriveEncoder</span><span class="o">[</span><span class="kt">YourRequest</span><span class="o">]</span>
+<span class="k">implicit</span> <span class="k">val</span> <span class="nv">yourRequestEncoder</span> <span class="k">=</span> <span class="n">deriveEncoder</span><span class="o">[</span><span class="kt">YourRequest</span><span class="o">]</span> 
+<span class="k">implicit</span> <span class="k">val</span> <span class="nv">yourResponseDecoder</span> <span class="k">=</span> <span class="n">deriveEncoder</span><span class="o">[</span><span class="kt">YourRequest</span><span class="o">]</span>
 
-<span class="c1">// Need init a token before making calls
-</span><span class="k">implicit</span> <span class="n">slackApiToken</span><span class="k">:</span> <span class="kt">SlackApiToken</span> <span class="o">=</span> <span class="o">...</span>
+<span class="c1">// Need init a token before making calls</span>
+<span class="k">implicit</span> <span class="n">slackApiToken</span><span class="k">:</span> <span class="kt">SlackApiToken</span> <span class="o">=</span> <span class="o">...</span>
 
-<span class="c1">// Make a call
-</span><span class="n">client</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">post</span><span class="o">[</span><span class="kt">YourRequest</span>,<span class="kt">YourResponse</span><span class="o">](</span>
-    <span class="n">methodUri</span> <span class="k">=</span> <span class="s">"some.someMethod"</span><span class="o">,</span> <span class="c1">// Slack relative Method URI 
-</span>    <span class="nc">YourRequest</span><span class="o">()</span>
+<span class="c1">// Make a call</span>
+<span class="nv">client</span><span class="o">.</span><span class="py">http</span><span class="o">.</span><span class="py">post</span><span class="o">[</span><span class="kt">YourRequest</span>,<span class="kt">YourResponse</span><span class="o">](</span>
+    <span class="n">methodUri</span> <span class="k">=</span> <span class="s">"some.someMethod"</span><span class="o">,</span> <span class="c1">// Slack relative Method URI </span>
+    <span class="nc">YourRequest</span><span class="o">()</span>
 <span class="o">)</span>
 </code></pre></div></div>
 
@@ -310,7 +310,7 @@ This project is open to help each other, so any PRs are welcomed.</p>
 
 <p>This is completely optional and just a recommendation for you.</p>
 
-<p>You might notice some boilerplate when you deal with consequent client requests that returns <code class="highlighter-rouge">Future[ Either[ SlackApiClientError,SomeKindOfSlackResponse ] ]</code>.</p>
+<p>You might notice some boilerplate when you deal with consequent client requests that returns <code class="language-plaintext highlighter-rouge">Future[ Either[ SlackApiClientError,SomeKindOfSlackResponse ] ]</code>.</p>
 
 <p>To solve this in a better way, consider using an approach with <a href="https://typelevel.org/cats/datatypes/eithert.html">EitherT[]</a> from 
 <a href="https://typelevel.org/cats/">Cats</a>, well described <a href="http://eed3si9n.com/herding-cats/stacking-future-and-either.html">here</a>.</p>
@@ -319,24 +319,24 @@ This project is open to help each other, so any PRs are welcomed.</p>
 We make a first async call, find some result in the first response, and 
 getting the response result of a next async call.</p>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">EitherT</span><span class="o">(</span> <span class="n">slackApiClient</span><span class="o">.</span><span class="n">conversations</span><span class="o">.</span><span class="n">list</span><span class="o">(</span> <span class="nc">SlackApiConversationsListRequest</span><span class="o">()</span> <span class="o">)</span> <span class="o">).</span><span class="n">flatMap</span> <span class="o">{</span> <span class="n">channelsResp</span> <span class="k">=&gt;</span>
-  <span class="n">channelsResp</span><span class="o">.</span><span class="n">channels</span>
-    <span class="o">.</span><span class="n">find</span><span class="o">(</span> <span class="k">_</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">is_general</span><span class="o">.</span><span class="n">contains</span><span class="o">(</span> <span class="kc">true</span> <span class="o">)</span> <span class="o">)</span>
-    <span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="n">generalChannel</span> <span class="k">=&gt;</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">EitherT</span><span class="o">(</span> <span class="nv">slackApiClient</span><span class="o">.</span><span class="py">conversations</span><span class="o">.</span><span class="py">list</span><span class="o">(</span> <span class="nc">SlackApiConversationsListRequest</span><span class="o">()</span> <span class="o">)</span> <span class="o">).</span><span class="py">flatMap</span> <span class="o">{</span> <span class="n">channelsResp</span> <span class="k">=&gt;</span>
+  <span class="nv">channelsResp</span><span class="o">.</span><span class="py">channels</span>
+    <span class="o">.</span><span class="py">find</span><span class="o">(</span> <span class="nv">_</span><span class="o">.</span><span class="py">flags</span><span class="o">.</span><span class="py">is_general</span><span class="o">.</span><span class="py">contains</span><span class="o">(</span> <span class="kc">true</span> <span class="o">)</span> <span class="o">)</span>
+    <span class="o">.</span><span class="py">map</span> <span class="o">{</span> <span class="n">generalChannel</span> <span class="k">=&gt;</span>
       <span class="nc">EitherT</span><span class="o">(</span>
-        <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">postMessage</span><span class="o">(</span>
+        <span class="nv">client</span><span class="o">.</span><span class="py">chat</span><span class="o">.</span><span class="py">postMessage</span><span class="o">(</span>
             <span class="nc">SlackApiChatPostMessageRequest</span><span class="o">(</span>
-              <span class="n">channel</span> <span class="k">=</span> <span class="n">generalChannel</span><span class="o">.</span><span class="n">id</span><span class="o">,</span>
+              <span class="n">channel</span> <span class="k">=</span> <span class="nv">generalChannel</span><span class="o">.</span><span class="py">id</span><span class="o">,</span>
               <span class="n">text</span> <span class="k">=</span> <span class="s">"Hello"</span>
             <span class="o">)</span>
           <span class="o">)</span>
-      <span class="o">).</span><span class="n">map</span> <span class="o">{</span> <span class="n">resp</span> <span class="k">=&gt;</span>
-        <span class="n">resp</span><span class="o">.</span><span class="n">ts</span><span class="o">.</span><span class="n">some</span>
+      <span class="o">).</span><span class="py">map</span> <span class="o">{</span> <span class="n">resp</span> <span class="k">=&gt;</span>
+        <span class="nv">resp</span><span class="o">.</span><span class="py">ts</span><span class="o">.</span><span class="py">some</span>
       <span class="o">}</span>
     <span class="o">}</span>
-    <span class="o">.</span><span class="n">getOrElse</span><span class="o">(</span>
+    <span class="o">.</span><span class="py">getOrElse</span><span class="o">(</span>
       <span class="nc">EitherT</span><span class="o">[</span><span class="kt">Future</span>, <span class="kt">SlackApiClientError</span>, <span class="kt">Option</span><span class="o">[</span><span class="kt">SlackTs</span><span class="o">]](</span>
-        <span class="nc">Future</span><span class="o">.</span><span class="n">successful</span><span class="o">(</span> <span class="nc">None</span><span class="o">.</span><span class="n">asRight</span> <span class="o">)</span>
+        <span class="nv">Future</span><span class="o">.</span><span class="py">successful</span><span class="o">(</span> <span class="nv">None</span><span class="o">.</span><span class="py">asRight</span> <span class="o">)</span>
       <span class="o">)</span>
     <span class="o">)</span>
 <span class="o">}</span>

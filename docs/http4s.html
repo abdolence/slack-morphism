@@ -138,8 +138,8 @@ written with Slack Morphism and <a href="https://http4s.org/">http4s</a>.</p>
 </ul>
 
 <h3 id="install-and-run-ngrok-on-http-port">Install and run ngrok on http port</h3>
-<p>Run <code class="highlighter-rouge">ngrok</code> on a port 8080:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ngrok http 8080
+<p>Run <code class="language-plaintext highlighter-rouge">ngrok</code> on a port 8080:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ngrok http 8080
 </code></pre></div></div>
 <p>We will need the HTTPS URL from it further, so don’t close it and open a second terminal.</p>
 
@@ -148,16 +148,16 @@ written with Slack Morphism and <a href="https://http4s.org/">http4s</a>.</p>
 
 <p>We will use OAuth v2/granular permissions/scopes, so:</p>
 <ul>
-  <li>Follow to <code class="highlighter-rouge">Tools → Update to Granular Scopes</code></li>
+  <li>Follow to <code class="language-plaintext highlighter-rouge">Tools → Update to Granular Scopes</code></li>
   <li>Select the following bot token scopes:
     <ul>
-      <li><code class="highlighter-rouge">commands</code></li>
-      <li><code class="highlighter-rouge">im:history</code>, <code class="highlighter-rouge">im:read</code>, <code class="highlighter-rouge">im:write</code></li>
-      <li><code class="highlighter-rouge">users:read</code></li>
-      <li><code class="highlighter-rouge">team:read</code></li>
-      <li><code class="highlighter-rouge">channels:history</code></li>
-      <li><code class="highlighter-rouge">chat:write:bot</code> (it might be also <code class="highlighter-rouge">chat:write</code> after upgrade to Granular Scopes, careful with this one)</li>
-      <li><code class="highlighter-rouge">users.profile:read</code></li>
+      <li><code class="language-plaintext highlighter-rouge">commands</code></li>
+      <li><code class="language-plaintext highlighter-rouge">im:history</code>, <code class="language-plaintext highlighter-rouge">im:read</code>, <code class="language-plaintext highlighter-rouge">im:write</code></li>
+      <li><code class="language-plaintext highlighter-rouge">users:read</code></li>
+      <li><code class="language-plaintext highlighter-rouge">team:read</code></li>
+      <li><code class="language-plaintext highlighter-rouge">channels:history</code></li>
+      <li><code class="language-plaintext highlighter-rouge">chat:write:bot</code> (it might be also <code class="language-plaintext highlighter-rouge">chat:write</code> after upgrade to Granular Scopes, careful with this one)</li>
+      <li><code class="language-plaintext highlighter-rouge">users.profile:read</code></li>
     </ul>
   </li>
 </ul>
@@ -165,18 +165,18 @@ written with Slack Morphism and <a href="https://http4s.org/">http4s</a>.</p>
 <p><img src="https://slack.abdolence.dev/img/create-bot-token-scopes.png" alt="sbt-example-command" /></p>
 
 <p>So, the who list would be 
-<code class="highlighter-rouge">channels:history,chat:write,commands,im:history,im:read,im:write,team:read,users.profile:read,users:read</code>
+<code class="language-plaintext highlighter-rouge">channels:history,chat:write,commands,im:history,im:read,im:write,team:read,users.profile:read,users:read</code>
 and we will use this line further.</p>
 
 <h3 id="create-your-own-bot-with-sbt">Create your own bot with sbt</h3>
 
 <ul>
-  <li>Choose some directory and create your own Slack bot with <code class="highlighter-rouge">sbt</code> tool:
+  <li>Choose some directory and create your own Slack bot with <code class="language-plaintext highlighter-rouge">sbt</code> tool:
     <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sbt new abdolence/slack-morphism-http4s.g8
 </code></pre></div>    </div>
     <p><img src="https://slack.abdolence.dev/img/create-sbt-bot-command-http4s.png" alt="sbt-example-command" /></p>
   </li>
-  <li>Compile and run it with <code class="highlighter-rouge">sbt</code>:
+  <li>Compile and run it with <code class="language-plaintext highlighter-rouge">sbt</code>:
     <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sbt <span class="s2">"run </span><span class="se">\</span><span class="s2">
   --slack-app-id &lt;your-app-id&gt; </span><span class="se">\</span><span class="s2">
   --slack-client-id &lt;your-client-id&gt; </span><span class="se">\</span><span class="s2">
@@ -185,7 +185,7 @@ and we will use this line further.</p>
   --slack-install-bot-scope channels:history,chat:write,commands,im:history,im:read,im:write,team:read,users.profile:read,users:read </span><span class="se">\</span><span class="s2">
   --slack-redirect-url https://&lt;your-ngrok-id&gt;.ngrok.io/auth/callback"</span>
 </code></pre></div>    </div>
-    <p>Grab all required credentials from <code class="highlighter-rouge">Slack App Profile → Settings → Basic Information</code>.
+    <p>Grab all required credentials from <code class="language-plaintext highlighter-rouge">Slack App Profile → Settings → Basic Information</code>.
 If you all this correctly you should see something like this:</p>
   </li>
 </ul>
@@ -195,13 +195,13 @@ If you all this correctly you should see something like this:</p>
 <h3 id="fill-in-profile-parameters-in-your-slack-app-profile">Fill in profile parameters in your Slack app profile</h3>
 
 <ul>
-  <li><code class="highlighter-rouge">Features → Event Subscriptions → Enable Events</code>
+  <li><code class="language-plaintext highlighter-rouge">Features → Event Subscriptions → Enable Events</code>
     <ul>
       <li>Request URL:
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  https://&lt;your-ngrok-id&gt;.ngrok.io/push
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  https://&lt;your-ngrok-id&gt;.ngrok.io/push
 </code></pre></div>        </div>
       </li>
-      <li>Subscribe to bot events: <code class="highlighter-rouge">app_home_opened</code>, <code class="highlighter-rouge">message.im</code>, <code class="highlighter-rouge">message.channels</code></li>
+      <li>Subscribe to bot events: <code class="language-plaintext highlighter-rouge">app_home_opened</code>, <code class="language-plaintext highlighter-rouge">message.im</code>, <code class="language-plaintext highlighter-rouge">message.channels</code></li>
       <li><strong>Save Changes</strong></li>
     </ul>
   </li>
@@ -210,27 +210,27 @@ If you all this correctly you should see something like this:</p>
 <p><img src="https://slack.abdolence.dev/img/event-subscriptions.png" alt="sbt-example-command" /></p>
 
 <ul>
-  <li><code class="highlighter-rouge">Features → OAuth &amp; Permissions</code>:
+  <li><code class="language-plaintext highlighter-rouge">Features → OAuth &amp; Permissions</code>:
     <ul>
       <li>Redirect URLs:
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  https://&lt;your-ngrok-id&gt;.ngrok.io/auth/callback
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  https://&lt;your-ngrok-id&gt;.ngrok.io/auth/callback
 </code></pre></div>        </div>
       </li>
       <li><strong>Save URLs</strong></li>
-      <li>Check if <code class="highlighter-rouge">Scopes → Bot Token Scopes</code> contains all required scopes:
-  <code class="highlighter-rouge">channels:history,chat:write,commands,im:history,im:read,im:write,team:read,users.profile:read,users:read</code>
+      <li>Check if <code class="language-plaintext highlighter-rouge">Scopes → Bot Token Scopes</code> contains all required scopes:
+  <code class="language-plaintext highlighter-rouge">channels:history,chat:write,commands,im:history,im:read,im:write,team:read,users.profile:read,users:read</code>
 (occasionally Slack lose something in this list after upgrading to Granular Scopes)</li>
     </ul>
   </li>
-  <li><code class="highlighter-rouge">Features → Interactive Components → Interactivity</code>:
+  <li><code class="language-plaintext highlighter-rouge">Features → Interactive Components → Interactivity</code>:
     <ul>
       <li>Request URL:
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  https://&lt;your-ngrok-id&gt;.ngrok.io/interaction
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  https://&lt;your-ngrok-id&gt;.ngrok.io/interaction
 </code></pre></div>        </div>
       </li>
     </ul>
   </li>
-  <li><code class="highlighter-rouge">Features → Home</code>:
+  <li><code class="language-plaintext highlighter-rouge">Features → Home</code>:
     <ul>
       <li>Click on <strong>Sign Up</strong></li>
     </ul>
@@ -239,25 +239,25 @@ If you all this correctly you should see something like this:</p>
 
 <h3 id="install-a-bot-into-your-workspace-using-slack-oauth-v2">Install a bot into your workspace using Slack OAuth v2</h3>
 <p>Just follow to the</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/auth/install
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/auth/install
 </code></pre></div></div>
 <p>in your browser and allow the installation.</p>
 
 <p>That’s it, you now have a working bot in your workspace written with Scala, Slack Morphism and http4s.
-Follow to the <code class="highlighter-rouge">Apps</code> section in your workspace. 
-You should see your app with its <code class="highlighter-rouge">Home tab</code> and try to send a message to it, 
+Follow to the <code class="language-plaintext highlighter-rouge">Apps</code> section in your workspace. 
+You should see your app with its <code class="language-plaintext highlighter-rouge">Home tab</code> and try to send a message to it, 
 or click on buttons on messages and views.</p>
 
 <h2 id="the-code-structure-overview">The code structure overview</h2>
 <p>Now it is probably time to open a bot project in IDE to have deeper look how it works inside:</p>
 
 <ul>
-  <li>HTTP routes are located in <code class="highlighter-rouge">routes</code> subpackage, where you can find an auxiliary trait
-<code class="highlighter-rouge">SlackEventsMiddleware</code> that helps you to verify Slack Events signature and work with Events API
+  <li>HTTP routes are located in <code class="language-plaintext highlighter-rouge">routes</code> subpackage, where you can find an auxiliary trait
+<code class="language-plaintext highlighter-rouge">SlackEventsMiddleware</code> that helps you to verify Slack Events signature and work with Events API
 and read tokens for workspace.</li>
-  <li><code class="highlighter-rouge">SlackInteractionEventsRoutes</code> implements a handler for Slack Blocks Interactions Events (like clicking on buttons).</li>
-  <li><code class="highlighter-rouge">SlackPushEventsRoutes</code> implements a handler for Slack Push Events (like incoming messages or opening tabs).</li>
-  <li><code class="highlighter-rouge">SlackOAuthRoutes</code> implements OAuth v2 including redirection to Slack and back.</li>
+  <li><code class="language-plaintext highlighter-rouge">SlackInteractionEventsRoutes</code> implements a handler for Slack Blocks Interactions Events (like clicking on buttons).</li>
+  <li><code class="language-plaintext highlighter-rouge">SlackPushEventsRoutes</code> implements a handler for Slack Push Events (like incoming messages or opening tabs).</li>
+  <li><code class="language-plaintext highlighter-rouge">SlackOAuthRoutes</code> implements OAuth v2 including redirection to Slack and back.</li>
 </ul>
 
 <p>For simplicity sake:</p>

@@ -122,9 +122,9 @@
 			<div class="content-wrapper">
 				<section><h1 id="post-incoming-webhook-messages">Post Incoming Webhook messages</h1>
 
-<p>You can use <code class="highlighter-rouge">SlackApiClient.chat.postWebhookMessage()</code> to post <a href="https://api.slack.com/messaging/webhooks">Slack Incoming Webhook</a> messages:</p>
+<p>You can use <code class="language-plaintext highlighter-rouge">SlackApiClient.chat.postWebhookMessage()</code> to post <a href="https://api.slack.com/messaging/webhooks">Slack Incoming Webhook</a> messages:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>client.chat
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>client.chat
     .postWebhookMessage(
         url = "https://hooks.slack.com/services/...", 
         req = SlackApiPostWebHookRequest(
