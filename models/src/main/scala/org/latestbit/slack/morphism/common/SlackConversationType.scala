@@ -38,11 +38,11 @@ object SlackConversationType {
 
   @JsonAdt( PRIVATE.value )
   case object PRIVATE extends SlackConversationType {
-    override final val value = "private"
+    override final val value = "private_channel"
   }
 
   @JsonAdt( PUBLIC.value )
   case object PUBLIC extends SlackConversationType {
-    override final val value = "public"
+    override final val value = "public_channel"
   }
 }
