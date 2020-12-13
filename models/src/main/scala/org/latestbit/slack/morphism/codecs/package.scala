@@ -523,6 +523,12 @@ package object codecs {
     implicit val decoderSlackConversationType: Decoder[SlackConversationType] =
       JsonTaggedAdtCodec.createPureEnumDecoder[SlackConversationType]()
 
+    implicit val encoderSlackListFilterConversationType: Encoder[SlackListFilterConversationType] =
+      JsonTaggedAdtCodec.createPureEnumEncoder[SlackListFilterConversationType]()
+
+    implicit val decoderSlackListFilterConversationType: Decoder[SlackListFilterConversationType] =
+      JsonTaggedAdtCodec.createPureEnumDecoder[SlackListFilterConversationType]()
+
     implicit val encoderSlackConversationListFilter: Encoder.AsObject[SlackConversationListFilter] =
       deriveEncoder[SlackConversationListFilter]
 

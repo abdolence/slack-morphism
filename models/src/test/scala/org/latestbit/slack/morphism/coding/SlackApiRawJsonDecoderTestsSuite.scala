@@ -27,7 +27,10 @@ import org.scalatest.flatspec.AnyFlatSpec
 import io.circe.{ Decoder, Encoder, Json }
 import io.circe.syntax._
 import io.circe.parser._
-import org.latestbit.slack.morphism.messages.SlackBlockConversationListSelectElement
+import org.latestbit.slack.morphism.messages.{
+  SlackBlockConversationListSelectElement,
+  SlackListFilterConversationType
+}
 import org.latestbit.slack.morphism.views.SlackModalView
 
 class SlackApiRawJsonDecoderTestsSuite extends AnyFlatSpec with CirceCodecs {
@@ -427,7 +430,9 @@ class SlackApiRawJsonDecoderTestsSuite extends AnyFlatSpec with CirceCodecs {
         convList.filter match {
           case Some( filter ) => {
             assert(
-              filter.include.exists( _.toList === List( SlackConversationType.PUBLIC, SlackConversationType.MPIM ) )
+              filter.include.exists(
+                _.toList === List( SlackListFilterConversationType.PUBLIC, SlackListFilterConversationType.MPIM )
+              )
             )
 
             val encodedJson = convList.asJson.printWith( SlackCirceJsonSettings.printer )
