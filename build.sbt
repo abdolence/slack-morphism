@@ -96,40 +96,41 @@ def priorTo2_13( scalaVersion: String ): Boolean =
     case _                                  => false
   }
 
-val catsVersion                   = "2.1.1"
-val catsEffectVersion             = "2.1.4"
+
+val catsVersion                   = "2.3.0"
+val catsEffectVersion             = "2.3.0"
 val circeVersion                  = "0.13.0"
-val scalaCollectionsCompatVersion = "2.2.0"
+val scalaCollectionsCompatVersion = "2.3.1"
 val sttpVersion                   = "2.2.9"
 val circeAdtCodecVersion          = "0.9.1"
 
 // For tests
-val scalaTestVersion    = "3.2.2"
-val scalaCheckVersion   = "1.14.3"
+val scalaTestVersion    = "3.2.3"
+val scalaCheckVersion   = "1.15.0"
 val scalaTestPlusCheck  = "3.2.2.0"
 val scalaTestPlusTestNG = "3.2.2.0" // reactive publishers tck testing
 val scalaCheckShapeless = "1.2.5"
-val scalaMockVersion    = "5.0.0"
+val scalaMockVersion    = "5.1.0"
 
 // For full-featured examples we use additional libs
 val akkaVersion          = "2.6.10"
-val akkaHttpVersion      = "10.2.1"
-val akkaHttpCirceVersion = "1.35.2"
+val akkaHttpVersion      = "10.2.2"
+val akkaHttpCirceVersion = "1.35.0"
 val logbackVersion       = "1.2.3"
 val scalaLoggingVersion  = "3.9.2"
 val scoptVersion         = "3.7.1"
 val swayDbVersion        = "0.11"
-val http4sVersion        = "0.21.8"
+val http4sVersion        = "0.21.14"
 val declineVersion       = "1.3.0"
 
 // For fs2 integration module
-val fs2Version = "2.4.4"
+val fs2Version = "2.4.6"
 
 // For reactive-streams integration module
 val reactiveStreamsVersion = "1.0.3"
 
 // Compiler plugins
-val kindProjectorVer = "0.11.0"
+val kindProjectorVer = "0.11.2"
 
 // Compatibility libs for Scala < 2.13
 val bigwheelUtilBackports = "2.1"

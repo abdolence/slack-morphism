@@ -370,7 +370,34 @@ case class SlackBlockMarkDownText(
  * https://api.slack.com/reference/block-kit/composition-objects#filter_conversations
  */
 case class SlackConversationListFilter(
-    include: Option[NonEmptyList[SlackConversationType]] = None,
+    include: Option[NonEmptyList[SlackListFilterConversationType]] = None,
     exclude_external_shared_channels: Option[Boolean] = None,
     exclude_bot_users: Option[Boolean] = None
 )
+
+sealed trait SlackListFilterConversationType {
+  val value: String
+}
+
+object SlackListFilterConversationType {
+
+  @JsonAdt( IM.value )
+  case object IM extends SlackListFilterConversationType {
+    override final val value = "im"
+  }
+
+  @JsonAdt( MPIM.value )
+  case object MPIM extends SlackListFilterConversationType {
+    override final val value = "mpim"
+  }
+
+  @JsonAdt( PRIVATE.value )
+  case object PRIVATE extends SlackListFilterConversationType {
+    override final val value = "private"
+  }
+
+  @JsonAdt( PUBLIC.value )
+  case object PUBLIC extends SlackListFilterConversationType {
+    override final val value = "public"
+  }
+}
