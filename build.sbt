@@ -96,8 +96,9 @@ def priorTo2_13( scalaVersion: String ): Boolean =
     case _                                  => false
   }
 
+
 val catsVersion                   = "2.3.0"
-val catsEffectVersion             = "2.1.4"
+val catsEffectVersion             = "2.3.0"
 val circeVersion                  = "0.13.0"
 val scalaCollectionsCompatVersion = "2.3.1"
 val sttpVersion                   = "2.2.9"
