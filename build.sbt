@@ -105,7 +105,7 @@ val sttpVersion                   = "2.2.9"
 val circeAdtCodecVersion          = "0.9.1"
 
 // For tests
-val scalaTestVersion    = "3.2.3"
+val scalaTestVersion    = "3.2.6"
 val scalaCheckVersion   = "1.15.0"
 val scalaTestPlusCheck  = "3.2.2.0"
 val scalaTestPlusTestNG = "3.2.2.0" // reactive publishers tck testing
