@@ -38,9 +38,10 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
   }
 
   it should "provide DSL to build blocks API" in {
-    val testCond = 0
 
     new SlackMessageTemplate {
+      private val testCond     = 0
+      private val formattedUrl = formatUrl( "https://example.com", "Overlook Hotel." )
 
       override def renderPlainText(): String = "Test template"
 
@@ -151,8 +152,7 @@ class SlackMessageTemplatingTestSuite extends AnyFlatSpec {
               ),
               blocks(
                 sectionBlock(
-                  text =
-                    md"${formatUrl( "https://example.com", "Overlook Hotel" )}\n :star: \n Doors had too many axe holes, guest in room 237 was far too rowdy, whole place felt stuck in the 1920s."
+                  text = md"${formattedUrl}"
                 ),
                 sectionBlock(
                   fields = sectionFields(

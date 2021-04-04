@@ -8,7 +8,7 @@ import sbt.Package.ManifestAttributes
 
 name := "slack-morphism-root"
 
-ThisBuild / version := "3.0.1"
+ThisBuild / version := "3.0.2-SNAPSHOT"
 
 ThisBuild / description := "Open Type-Safe Reactive Client with Blocks Templating for Slack"
 
@@ -100,7 +100,7 @@ def priorTo2_13( scalaVersion: String ): Boolean =
 val catsVersion                   = "2.3.0"
 val catsEffectVersion             = "2.3.0"
 val circeVersion                  = "0.13.0"
-val scalaCollectionsCompatVersion = "2.3.1"
+val scalaCollectionsCompatVersion = "2.3.2"
 val sttpVersion                   = "2.2.9"
 val circeAdtCodecVersion          = "0.9.1"
 
@@ -113,24 +113,24 @@ val scalaCheckShapeless = "1.2.5"
 val scalaMockVersion    = "5.1.0"
 
 // For full-featured examples we use additional libs
-val akkaVersion          = "2.6.10"
+val akkaVersion          = "2.6.13"
 val akkaHttpVersion      = "10.2.2"
 val akkaHttpCirceVersion = "1.35.0"
 val logbackVersion       = "1.2.3"
-val scalaLoggingVersion  = "3.9.2"
+val scalaLoggingVersion  = "3.9.3"
 val scoptVersion         = "3.7.1"
 val swayDbVersion        = "0.11"
-val http4sVersion        = "0.21.21"
-val declineVersion       = "1.3.0"
+val http4sVersion        = "0.21.14"
+val declineVersion       = "1.4.0"
 
 // For fs2 integration module
-val fs2Version = "2.4.6"
+val fs2Version = "2.5.4"
 
 // For reactive-streams integration module
 val reactiveStreamsVersion = "1.0.3"
 
 // Compiler plugins
-val kindProjectorVer = "0.11.2"
+val kindProjectorVer = "0.11.3"
 
 // Compatibility libs for Scala < 2.13
 val bigwheelUtilBackports = "2.1"
