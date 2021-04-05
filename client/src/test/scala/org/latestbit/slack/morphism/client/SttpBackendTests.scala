@@ -152,7 +152,7 @@ class SttpBackendTests extends AsyncFlatSpec {
           case Left( ex: SlackApiResponseError ) => assert( ex.errorCode !== null )
           case Left( ex )                        => fail( ex )
         }
-      )
+    )
 
   }
 

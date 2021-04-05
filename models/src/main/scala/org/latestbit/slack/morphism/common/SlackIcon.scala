@@ -35,7 +35,7 @@ object SlackIcon {
 
   final val IconPrefix = "image_"
 
-  implicit val slackUserInfoEncoder: Encoder.AsObject[SlackIcon] = ( model: SlackIcon) => {
+  implicit val slackUserInfoEncoder: Encoder.AsObject[SlackIcon] = ( model: SlackIcon ) => {
     val baseObject =
       JsonObject(
         "image_original" -> model.image_original.asJson,
@@ -50,7 +50,7 @@ object SlackIcon {
     }
   }
 
-  implicit val slackUserInfoDecoder: Decoder[SlackIcon] = ( cursor: HCursor) => {
+  implicit val slackUserInfoDecoder: Decoder[SlackIcon] = ( cursor: HCursor ) => {
 
     def cursorToImages(): List[( Int, String )] = {
       cursor.keys

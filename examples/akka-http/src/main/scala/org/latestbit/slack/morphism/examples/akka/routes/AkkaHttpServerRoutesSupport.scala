@@ -91,7 +91,7 @@ trait AkkaHttpServerRoutesSupport extends org.latestbit.slack.morphism.codecs.Ci
 
     ( slackTokensDb ? { ref: ActorRef[Option[SlackTokensDb.TeamTokensRecord]] =>
       SlackTokensDb.ReadTokens( teamId, ref )
-    }).map( _.flatMap { record =>
+    } ).map( _.flatMap { record =>
       record.tokens.lastOption.map { lastToken =>
         SlackApiToken.createFrom(
           tokenType = lastToken.tokenType,

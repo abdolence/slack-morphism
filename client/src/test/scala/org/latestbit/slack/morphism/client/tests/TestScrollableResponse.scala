@@ -38,19 +38,19 @@ object TestScrollableResponse {
 
   val testBatches: Seq[TestScrollableResponse] = IndexedSeq(
     TestScrollableResponse(
-      values = ( 0 to 9).toList,
+      values = ( 0 to 9 ).toList,
       cursor = Some( "1" )
     ),
     TestScrollableResponse(
-      values = ( 10 to 19).toList,
+      values = ( 10 to 19 ).toList,
       cursor = Some( "2" )
     ),
     TestScrollableResponse(
-      values = ( 20 to 29).toList,
+      values = ( 20 to 29 ).toList,
       cursor = Some( "3" )
     ),
     TestScrollableResponse(
-      values = ( 30 to 39).toList,
+      values = ( 30 to 39 ).toList,
       cursor = None
     )
   )

@@ -185,7 +185,7 @@ package object codecs {
         flagsEncoder: Encoder.AsObject[SlackChannelFlags],
         lastStateEncoder: Encoder.AsObject[SlackChannelCurrentState]
     ): Encoder.AsObject[SlackChannelInfo] =
-      ( model: SlackChannelInfo) => {
+      ( model: SlackChannelInfo ) => {
         JsonObject(
           "id"              -> model.id.asJson,
           "name"            -> model.name.asJson,
@@ -204,7 +204,7 @@ package object codecs {
 
     implicit val slackChannelInfoEncoder = createSlackChannelInfoEncoder()
 
-    implicit val slackChannelInfoDecoder: Decoder[SlackChannelInfo] = ( c: HCursor) => {
+    implicit val slackChannelInfoDecoder: Decoder[SlackChannelInfo] = ( c: HCursor ) => {
       for {
         id              <- c.downField( "id" ).as[SlackChannelId]
         name            <- c.downField( "name" ).as[Option[String]]
@@ -239,7 +239,7 @@ package object codecs {
     }
 
     def createUserProfileEncoder(): Encoder.AsObject[SlackUserProfile] =
-      ( model: SlackUserProfile) => {
+      ( model: SlackUserProfile ) => {
         implicit val encoderSlackUserProfile: Encoder.AsObject[SlackUserProfile] = deriveEncoder[SlackUserProfile]
 
         model.icon
@@ -252,7 +252,7 @@ package object codecs {
       }
 
     def createDecoderUserProfile(): Decoder[SlackUserProfile] =
-      ( cursor: HCursor) => {
+      ( cursor: HCursor ) => {
         for {
           icon         <- cursor.as[SlackIcon]
           baseUserInfo <- cursor.as[SlackUserProfile]( deriveDecoder[SlackUserProfile] )
@@ -266,7 +266,7 @@ package object codecs {
     implicit val decoderSlackUserFlags: Decoder[SlackUserFlags]          = deriveDecoder[SlackUserFlags]
 
     def createSlackUserInfoEncoder(): Encoder.AsObject[SlackUserInfo] =
-      ( model: SlackUserInfo) => {
+      ( model: SlackUserInfo ) => {
         JsonObject(
           "id"        -> model.id.asJson,
           "team_id"   -> model.team_id.asJson,
@@ -284,7 +284,7 @@ package object codecs {
       }
 
     def createSlackUserInfoDecoder(): Decoder[SlackUserInfo] =
-      ( c: HCursor) => {
+      ( c: HCursor ) => {
         for {
           id        <- c.downField( "id" ).as[SlackUserId]
           team_id   <- c.downField( "team_id" ).as[Option[SlackTeamId]]
@@ -765,14 +765,14 @@ package object codecs {
       deriveEncoder[SlackStatefulStateParams]
 
     def createSlackStatefulViewEncoder(): Encoder.AsObject[SlackStatefulView] =
-      ( model: SlackStatefulView) => {
+      ( model: SlackStatefulView ) => {
         encoderSlackView
           .encodeObject( model.view )
           .deepMerge( encoderSlackStatefulViewParams.encodeObject( model.stateParams ) )
       }
 
     def createSlackStatefulViewDecoder(): Decoder[SlackStatefulView] =
-      ( cursor: HCursor) => {
+      ( cursor: HCursor ) => {
         for {
           view        <- cursor.as[SlackView]
           stateParams <- cursor.as[SlackStatefulStateParams]( deriveDecoder[SlackStatefulStateParams] )

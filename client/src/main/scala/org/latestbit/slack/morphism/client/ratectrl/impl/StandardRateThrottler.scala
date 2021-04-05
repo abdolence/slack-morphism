@@ -194,7 +194,7 @@ abstract class StandardRateThrottler[F[_] : SlackApiClientBackend.BackendType : 
         .flatMap { tokenValue =>
           tokenValue.teamId.map { teamId => calcWorkspaceDelays( now, teamId, apiMethodUri, methodRateControl ) }
         }
-        .getOrElse( List() ) )).maxOption
+        .getOrElse( List() ) ) ).maxOption
 
     }
   }

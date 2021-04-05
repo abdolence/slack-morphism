@@ -48,14 +48,14 @@ class SlackApiRateThrottlerMetricTestsSuite extends AnyFlatSpec {
   it should "be maxAvailable -1 when update happens after rateLimitInMs" in {
     val updatedMetric = metric.update( 2000 )
 
-    assert( updatedMetric.lastUpdated === ( 2000 / metric.rateLimitInMs) * metric.rateLimitInMs )
+    assert( updatedMetric.lastUpdated === ( 2000 / metric.rateLimitInMs ) * metric.rateLimitInMs )
     assert( updatedMetric.delay === 0 )
     assert( updatedMetric.available === metric.maxAvailable - 1 )
     assert( updatedMetric.rateLimitInMs === metric.rateLimitInMs )
   }
 
   it should "be delay when update happens more than available within rateLimitInMs" in {
-    val updatedMetric = ( 0 to metric.available.toInt).foldLeft( metric ) { case ( metric, _ ) =>
+    val updatedMetric = ( 0 to metric.available.toInt ).foldLeft( metric ) { case ( metric, _ ) =>
       metric.update( 0 )
     }
 
@@ -66,7 +66,7 @@ class SlackApiRateThrottlerMetricTestsSuite extends AnyFlatSpec {
   }
 
   it should "not be delay when update happens more than available after rateLimitInMs" in {
-    val updatedMetric = ( 0 to metric.available.toInt).foldLeft( metric ) { case ( metric, _ ) =>
+    val updatedMetric = ( 0 to metric.available.toInt ).foldLeft( metric ) { case ( metric, _ ) =>
       metric.update( 0 )
     }
 

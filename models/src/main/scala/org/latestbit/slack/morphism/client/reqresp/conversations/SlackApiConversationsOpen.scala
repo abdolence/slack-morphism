@@ -29,7 +29,7 @@ case class SlackApiConversationsOpenRequest(
     return_im: Option[Boolean] = None,
     users: Option[NonEmptyList[SlackUserId]] = None
 ) {
-  require( ( channel.isEmpty && users.nonEmpty) || ( users.isEmpty && channel.nonEmpty) )
+  require( ( channel.isEmpty && users.nonEmpty ) || ( users.isEmpty && channel.nonEmpty ) )
 }
 
 /**

@@ -21,11 +21,11 @@ package org.latestbit.slack.morphism.client.reactive.impl
 import java.util.concurrent.locks.ReentrantLock
 import cats.Monad
 import cats.effect._
-import cats.effect.concurrent.{MVar, MVar2}
+import cats.effect.concurrent.{ MVar, MVar2 }
 import cats.implicits._
 import org.latestbit.slack.morphism.client.SlackApiClientError
-import org.latestbit.slack.morphism.client.streaming.{SlackApiResponseScroller, SlackApiScrollableResponse}
-import org.latestbit.slack.morphism.concurrent.{AsyncSeqIterator, UniqueLockMonitor}
+import org.latestbit.slack.morphism.client.streaming.{ SlackApiResponseScroller, SlackApiScrollableResponse }
+import org.latestbit.slack.morphism.concurrent.{ AsyncSeqIterator, UniqueLockMonitor }
 import org.reactivestreams.Subscriber
 
 import scala.concurrent.ExecutionContext
@@ -224,7 +224,7 @@ class SlackApiScrollableSubscriptionCommandChannel[F[_] : Monad, IT, PT, SR <: S
       fc <- consumer.start
       _  <- producerCommandLoop( channel )
       _  <- fc.join
-    } yield ()).unsafeRunAsyncAndForget()
+    } yield () ).unsafeRunAsyncAndForget()
   }
 
   def shutdown(): Unit = {

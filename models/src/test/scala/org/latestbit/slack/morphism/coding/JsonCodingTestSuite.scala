@@ -126,7 +126,7 @@ class JsonCodingTestSuite extends AnyFlatSpec {
 
     val testJson = testModel.asJson.dropNullValues.noSpaces
 
-    assert( !( testJson contains "value") )
+    assert( !( testJson contains "value" ) )
 
     decode[TestSlackInstant](
       testJson
@@ -179,7 +179,7 @@ class JsonCodingTestSuite extends AnyFlatSpec {
 
     val testJson = testModel.asJson.dropNullValues.noSpaces
 
-    assert( !( testJson contains "SlackUserMessage") )
+    assert( !( testJson contains "SlackUserMessage" ) )
 
     decode[SlackMessageEvent](
       testJson

@@ -57,11 +57,11 @@ object SlackDateTime {
   implicit def fromSlackDateTimeToLong( dateTime: SlackDateTime ): Long =
     dateTime.value.getEpochSecond
 
-  implicit val slackDateTimeEncoder: Encoder[SlackDateTime] = ( a: SlackDateTime) => {
+  implicit val slackDateTimeEncoder: Encoder[SlackDateTime] = ( a: SlackDateTime ) => {
     Json.fromLong( fromSlackDateTimeToLong( a.value ) )
   }
 
-  implicit val slackDateTimeDecoder: Decoder[SlackDateTime] = ( c: HCursor) => {
+  implicit val slackDateTimeDecoder: Decoder[SlackDateTime] = ( c: HCursor ) => {
     c.as[Long].map( toSlackDateTime )
   }
 
@@ -81,11 +81,11 @@ object SlackDateTimeAsStr {
   implicit def fromSlackDateTimeStrToLong( dateTime: SlackDateTimeAsStr ): Long =
     dateTime.value.getEpochSecond
 
-  implicit val slackDateTimeAsStrEncoder: Encoder[SlackDateTimeAsStr] = ( a: SlackDateTimeAsStr) => {
+  implicit val slackDateTimeAsStrEncoder: Encoder[SlackDateTimeAsStr] = ( a: SlackDateTimeAsStr ) => {
     Json.fromString( fromSlackDateTimeStrToLong( a.value ).toString() )
   }
 
-  implicit val slackDateTimeAsStrDecoder: Decoder[SlackDateTimeAsStr] = ( c: HCursor) => {
+  implicit val slackDateTimeAsStrDecoder: Decoder[SlackDateTimeAsStr] = ( c: HCursor ) => {
     c.as[String].map( _.toLong ).map( toSlackDateTimeStr )
   }
 

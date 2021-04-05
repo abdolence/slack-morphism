@@ -46,7 +46,7 @@ class ScrollablePublisherTestsSuite( env: TestEnvironment, publisherShutdownTime
   }
 
   override def createFailedPublisher(): Publisher[Int] =
-    ( s: Subscriber[_ >: Int]) => {
+    ( s: Subscriber[_ >: Int] ) => {
       s.onSubscribe( new Subscription {
         override def request( n: Long ): Unit = {
           s.onError( new Exception( "Unable to serve subscribers right now!" ) )

@@ -32,7 +32,7 @@ case class RateThrottlerMetric private[ratectrl] (
     val ( arrived, newLastUpdated ) =
       if (timeElapsed >= rateLimitInMs) {
         val arrivedInTime  = timeElapsed / rateLimitInMs
-        val newLastUpdated = lastUpdated + ( arrivedInTime * rateLimitInMs)
+        val newLastUpdated = lastUpdated + ( arrivedInTime * rateLimitInMs )
         ( arrivedInTime, newLastUpdated )
       } else
         ( 0L, lastUpdated )
