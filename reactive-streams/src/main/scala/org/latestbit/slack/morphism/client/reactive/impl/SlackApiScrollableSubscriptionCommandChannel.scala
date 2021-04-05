@@ -19,14 +19,13 @@
 package org.latestbit.slack.morphism.client.reactive.impl
 
 import java.util.concurrent.locks.ReentrantLock
-
 import cats.Monad
 import cats.effect._
-import cats.effect.concurrent.MVar
+import cats.effect.concurrent.{MVar, MVar2}
 import cats.implicits._
 import org.latestbit.slack.morphism.client.SlackApiClientError
-import org.latestbit.slack.morphism.client.streaming.{ SlackApiResponseScroller, SlackApiScrollableResponse }
-import org.latestbit.slack.morphism.concurrent.{ AsyncSeqIterator, UniqueLockMonitor }
+import org.latestbit.slack.morphism.client.streaming.{SlackApiResponseScroller, SlackApiScrollableResponse}
+import org.latestbit.slack.morphism.concurrent.{AsyncSeqIterator, UniqueLockMonitor}
 import org.reactivestreams.Subscriber
 
 import scala.concurrent.ExecutionContext
@@ -240,7 +239,7 @@ object SlackApiScrollableSubscriptionCommandChannel {
   case class RequestElements( n: Long ) extends Command
   case object Close                     extends Command
 
-  type CommandChannel = MVar[IO, Command]
+  type CommandChannel = MVar2[IO, Command]
 
   case class ConsumerState[F[_] : Monad, IT, PT, SR <: SlackApiScrollableResponse[IT, PT]](
       batchIterator: Option[AsyncSeqIterator[

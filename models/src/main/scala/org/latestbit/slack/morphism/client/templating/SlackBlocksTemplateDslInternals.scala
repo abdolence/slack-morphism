@@ -71,8 +71,11 @@ trait SlackBlocksTemplateDslInternals {
       case SlackDslNoneItem                    => Iterable.empty
     }
 
-  protected implicit final def slackDslListInnerItemsToListItems[T]( items: => Iterable[Iterable[T]] ) =
+  protected implicit final def slackDslListInnerItemsToListItems[T]( items: => Iterable[Iterable[T]] ): SlackDslItemDef[T] =
     SlackDslSomeIterableOfItem[T]( () => items.flatten )
+
+  protected implicit final def slackDslListInnerItemsToListItems[T]( items: Iterable[T] ): SlackDslItemDef[T] =
+    SlackDslSomeIterableOfItem[T]( () => items )
 
   protected implicit final class SlackTextInterpolators( private val sc: StringContext ) {
 
