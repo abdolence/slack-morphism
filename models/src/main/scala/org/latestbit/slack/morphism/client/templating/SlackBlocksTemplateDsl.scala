@@ -98,29 +98,4 @@ trait SlackBlocksTemplateDsl extends SlackBlocksTemplateDslInternals {
     optElement[T]( condition, createItem )
   }
 
-  // deprecated DSL constructs
-
-  @deprecated( message = "Use optionally() instead", "1.3.2" )
-  protected def optBlock[T <: SlackBlock]( condition: => Boolean )( block: => T ): SlackDslItemDef[T] =
-    optElement( condition, block )
-
-  @deprecated( message = "Use optionally() instead", "1.3.2" )
-  protected def optBlockEl[T <: SlackBlockElement]( condition: => Boolean )( blockElement: => T ): SlackDslItemDef[T] =
-    optElement( condition, blockElement )
-
-  @deprecated( message = "Use optionally() instead", "1.3.2" )
-  protected def optSectionField[T <: SlackBlockText]( condition: => Boolean )( field: => T ): SlackDslItemDef[T] =
-    optElement( condition, field )
-
-  @deprecated( message = "Use optionally() instead", "1.3.2" )
-  protected def optChoiceItem[T <: SlackBlockText](
-      condition: => Boolean
-  )( item: => SlackBlockChoiceItem[T] ): SlackDslItemDef[SlackBlockChoiceItem[T]] =
-    optElement( condition, item )
-
-  @deprecated( message = "Use optionally() instead", "1.3.2" )
-  protected def optChoiceGroup[T <: SlackBlockText](
-      condition: => Boolean
-  )( group: => SlackBlockOptionGroup[T] ): SlackDslItemDef[SlackBlockOptionGroup[T]] =
-    optElement( condition, group )
 }
