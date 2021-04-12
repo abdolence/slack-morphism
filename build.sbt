@@ -51,6 +51,7 @@ ThisBuild / pomExtra := (
 )
 
 ThisBuild / resolvers ++= Seq(
+  "Typesafe repository" at "https://repo.typesafe.com/typesafe/releases/",
   "Sonatype OSS Releases" at "https://oss.sonatype.org/content/repositories/releases/",
   "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 )
