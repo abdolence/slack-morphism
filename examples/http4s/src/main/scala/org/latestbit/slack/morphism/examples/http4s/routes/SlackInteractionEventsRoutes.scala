@@ -26,12 +26,15 @@ import org.http4s._
 import org.http4s.dsl.Http4sDsl
 import org.latestbit.slack.morphism.client.reqresp.views._
 import org.latestbit.slack.morphism.client._
+import org.latestbit.slack.morphism.client.reqresp.files.SlackApiFilesUploadRequest
 import org.latestbit.slack.morphism.codecs.CirceCodecs
 import org.latestbit.slack.morphism.common.SlackTriggerId
 import org.latestbit.slack.morphism.events._
 import org.latestbit.slack.morphism.examples.http4s.config.AppConfig
 import org.latestbit.slack.morphism.examples.http4s.db.SlackTokensDb
 import org.latestbit.slack.morphism.examples.http4s.templates._
+
+import java.io.FileInputStream
 
 class SlackInteractionEventsRoutes[F[_] : Sync](
     slackApiClient: SlackApiClientT[F],
@@ -60,7 +63,27 @@ class SlackInteractionEventsRoutes[F[_] : Sync](
             actionSubmissionEvent.view.stateParams.state.foreach { state =>
               logger.info( s"Received action submission state: ${state}" )
             }
+
+            // Upload example
+
+//            slackApiClient.files.upload(
+//              SlackApiFilesUploadRequest(
+//                filename = "test.txt"
+//              ),
+//              fileInputStream = new FileInputStream("/tmp/test.png")
+//            ).flatMap {
+//              case Right( resp ) => {
+//                logger.info( s"File uploaded: ${resp}" )
+//                Ok( "" ) // "" is required here by Slack
+//              }
+//              case Left( err ) => {
+//                logger.error( s"Unable to upload file", err )
+//                InternalServerError()
+//              }
+//            }
+
             Ok( "" ) // "" is required here by Slack
+
           }
           case interactionEvent: SlackInteractionEvent => {
             logger.warn( s"We don't handle this interaction in this example: ${interactionEvent}" )

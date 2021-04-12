@@ -18,9 +18,10 @@
 
 package org.latestbit.slack.morphism
 
+import cats.data._
+import cats.implicits._
 import io.circe._
 import io.circe.syntax._
-
 import org.latestbit.slack.morphism.common.SlackChannelInfo._
 import org.latestbit.slack.morphism.common._
 import org.latestbit.slack.morphism.messages._
@@ -36,6 +37,7 @@ import org.latestbit.slack.morphism.client.reqresp.conversations._
 import org.latestbit.slack.morphism.client.reqresp.dnd._
 import org.latestbit.slack.morphism.client.reqresp.emoji._
 import org.latestbit.slack.morphism.client.reqresp.events._
+import org.latestbit.slack.morphism.client.reqresp.files._
 import org.latestbit.slack.morphism.client.reqresp.interaction._
 import org.latestbit.slack.morphism.client.reqresp.internal._
 import org.latestbit.slack.morphism.client.reqresp.oauth._
@@ -126,6 +128,22 @@ package object codecs {
 
     implicit val decoderSlackApiTokenType: Decoder[SlackApiTokenType] =
       JsonTaggedAdtCodec.createPureEnumDecoder[SlackApiTokenType]()
+
+    implicit val encoderSlackFileType: Encoder[SlackFileType] = deriveUnwrappedEncoder[SlackFileType]
+    implicit val decoderSlackFileType: Decoder[SlackFileType] = deriveUnwrappedDecoder[SlackFileType]
+
+    implicit val encoderSlackFileId: Encoder[SlackFileId] = deriveUnwrappedEncoder[SlackFileId]
+    implicit val decoderSlackFileId: Decoder[SlackFileId] = deriveUnwrappedDecoder[SlackFileId]
+
+    implicit val encoderSlackFileMimeType: Encoder[SlackFileMimeType] = deriveUnwrappedEncoder[SlackFileMimeType]
+    implicit val decoderSlackFileMimeType: Decoder[SlackFileMimeType] = deriveUnwrappedDecoder[SlackFileMimeType]
+
+    implicit val encoderSlackPrettyFileType: Encoder[SlackPrettyFileType] = deriveUnwrappedEncoder[SlackPrettyFileType]
+    implicit val decoderSlackPrettyFileType: Decoder[SlackPrettyFileType] = deriveUnwrappedDecoder[SlackPrettyFileType]
+
+    implicit val encoderSlackFileUploadMode: Encoder[SlackFileUploadMode] = deriveUnwrappedEncoder[SlackFileUploadMode]
+    implicit val decoderSlackFileUploadMode: Decoder[SlackFileUploadMode] = deriveUnwrappedDecoder[SlackFileUploadMode]
+
   }
 
   trait CirceCodecs extends CirceCommonTypesCodes {
@@ -1870,6 +1888,99 @@ package object codecs {
 
     implicit val decoderSlackApiEventAuthorizationsListResponse: Decoder[SlackApiEventAuthorizationsListResponse] =
       deriveDecoder[SlackApiEventAuthorizationsListResponse]
+
+    implicit val encoderSlackFileFlags: Encoder.AsObject[SlackFileFlags] = deriveEncoder[SlackFileFlags]
+    implicit val decoderSlackFileFlags: Decoder[SlackFileFlags]          = deriveDecoder[SlackFileFlags]
+
+    implicit val encoderSlackFileTypeInfo: Encoder.AsObject[SlackFileTypeInfo] = deriveEncoder[SlackFileTypeInfo]
+    implicit val decoderSlackFileTypeInfo: Decoder[SlackFileTypeInfo]          = deriveDecoder[SlackFileTypeInfo]
+
+    implicit val encoderSlackFileResolutionInfo: Encoder.AsObject[SlackFileResolutionInfo] =
+      deriveEncoder[SlackFileResolutionInfo]
+
+    implicit val decoderSlackFileResolutionInfo: Decoder[SlackFileResolutionInfo] =
+      deriveDecoder[SlackFileResolutionInfo]
+
+    implicit val encoderSlackFileInfo: Encoder.AsObject[SlackFileInfo] =
+      ( model: SlackFileInfo ) => {
+        JsonObject(
+          "id"                   -> model.id.asJson,
+          "channels"             -> model.channels.asJson,
+          "mode"                 -> model.mode.asJson,
+          "created"              -> model.created.asJson,
+          "comments_count"       -> model.comments_count.asJson,
+          "name"                 -> model.name.asJson,
+          "permalink"            -> model.permalink.asJson,
+          "permalink_public"     -> model.permalink_public.asJson,
+          "size"                 -> model.size.asJson,
+          "timestamp"            -> model.timestamp.asJson,
+          "url_private"          -> model.url_private.asJson,
+          "url_private_download" -> model.url_private_download.asJson,
+          "user"                 -> model.user.asJson,
+          "username"             -> model.username.asJson,
+          "preview"              -> model.preview.asJson,
+          "preview_highlight"    -> model.preview_highlight.asJson
+        )
+          .deepMerge( encoderSlackFileFlags.encodeObject( model.flags ) )
+          .deepMerge( encoderSlackFileTypeInfo.encodeObject( model.typeInfo ) )
+          .deepMerge( encoderSlackFileResolutionInfo.encodeObject( model.resolutionInfo ) )
+          .deepMerge( SlackFileThumbnails.slackFileThumbNailsEncoder.encodeObject( model.thumbnails ) )
+      }
+
+    implicit val decoderSlackFileInfo: Decoder[SlackFileInfo] =
+      ( c: HCursor ) => {
+        for {
+          id                   <- c.downField( "id" ).as[SlackFileId]
+          created              <- c.downField( "created" ).as[SlackDateTime]
+          timestamp            <- c.downField( "timestamp" ).as[SlackDateTime]
+          name                 <- c.downField( "user" ).as[String]
+          user                 <- c.downField( "user" ).as[SlackUserId]
+          username             <- c.downField( "username" ).as[Option[String]]
+          typeInfo             <- c.as[SlackFileTypeInfo]
+          size                 <- c.downField( "size" ).as[Long]
+          title                <- c.downField( "title" ).as[Option[String]]
+          mode                 <- c.downField( "mode" ).as[Option[SlackFileUploadMode]]
+          flags                <- c.as[SlackFileFlags]
+          url_private          <- c.downField( "url_private" ).as[Option[String]]
+          url_private_download <- c.downField( "url_private_download" ).as[Option[String]]
+          resolutionInfo       <- c.as[SlackFileResolutionInfo]
+          thumbnails           <- c.as[SlackFileThumbnails]
+          permalink            <- c.downField( "permalink" ).as[Option[String]]
+          permalink_public     <- c.downField( "permalink_public" ).as[Option[String]]
+          comments_count       <- c.downField( "comments_count" ).as[Option[Long]]
+          channels             <- c.downField( "channels" ).as[Option[List[SlackChannelId]]]
+          preview              <- c.downField( "preview" ).as[Option[String]]
+          preview_highlight    <- c.downField( "preview_highlight" ).as[Option[String]]
+        } yield SlackFileInfo(
+          id = id,
+          created = created,
+          timestamp = timestamp,
+          name = name,
+          user = user,
+          username = username,
+          typeInfo = typeInfo,
+          size = size,
+          title = title,
+          mode = mode,
+          flags = flags,
+          url_private = url_private,
+          url_private_download = url_private_download,
+          resolutionInfo = resolutionInfo,
+          thumbnails = thumbnails,
+          permalink = permalink,
+          permalink_public = permalink_public,
+          comments_count = comments_count,
+          channels = channels.filterNot(_.isEmpty).map(NonEmptyList.fromListUnsafe),
+          preview = preview,
+          preview_highlight = preview_highlight
+        )
+      }
+
+    implicit val encoderSlackApiFilesUploadResponse: Encoder.AsObject[SlackApiFilesUploadResponse] =
+      deriveEncoder[SlackApiFilesUploadResponse]
+
+    implicit val decoderSlackApiFilesUploadResponse: Decoder[SlackApiFilesUploadResponse] =
+      deriveDecoder[SlackApiFilesUploadResponse]
 
   }
 
