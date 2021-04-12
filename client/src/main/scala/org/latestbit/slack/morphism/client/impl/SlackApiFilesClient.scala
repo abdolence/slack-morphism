@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Abdulla Abdurakhmanov (abdulla@latestbit.com)
+ * Copyright 2021 Abdulla Abdurakhmanov (abdulla@latestbit.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,16 +18,14 @@
 
 package org.latestbit.slack.morphism.client.impl
 
+import cats.implicits._
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client.reqresp.files._
 import org.latestbit.slack.morphism.codecs.implicits._
 import sttp.client._
 
-import cats.data._
-import cats.implicits._
-
-import java.io.{ FileInputStream, InputStream }
+import java.io.InputStream
 
 /**
  * Support for Slack Files API methods
