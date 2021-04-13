@@ -26,6 +26,7 @@ import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
 import org.latestbit.slack.morphism.codecs.implicits._
 import org.latestbit.slack.morphism.common._
 import sttp.client._
+import sttp.model.Part
 
 import java.io.InputStream
 
@@ -44,21 +45,23 @@ trait SlackApiFilesClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
         backendType: SlackApiClientBackend.BackendType[F]
     ): F[Either[SlackApiClientError, SlackApiFilesUploadResponse]] = {
 
+      val parts: Seq[Part[BasicRequestBody]] = Seq(
+        req.channels.map( channels => multipart( "channels", channels.map( _.value ).intercalate( "," ) ) ),
+        Some( multipart( "filename", req.filename ) ),
+        req.filetype.map( filetype => multipart( "filetype", filetype.value ) ),
+        req.initial_comment.map( initial_comment => multipart( "initial_comment", initial_comment ) ),
+        req.thread_ts.map( thread_ts => multipart( "thread_ts", thread_ts.value ) ),
+        req.title.map( title => multipart( "title", title ) )
+      ).flatten
+
       sendManagedSlackHttpRequest[SlackApiFilesUploadResponse](
         createSlackHttpApiRequest()
           .post(
             getSlackMethodAbsoluteUri( "files.upload" )
           )
           .multipartBody(
-            Seq(
-              Some( multipart( "file", fileInputStream ).fileName( req.filename ) ),
-              req.channels.map( channels => multipart( "channels", channels.map( _.value ).intercalate( "," ) ) ),
-              Some( multipart( "filename", req.filename ) ),
-              req.filetype.map( filetype => multipart( "filetype", filetype.value ) ),
-              req.initial_comment.map( initial_comment => multipart( "initial_comment", initial_comment ) ),
-              req.thread_ts.map( thread_ts => multipart( "thread_ts", thread_ts.value ) ),
-              req.title.map( title => multipart( "title", title ) )
-            ).flatten
+            multipart( "file", fileInputStream ).fileName( req.filename ),
+            parts: _*
           ),
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier2 ) ) ),
         slackApiToken = Some( slackApiToken )

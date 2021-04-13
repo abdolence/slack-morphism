@@ -10,7 +10,7 @@ import org.latestbit.slack.morphism.common._
 case class SlackApiFilesListRequest(
     channel: Option[SlackChannelId] = None,
     count: Option[Long] = None,
-    page: Option[Long],
+    page: Option[Long] = None,
     show_files_hidden_by_limit: Option[Boolean] = None,
     team_id: Option[SlackTeamId] = None,
     ts_from: Option[SlackTs] = None,
