@@ -12,7 +12,7 @@ object SlackFileThumbnails {
 
   final val ThumbsPrefix = "thumb_"
 
-  implicit val slackFileThumbNailsEncoder: Encoder.AsObject[SlackFileThumbnails] = (model: SlackFileThumbnails ) => {
+  implicit val slackFileThumbNailsEncoder: Encoder.AsObject[SlackFileThumbnails] = ( model: SlackFileThumbnails ) => {
     val baseObject =
       JsonObject()
 
@@ -24,7 +24,7 @@ object SlackFileThumbnails {
     }
   }
 
-  implicit val slackFileThumbNailsDecoder: Decoder[SlackFileThumbnails] = (cursor: HCursor ) => {
+  implicit val slackFileThumbNailsDecoder: Decoder[SlackFileThumbnails] = ( cursor: HCursor ) => {
 
     def cursorToImages(): List[( String, String )] = {
       cursor.keys

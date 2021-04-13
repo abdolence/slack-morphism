@@ -49,9 +49,8 @@ case class SlackFileInfo(
     comments_count: Option[Long] = None,
     channels: Option[NonEmptyList[SlackChannelId]] = None,
     preview: Option[String] = None,
-    preview_highlight: Option[String] = None,
+    preview_highlight: Option[String] = None
 )
-
 
 case class SlackFileFlags(
     editable: Option[Boolean] = None,
@@ -60,14 +59,14 @@ case class SlackFileFlags(
     public_url_shared: Option[Boolean] = None,
     display_as_bot: Option[Boolean] = None,
     is_starred: Option[Boolean] = None,
-    has_rich_preview: Option[Boolean] = None,
+    has_rich_preview: Option[Boolean] = None
 )
 
 case class SlackFileTypeInfo(
     mimetype: Option[SlackFileMimeType] = None,
     filetype: Option[SlackFileType] = None,
     pretty_type: Option[SlackPrettyFileType] = None,
-    external_type: Option[String] = None,
+    external_type: Option[String] = None
 )
 
 case class SlackFileResolutionInfo(

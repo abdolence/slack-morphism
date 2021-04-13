@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Abdulla Abdurakhmanov (abdulla@latestbit.com)
+ * Copyright 2019 Abdulla Abdurakhmanov (abdulla@latestbit.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,16 @@
  *
  */
 
-package org.latestbit.slack.morphism.common
+package org.latestbit.slack.morphism.client.reqresp.files
+
+import org.latestbit.slack.morphism.common._
 
 /**
- * https://api.slack.com/types/file#file_types
+ * Request of https://api.slack.com/methods/files.delete
  */
-case class SlackFileType( value: String ) extends AnyVal
+case class SlackApiFilesDeleteRequest( file: SlackFileId )
 
 /**
- * Look complete list at https://api.slack.com/types/file#file_types
+ * Response of https://api.slack.com/methods/files.delete
  */
-object SlackFileType {
-  final val Auto = SlackFileType( "auto" )
-  final val Text = SlackFileType( "text" )
-  final val Pdf  = SlackFileType( "pdf" )
-  final val Zip  = SlackFileType( "zip" )
-}
+case class SlackApiFilesDeleteResponse()

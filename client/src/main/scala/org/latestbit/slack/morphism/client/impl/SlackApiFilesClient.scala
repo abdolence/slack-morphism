@@ -22,7 +22,9 @@ import cats.implicits._
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client.reqresp.files._
+import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
 import org.latestbit.slack.morphism.codecs.implicits._
+import org.latestbit.slack.morphism.common._
 import sttp.client._
 
 import java.io.InputStream
@@ -62,6 +64,85 @@ trait SlackApiFilesClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
         slackApiToken = Some( slackApiToken )
       )
     }
+
+    /**
+     * https://api.slack.com/methods/files.list
+     */
+    def list( req: SlackApiFilesListRequest )( implicit
+        slackApiToken: SlackApiToken,
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiFilesListResponse]] = {
+
+      http.get[SlackApiFilesListResponse](
+        "files.list",
+        Map(
+          "page"                       -> req.page.map( _.toString() ),
+          "count"                      -> req.count.map( _.toString() ),
+          "ts_to"                      -> req.ts_to.map( _.toString() ),
+          "ts_from"                    -> req.ts_from.map( _.toString() ),
+          "show_files_hidden_by_limit" -> req.show_files_hidden_by_limit.map( _.toString() ),
+          "team_id"                    -> req.team_id.map( _.value ),
+          "channel"                    -> req.channel.map( _.value ),
+          "types"                      -> req.types.map( _.map( _.value ).intercalate( "," ) ),
+          "user"                       -> req.user.map( _.value )
+        ),
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier3 ) ) )
+      )
+    }
+
+    /**
+     * Scrolling support for
+     * https://api.slack.com/methods/files.list
+     */
+    def listScroller( req: SlackApiFilesListRequest )( implicit
+        slackApiToken: SlackApiToken,
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): SlackApiResponseScroller[F, SlackFileInfo, Long, SlackApiFilesListResponse] = {
+      new SlackApiResponseScroller[F, SlackFileInfo, Long, SlackApiFilesListResponse](
+        initialLoader = { () => list( req ) },
+        batchLoader = { lastPage =>
+          list(
+            SlackApiFilesListRequest(
+              page = Some( lastPage + 1 ),
+              count = req.count
+            )
+          )
+        }
+      )
+    }
+
+    /**
+     * https://api.slack.com/methods/files.info
+     */
+    def info( req: SlackApiFilesInfoRequest )( implicit
+        slackApiToken: SlackApiToken,
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiFilesInfoResponse]] = {
+
+      http.get[SlackApiFilesInfoResponse](
+        "files.info",
+        Map(
+          "file" -> Some( req.file.value )
+        ),
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier4 ) ) )
+      )
+    }
+
+    /**
+     * https://api.slack.com/methods/files.delete
+     */
+    def delete( req: SlackApiFilesDeleteRequest )( implicit
+        slackApiToken: SlackApiToken,
+        backendType: SlackApiClientBackend.BackendType[F]
+    ): F[Either[SlackApiClientError, SlackApiFilesDeleteResponse]] = {
+
+      http.post[SlackApiFilesDeleteRequest, SlackApiFilesDeleteResponse](
+        "files.delete",
+        req,
+        methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier3 ) ) )
+      )
+    }
+
   }
 
 }

@@ -1970,7 +1970,7 @@ package object codecs {
           permalink = permalink,
           permalink_public = permalink_public,
           comments_count = comments_count,
-          channels = channels.filterNot(_.isEmpty).map(NonEmptyList.fromListUnsafe),
+          channels = channels.filterNot( _.isEmpty ).map( NonEmptyList.fromListUnsafe ),
           preview = preview,
           preview_highlight = preview_highlight
         )
@@ -1981,6 +1981,36 @@ package object codecs {
 
     implicit val decoderSlackApiFilesUploadResponse: Decoder[SlackApiFilesUploadResponse] =
       deriveDecoder[SlackApiFilesUploadResponse]
+
+    implicit val encoderSlackApiFilesListResponsePaging: Encoder.AsObject[SlackApiFilesListResponsePaging] =
+      deriveEncoder[SlackApiFilesListResponsePaging]
+
+    implicit val decoderSlackApiFilesListResponsePaging: Decoder[SlackApiFilesListResponsePaging] =
+      deriveDecoder[SlackApiFilesListResponsePaging]
+
+    implicit val encoderSlackApiFilesListResponse: Encoder.AsObject[SlackApiFilesListResponse] =
+      deriveEncoder[SlackApiFilesListResponse]
+
+    implicit val decoderSlackApiFilesListResponse: Decoder[SlackApiFilesListResponse] =
+      deriveDecoder[SlackApiFilesListResponse]
+
+    implicit val encoderSlackApiFilesInfoResponse: Encoder.AsObject[SlackApiFilesInfoResponse] =
+      deriveEncoder[SlackApiFilesInfoResponse]
+
+    implicit val decoderSlackApiFilesInfoResponse: Decoder[SlackApiFilesInfoResponse] =
+      deriveDecoder[SlackApiFilesInfoResponse]
+
+    implicit val encoderSlackApiFilesDeleteRequest: Encoder.AsObject[SlackApiFilesDeleteRequest] =
+      deriveEncoder[SlackApiFilesDeleteRequest]
+
+    implicit val decoderSlackApiFilesDeleteRequest: Decoder[SlackApiFilesDeleteRequest] =
+      deriveDecoder[SlackApiFilesDeleteRequest]
+
+    implicit val encoderSlackApiFilesDeleteResponse: Encoder.AsObject[SlackApiFilesDeleteResponse] =
+      deriveEncoder[SlackApiFilesDeleteResponse]
+
+    implicit val decoderSlackApiFilesDeleteResponse: Decoder[SlackApiFilesDeleteResponse] =
+      deriveDecoder[SlackApiFilesDeleteResponse]
 
   }
 
