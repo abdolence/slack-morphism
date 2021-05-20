@@ -130,7 +130,7 @@ val fs2Version = "2.5.4"
 val reactiveStreamsVersion = "1.0.3"
 
 // Compiler plugins
-val kindProjectorVer = "0.11.3"
+val kindProjectorVer = "0.13.0"
 
 // Compatibility libs for Scala < 2.13
 val bigwheelUtilBackports = "2.1"
