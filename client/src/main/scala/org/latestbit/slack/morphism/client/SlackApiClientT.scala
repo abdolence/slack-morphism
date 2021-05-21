@@ -43,6 +43,7 @@ class SlackApiClientT[F[_] : SlackApiClientBackend.BackendType] private[client] 
     with SlackApiTeamClient[F]
     with SlackApiUsersClient[F]
     with SlackApiViewsClient[F]
+    with SlackApiFilesClient[F]
     with SlackApiEventsCallbackClient[F] {
 
   /**
