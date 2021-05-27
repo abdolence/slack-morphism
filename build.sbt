@@ -30,8 +30,6 @@ ThisBuild / exportJars := true
 
 ThisBuild / exportJars := true
 
-ThisBuild / publishMavenStyle := true
-
 ThisBuild / publishTo := {
   val nexus = "https://oss.sonatype.org/"
   if (isSnapshot.value)
@@ -56,7 +54,7 @@ ThisBuild / resolvers ++= Seq(
   "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 )
 
-ThisBuild / scalacOptions ++= Seq(
+ThisBuild / scalacOptions := Seq(
   "-deprecation",
   "-unchecked",
   "-feature",
@@ -65,7 +63,7 @@ ThisBuild / scalacOptions ++= Seq(
   "-Ywarn-dead-code",
   "-Ywarn-numeric-widen",
   "-Ywarn-value-discard"
-) ++ ( CrossVersion.partialVersion( ( ThisBuild / scalaVersion).value ) match {
+) ++ ( CrossVersion.partialVersion( scalaVersion.value ) match {
   case Some( ( 2, n ) ) if n >= 13 => Seq( "-Xsource:3" )
   case Some( ( 2, n ) ) if n < 13  => Seq( "-Ypartial-unification" )
   case _                           => Seq()
@@ -189,7 +187,7 @@ lazy val overwritePublishSettings = Seq(
 )
 
 lazy val scalaDocSettings = Seq(
-  scalacOptions in ( Compile, doc) ++= Seq( "-groups", "-skip-packages", "sttp.client" ) ++
+  Compile / doc / scalacOptions ++= Seq( "-groups", "-skip-packages", "sttp.client" ) ++
     ( if (priorTo2_13( scalaVersion.value ))
        Seq( "-Yno-adapted-args" )
      else
@@ -375,13 +373,13 @@ lazy val docSettings = Seq(
     MicrositeFavicon( "favicon-196x196.png", "196x196" )
   ),
   apiDocsDir := "api",
-  unidocProjectFilter in ( ScalaUnidoc, unidoc) := inProjects( slackMorphismModels, slackMorphismClient ),
-  addMappingsToSiteDir( mappings in ( ScalaUnidoc, packageDoc), apiDocsDir ),
+  ScalaUnidoc / unidoc / unidocProjectFilter := inProjects( slackMorphismModels, slackMorphismClient ),
+  addMappingsToSiteDir(  ScalaUnidoc / packageDoc / mappings, apiDocsDir ),
   micrositeAnalyticsToken := "UA-155371094-1",
-  includeFilter in makeSite := ( includeFilter in makeSite).value || "*.txt" || "*.xml",
-  mappings in makeSite ++= Seq(
-    ( resourceDirectory in Compile).value / "microsite" / "robots.txt"  -> "robots.txt",
-    ( resourceDirectory in Compile).value / "microsite" / "sitemap.xml" -> "sitemap.xml"
+  makeSite / includeFilter := ( makeSite / includeFilter).value || "*.txt" || "*.xml",
+  makeSite / mappings ++= Seq(
+    ( Compile / resourceDirectory).value / "microsite" / "robots.txt"  -> "robots.txt",
+    ( Compile / resourceDirectory).value / "microsite" / "sitemap.xml" -> "sitemap.xml"
   )
 )
 
