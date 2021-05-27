@@ -8,7 +8,7 @@ import sbt.Package.ManifestAttributes
 
 name := "slack-morphism-root"
 
-ThisBuild / version := "3.1.0"
+ThisBuild / version := "3.2.0-SNAPSHOT"
 
 ThisBuild / description := "Open Type-Safe Reactive Client with Blocks Templating for Slack"
 
@@ -20,7 +20,7 @@ ThisBuild / licenses := Seq(
   ( "Apache License v2.0", url( "http://www.apache.org/licenses/LICENSE-2.0.html" ) )
 )
 
-ThisBuild / crossScalaVersions := Seq( "2.13.5", "2.12.13" )
+ThisBuild / crossScalaVersions := Seq( "2.13.6", "2.12.13" )
 
 ThisBuild / scalaVersion := ( ThisBuild / crossScalaVersions).value.head
 
@@ -29,8 +29,6 @@ ThisBuild / scalacOptions ++= Seq( "-feature" )
 ThisBuild / exportJars := true
 
 ThisBuild / exportJars := true
-
-ThisBuild / publishMavenStyle := true
 
 ThisBuild / publishTo := {
   val nexus = "https://oss.sonatype.org/"
@@ -56,7 +54,7 @@ ThisBuild / resolvers ++= Seq(
   "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 )
 
-ThisBuild / scalacOptions ++= Seq(
+ThisBuild / scalacOptions := Seq(
   "-deprecation",
   "-unchecked",
   "-feature",
@@ -65,7 +63,7 @@ ThisBuild / scalacOptions ++= Seq(
   "-Ywarn-dead-code",
   "-Ywarn-numeric-widen",
   "-Ywarn-value-discard"
-) ++ ( CrossVersion.partialVersion( ( ThisBuild / scalaVersion).value ) match {
+) ++ ( CrossVersion.partialVersion( scalaVersion.value ) match {
   case Some( ( 2, n ) ) if n >= 13 => Seq( "-Xsource:3" )
   case Some( ( 2, n ) ) if n < 13  => Seq( "-Ypartial-unification" )
   case _                           => Seq()
@@ -97,40 +95,41 @@ def priorTo2_13( scalaVersion: String ): Boolean =
   }
 
 
+
 val catsVersion                   = "2.6.1"
-val catsEffectVersion             = "2.3.3"
+val catsEffectVersion             = "2.5.1"
 val circeVersion                  = "0.13.0"
-val scalaCollectionsCompatVersion = "2.4.3"
+val scalaCollectionsCompatVersion = "2.4.4"
 val sttpVersion                   = "2.2.9"
 val circeAdtCodecVersion          = "0.9.1"
 
 // For tests
-val scalaTestVersion    = "3.2.8"
+val scalaTestVersion    = "3.2.9"
 val scalaCheckVersion   = "1.15.4"
 val scalaTestPlusCheck  = "3.2.2.0"
-val scalaTestPlusTestNG = "3.2.7.0" // reactive publishers tck testing
+val scalaTestPlusTestNG = "3.2.9.0" // reactive publishers tck testing
 val scalaCheckShapeless = "1.2.5"
 val scalaMockVersion    = "5.1.0"
 
 // For full-featured examples we use additional libs
-val akkaVersion          = "2.6.13"
+val akkaVersion          = "2.6.14"
 val akkaHttpVersion      = "10.2.4"
 val akkaHttpCirceVersion = "1.36.0"
 val logbackVersion       = "1.2.3"
 val scalaLoggingVersion  = "3.9.3"
 val scoptVersion         = "3.7.1"
 val swayDbVersion        = "0.11"
-val http4sVersion        = "0.21.21"
+val http4sVersion        = "0.21.23"
 val declineVersion       = "1.4.0"
 
 // For fs2 integration module
-val fs2Version = "2.5.4"
+val fs2Version = "2.5.6"
 
 // For reactive-streams integration module
 val reactiveStreamsVersion = "1.0.3"
 
 // Compiler plugins
-val kindProjectorVer = "0.11.3"
+val kindProjectorVer = "0.13.0"
 
 // Compatibility libs for Scala < 2.13
 val bigwheelUtilBackports = "2.1"
@@ -189,7 +188,7 @@ lazy val overwritePublishSettings = Seq(
 )
 
 lazy val scalaDocSettings = Seq(
-  scalacOptions in ( Compile, doc) ++= Seq( "-groups", "-skip-packages", "sttp.client" ) ++
+  Compile / doc / scalacOptions ++= Seq( "-groups", "-skip-packages", "sttp.client" ) ++
     ( if (priorTo2_13( scalaVersion.value ))
        Seq( "-Yno-adapted-args" )
      else
@@ -375,13 +374,12 @@ lazy val docSettings = Seq(
     MicrositeFavicon( "favicon-196x196.png", "196x196" )
   ),
   apiDocsDir := "api",
-  unidocProjectFilter in ( ScalaUnidoc, unidoc) := inProjects( slackMorphismModels, slackMorphismClient ),
-  addMappingsToSiteDir( mappings in ( ScalaUnidoc, packageDoc), apiDocsDir ),
-  micrositeAnalyticsToken := "UA-155371094-1",
-  includeFilter in makeSite := ( includeFilter in makeSite).value || "*.txt" || "*.xml",
-  mappings in makeSite ++= Seq(
-    ( resourceDirectory in Compile).value / "microsite" / "robots.txt"  -> "robots.txt",
-    ( resourceDirectory in Compile).value / "microsite" / "sitemap.xml" -> "sitemap.xml"
+  ScalaUnidoc / unidoc / unidocProjectFilter := inProjects( slackMorphismModels, slackMorphismClient ),
+  addMappingsToSiteDir(  ScalaUnidoc / packageDoc / mappings, apiDocsDir ),
+  makeSite / includeFilter := ( makeSite / includeFilter).value || "*.txt" || "*.xml",
+  makeSite / mappings ++= Seq(
+    ( Compile / resourceDirectory).value / "microsite" / "robots.txt"  -> "robots.txt",
+    ( Compile / resourceDirectory).value / "microsite" / "sitemap.xml" -> "sitemap.xml"
   )
 )
 
