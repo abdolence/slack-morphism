@@ -375,7 +375,6 @@ lazy val docSettings = Seq(
   apiDocsDir := "api",
   ScalaUnidoc / unidoc / unidocProjectFilter := inProjects( slackMorphismModels, slackMorphismClient ),
   addMappingsToSiteDir(  ScalaUnidoc / packageDoc / mappings, apiDocsDir ),
-  micrositeAnalyticsToken := "UA-155371094-1",
   makeSite / includeFilter := ( makeSite / includeFilter).value || "*.txt" || "*.xml",
   makeSite / mappings ++= Seq(
     ( Compile / resourceDirectory).value / "microsite" / "robots.txt"  -> "robots.txt",
