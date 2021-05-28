@@ -123,7 +123,7 @@ val http4sVersion        = "0.21.23"
 val declineVersion       = "1.4.0"
 
 // For fs2 integration module
-val fs2Version = "2.5.6"
+val fs2Version = "3.0.4"
 
 // For reactive-streams integration module
 val reactiveStreamsVersion = "1.0.3"
