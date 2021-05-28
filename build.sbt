@@ -119,7 +119,7 @@ val logbackVersion       = "1.2.3"
 val scalaLoggingVersion  = "3.9.3"
 val scoptVersion         = "3.7.1"
 val swayDbVersion        = "0.11"
-val http4sVersion        = "0.21.23"
+val http4sVersion        = "0.21.24"
 val declineVersion       = "1.4.0"
 
 // For fs2 integration module
