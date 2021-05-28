@@ -75,7 +75,7 @@ class SlackApiScrollableSubscriptionCommandChannel[F[_] : Monad, IT, PT, SR <: S
   }
 
   def takeNewCommand(): IO[Command] = {
-    Async[IO].async[Command] { cb =>
+    Async[IO].async_[Command] { cb =>
       val _ = Using( UniqueLockMonitor.lockAndMonitor( statusLock ) ) { monitor =>
         if (commandBuffer.isEmpty) {
           notifyAsyncCommandCb = () => {
@@ -140,7 +140,7 @@ class SlackApiScrollableSubscriptionCommandChannel[F[_] : Monad, IT, PT, SR <: S
       reqN: Long,
       state: ConsumerState[F, IT, PT, SR]
   ): IO[ConsumerState[F, IT, PT, SR]] = {
-    Async[IO].async[ConsumerState[F, IT, PT, SR]] { asyncCallback =>
+    Async[IO].async_[ConsumerState[F, IT, PT, SR]] { asyncCallback =>
       if (!state.finished)
         pumpNextBatch( reqN, state, asyncCallback )
       else

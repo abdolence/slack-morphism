@@ -18,7 +18,7 @@
 
 package org.latestbit.slack.morphism.examples.http4s.db
 
-import cats.effect.{ Bracket, ConcurrentEffect, LiftIO, Resource }
+import cats.effect.{ ConcurrentEffect, LiftIO, Resource }
 import swaydb.data.slice.Slice
 import cats.implicits._
 import cats.effect.implicits._

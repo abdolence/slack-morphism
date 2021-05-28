@@ -22,6 +22,7 @@ import org.latestbit.slack.morphism.client.ratectrl.SlackApiRateThrottler
 import org.latestbit.slack.morphism.client.reqresp.test.SlackApiTestRequest
 import org.latestbit.slack.morphism.common._
 import org.scalatest.flatspec.AsyncFlatSpec
+import cats.effect.Resource
 
 class SttpBackendTests extends AsyncFlatSpec {
   "A Slack client" should "able to try to connect using a async http client network sttp backend" in {
@@ -132,7 +133,7 @@ class SttpBackendTests extends AsyncFlatSpec {
 
     def createHttp4sClient(): Resource[IO, ( Blocker, Client[IO] )] = {
       for {
-        blocker    <- Blocker[IO]
+        blocker    <- Resource.unit[IO]
         httpClient <- BlazeClientBuilder[IO]( blocker.blockingContext ).resource
       } yield ( blocker, httpClient )
     }

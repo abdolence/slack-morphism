@@ -1,6 +1,6 @@
 package org.latestbit.slack.morphism.examples.http4s
 
-import cats.effect.{ Blocker, ConcurrentEffect, ContextShift, Timer }
+import cats.effect.ConcurrentEffect
 import cats.implicits._
 import fs2.Stream
 import org.http4s.client.blaze.BlazeClientBuilder
@@ -14,15 +14,16 @@ import org.latestbit.slack.morphism.examples.http4s.routes._
 import sttp.client.http4s.Http4sBackend
 
 import scala.concurrent.ExecutionContext.global
+import cats.effect.{ Resource, Temporal }
 
 object Http4sServer {
 
   def stream[F[_] : ConcurrentEffect](
       config: AppConfig
-  )( implicit T: Timer[F], C: ContextShift[F] ): Stream[F, Nothing] = {
+  )( implicit T: Temporal[F]): Stream[F, Nothing] = {
     for {
       httpClient <- BlazeClientBuilder[F]( global ).stream
-      blocker    <- Stream.resource( Blocker[F] )
+      blocker    <- Stream.resource( Resource.unit[F] )
       slackApiClient <- Stream.resource(
                           SlackApiClient
                             .build[F](
