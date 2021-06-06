@@ -33,8 +33,8 @@ import org.latestbit.slack.morphism.client.reqresp.test._
 import org.latestbit.slack.morphism.common._
 import org.latestbit.slack.morphism.events.SlackUserMessage
 import org.scalatest.flatspec.AsyncFlatSpec
-import sttp.client.Response
-import sttp.client.testing.SttpBackendStub
+import sttp.client3._
+import sttp.client3.testing.SttpBackendStub
 import sttp.model.{ Header, MediaType, StatusCode }
 
 import scala.collection.immutable.Seq
@@ -47,7 +47,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
     val mockResponse = SlackApiTestResponse( args = Map( "test" -> "test" ) )
     implicit val testingBackend =
       SttpBackendStub.asynchronousFuture.whenAnyRequest
-        .thenRespondWrapped(
+        .thenRespondF(
           createJsonResponseStub( mockResponse )
         )
     val slackApiClient = SlackApiClient.create()
@@ -61,7 +61,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
   it should "detect Slack API error responses" in {
     implicit val testingBackend: SlackApiClientBackend.SttpBackendType[Future] =
       SttpBackendStub.asynchronousFuture.whenAnyRequest
-        .thenRespondWrapped(
+        .thenRespond(
           Future {
             Response(
               statusText = "OK",
@@ -72,8 +72,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
               ).asJson.dropNullValues.noSpaces,
               headers = Seq(
                 Header.contentType( MediaType.ApplicationJson )
-              ),
-              history = Nil
+              )
             )
           }
         )
@@ -93,7 +92,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
     implicit val testingBackend: SlackApiClientBackend.SttpBackendType[Future] =
       SttpBackendStub.asynchronousFuture
         .whenRequestMatches( _.uri.path.contains( "conversations.list" ) )
-        .thenRespondWrapped(
+        .thenRespond(
           createJsonResponseStub(
             SlackApiConversationsListResponse(
               channels = List(
@@ -110,7 +109,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
           )
         )
         .whenRequestMatches( _.uri.path.contains( "chat.postMessage" ) )
-        .thenRespondWrapped(
+        .thenRespond(
           createJsonResponseStub(
             SlackApiChatPostMessageResponse(
               ts = SlackTs( "message-ts" ),
@@ -171,7 +170,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
           req.method.method == Methods.POST &&
           isExpectedJsonBody( req.body, testReply )
         }
-        .thenRespondWrapped(
+        .thenRespond(
           createTextResponseStub( "Ok" )
         )
 
@@ -201,7 +200,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
           req.method.method == Methods.POST &&
           isExpectedJsonBody( req.body, testWebHookMessage )
         }
-        .thenRespondWrapped(
+        .thenRespond(
           createTextResponseStub( "Ok" )
         )
 

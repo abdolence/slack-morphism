@@ -43,7 +43,7 @@ package object reactive {
      */
     def toPublisher(
         maxItems: Option[Long] = None
-    )( implicit ec: ExecutionContext ): Publisher[IT] =
+    ): Publisher[IT] =
       new SlackApiScrollableReactivePublisher[F, IT, PT, SR]( scroller, maxItems )
   }
 }

@@ -24,7 +24,7 @@ import io.circe.syntax._
 import io.circe._
 import org.latestbit.slack.morphism.client.impl.SlackApiHttpProtocolSupport
 import org.latestbit.slack.morphism.common._
-import sttp.client._
+import sttp.client3._
 import sttp.model._
 
 import scala.collection.immutable.Seq
@@ -49,8 +49,7 @@ trait SlackApiClientTestsSuiteSupport {
           .printWith( SlackApiHttpProtocolSupport.SlackJsonPrinter ),
         headers = Seq(
           Header.contentType( MediaType.ApplicationJson )
-        ),
-        history = Nil
+        )
       )
     }
   }
@@ -75,8 +74,7 @@ trait SlackApiClientTestsSuiteSupport {
         body = text,
         headers = Seq(
           Header.contentType( MediaType.TextPlainUtf8 )
-        ),
-        history = Nil
+        )
       )
     }
   }

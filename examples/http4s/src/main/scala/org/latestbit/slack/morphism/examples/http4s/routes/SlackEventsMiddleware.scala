@@ -37,14 +37,14 @@ trait SlackEventsMiddleware extends StrictLogging {
 
   private val slackSignatureVerifier = new SlackEventSignatureVerifier()
 
-  private def verifySlackSignatureRequest[F[_] : Sync](
+  private def verifySlackSignatureRequest[F[_] : Concurrent : Async](
       config: AppConfig,
       req: Request[F]
   ): F[Either[SlackSignatureVerificationError, String]] = {
     req.bodyText.compile
       .fold( "" )( _ ++ _ )
       .flatMap { body =>
-        Sync[F].delay(
+        Async[F].delay(
           (
             req.headers.get( SlackEventSignatureVerifier.HttpHeaderNames.SignedHash.ci ),
             req.headers.get( SlackEventSignatureVerifier.HttpHeaderNames.SignedTimestamp.ci )
@@ -53,8 +53,8 @@ trait SlackEventsMiddleware extends StrictLogging {
               slackSignatureVerifier
                 .verify(
                   config.slackAppConfig.signingSecret,
-                  receivedHash.value,
-                  signedTimestamp.value,
+                  receivedHash.head.value,
+                  signedTimestamp.head.value,
                   body
                 )
                 .map { _ => body }
@@ -65,16 +65,16 @@ trait SlackEventsMiddleware extends StrictLogging {
       }
   }
 
-  private def decodeVerifiedSlackEventBody[F[_] : Sync](
+  private def decodeVerifiedSlackEventBody[F[_] : Concurrent : Async](
       config: AppConfig,
       req: Request[F]
   ) = {
     OptionT(
       verifySlackSignatureRequest[F]( config, req )
         .flatMap {
-          case Right( body ) => Sync[F].pure( body.some )
+          case Right( body ) => Concurrent[F].pure( body.some )
           case Left( err ) =>
-            Sync[F]
+            Concurrent[F]
               .delay( logger.error( "Error: {}", err ) )
               .map { _ => Option.empty[String] }
         }
@@ -95,32 +95,32 @@ trait SlackEventsMiddleware extends StrictLogging {
     )
   }
 
-  protected def slackSignedRoutes[F[_] : Sync](
+  protected def slackSignedRoutes[F[_] : Concurrent : Async](
       req: Request[F]
   )( resp: => F[Response[F]] )( implicit config: AppConfig ): F[Response[F]] = {
     decodeVerifiedSlackEventBody[F]( config, req )
       .flatMapF { _ => resp.map( _.some ) }
       .getOrElseF(
-        Sync[F].pure(
+        Concurrent[F].pure(
           Response[F]( status = Forbidden )
         )
       )
   }
 
-  protected def slackSignedRoutes[F[_] : Sync, J](
+  protected def slackSignedRoutes[F[_] : Concurrent : Async, J](
       req: Request[F]
   )( resp: J => F[Response[F]] )( implicit config: AppConfig, decoder: Decoder[J] ): F[Response[F]] = {
     decodeVerifiedSlackEventBody[F]( config, req )
       .flatMap( decodeJson[F, J] )
       .flatMapF { decoded => resp( decoded ).map( _.some ) }
       .getOrElseF(
-        Sync[F].pure(
+        Concurrent[F].pure(
           Response[F]( status = Forbidden )
         )
       )
   }
 
-  protected def extractSlackWorkspaceToken[F[_] : Sync](
+  protected def extractSlackWorkspaceToken[F[_] : Concurrent : Async](
       teamId: SlackTeamId
   )(
       resp: SlackApiToken => F[Response[F]]
@@ -142,7 +142,7 @@ trait SlackEventsMiddleware extends StrictLogging {
             )
         }
     ).flatMapF { token => resp( token ).map( _.some ) }.getOrElseF {
-      Sync[F]
+      Concurrent[F]
         .delay(
           logger.warn( "Token absent for: {}", teamId )
         )

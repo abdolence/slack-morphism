@@ -118,7 +118,7 @@ val akkaHttpCirceVersion = "1.36.0"
 val logbackVersion       = "1.2.3"
 val scalaLoggingVersion  = "3.9.3"
 val scoptVersion         = "3.7.1"
-val swayDbVersion        = "0.11"
+val swayDbVersion        = "0.16.2"
 val http4sVersion        = "0.23.0-RC1"
 val declineVersion       = "2.0.0"
 
@@ -166,13 +166,18 @@ val baseDependencies =
       "com.github.alexarchambault"   %% "scalacheck-shapeless_1.14"        % scalaCheckShapeless,
       "com.softwaremill.sttp.client3" %% "async-http-client-backend-future" % sttp3Version,
       "com.softwaremill.sttp.client3" %% "async-http-client-backend-cats"   % sttp3Version,
-      "com.softwaremill.sttp.client3" %% "async-http-client-backend-monix"  % sttp3Version,
+      //"com.softwaremill.sttp.client3" %% "async-http-client-backend-monix"  % sttp3Version,
       "com.softwaremill.sttp.client3" %% "http4s-backend"                   % sttp3Version,
+      "org.http4s" %% "http4s-blaze-client" % http4sVersion
+          exclude ( "org.typelevel", "cats-core")
+          exclude ( "org.typelevel", "cats-effect")
+          excludeAll ( ExclusionRule( organization = "io.circe" )
+      ),
       "ch.qos.logback"                % "logback-classic"                  % logbackVersion
         exclude ( "org.slf4j", "slf4j-api"),
       "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion
     ).map(
-      _ % "test"
+      _ % Test
         exclude ( "org.typelevel", "cats-core")
         exclude ( "org.typelevel", "cats-effect")
     )
@@ -300,13 +305,14 @@ lazy val slackMorphismHttp4sExample =
           excludeAll (
             ExclusionRule( organization = "org.scala-lang.modules" ),
             ExclusionRule( organization = "org.reactivestreams" )
-        ),
-        "io.swaydb" %% "cats-effect" % swayDbVersion
-          excludeAll (
-            ExclusionRule( organization = "org.scala-lang.modules" ),
-            ExclusionRule( organization = "org.reactivestreams" ),
-            ExclusionRule( organization = "org.typelevel" )
         )
+//        SwayDB effect doesn't support Cats Effect 3,
+//        "io.swaydb" %% "cats-effect" % swayDbVersion
+//          excludeAll (
+//            ExclusionRule( organization = "org.scala-lang.modules" ),
+//            ExclusionRule( organization = "org.reactivestreams" ),
+//            ExclusionRule( organization = "org.typelevel" )
+//        )
       )
     )
     .settings( noPublishSettings )
@@ -337,7 +343,7 @@ lazy val slackMorphismReactiveStreams =
         "org.reactivestreams" % "reactive-streams" % reactiveStreamsVersion
       ) ++ ( Seq(
         "org.reactivestreams" % "reactive-streams-tck" % reactiveStreamsVersion
-      ).map( _ % "test" ) )
+      ).map( _ % Test ) )
     )
     .settings( scalaDocSettings )
     .settings( compilerPluginSettings )
