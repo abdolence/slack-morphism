@@ -18,4 +18,6 @@
 
 package org.latestbit.slack.morphism.common
 
-case class SlackAccessTokenValue( value: String ) extends AnyVal
+case class SlackAccessTokenValue( value: String ) extends AnyVal {
+  override def toString: String = s"${value.take(4)}...(${value.length})"
+}

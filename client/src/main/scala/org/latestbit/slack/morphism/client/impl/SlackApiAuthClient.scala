@@ -21,7 +21,9 @@ package org.latestbit.slack.morphism.client.impl
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client.reqresp.auth._
+import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
 import org.latestbit.slack.morphism.codecs.implicits._
+import org.latestbit.slack.morphism.common.{ SlackBasicTeamInfo, SlackCursorId }
 
 /**
  * Support for Slack Auth API methods
@@ -57,6 +59,52 @@ trait SlackApiAuthClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
         req,
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier3 ) ) )
       )
+    }
+
+    object teams {
+
+      /**
+       * https://api.slack.com/methods/auth.teams.list
+       */
+      def list( req: SlackApiAuthTeamListRequest )( implicit
+          slackApiToken: SlackApiToken,
+          backendType: SlackApiClientBackend.BackendType[F]
+      ): F[Either[SlackApiClientError, SlackApiAuthTeamListResponse]] = {
+
+        http.get[
+          SlackApiAuthTeamListResponse
+        ](
+          "auth.teams.list",
+          Map(
+            "cursor"       -> req.cursor.map( _.value ),
+            "include_icon" -> req.include_icon.map( _.toString() ),
+            "limit"        -> req.limit.map( _.toString() )
+          ),
+          methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier2 ) ) )
+        )
+      }
+
+      /**
+       * Scrolling support for
+       * https://api.slack.com/methods/auth.teams.list
+       */
+      def listScroller( req: SlackApiAuthTeamListRequest )( implicit
+          slackApiToken: SlackApiToken,
+          backendType: SlackApiClientBackend.BackendType[F]
+      ): SlackApiResponseScroller[F, SlackBasicTeamInfo, SlackCursorId, SlackApiAuthTeamListResponse] = {
+        new SlackApiResponseScroller[F, SlackBasicTeamInfo, SlackCursorId, SlackApiAuthTeamListResponse](
+          initialLoader = { () => list( req ) },
+          batchLoader = { cursor =>
+            list(
+              SlackApiAuthTeamListRequest(
+                cursor = Some( cursor ),
+                limit = req.limit
+              )
+            )
+          }
+        )
+      }
+
     }
 
   }

@@ -1121,6 +1121,12 @@ package object codecs {
     implicit val decoderSlackApiAuthTestResponse: Decoder[SlackApiAuthTestResponse] =
       deriveDecoder[SlackApiAuthTestResponse]
 
+    implicit val encoderSlackApiAuthTeamListResponse: Encoder.AsObject[SlackApiAuthTeamListResponse] =
+      deriveEncoder[SlackApiAuthTeamListResponse]
+
+    implicit val decoderSlackApiAuthTeamListResponse: Decoder[SlackApiAuthTeamListResponse] =
+      deriveDecoder[SlackApiAuthTeamListResponse]
+
     implicit val encoderSlackApiBotsInfo: Encoder.AsObject[SlackApiBotsInfo] = deriveEncoder[SlackApiBotsInfo]
     implicit val decoderSlackApiBotsInfo: Decoder[SlackApiBotsInfo]          = deriveDecoder[SlackApiBotsInfo]
 
