@@ -104,7 +104,7 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
           "cursor"    -> req.cursor.map( _.value ),
           "inclusive" -> req.inclusive.map( _.toString() ),
           "latest"    -> req.latest.map( _.value ),
-          "limit"     -> req.latest.map( _.toString() ),
+          "limit"     -> req.limit.map( _.toString() ),
           "oldest"    -> req.oldest.map( _.value )
         ),
         methodRateControl = Some( SlackApiMethodRateControlParams( tier = Some( SlackApiRateControlParams.Tier3 ) ) )
