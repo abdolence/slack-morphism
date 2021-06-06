@@ -406,7 +406,7 @@ object SlackListFilterConversationType {
 /**
  * https://api.slack.com/reference/block-kit/composition-objects#dispatch_action_config
  */
-case class SlackDispatchActionConfig(trigger_actions_on: NonEmptyList[SlackDispatchActionConfigAction])
+case class SlackDispatchActionConfig( trigger_actions_on: NonEmptyList[SlackDispatchActionConfigAction] )
 
 sealed trait SlackDispatchActionConfigAction {
   val value: String
