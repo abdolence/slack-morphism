@@ -10,6 +10,8 @@ name := "slack-morphism-root"
 
 ThisBuild / version := "3.2.0"
 
+ThisBuild / versionScheme := Some("semver-spec")
+
 ThisBuild / description := "Open Type-Safe Reactive Client with Blocks Templating for Slack"
 
 ThisBuild / organization := "org.latestbit"
