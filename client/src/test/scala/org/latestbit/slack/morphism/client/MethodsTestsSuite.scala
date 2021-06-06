@@ -53,7 +53,7 @@ class MethodsTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenPropertyCheck
           .map { sample =>
             val mockBackend =
               SttpBackendStub.asynchronousFuture.whenAnyRequest
-                .thenRespond(
+                .thenRespondF(
                   createJsonResponseStub[RS]( responseFactory( sample ) )
                 )
             ( sample, apiMethodCall( sample )( mockBackend ) )

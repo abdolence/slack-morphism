@@ -54,7 +54,7 @@ class OAuthTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuiteSupport
               header.value == createBasicCredentials( mockClientId, mockClientSecret )
           )
         }
-        .thenRespond(
+        .thenRespondF(
           createJsonResponseStub( mockResponse )
         )
 

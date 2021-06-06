@@ -29,7 +29,7 @@ import org.latestbit.slack.morphism.client.reqresp.internal.SlackGeneralResponse
 import org.latestbit.slack.morphism.codecs.SlackCirceJsonSettings
 import org.latestbit.slack.morphism.codecs.implicits._
 import sttp.client3._
-import sttp.model.{HeaderNames, MediaType, StatusCode, Uri}
+import sttp.model.{ HeaderNames, MediaType, StatusCode, Uri }
 
 import scala.concurrent.duration.FiniteDuration
 
@@ -151,7 +151,7 @@ trait SlackApiHttpProtocolSupport[F[_]] extends SlackApiClientBackend[F] {
       backend: SlackApiClientBackend.SttpBackendType[F],
       backendType: SlackApiClientBackend.BackendType[F]
   ): F[Either[SlackApiClientError, RS]] = {
-    request.send(backend).map( response => decodeSlackResponse[RS]( request.uri, response ) ).recoverWith {
+    request.send( backend ).map( response => decodeSlackResponse[RS]( request.uri, response ) ).recoverWith {
       case ex: IOException =>
         backendType.pure( Left( SlackApiConnectionError( request.uri, ex ) ) )
       case ex: Throwable =>

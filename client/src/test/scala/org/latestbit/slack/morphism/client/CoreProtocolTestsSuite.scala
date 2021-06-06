@@ -61,7 +61,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
   it should "detect Slack API error responses" in {
     implicit val testingBackend: SlackApiClientBackend.SttpBackendType[Future] =
       SttpBackendStub.asynchronousFuture.whenAnyRequest
-        .thenRespond(
+        .thenRespondF(
           Future {
             Response(
               statusText = "OK",
@@ -92,7 +92,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
     implicit val testingBackend: SlackApiClientBackend.SttpBackendType[Future] =
       SttpBackendStub.asynchronousFuture
         .whenRequestMatches( _.uri.path.contains( "conversations.list" ) )
-        .thenRespond(
+        .thenRespondF(
           createJsonResponseStub(
             SlackApiConversationsListResponse(
               channels = List(
@@ -109,7 +109,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
           )
         )
         .whenRequestMatches( _.uri.path.contains( "chat.postMessage" ) )
-        .thenRespond(
+        .thenRespondF(
           createJsonResponseStub(
             SlackApiChatPostMessageResponse(
               ts = SlackTs( "message-ts" ),
@@ -170,7 +170,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
           req.method.method == Methods.POST &&
           isExpectedJsonBody( req.body, testReply )
         }
-        .thenRespond(
+        .thenRespondF(
           createTextResponseStub( "Ok" )
         )
 
@@ -200,7 +200,7 @@ class CoreProtocolTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuite
           req.method.method == Methods.POST &&
           isExpectedJsonBody( req.body, testWebHookMessage )
         }
-        .thenRespond(
+        .thenRespondF(
           createTextResponseStub( "Ok" )
         )
 
