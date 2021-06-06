@@ -32,6 +32,7 @@ import org.latestbit.slack.morphism.common.SlackTeamId
 import org.latestbit.slack.morphism.events.signature._
 import org.latestbit.slack.morphism.examples.http4s.config.AppConfig
 import org.latestbit.slack.morphism.examples.http4s.db.SlackTokensDb
+import org.typelevel.ci.CIString
 
 trait SlackEventsMiddleware extends StrictLogging {
 
@@ -46,8 +47,8 @@ trait SlackEventsMiddleware extends StrictLogging {
       .flatMap { body =>
         Async[F].delay(
           (
-            req.headers.get( SlackEventSignatureVerifier.HttpHeaderNames.SignedHash.ci ),
-            req.headers.get( SlackEventSignatureVerifier.HttpHeaderNames.SignedTimestamp.ci )
+            req.headers.get( CIString(SlackEventSignatureVerifier.HttpHeaderNames.SignedHash) ),
+            req.headers.get( CIString(SlackEventSignatureVerifier.HttpHeaderNames.SignedTimestamp) )
           ) match {
             case ( Some( receivedHash ), Some( signedTimestamp ) ) => {
               slackSignatureVerifier

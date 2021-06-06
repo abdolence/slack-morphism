@@ -19,7 +19,6 @@
 package org.latestbit.slack.morphism.client.impl
 
 import java.io.IOException
-
 import cats.implicits._
 import io.circe._
 import io.circe.parser._
@@ -30,7 +29,7 @@ import org.latestbit.slack.morphism.client.reqresp.internal.SlackGeneralResponse
 import org.latestbit.slack.morphism.codecs.SlackCirceJsonSettings
 import org.latestbit.slack.morphism.codecs.implicits._
 import sttp.client3._
-import sttp.model.{ HeaderNames, MediaType, StatusCode, Uri }
+import sttp.model.{HeaderNames, MediaType, StatusCode, Uri}
 
 import scala.concurrent.duration.FiniteDuration
 
@@ -149,9 +148,10 @@ trait SlackApiHttpProtocolSupport[F[_]] extends SlackApiClientBackend[F] {
 
   protected def sendSlackRequest[RS]( request: Request[Either[String, String], Any] )( implicit
       decoder: Decoder[RS],
+      backend: SlackApiClientBackend.SttpBackendType[F],
       backendType: SlackApiClientBackend.BackendType[F]
   ): F[Either[SlackApiClientError, RS]] = {
-    request.send().map( response => decodeSlackResponse[RS]( request.uri, response ) ).recoverWith {
+    request.send(backend).map( response => decodeSlackResponse[RS]( request.uri, response ) ).recoverWith {
       case ex: IOException =>
         backendType.pure( Left( SlackApiConnectionError( request.uri, ex ) ) )
       case ex: Throwable =>
@@ -251,7 +251,7 @@ trait SlackApiHttpProtocolSupport[F[_]] extends SlackApiClientBackend[F] {
         v.map( acc.updated( k, _ ) ).getOrElse( acc )
       }
     sendManagedSlackHttpRequest[RS](
-      request.get( getSlackMethodAbsoluteUri( methodUri ).params( filteredParams ) ),
+      request.get( getSlackMethodAbsoluteUri( methodUri ).addParams( filteredParams ) ),
       methodRateControl,
       Some( slackApiToken )
     )
