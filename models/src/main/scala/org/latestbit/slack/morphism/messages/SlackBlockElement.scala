@@ -291,7 +291,8 @@ case class SlackBlockPlainInputElement(
     initial_value: Option[String] = None,
     multiline: Option[Boolean] = None,
     min_length: Option[Long] = None,
-    max_length: Option[Long] = None
+    max_length: Option[Long] = None,
+    dispatch_action_config: Option[SlackDispatchActionConfig]
 ) extends SlackBlockElement
     with SlackSectionBlockElement
     with SlackActionBlockElement
@@ -399,5 +400,27 @@ object SlackListFilterConversationType {
   @JsonAdt( PUBLIC.value )
   case object PUBLIC extends SlackListFilterConversationType {
     override final val value = "public"
+  }
+}
+
+/**
+ * https://api.slack.com/reference/block-kit/composition-objects#dispatch_action_config
+ */
+case class SlackDispatchActionConfig(trigger_actions_on: NonEmptyList[SlackDispatchActionConfigAction])
+
+sealed trait SlackDispatchActionConfigAction {
+  val value: String
+}
+
+object SlackDispatchActionConfig {
+
+  @JsonAdt( OnEnterPressed.value )
+  case object OnEnterPressed extends SlackDispatchActionConfigAction {
+    override final val value: String = "on_enter_pressed"
+  }
+
+  @JsonAdt( OnCharacterEntered.value )
+  case object OnCharacterEntered extends SlackDispatchActionConfigAction {
+    override final val value: String = "on_character_entered"
   }
 }

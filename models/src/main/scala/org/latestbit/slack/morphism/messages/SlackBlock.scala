@@ -87,6 +87,7 @@ case class SlackInputBlock(
     element: SlackInputBlockElement,
     hint: Option[SlackBlockPlainText] = None,
     optional: Option[Boolean] = None,
+    dispatch_action: Option[Boolean] = None,
     override val block_id: Option[SlackBlockId] = None
 ) extends SlackBlock
 
