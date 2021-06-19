@@ -10,8 +10,6 @@ Please follow to the official website: [https://slack.abdolence.dev](https://sla
 ### Scala support
 - Scala v2.12+
 
-![Cats Friendly Badge](https://typelevel.org/cats/img/cats-badge-tiny.png)
-
 ### Licence
 Apache Software License (ASL)
 
