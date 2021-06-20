@@ -25,7 +25,7 @@ import org.latestbit.slack.morphism.client.reqresp.files._
 import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
 import org.latestbit.slack.morphism.codecs.implicits._
 import org.latestbit.slack.morphism.common._
-import sttp.client._
+import sttp.client3._
 import sttp.model.Part
 
 import java.io.InputStream

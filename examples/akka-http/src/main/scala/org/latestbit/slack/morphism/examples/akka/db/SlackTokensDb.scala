@@ -22,6 +22,7 @@ import akka.actor.typed._
 import akka.actor.typed.scaladsl._
 import swaydb.{ Set => _, _ }
 import swaydb.serializers.Default._
+import swaydb.data.Functions
 import akka.actor.typed.scaladsl.adapter._
 import com.typesafe.scalalogging._
 import swaydb.IO.ApiIO
@@ -31,7 +32,7 @@ import org.latestbit.slack.morphism.common._
 import org.latestbit.slack.morphism.examples.akka.config.AppConfig
 import swaydb.serializers.Serializer
 
-import scala.concurrent.ExecutionContextExecutor
+import scala.concurrent.{ ExecutionContextExecutor, Future }
 
 object SlackTokensDb extends StrictLogging {
 
@@ -65,7 +66,7 @@ object SlackTokensDb extends StrictLogging {
   case class ReadTokens( teamId: SlackTeamId, ref: akka.actor.typed.ActorRef[Option[TeamTokensRecord]] ) extends Command
 
   type FunctionType = PureFunction[SlackTeamId, TeamTokensRecord, Apply.Map[TeamTokensRecord]]
-  type SwayDbType   = Map[SlackTeamId, TeamTokensRecord, FunctionType, ApiIO]
+  type SwayDbType   = Future[Map[SlackTeamId, TeamTokensRecord, FunctionType, Future]]
 
   val run: Behavior[Command] = runBehavior( None )
 
@@ -84,43 +85,47 @@ object SlackTokensDb extends StrictLogging {
       Behaviors.receiveMessage {
         case OpenDb( config ) => {
           logger.info( s"Opening sway db in ${config.databaseDir}" )
+          implicit val functions = Functions[PureFunction.Map[SlackTeamId, TeamTokensRecord]]()
+
           val map: SwayDbType =
-            persistent.Map[SlackTeamId, TeamTokensRecord, FunctionType, IO.ApiIO]( dir = config.databaseDir ).get
+            persistent.Map[SlackTeamId, TeamTokensRecord, FunctionType, Future]( dir = config.databaseDir )
 
           runBehavior( Some( map ) )
         }
 
         case InsertToken( teamId: SlackTeamId, tokenRecord ) => {
-          swayMap.foreach { swayMap =>
-            swayMap
-              .get( key = teamId )
-              .map(
-                _.map( rec =>
-                  rec.copy( tokens = rec.tokens.filterNot( _.userId == tokenRecord.userId ) :+ tokenRecord )
-                ).getOrElse(
-                  TeamTokensRecord(
-                    teamId = teamId,
-                    tokens = List(
-                      tokenRecord
+          swayMap.foreach { swayMapFuture =>
+            swayMapFuture.foreach { storageMap =>
+              storageMap
+                .get( key = teamId )
+                .map(
+                  _.map( rec =>
+                    rec.copy( tokens = rec.tokens.filterNot( _.userId == tokenRecord.userId ) :+ tokenRecord )
+                  ).getOrElse(
+                    TeamTokensRecord(
+                      teamId = teamId,
+                      tokens = List(
+                        tokenRecord
+                      )
                     )
                   )
                 )
-              )
-              .foreach { record =>
-                logger.debug( s"Inserting record for : ${teamId}/${tokenRecord.userId}" )
-                swayMap.put( teamId, record )
-              }
+                .foreach { record =>
+                  logger.debug( s"Inserting record for : ${teamId}/${tokenRecord.userId}" )
+                  storageMap.put( teamId, record )
+                }
+            }
           }
           Behaviors.same
         }
 
         case ReadTokens( teamId, ref ) => {
-          swayMap.foreach { swayMap => swayMap.get( key = teamId ).foreach { record => ref ! record } }
+          swayMap.foreach( _.foreach( _.get( key = teamId ).foreach { record => ref ! record } ) )
           Behaviors.same
         }
 
         case RemoveTokens( teamId: SlackTeamId, users: Set[SlackUserId] ) => {
-          swayMap.foreach { swayMap =>
+          swayMap.foreach( _.foreach { swayMap =>
             swayMap
               .get( key = teamId )
               .foreach( _.foreach { record =>
@@ -131,7 +136,7 @@ object SlackTokensDb extends StrictLogging {
                   )
                 )
               } )
-          }
+          } )
           Behaviors.same
         }
 

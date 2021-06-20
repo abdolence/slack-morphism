@@ -19,9 +19,8 @@
 package org.latestbit.slack.morphism.examples.http4s.routes
 
 import java.time.{ LocalDateTime, ZoneId }
-
 import cats.data.EitherT
-import cats.effect.Sync
+import cats.effect.{ Async, Concurrent, Sync }
 import cats.implicits._
 import com.typesafe.scalalogging.StrictLogging
 import org.http4s._
@@ -38,7 +37,7 @@ import org.latestbit.slack.morphism.examples.http4s.db.SlackTokensDb
 import org.latestbit.slack.morphism.examples.http4s.templates._
 import org.latestbit.slack.morphism.views.SlackHomeView
 
-class SlackPushEventsRoutes[F[_] : Sync](
+class SlackPushEventsRoutes[F[_] : Concurrent : Async](
     slackApiClient: SlackApiClientT[F],
     implicit val tokensDb: SlackTokensDb[F],
     implicit val config: AppConfig

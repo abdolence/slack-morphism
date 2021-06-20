@@ -44,6 +44,7 @@ object SyncScrollerAwaiter {
   implicit val futureToSyncFutureAwaiter: SyncScrollerAwaiter[Future] = new SyncFutureAwaiter()
 
   class SyncIOAwaiter extends SyncScrollerAwaiter[IO] {
+    import cats.effect.unsafe.implicits.global
 
     override def await[A]( instance: IO[A], duration: FiniteDuration ): A =
       Await.result(

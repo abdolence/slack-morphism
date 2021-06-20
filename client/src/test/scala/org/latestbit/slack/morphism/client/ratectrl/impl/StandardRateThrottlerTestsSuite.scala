@@ -24,7 +24,7 @@ import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.ratectrl._
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.flatspec.AnyFlatSpec
-import sttp.client._
+import sttp.client3._
 
 import scala.concurrent.{ Await, Future }
 import scala.concurrent.duration._

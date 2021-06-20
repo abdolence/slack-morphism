@@ -18,6 +18,7 @@
 
 package org.latestbit.slack.morphism.client
 
+import cats.effect.unsafe.IORuntime
 import org.latestbit.slack.morphism.client.ratectrl.SlackApiRateThrottler
 import org.latestbit.slack.morphism.client.reqresp.test.SlackApiTestRequest
 import org.latestbit.slack.morphism.common._
@@ -26,7 +27,7 @@ import org.scalatest.flatspec.AsyncFlatSpec
 class SttpBackendTests extends AsyncFlatSpec {
   "A Slack client" should "able to try to connect using a async http client network sttp backend" in {
     import cats.instances.future._
-    import sttp.client.asynchttpclient.future.AsyncHttpClientFutureBackend
+    import sttp.client3.asynchttpclient.future.AsyncHttpClientFutureBackend
 
     implicit val sttpBackend = AsyncHttpClientFutureBackend()
 
@@ -51,8 +52,8 @@ class SttpBackendTests extends AsyncFlatSpec {
 
   it should "able to try to connect using a async http cats effect network sttp backend" in {
     import cats.effect._
-    import sttp.client.asynchttpclient.cats.AsyncHttpClientCatsBackend
-    implicit val cs: ContextShift[IO] = IO.contextShift( scala.concurrent.ExecutionContext.global )
+    import sttp.client3.asynchttpclient.cats.AsyncHttpClientCatsBackend
+    implicit val ioRuntime: IORuntime = cats.effect.unsafe.IORuntime.global
 
     val testApiUserToken =
       SlackApiUserToken( SlackAccessTokenValue( "test-token" ), Some( SlackApiTokenScope( "test-scope" ) ) )
@@ -75,8 +76,8 @@ class SttpBackendTests extends AsyncFlatSpec {
   it should "able to try to connect using a async http cats effect network sttp backend with a throttler" in {
     import cats.effect._
 
-    import sttp.client.asynchttpclient.cats.AsyncHttpClientCatsBackend
-    implicit val cs: ContextShift[IO] = IO.contextShift( scala.concurrent.ExecutionContext.global )
+    import sttp.client3.asynchttpclient.cats.AsyncHttpClientCatsBackend
+    implicit val ioRuntime: IORuntime = cats.effect.unsafe.IORuntime.global
 
     implicit val testApiUserToken =
       SlackApiUserToken( SlackAccessTokenValue( "test-token" ), Some( SlackApiTokenScope( "test-scope" ) ) )
@@ -100,49 +101,49 @@ class SttpBackendTests extends AsyncFlatSpec {
 
   }
 
-  it should "able to try to connect using the monix effect sttp backend" in {
-    import sttp.client.asynchttpclient.monix.AsyncHttpClientMonixBackend
-    import monix.eval._
-    import monix.execution.Scheduler.Implicits.global
-
-    implicit val testApiUserToken =
-      SlackApiUserToken( SlackAccessTokenValue( "test-token" ), Some( SlackApiTokenScope( "test-scope" ) ) )
-    (
-      for {
-        backend <- AsyncHttpClientMonixBackend()
-        client = SlackApiClient.build[Task]( backend ).create()
-        result <- client.api.test( SlackApiTestRequest() )
-      } yield result
-    ).executeAsync.runToFuture
-      .map {
-        case Right( resp )                     => fail( s"Unexpected resp: ${resp}" )
-        case Left( ex: SlackApiResponseError ) => assert( ex.errorCode !== null )
-        case Left( ex )                        => fail( ex )
-      }
-
-  }
+  // Monix still on Cats Effects 2
+//  it should "able to try to connect using the monix effect sttp backend" in {
+//    import sttp.client3.asynchttpclient.monix.AsyncHttpClientMonixBackend
+//    import monix.eval._
+//    import monix.execution.Scheduler.Implicits.global
+//
+//    implicit val testApiUserToken =
+//      SlackApiUserToken( SlackAccessTokenValue( "test-token" ), Some( SlackApiTokenScope( "test-scope" ) ) )
+//    (
+//      for {
+//        backend <- AsyncHttpClientMonixBackend()
+//        client = SlackApiClient.build[Task]( backend ).create()
+//        result <- client.api.test( SlackApiTestRequest() )
+//      } yield result
+//    ).executeAsync.runToFuture
+//      .map {
+//        case Right( resp )                     => fail( s"Unexpected resp: ${resp}" )
+//        case Left( ex: SlackApiResponseError ) => assert( ex.errorCode !== null )
+//        case Left( ex )                        => fail( ex )
+//      }
+//
+//  }
 
   it should "able to try to connect using the http4s sttp backend" in {
     import cats.effect._
-    import org.http4s.client.blaze.BlazeClientBuilder
-    import sttp.client.http4s.Http4sBackend
+    import sttp.client3.http4s.Http4sBackend
+
     import org.http4s.client.Client
+    import org.http4s.blaze.client.BlazeClientBuilder
+    implicit val ioRuntime: IORuntime = cats.effect.unsafe.IORuntime.global
 
-    implicit val cs: ContextShift[IO] = IO.contextShift( scala.concurrent.ExecutionContext.global )
-
-    def createHttp4sClient(): Resource[IO, ( Blocker, Client[IO] )] = {
+    def createHttp4sClient(): Resource[IO, Client[IO]] = {
       for {
-        blocker    <- Blocker[IO]
-        httpClient <- BlazeClientBuilder[IO]( blocker.blockingContext ).resource
-      } yield ( blocker, httpClient )
+        httpClient <- BlazeClientBuilder[IO]( scala.concurrent.ExecutionContext.global ).resource
+      } yield httpClient
     }
 
     implicit val testApiUserToken =
       SlackApiUserToken( SlackAccessTokenValue( "test-token" ), Some( SlackApiTokenScope( "test-scope" ) ) )
     (
       createHttp4sClient()
-        .use { case ( blocker, httpClient ) =>
-          val backend = Http4sBackend.usingClient( httpClient, blocker )
+        .use { httpClient =>
+          val backend = Http4sBackend.usingClient( httpClient )
           val client  = SlackApiClient.build[IO]( backend ).create()
           client.api.test( SlackApiTestRequest() )
         }

@@ -52,8 +52,8 @@ trait SlackApiOAuthClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
             )
             .get(
               getSlackMethodAbsoluteUri( "oauth.v2.access" )
-                .param( "code", code )
-                .param( "redirect_uri", redirectUri )
+                .addParam( "code", code )
+                .addParam( "redirect_uri", redirectUri )
             )
         )
       }

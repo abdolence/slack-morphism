@@ -18,8 +18,8 @@
 
 package org.latestbit.slack.morphism.client
 
-import cats.{ ApplicativeError, Monad, MonadError }
-import sttp.client.{ NothingT, SttpBackend }
+import cats.MonadError
+import sttp.client3.SttpBackend
 
 /**
  * A trait defines requirement for STTP backend
@@ -34,7 +34,7 @@ object SlackApiClientBackend {
   /**
    * Compatible STTP backend type alias
    */
-  type SttpBackendType[F[_]] = SttpBackend[F, Nothing, NothingT]
+  type SttpBackendType[F[_]] = SttpBackend[F, Any]
 
   /**
    * SlackApiClient backend kind requirements

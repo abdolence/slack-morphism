@@ -18,80 +18,97 @@
 
 package org.latestbit.slack.morphism.examples.http4s.db
 
-import cats.effect.{ Bracket, ConcurrentEffect, LiftIO, Resource }
+import cats.FlatMap
 import swaydb.data.slice.Slice
 import cats.implicits._
+import cats.effect._
 import cats.effect.implicits._
 import com.typesafe.scalalogging.StrictLogging
 import org.latestbit.slack.morphism.examples.http4s.config.AppConfig
-import cats.effect._
 import cats.effect.IO
 import org.latestbit.slack.morphism.common._
 import swaydb.{ IO => _, Set => _, _ }
 import swaydb.serializers.Default._
-import swaydb.cats.effect.Tag._
 import swaydb.serializers.Serializer
+import swaydb.data.Functions
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
-class SlackTokensDb[F[_] : ConcurrentEffect]( storage: SlackTokensDb.SwayDbType ) extends StrictLogging {
+class SlackTokensDb[F[_] : LiftIO : FlatMap]( storage: SlackTokensDb.SwayDbType ) extends StrictLogging {
   import SlackTokensDb._
 
   def insertToken( teamId: SlackTeamId, tokenRecord: TokenRecord ): F[Unit] = {
     LiftIO[F].liftIO(
-      storage
-        .get( key = teamId )
-        .map(
-          _.map( rec => rec.copy( tokens = rec.tokens.filterNot( _.userId == tokenRecord.userId ) :+ tokenRecord ) )
-            .getOrElse(
-              TeamTokensRecord(
-                teamId = teamId,
-                tokens = List(
-                  tokenRecord
+      IO.fromFuture(
+        IO(
+          storage
+            .get( key = teamId )
+            .map(
+              _.map( rec => rec.copy( tokens = rec.tokens.filterNot( _.userId == tokenRecord.userId ) :+ tokenRecord ) )
+                .getOrElse(
+                  TeamTokensRecord(
+                    teamId = teamId,
+                    tokens = List(
+                      tokenRecord
+                    )
+                  )
                 )
-              )
             )
+            .flatMap { record =>
+              storage.put( teamId, record ).map { _ =>
+                logger.info( s"Inserting record for : ${teamId}/${tokenRecord.userId}" )
+              }
+            }
         )
-        .flatMap { record =>
-          storage.put( teamId, record ).map { _ =>
-            logger.info( s"Inserting record for : ${teamId}/${tokenRecord.userId}" )
-          }
-        }
+      )
     )
   }
 
   def removeTokens( teamId: SlackTeamId, users: Set[SlackUserId] ): F[Unit] = {
     LiftIO[F].liftIO[Unit](
-      storage
-        .get( key = teamId )
-        .flatMap( res =>
-          res
-            .map { record =>
-              storage
-                .put(
-                  teamId,
-                  record.copy(
-                    tokens = record.tokens.filterNot( token => users.contains( token.userId ) )
-                  )
-                )
-                .map( _ => logger.info( s"Removed tokens for: ${users.mkString( "," )}" ) )
-            }
-            .getOrElse( IO.unit )
+      IO.fromFuture(
+        IO(
+          storage
+            .get( key = teamId )
+            .flatMap( res =>
+              res
+                .map { record =>
+                  storage
+                    .put(
+                      teamId,
+                      record.copy(
+                        tokens = record.tokens.filterNot( token => users.contains( token.userId ) )
+                      )
+                    )
+                    .map( _ => logger.info( s"Removed tokens for: ${users.mkString( "," )}" ) )
+                }
+                .getOrElse( Future.successful( () ) )
+            )
         )
+      )
     )
   }
 
   def readTokens( teamId: SlackTeamId ): F[Option[TeamTokensRecord]] = {
     LiftIO[F].liftIO(
-      storage.get( key = teamId )
+      IO.fromFuture(
+        IO(
+          storage.get( key = teamId )
+        )
+      )
     )
   }
 
   private def close(): F[Unit] =
     LiftIO[F].liftIO {
-      IO( logger.info( s"Closing tokens database" ) ).flatMap( _ => storage.close() )
+      IO.fromFuture(
+        IO {
+          logger.info( s"Closing tokens database" )
+          storage.close()
+        }
+      )
     }
-
 }
 
 object SlackTokensDb extends StrictLogging {
@@ -119,10 +136,9 @@ object SlackTokensDb extends StrictLogging {
   }
 
   private type FunctionType = PureFunction[SlackTeamId, TeamTokensRecord, Apply.Map[TeamTokensRecord]]
-  private type SwayDbType   = swaydb.Map[SlackTeamId, TeamTokensRecord, FunctionType, IO]
+  private type SwayDbType   = swaydb.Map[SlackTeamId, TeamTokensRecord, FunctionType, Future]
 
-  private def openDb[F[_] : ConcurrentEffect]( config: AppConfig ): F[SlackTokensDb[F]] = {
-    implicit val cs = IO.contextShift( global )
+  private def openDb[F[_] : LiftIO : Async]( config: AppConfig ): F[SlackTokensDb[F]] = {
 
     implicit val teamIdSerializer = new Serializer[SlackTeamId] {
       override def write( data: SlackTeamId ): Slice[Byte] = StringSerializer.write( data.value )
@@ -130,15 +146,25 @@ object SlackTokensDb extends StrictLogging {
       override def read( data: Slice[Byte] ): SlackTeamId = SlackTeamId( StringSerializer.read( data ) )
     }
 
-    implicitly[ConcurrentEffect[F]]
+    implicit val functions = Functions[PureFunction.Map[SlackTeamId, TeamTokensRecord]]()
+
+    implicitly[Async[F]]
       .delay {
         logger.info( s"Opening database in dir: '${config.databaseDir}''" )
-        persistent.Map[SlackTeamId, TeamTokensRecord, FunctionType, IO]( dir = config.databaseDir ).get
+      }
+      .flatMap { _ =>
+        implicitly[LiftIO[F]].liftIO(
+          IO.fromFuture(
+            IO(
+              persistent.Map[SlackTeamId, TeamTokensRecord, FunctionType, Future]( dir = config.databaseDir )
+            )
+          )
+        )
       }
       .map( storage => new SlackTokensDb[F]( storage ) )
   }
 
-  def open[F[_] : ConcurrentEffect]( config: AppConfig ): Resource[F, SlackTokensDb[F]] = {
+  def open[F[_] : LiftIO : Async]( config: AppConfig ): Resource[F, SlackTokensDb[F]] = {
     Resource.make[F, SlackTokensDb[F]]( openDb[F]( config ) )( _.close() )
   }
 }

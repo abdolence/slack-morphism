@@ -50,7 +50,7 @@ object Main
   override def main: Opts[IO[ExitCode]] = {
     parseAppConfigOpts.map { config: AppConfig =>
       logger.info( "Loading..." )
-      Http4sServer.stream[IO]( config ).compile.drain.as( ExitCode.Success )
+      Http4sServer.stream( config ).compile.drain.as( ExitCode.Success )
     }
   }
 }
