@@ -102,7 +102,7 @@ val catsVersion                   = "2.6.1"
 val catsEffectVersion             = "2.5.1"
 val circeVersion                  = "0.14.1"
 val scalaCollectionsCompatVersion = "2.4.4"
-val sttpVersion                   = "2.2.9"
+val sttpVersion                   = "2.2.10"
 val circeAdtCodecVersion          = "0.10.0"
 
 // For tests
