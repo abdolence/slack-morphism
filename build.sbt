@@ -32,6 +32,12 @@ ThisBuild / exportJars := true
 
 ThisBuild / exportJars := true
 
+ThisBuild / semanticdbEnabled := true
+
+ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
+
+ThisBuild / scalafixScalaBinaryVersion := CrossVersion.binaryScalaVersion(scalaVersion.value)
+
 ThisBuild / publishTo := {
   val nexus = "https://oss.sonatype.org/"
   if (isSnapshot.value)
@@ -64,7 +70,8 @@ ThisBuild / scalacOptions := Seq(
   "-language:higherKinds",
   "-Ywarn-dead-code",
   "-Ywarn-numeric-widen",
-  "-Ywarn-value-discard"
+  "-Ywarn-value-discard",
+  "-Ywarn-unused"
 ) ++ ( CrossVersion.partialVersion( scalaVersion.value ) match {
   case Some( ( 2, n ) ) if n >= 13 => Seq( "-Xsource:3" )
   case Some( ( 2, n ) ) if n < 13  => Seq( "-Ypartial-unification" )
