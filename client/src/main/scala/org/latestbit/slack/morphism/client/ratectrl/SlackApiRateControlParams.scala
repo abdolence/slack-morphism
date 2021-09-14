@@ -18,7 +18,7 @@
 
 package org.latestbit.slack.morphism.client.ratectrl
 
-import org.latestbit.slack.morphism.client.{ SlackApiClientError, SlackApiRateLimitedError, SlackApiRetryableError }
+import org.latestbit.slack.morphism.client.{ SlackApiClientError, SlackApiRateLimitedError }
 
 import scala.concurrent.duration._
 import scala.language.implicitConversions

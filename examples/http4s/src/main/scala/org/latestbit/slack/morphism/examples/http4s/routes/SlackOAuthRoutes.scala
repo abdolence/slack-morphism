@@ -19,19 +19,19 @@
 package org.latestbit.slack.morphism.examples.http4s.routes
 
 import cats.data.EitherT
-import cats.effect.Sync
+import cats.effect.{ Async, Concurrent }
 import cats.implicits._
 import com.typesafe.scalalogging.StrictLogging
 import org.http4s._
 import org.http4s.implicits._
 import org.http4s.dsl.Http4sDsl
 import org.http4s.headers.Location
-import org.latestbit.slack.morphism.client.{ SlackApiClientError, SlackApiClientT }
+import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.common.SlackApiError
 import org.latestbit.slack.morphism.examples.http4s.config.AppConfig
 import org.latestbit.slack.morphism.examples.http4s.db.SlackTokensDb
 
-class SlackOAuthRoutes[F[_] : Sync](
+class SlackOAuthRoutes[F[_] : Concurrent : Async](
     slackApiClient: SlackApiClientT[F],
     tokensDb: SlackTokensDb[F],
     config: AppConfig
@@ -42,7 +42,6 @@ class SlackOAuthRoutes[F[_] : Sync](
   def routes(): HttpRoutes[F] = {
     val dsl = new Http4sDsl[F] {}
     import dsl._
-    val basePath = Path( "auth" )
 
     object QueryParamsMatchers {
       object QueryCodeParam extends OptionalQueryParamDecoderMatcher[String]( "code" )
@@ -52,7 +51,7 @@ class SlackOAuthRoutes[F[_] : Sync](
     import QueryParamsMatchers._
 
     HttpRoutes.of[F] {
-      case GET -> Root / basePath / "install" => {
+      case GET -> Root / "auth" / "install" => {
         val baseParams: Map[String, String] = List[( String, Option[String] )](
           "client_id"    -> Option( config.slackAppConfig.clientId ),
           "scope"        -> Option( config.slackAppConfig.botScope ),
@@ -64,7 +63,7 @@ class SlackOAuthRoutes[F[_] : Sync](
         } yield resp
       }
 
-      case GET -> Root / basePath / "callback" :? QueryCodeParam( code ) +& ErrorCodeParam( error ) => {
+      case GET -> Root / "auth" / "callback" :? QueryCodeParam( code ) +& ErrorCodeParam( error ) => {
         ( code, error ) match {
           case ( Some( oauthCode ), _ ) => {
             logger.info( s"Received OAuth access code: ${oauthCode}" )

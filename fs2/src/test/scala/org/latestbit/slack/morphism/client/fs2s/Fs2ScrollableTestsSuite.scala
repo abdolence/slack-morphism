@@ -18,6 +18,7 @@
 
 package org.latestbit.slack.morphism.client.fs2s
 
+import cats.effect.unsafe.implicits.global
 import org.latestbit.slack.morphism.client.SlackApiClientTestsSuiteSupport
 import org.scalatest.flatspec.AnyFlatSpec
 

@@ -33,9 +33,6 @@ import org.latestbit.slack.morphism.examples.akka.db.SlackTokensDb
 
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.concurrent.duration._
-import cats.Functor
-import cats.instances.option._
-import cats.implicits._
 import com.typesafe.scalalogging.StrictLogging
 import org.latestbit.slack.morphism.common.SlackTeamId
 import org.latestbit.slack.morphism.examples.akka.config.AppConfig

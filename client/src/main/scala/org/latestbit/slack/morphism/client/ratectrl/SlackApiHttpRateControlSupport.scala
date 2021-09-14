@@ -21,14 +21,14 @@ package org.latestbit.slack.morphism.client.ratectrl
 import io.circe.Decoder
 import org.latestbit.slack.morphism.client.impl.SlackApiHttpProtocolSupport
 import org.latestbit.slack.morphism.client.{ SlackApiClientBackend, SlackApiClientError, SlackApiToken }
-import sttp.client.Request
+import sttp.client3.Request
 
 trait SlackApiHttpRateControlSupport[F[_]] extends SlackApiHttpProtocolSupport[F] {
 
   protected val throttler: SlackApiRateThrottler[F]
 
   override protected def sendManagedSlackHttpRequest[RS](
-      request: Request[Either[String, String], Nothing],
+      request: Request[Either[String, String], Any],
       methodRateControl: Option[SlackApiMethodRateControlParams],
       slackApiToken: Option[SlackApiToken]
   )( implicit

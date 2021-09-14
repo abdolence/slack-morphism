@@ -18,8 +18,6 @@
 
 package org.latestbit.slack.morphism.ext
 
-import scala.language.implicitConversions
-
 object ArrayExt {
 
   private final val DigitsLower =

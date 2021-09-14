@@ -21,36 +21,33 @@ package org.latestbit.slack.morphism.client.reactive.impl
 import java.util.concurrent.locks.ReentrantLock
 import cats.Monad
 import cats.effect._
-import cats.effect.concurrent.{ MVar, MVar2 }
+import cats.effect.std.Queue
+import cats.effect.unsafe.IORuntime
 import cats.implicits._
 import org.latestbit.slack.morphism.client.SlackApiClientError
 import org.latestbit.slack.morphism.client.streaming.{ SlackApiResponseScroller, SlackApiScrollableResponse }
 import org.latestbit.slack.morphism.concurrent.{ AsyncSeqIterator, UniqueLockMonitor }
 import org.reactivestreams.Subscriber
 
-import scala.concurrent.ExecutionContext
 import scala.util.Using
 
 class SlackApiScrollableSubscriptionCommandChannel[F[_] : Monad, IT, PT, SR <: SlackApiScrollableResponse[IT, PT]](
     subscriber: Subscriber[_ >: IT],
     scrollableResponse: SlackApiResponseScroller[F, IT, PT, SR],
     maxItems: Option[Long] = None
-)( implicit
-    ec: ExecutionContext,
-    ctxshift: ContextShift[IO]
-) {
+)( implicit ioRuntime: IORuntime ) {
   import SlackApiScrollableSubscriptionCommandChannel._
 
   @volatile private var commandBuffer: Vector[Command]   = Vector()
   @volatile private var notifyAsyncCommandCb: () => Unit = _
   private val statusLock                                 = new ReentrantLock()
 
-  private def consumerTask( channel: CommandChannel, currentState: ConsumerState[F, IT, PT, SR] ): IO[Unit] = {
-    channel.take.flatMap {
+  private def consumerTask( commandQueue: CommandQueue, currentState: ConsumerState[F, IT, PT, SR] ): IO[Unit] = {
+    commandQueue.take.flatMap {
       case RequestElements( n ) => {
         for {
           updatedState <- pumpNextBatchAsync( n, currentState )
-          _            <- consumerTask( channel, updatedState )
+          _            <- consumerTask( commandQueue, updatedState )
         } yield ()
       }
       case Close => {
@@ -59,23 +56,23 @@ class SlackApiScrollableSubscriptionCommandChannel[F[_] : Monad, IT, PT, SR <: S
     }
   }
 
-  private def producerCommandLoop( channel: CommandChannel ): IO[Unit] = {
+  private def producerCommandLoop( commandQueue: CommandQueue ): IO[Unit] = {
     for {
       command <- takeNewCommand()
-      producer = channel.put( command )
+      producer = commandQueue.offer( command )
       fp <- producer.start
       _  <- fp.join
       _ <- (
              command match {
                case Close => IO.unit
-               case _     => producerCommandLoop( channel )
+               case _     => producerCommandLoop( commandQueue )
              }
            )
     } yield ()
   }
 
   def takeNewCommand(): IO[Command] = {
-    Async[IO].async[Command] { cb =>
+    Async[IO].async_[Command] { cb =>
       val _ = Using( UniqueLockMonitor.lockAndMonitor( statusLock ) ) { monitor =>
         if (commandBuffer.isEmpty) {
           notifyAsyncCommandCb = () => {
@@ -140,7 +137,7 @@ class SlackApiScrollableSubscriptionCommandChannel[F[_] : Monad, IT, PT, SR <: S
       reqN: Long,
       state: ConsumerState[F, IT, PT, SR]
   ): IO[ConsumerState[F, IT, PT, SR]] = {
-    Async[IO].async[ConsumerState[F, IT, PT, SR]] { asyncCallback =>
+    Async[IO].async_[ConsumerState[F, IT, PT, SR]] { asyncCallback =>
       if (!state.finished)
         pumpNextBatch( reqN, state, asyncCallback )
       else
@@ -219,12 +216,12 @@ class SlackApiScrollableSubscriptionCommandChannel[F[_] : Monad, IT, PT, SR <: S
 
   def start(): Unit = {
     ( for {
-      channel <- MVar[IO].empty[Command]
-      consumer = consumerTask( channel, ConsumerState( Some( scrollableResponse.toAsyncScroller() ) ) )
+      commandQueue <- Queue.unbounded[IO, Command]
+      consumer = consumerTask( commandQueue, ConsumerState( Some( scrollableResponse.toAsyncScroller() ) ) )
       fc <- consumer.start
-      _  <- producerCommandLoop( channel )
+      _  <- producerCommandLoop( commandQueue )
       _  <- fc.join
-    } yield () ).unsafeRunAsyncAndForget()
+    } yield () ).unsafeRunAndForget()
   }
 
   def shutdown(): Unit = {
@@ -239,7 +236,7 @@ object SlackApiScrollableSubscriptionCommandChannel {
   case class RequestElements( n: Long ) extends Command
   case object Close                     extends Command
 
-  type CommandChannel = MVar2[IO, Command]
+  type CommandQueue = Queue[IO, Command]
 
   case class ConsumerState[F[_] : Monad, IT, PT, SR <: SlackApiScrollableResponse[IT, PT]](
       batchIterator: Option[AsyncSeqIterator[

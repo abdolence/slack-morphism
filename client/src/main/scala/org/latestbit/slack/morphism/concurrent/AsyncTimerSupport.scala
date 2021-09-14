@@ -18,15 +18,14 @@
 
 package org.latestbit.slack.morphism.concurrent
 
-import scala.languageFeature.implicitConversions
-import java.util.concurrent.{ ScheduledExecutorService, TimeUnit }
+import cats.FlatMap
 
+import java.util.concurrent.ScheduledExecutorService
 import cats.effect._
 import cats.implicits._
 
 import scala.concurrent.{ ExecutionContext, Future, Promise }
 import scala.concurrent.duration.FiniteDuration
-import scala.language.implicitConversions
 
 /**
  * Auxiliary interface to support delayed effects for different kind of monads
@@ -74,7 +73,7 @@ object AsyncTimerSupport {
 
   implicit val futureToAsyncTimerSupport: AsyncTimerSupport[Future] = new FutureAsyncTimerSupport()
 
-  class IOAsyncTimerSupport[F[_] : ConcurrentEffect]() extends AsyncTimerSupport[F] {
+  class IOAsyncTimerSupport[F[_] : LiftIO : FlatMap]() extends AsyncTimerSupport[F] {
 
     override def delayed[A](
         effect: () => F[A],
@@ -83,14 +82,13 @@ object AsyncTimerSupport {
     )( implicit
         ec: ExecutionContext
     ): F[A] = {
-      implicit val timer = IO.timer( ec, scheduledExecutor )
-      implicit val cs    = IO.contextShift( ec )
+      val ec: ExecutionContext = ExecutionContext.fromExecutorService( scheduledExecutor )
 
-      LiftIO[F].liftIO( IO.sleep( duration ).start ).flatMap { _ => effect() }
+      LiftIO[F].liftIO( IO.cede.evalOn( ec ).delayBy( duration ).startOn( ec ) ).flatMap { _ => effect() }
 
     }
   }
 
-  implicit def ioToAsyncTimerSupport[F[_] : ConcurrentEffect]: AsyncTimerSupport[F] = new IOAsyncTimerSupport()
+  implicit def ioToAsyncTimerSupport[F[_] : LiftIO : FlatMap]: AsyncTimerSupport[F] = new IOAsyncTimerSupport()
 
 }

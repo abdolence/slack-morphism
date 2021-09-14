@@ -19,7 +19,6 @@
 package org.latestbit.slack.morphism
 
 import cats.data._
-import cats.implicits._
 import io.circe._
 import io.circe.syntax._
 import org.latestbit.slack.morphism.common.SlackChannelInfo._

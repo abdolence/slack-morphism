@@ -18,7 +18,6 @@
 
 package org.latestbit.slack.morphism.client.impl
 
-import cats.MonadError
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.client.ratectrl._
 import org.latestbit.slack.morphism.client.reqresp.apps._

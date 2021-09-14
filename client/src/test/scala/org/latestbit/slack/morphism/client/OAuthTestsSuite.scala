@@ -21,7 +21,7 @@ package org.latestbit.slack.morphism.client
 import org.latestbit.slack.morphism.client.reqresp.oauth._
 import org.latestbit.slack.morphism.common._
 import org.scalatest.flatspec.AsyncFlatSpec
-import sttp.client.testing.SttpBackendStub
+import sttp.client3.testing.SttpBackendStub
 import sttp.model.HeaderNames
 import cats.instances.future._
 import org.latestbit.slack.morphism.codecs.CirceCodecs
@@ -54,7 +54,7 @@ class OAuthTestsSuite extends AsyncFlatSpec with SlackApiClientTestsSuiteSupport
               header.value == createBasicCredentials( mockClientId, mockClientSecret )
           )
         }
-        .thenRespondWrapped(
+        .thenRespondF(
           createJsonResponseStub( mockResponse )
         )
 

@@ -20,7 +20,7 @@ package org.latestbit.slack.morphism.client.impl
 
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.codecs.implicits._
-import sttp.client._
+import sttp.client3._
 import cats.implicits._
 import org.latestbit.slack.morphism.client.reqresp.events._
 

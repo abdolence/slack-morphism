@@ -29,7 +29,7 @@ import com.typesafe.scalalogging._
 import org.latestbit.slack.morphism.client._
 import org.latestbit.slack.morphism.examples.akka.db.SlackTokensDb
 import org.latestbit.slack.morphism.examples.akka.routes._
-import sttp.client.akkahttp.AkkaHttpBackend
+import sttp.client3.akkahttp.AkkaHttpBackend
 
 import scala.concurrent.duration._
 import scala.concurrent.{ ExecutionContextExecutor, Future }

@@ -19,18 +19,15 @@
 package org.latestbit.slack.morphism.client.reactive.impl
 
 import cats.Monad
-import cats.effect.IO
+import cats.effect.unsafe.IORuntime
 import org.latestbit.slack.morphism.client.streaming.{ SlackApiResponseScroller, SlackApiScrollableResponse }
 import org.reactivestreams.{ Publisher, Subscriber, Subscription }
-
-import scala.concurrent.ExecutionContext
 
 class SlackApiScrollableReactivePublisher[F[_] : Monad, IT, PT, SR <: SlackApiScrollableResponse[IT, PT]](
     scrollableResponse: SlackApiResponseScroller[F, IT, PT, SR],
     maxItems: Option[Long] = None
-)( implicit ec: ExecutionContext )
-    extends Publisher[IT] {
-  private implicit val ctxShift = IO.contextShift( ec )
+) extends Publisher[IT] {
+  private implicit val ioRuntime: IORuntime = cats.effect.unsafe.IORuntime.global
 
   private final class SlackApiScrollableSubscription( subscriber: Subscriber[_ >: IT] ) extends Subscription {
 

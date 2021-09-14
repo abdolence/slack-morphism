@@ -18,7 +18,7 @@
 
 package org.latestbit.slack.morphism.examples.http4s.routes
 
-import cats.effect.Sync
+import cats.effect.{ Async, Concurrent }
 import cats.implicits._
 import com.typesafe.scalalogging.StrictLogging
 import org.http4s._
@@ -30,7 +30,7 @@ import org.latestbit.slack.morphism.examples.http4s.config.AppConfig
 import org.latestbit.slack.morphism.examples.http4s.db.SlackTokensDb
 import org.latestbit.slack.morphism.examples.http4s.templates.SlackSampleMessageReplyTemplateExample
 
-class SlackCommandEventsRoutes[F[_] : Sync](
+class SlackCommandEventsRoutes[F[_] : Concurrent : Async](
     slackApiClient: SlackApiClientT[F],
     implicit val tokensDb: SlackTokensDb[F],
     implicit val config: AppConfig
@@ -62,7 +62,7 @@ class SlackCommandEventsRoutes[F[_] : Sync](
                     )
                   )
                   .flatMap { resp =>
-                    resp.leftMap( err => logger.error( err.getMessage() ) )
+                    resp.leftMap( err => logger.error( err.getMessage ) )
                     Ok()
                   }
               }

@@ -19,7 +19,6 @@
 package org.latestbit.slack.morphism.client
 
 import org.latestbit.slack.morphism.common._
-import cats.data.NonEmptyList
 
 /**
  * Slack API token base representation

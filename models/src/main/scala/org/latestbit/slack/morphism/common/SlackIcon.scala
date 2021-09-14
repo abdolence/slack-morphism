@@ -19,7 +19,6 @@
 package org.latestbit.slack.morphism.common
 
 import io.circe._
-import io.circe.parser._
 import io.circe.syntax._
 
 /**

@@ -24,7 +24,7 @@ import org.scalatest.Succeeded
 import org.scalacheck.ScalacheckShapeless._
 import org.scalacheck._
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
-import sttp.client.testing.SttpBackendStub
+import sttp.client3.testing.SttpBackendStub
 import io.circe.Encoder
 import io.circe.generic.auto._
 import org.latestbit.slack.morphism.client.reqresp.apps._
@@ -42,7 +42,7 @@ class MethodsTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenPropertyCheck
   }
 
   def testSlackApiMethod[RQ, RS](
-      apiMethodCall: RQ => SttpBackendStub[Future, Nothing, Nothing] => Future[Either[SlackApiClientError, RS]]
+      apiMethodCall: RQ => SttpBackendStub[Future, Any] => Future[Either[SlackApiClientError, RS]]
   )( responseFactory: RQ => RS )(
       reqRespAssertion: ( RQ, Either[SlackApiClientError, RS] ) => Assertion
   )( implicit arq: Arbitrary[RQ], encoder: Encoder.AsObject[RS] ) = {
@@ -53,7 +53,7 @@ class MethodsTestsSuite extends AsyncFlatSpec with ScalaCheckDrivenPropertyCheck
           .map { sample =>
             val mockBackend =
               SttpBackendStub.asynchronousFuture.whenAnyRequest
-                .thenRespondWrapped(
+                .thenRespondF(
                   createJsonResponseStub[RS]( responseFactory( sample ) )
                 )
             ( sample, apiMethodCall( sample )( mockBackend ) )
