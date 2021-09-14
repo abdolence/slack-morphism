@@ -18,6 +18,4 @@
 
 package org.latestbit.slack.morphism.client.compat
 
-import scala.language.implicitConversions
-
 object CollectionsImplicits {}

@@ -70,8 +70,8 @@ ThisBuild / scalacOptions := Seq(
   "-language:higherKinds",
   "-Ywarn-dead-code",
   "-Ywarn-numeric-widen",
-  "-Ywarn-value-discard",
-  "-Ywarn-unused"
+  "-Ywarn-value-discard"/*,
+  "-Ywarn-unused"*/
 ) ++ ( CrossVersion.partialVersion( scalaVersion.value ) match {
   case Some( ( 2, n ) ) if n >= 13 => Seq( "-Xsource:3" )
   case Some( ( 2, n ) ) if n < 13  => Seq( "-Ypartial-unification" )

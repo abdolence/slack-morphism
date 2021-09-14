@@ -1,13 +1,9 @@
 package org.latestbit.slack.morphism.examples.http4s
 
-import cats.effect._
 import cats.implicits._
 import fs2.Stream
 import cats.effect._
-import cats.effect.implicits._
-import org.http4s.HttpRoutes
 import org.http4s.blaze.client.BlazeClientBuilder
-import org.http4s.dsl.io._
 import org.http4s.implicits._
 import org.http4s.blaze.server._
 

@@ -19,7 +19,6 @@
 package org.latestbit.slack.morphism.views
 
 import io.circe._
-import io.circe.generic.semiauto._
 import org.latestbit.circe.adt.codec._
 import org.latestbit.slack.morphism.common._
 import org.latestbit.slack.morphism.messages.{ SlackBlock, SlackBlockPlainText }

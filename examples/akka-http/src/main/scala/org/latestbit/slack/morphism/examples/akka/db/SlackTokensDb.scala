@@ -25,7 +25,6 @@ import swaydb.serializers.Default._
 import swaydb.data.Functions
 import akka.actor.typed.scaladsl.adapter._
 import com.typesafe.scalalogging._
-import swaydb.IO.ApiIO
 import swaydb.data.slice.Slice
 import cats.implicits._
 import org.latestbit.slack.morphism.common._

@@ -19,14 +19,13 @@
 package org.latestbit.slack.morphism.examples.http4s.routes
 
 import cats.data.OptionT
-import cats.effect.{ Async, Concurrent, Sync }
+import cats.effect.{ Async, Concurrent }
 import cats.implicits._
 import com.typesafe.scalalogging.StrictLogging
 import org.http4s._
 import org.http4s.dsl.Http4sDsl
 import org.latestbit.slack.morphism.client.reqresp.views._
 import org.latestbit.slack.morphism.client._
-import org.latestbit.slack.morphism.client.reqresp.files._
 import org.latestbit.slack.morphism.codecs.CirceCodecs
 import org.latestbit.slack.morphism.common._
 import org.latestbit.slack.morphism.events._

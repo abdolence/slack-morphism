@@ -32,6 +32,7 @@ import sttp.model.Uri
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
 import scala.util._
+import org.latestbit.slack.morphism.client.compat.CollectionsImplicits._
 
 abstract class StandardRateThrottler[F[_] : SlackApiClientBackend.BackendType : AsyncTimerSupport] private[ratectrl] (
     params: SlackApiRateControlParams,
@@ -40,7 +41,6 @@ abstract class StandardRateThrottler[F[_] : SlackApiClientBackend.BackendType : 
     extends SlackApiRateThrottler[F] {
 
   import StandardRateThrottler._
-  import org.latestbit.slack.morphism.client.compat.CollectionsImplicits._
 
   @volatile private var globalMaxRateMetric: RateThrottlerMetric =
     params.globalMaxRateLimit.map( toRateMetric ).orNull

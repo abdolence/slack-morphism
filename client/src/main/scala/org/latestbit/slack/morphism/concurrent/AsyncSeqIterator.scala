@@ -21,8 +21,6 @@ package org.latestbit.slack.morphism.concurrent
 import cats._
 import org.latestbit.slack.morphism.concurrent.impl.AsyncSeqIteratorImpl
 
-import scala.language.implicitConversions
-
 /**
  * Provides infinite and async computation results lazily iterating over some user defined function
  * Unlike standard Stream[]/LazyList[] from Scala, this implementation doesn't memorise previous values.

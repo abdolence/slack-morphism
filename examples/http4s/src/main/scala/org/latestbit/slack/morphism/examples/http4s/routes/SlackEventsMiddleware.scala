@@ -26,7 +26,6 @@ import io.circe.Decoder
 import io.circe.parser._
 import org.http4s._
 import org.http4s.dsl.io._
-import org.http4s.implicits._
 import org.latestbit.slack.morphism.client.SlackApiToken
 import org.latestbit.slack.morphism.common.SlackTeamId
 import org.latestbit.slack.morphism.events.signature._

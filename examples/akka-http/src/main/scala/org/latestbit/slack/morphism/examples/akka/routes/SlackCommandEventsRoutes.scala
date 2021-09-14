@@ -20,13 +20,10 @@ package org.latestbit.slack.morphism.examples.akka.routes
 
 import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.ActorContext
-import akka.http.scaladsl.model._
 import akka.http.scaladsl.server._
 import com.typesafe.scalalogging._
-import io.circe.parser._
 import org.latestbit.slack.morphism.client.SlackApiClientT
 import org.latestbit.slack.morphism.common.SlackResponseTypes
-import org.latestbit.slack.morphism.events._
 import org.latestbit.slack.morphism.examples.akka.db.SlackTokensDb
 import org.latestbit.slack.morphism.examples.akka.templates._
 
@@ -65,16 +62,16 @@ class SlackCommandEventsRoutes( implicit
             "trigger_id"
           ) {
             case (
-                  team_id,
-                  team_domain,
-                  channel_id,
-                  channel_name,
-                  user_id,
-                  user_name,
-                  command,
+                  _,
+                  _,
+                  _,
+                  _,
+                  _,
+                  _,
+                  _,
                   text,
                   response_url,
-                  trigger_id
+                  _
                 ) =>
               // Sending additional reply using response_url
               val commandReply = new SlackSampleMessageReplyTemplateExample(

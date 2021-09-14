@@ -20,15 +20,12 @@ package org.latestbit.slack.morphism.concurrent
 
 import cats.FlatMap
 
-import scala.languageFeature.implicitConversions
-import java.util.concurrent.{ ScheduledExecutorService, TimeUnit }
+import java.util.concurrent.ScheduledExecutorService
 import cats.effect._
-import cats.effect.std.Dispatcher
 import cats.implicits._
 
 import scala.concurrent.{ ExecutionContext, Future, Promise }
 import scala.concurrent.duration.FiniteDuration
-import scala.language.implicitConversions
 
 /**
  * Auxiliary interface to support delayed effects for different kind of monads

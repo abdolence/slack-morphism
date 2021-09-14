@@ -19,7 +19,7 @@
 package org.latestbit.slack.morphism.examples.http4s.routes
 
 import cats.data.EitherT
-import cats.effect.{ Async, Concurrent, Sync }
+import cats.effect.{ Async, Concurrent }
 import cats.implicits._
 import com.typesafe.scalalogging.StrictLogging
 import org.http4s._

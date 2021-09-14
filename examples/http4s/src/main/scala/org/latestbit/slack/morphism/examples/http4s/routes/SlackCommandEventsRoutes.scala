@@ -18,14 +18,11 @@
 
 package org.latestbit.slack.morphism.examples.http4s.routes
 
-import cats.{ FlatMap, Functor }
-import cats.effect.{ Async, Concurrent, Sync }
+import cats.effect.{ Async, Concurrent }
 import cats.implicits._
-import cats.effect.implicits._
 import com.typesafe.scalalogging.StrictLogging
 import org.http4s._
 import org.http4s.dsl.Http4sDsl
-import org.http4s.dsl._
 import org.latestbit.slack.morphism.client.SlackApiClientT
 import org.latestbit.slack.morphism.client.reqresp.events.SlackApiEventMessageReply
 import org.latestbit.slack.morphism.common.SlackResponseTypes

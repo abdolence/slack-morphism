@@ -22,7 +22,6 @@ import cats.effect.IO
 
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ Await, Future }
-import scala.languageFeature.implicitConversions
 
 /**
  * Mostly for testing purposes we provide a sync scroller,

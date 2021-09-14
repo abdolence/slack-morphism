@@ -22,7 +22,6 @@ import cats.FlatMap
 import swaydb.data.slice.Slice
 import cats.implicits._
 import cats.effect._
-import cats.effect.implicits._
 import com.typesafe.scalalogging.StrictLogging
 import org.latestbit.slack.morphism.examples.http4s.config.AppConfig
 import cats.effect.IO

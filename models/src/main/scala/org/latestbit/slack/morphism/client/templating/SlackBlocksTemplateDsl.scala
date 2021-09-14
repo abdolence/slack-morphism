@@ -21,8 +21,6 @@ package org.latestbit.slack.morphism.client.templating
 import org.latestbit.slack.morphism.messages._
 import cats.data._
 
-import scala.language.implicitConversions
-
 trait SlackBlocksTemplateDsl extends SlackBlocksTemplateDslInternals {
 
   protected def blocks( blockDefs: SlackDslItemDef[SlackBlock]* ): List[SlackBlock] =
