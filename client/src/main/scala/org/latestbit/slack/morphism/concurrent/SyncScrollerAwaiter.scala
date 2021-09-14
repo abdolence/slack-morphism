@@ -22,7 +22,6 @@ import cats.effect.IO
 
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ Await, Future }
-import scala.languageFeature.implicitConversions
 
 /**
  * Mostly for testing purposes we provide a sync scroller,
@@ -44,6 +43,7 @@ object SyncScrollerAwaiter {
   implicit val futureToSyncFutureAwaiter: SyncScrollerAwaiter[Future] = new SyncFutureAwaiter()
 
   class SyncIOAwaiter extends SyncScrollerAwaiter[IO] {
+    import cats.effect.unsafe.implicits.global
 
     override def await[A]( instance: IO[A], duration: FiniteDuration ): A =
       Await.result(

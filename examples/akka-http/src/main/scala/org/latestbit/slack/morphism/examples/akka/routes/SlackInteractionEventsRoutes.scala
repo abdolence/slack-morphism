@@ -24,7 +24,7 @@ import akka.http.scaladsl.model._
 import akka.http.scaladsl.server._
 import com.typesafe.scalalogging._
 import io.circe.parser._
-import org.latestbit.slack.morphism.client.{ SlackApiClient, SlackApiClientT, SlackApiToken }
+import org.latestbit.slack.morphism.client.{ SlackApiClientT, SlackApiToken }
 import org.latestbit.slack.morphism.client.reqresp.views.SlackApiViewsOpenRequest
 import org.latestbit.slack.morphism.events._
 import org.latestbit.slack.morphism.examples.akka.db.SlackTokensDb

@@ -32,6 +32,12 @@ ThisBuild / exportJars := true
 
 ThisBuild / exportJars := true
 
+ThisBuild / semanticdbEnabled := true
+
+ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
+
+ThisBuild / scalafixScalaBinaryVersion := CrossVersion.binaryScalaVersion(scalaVersion.value)
+
 ThisBuild / publishTo := {
   val nexus = "https://oss.sonatype.org/"
   if (isSnapshot.value)
@@ -64,7 +70,8 @@ ThisBuild / scalacOptions := Seq(
   "-language:higherKinds",
   "-Ywarn-dead-code",
   "-Ywarn-numeric-widen",
-  "-Ywarn-value-discard"
+  "-Ywarn-value-discard"/*,
+  "-Ywarn-unused"*/
 ) ++ ( CrossVersion.partialVersion( scalaVersion.value ) match {
   case Some( ( 2, n ) ) if n >= 13 => Seq( "-Xsource:3" )
   case Some( ( 2, n ) ) if n < 13  => Seq( "-Ypartial-unification" )
@@ -96,13 +103,11 @@ def priorTo2_13( scalaVersion: String ): Boolean =
     case _                                  => false
   }
 
-
-
 val catsVersion                   = "2.6.1"
-val catsEffectVersion             = "2.5.1"
+val catsEffectVersion             = "3.1.1"
 val circeVersion                  = "0.14.1"
 val scalaCollectionsCompatVersion = "2.4.4"
-val sttpVersion                   = "2.2.9"
+val sttp3Version                   = "3.3.6"
 val circeAdtCodecVersion          = "0.10.0"
 
 // For tests
@@ -120,12 +125,12 @@ val akkaHttpCirceVersion = "1.36.0"
 val logbackVersion       = "1.2.5"
 val scalaLoggingVersion  = "3.9.4"
 val scoptVersion         = "3.7.1"
-val swayDbVersion        = "0.11"
-val http4sVersion        = "0.21.23"
-val declineVersion       = "1.4.0"
+val swayDbVersion        = "0.16.2"
+val http4sVersion        = "0.23.0-RC1"
+val declineVersion       = "2.0.0"
 
 // For fs2 integration module
-val fs2Version = "2.5.6"
+val fs2Version = "3.0.4"
 
 // For reactive-streams integration module
 val reactiveStreamsVersion = "1.0.3"
@@ -166,15 +171,20 @@ val baseDependencies =
       "org.scalatestplus"            %% "scalacheck-1-14"                  % scalaTestPlusCheck,
       "org.scalatestplus"            %% "testng-6-7"                       % scalaTestPlusTestNG,
       "com.github.alexarchambault"   %% "scalacheck-shapeless_1.14"        % scalaCheckShapeless,
-      "com.softwaremill.sttp.client" %% "async-http-client-backend-future" % sttpVersion,
-      "com.softwaremill.sttp.client" %% "async-http-client-backend-cats"   % sttpVersion,
-      "com.softwaremill.sttp.client" %% "async-http-client-backend-monix"  % sttpVersion,
-      "com.softwaremill.sttp.client" %% "http4s-backend"                   % sttpVersion,
+      "com.softwaremill.sttp.client3" %% "async-http-client-backend-future" % sttp3Version,
+      "com.softwaremill.sttp.client3" %% "async-http-client-backend-cats"   % sttp3Version,
+      //"com.softwaremill.sttp.client3" %% "async-http-client-backend-monix"  % sttp3Version,
+      "com.softwaremill.sttp.client3" %% "http4s-backend"                   % sttp3Version,
+      "org.http4s" %% "http4s-blaze-client" % http4sVersion
+          exclude ( "org.typelevel", "cats-core")
+          exclude ( "org.typelevel", "cats-effect")
+          excludeAll ( ExclusionRule( organization = "io.circe" )
+      ),
       "ch.qos.logback"                % "logback-classic"                  % logbackVersion
         exclude ( "org.slf4j", "slf4j-api"),
       "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion
     ).map(
-      _ % "test"
+      _ % Test
         exclude ( "org.typelevel", "cats-core")
         exclude ( "org.typelevel", "cats-effect")
     )
@@ -228,7 +238,7 @@ lazy val slackMorphismClient =
     .settings(
       name := "slack-morphism-client",
       libraryDependencies ++= ( baseDependencies ++ Seq(
-        "com.softwaremill.sttp.client" %% "core"                    % sttpVersion,
+        "com.softwaremill.sttp.client3" %% "core"                    % sttp3Version,
         "org.scala-lang.modules"       %% "scala-collection-compat" % scalaCollectionsCompatVersion
       ) ++ ( if (priorTo2_13( scalaVersion.value ))
               Seq( "com.github.bigwheel" %% "util-backports" % bigwheelUtilBackports )
@@ -256,7 +266,7 @@ lazy val slackMorphismAkkaExample =
             ExclusionRule( organization = "com.typesafe.akka" ),
             ExclusionRule( organization = "io.circe" )
         ),
-        "com.softwaremill.sttp.client" %% "akka-http-backend" % sttpVersion
+        "com.softwaremill.sttp.client3" %% "akka-http-backend" % sttp3Version
           excludeAll (
             ExclusionRule( organization = "com.typesafe.akka" )
           ),
@@ -287,27 +297,29 @@ lazy val slackMorphismHttp4sExample =
           excludeAll ( ExclusionRule( organization = "io.circe" ) )
       ) ) ++ Seq(
         "com.monovore" %% "decline" % declineVersion
-          exclude ( "org.typelevel", "cats-core"),
+          exclude ( "org.typelevel", "cats-core")
+        ,
         "com.monovore" %% "decline-effect" % declineVersion
           exclude ( "org.typelevel", "cats-core")
           exclude ( "org.typelevel", "cats-effect"),
         "ch.qos.logback" % "logback-classic" % logbackVersion
           exclude ( "org.slf4j", "slf4j-api"),
         "com.typesafe.scala-logging"   %% "scala-logging"  % scalaLoggingVersion,
-        "com.softwaremill.sttp.client" %% "http4s-backend" % sttpVersion
+        "com.softwaremill.sttp.client3" %% "http4s-backend" % sttp3Version
           excludeAll ( ExclusionRule( organization = "org.http4s" ) )
           excludeAll ( ExclusionRule( organization = "io.circe" ) ),
         "io.swaydb" %% "swaydb" % swayDbVersion
           excludeAll (
             ExclusionRule( organization = "org.scala-lang.modules" ),
             ExclusionRule( organization = "org.reactivestreams" )
-        ),
-        "io.swaydb" %% "cats-effect" % swayDbVersion
-          excludeAll (
-            ExclusionRule( organization = "org.scala-lang.modules" ),
-            ExclusionRule( organization = "org.reactivestreams" ),
-            ExclusionRule( organization = "org.typelevel" )
         )
+//        SwayDB effect doesn't support Cats Effect 3,
+//        "io.swaydb" %% "cats-effect" % swayDbVersion
+//          excludeAll (
+//            ExclusionRule( organization = "org.scala-lang.modules" ),
+//            ExclusionRule( organization = "org.reactivestreams" ),
+//            ExclusionRule( organization = "org.typelevel" )
+//        )
       )
     )
     .settings( noPublishSettings )
@@ -338,7 +350,7 @@ lazy val slackMorphismReactiveStreams =
         "org.reactivestreams" % "reactive-streams" % reactiveStreamsVersion
       ) ++ ( Seq(
         "org.reactivestreams" % "reactive-streams-tck" % reactiveStreamsVersion
-      ).map( _ % "test" ) )
+      ).map( _ % Test ) )
     )
     .settings( scalaDocSettings )
     .settings( compilerPluginSettings )

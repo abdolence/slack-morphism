@@ -24,7 +24,7 @@ import akka.http.scaladsl.model.Uri.Query
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server._
 import com.typesafe.scalalogging.StrictLogging
-import org.latestbit.slack.morphism.client.{ SlackApiClient, SlackApiClientT }
+import org.latestbit.slack.morphism.client.SlackApiClientT
 import org.latestbit.slack.morphism.examples.akka.db.SlackTokensDb
 
 import scala.concurrent.{ ExecutionContext, Future }
@@ -71,7 +71,7 @@ class SlackOAuthRoutes( implicit
       } ~
         get {
           path( "callback" ) {
-            parameters( "code".?, "error".?, "state".? ) { case ( code, error, state ) =>
+            parameters( "code".?, "error".?, "state".? ) { case ( code, error, _ ) =>
               ( code, error ) match {
                 case ( Some( oauthCode ), _ ) => {
                   logger.info( s"Received OAuth access code: ${oauthCode}" )

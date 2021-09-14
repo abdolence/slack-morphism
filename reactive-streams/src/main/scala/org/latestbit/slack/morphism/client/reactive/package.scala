@@ -22,9 +22,6 @@ import org.latestbit.slack.morphism.client.reactive.impl.SlackApiScrollableReact
 import org.latestbit.slack.morphism.client.streaming.{ SlackApiResponseScroller, SlackApiScrollableResponse }
 import org.reactivestreams.Publisher
 
-import scala.concurrent.ExecutionContext
-import scala.language.implicitConversions
-
 package object reactive {
 
   implicit class SlackClientReactiveStreamsScroller[F[
@@ -43,7 +40,7 @@ package object reactive {
      */
     def toPublisher(
         maxItems: Option[Long] = None
-    )( implicit ec: ExecutionContext ): Publisher[IT] =
+    ): Publisher[IT] =
       new SlackApiScrollableReactivePublisher[F, IT, PT, SR]( scroller, maxItems )
   }
 }
