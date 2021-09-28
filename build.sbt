@@ -121,16 +121,16 @@ val scalaMockVersion    = "5.1.0"
 // For full-featured examples we use additional libs
 val akkaVersion          = "2.6.15"
 val akkaHttpVersion      = "10.2.6"
-val akkaHttpCirceVersion = "1.36.0"
+val akkaHttpCirceVersion = "1.38.2"
 val logbackVersion       = "1.2.6"
 val scalaLoggingVersion  = "3.9.4"
 val scoptVersion         = "3.7.1"
 val swayDbVersion        = "0.16.2"
 val http4sVersion        = "0.23.4"
-val declineVersion       = "2.0.0"
+val declineVersion       = "2.2.0"
 
 // For fs2 integration module
-val fs2Version = "3.0.6"
+val fs2Version = "3.1.3"
 
 // For reactive-streams integration module
 val reactiveStreamsVersion = "1.0.3"
