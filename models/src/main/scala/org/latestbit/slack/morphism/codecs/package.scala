@@ -143,8 +143,11 @@ package object codecs {
     implicit val encoderSlackFileUploadMode: Encoder[SlackFileUploadMode] = deriveUnwrappedEncoder[SlackFileUploadMode]
     implicit val decoderSlackFileUploadMode: Decoder[SlackFileUploadMode] = deriveUnwrappedDecoder[SlackFileUploadMode]
 
-    implicit val encoderSlackChannelPriority: Encoder[SlackChannelPriority] = deriveUnwrappedEncoder[SlackChannelPriority]
-    implicit val decoderSlackChannelPriority: Decoder[SlackChannelPriority] = deriveUnwrappedDecoder[SlackChannelPriority]
+    implicit val encoderSlackChannelPriority: Encoder[SlackChannelPriority] =
+      deriveUnwrappedEncoder[SlackChannelPriority]
+
+    implicit val decoderSlackChannelPriority: Decoder[SlackChannelPriority] =
+      deriveUnwrappedDecoder[SlackChannelPriority]
 
   }
 
