@@ -41,7 +41,7 @@ case class SlackChannelInfo(
     topic: Option[SlackChannelInfo.SlackTopicInfo] = None,
     purpose: Option[SlackChannelInfo.SlackPurposeInfo] = None,
     previous_names: Option[List[String]] = None,
-    priority: Option[Long] = None,
+    priority: Option[SlackChannelPriority] = None,
     num_members: Option[Long] = None,
     locale: Option[String] = None,
     flags: SlackChannelFlags = SlackChannelFlags(),

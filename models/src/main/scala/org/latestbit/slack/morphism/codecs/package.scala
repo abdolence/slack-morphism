@@ -143,6 +143,9 @@ package object codecs {
     implicit val encoderSlackFileUploadMode: Encoder[SlackFileUploadMode] = deriveUnwrappedEncoder[SlackFileUploadMode]
     implicit val decoderSlackFileUploadMode: Decoder[SlackFileUploadMode] = deriveUnwrappedDecoder[SlackFileUploadMode]
 
+    implicit val encoderSlackChannelPriority: Encoder[SlackChannelPriority] = deriveUnwrappedEncoder[SlackChannelPriority]
+    implicit val decoderSlackChannelPriority: Decoder[SlackChannelPriority] = deriveUnwrappedDecoder[SlackChannelPriority]
+
   }
 
   trait CirceCodecs extends CirceCommonTypesCodes {
@@ -232,7 +235,7 @@ package object codecs {
         topic           <- c.downField( "topic" ).as[Option[SlackTopicInfo]]
         purpose         <- c.downField( "purpose" ).as[Option[SlackPurposeInfo]]
         previous_names  <- c.downField( "previous_names" ).as[Option[List[String]]]
-        priority        <- c.downField( "priority" ).as[Option[Long]]
+        priority        <- c.downField( "priority" ).as[Option[SlackChannelPriority]]
         num_members     <- c.downField( "num_members" ).as[Option[Long]]
         locale          <- c.downField( "locale" ).as[Option[String]]
         flags           <- c.as[SlackChannelFlags]
