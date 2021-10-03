@@ -19,8 +19,8 @@
 package org.latestbit.slack.morphism.client.ratectrl
 
 /**
- * Some Slack Web API methods have special rating limits
- * (e.g. chat.postMessage allowed up to 1rps per workspace channel)
+ * Some Slack Web API methods have special rating limits (e.g. chat.postMessage allowed up to 1rps per workspace
+ * channel)
  */
 case class SlackApiRateControlSpecialLimit(
     key: String,

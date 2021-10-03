@@ -29,8 +29,10 @@ trait SlackTextFormatters {
 
   /**
    * Format multi-line quoted text
-   * @param srcText source text to quote
-   * @return quoted text
+   * @param srcText
+   *   source text to quote
+   * @return
+   *   quoted text
    */
   protected def formatSlackQuoteText( srcText: String ) = {
     s">${srcText.replace( "\n", "\n>" )}"
@@ -38,8 +40,10 @@ trait SlackTextFormatters {
 
   /**
    * Format Slack Channel Id
-   * @param channelId channel id
-   * @return formatted channel id
+   * @param channelId
+   *   channel id
+   * @return
+   *   formatted channel id
    */
   protected def formatSlackChannelId( channelId: SlackChannelId ) = {
     s"<#${channelId.value}>"
@@ -47,8 +51,10 @@ trait SlackTextFormatters {
 
   /**
    * Format multiple Slack Channel Ids
-   * @param ids channel ids
-   * @return formatted channel ids
+   * @param ids
+   *   channel ids
+   * @return
+   *   formatted channel ids
    */
   protected def formatSlackChannelIds( ids: Iterable[SlackChannelId] ) = {
     ids.map( formatSlackChannelId ).mkString( ", " )
@@ -56,20 +62,25 @@ trait SlackTextFormatters {
 
   /**
    * Format Slack User Id
-   * @param userId user id
-   * @return formatted user id
+   * @param userId
+   *   user id
+   * @return
+   *   formatted user id
    */
   protected def formatSlackUserId( userId: SlackUserId ) = {
     s"<@${userId.value}>"
   }
 
   /**
-   * Format Slack Date/Time
-   * https://api.slack.com/reference/surfaces/formatting#date-formatting
-   * @param timestamp date time to format
-   * @param token_string provide a formatting for your timestamp, using plain text along with special Slack tokens
-   * @param link an optional link on date/time
-   * @return formatted Slack Date/Time
+   * Format Slack Date/Time https://api.slack.com/reference/surfaces/formatting#date-formatting
+   * @param timestamp
+   *   date time to format
+   * @param token_string
+   *   provide a formatting for your timestamp, using plain text along with special Slack tokens
+   * @param link
+   *   an optional link on date/time
+   * @return
+   *   formatted Slack Date/Time
    */
   protected def formatDate(
       timestamp: Instant,
@@ -82,9 +93,12 @@ trait SlackTextFormatters {
 
   /**
    * Format a Slack URL on some text
-   * @param url URL
-   * @param text text
-   * @return formatted url
+   * @param url
+   *   URL
+   * @param text
+   *   text
+   * @return
+   *   formatted url
    */
   protected def formatUrl( url: String, text: String ) = {
     s"<${url}|${text}>"
@@ -98,8 +112,7 @@ trait SlackTextFormatters {
 object SlackTextFormatters {
 
   /**
-   * Defines default Slack Date/Time formats from:
-   * https://api.slack.com/reference/surfaces/formatting#date-formatting
+   * Defines default Slack Date/Time formats from: https://api.slack.com/reference/surfaces/formatting#date-formatting
    */
   object SlackDateTimeFormats {
     final val DateNum         = "{date_num}"

@@ -50,7 +50,8 @@ case class SlackChannelInfo(
 
 /**
  * Slack Channel Flags
- * @note This class was extracted for convenience and to avoid very big class definition of [[SlackChannelInfo]]
+ * @note
+ *   This class was extracted for convenience and to avoid very big class definition of [[SlackChannelInfo]]
  */
 case class SlackChannelFlags(
     is_channel: Option[Boolean] = None,
@@ -68,7 +69,8 @@ case class SlackChannelFlags(
 
 /**
  * Slack Channel Current State
- * @note This class was extracted for convenience and to avoid very big class definition of [[SlackChannelInfo]]
+ * @note
+ *   This class was extracted for convenience and to avoid very big class definition of [[SlackChannelInfo]]
  */
 case class SlackChannelCurrentState(
     last_read: Option[String] = None,

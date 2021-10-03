@@ -56,7 +56,8 @@ case class SlackUserProfile(
 
 /**
  * Slack User Info Flags
- * @note This class was extracted for convenience and to avoid very big class definition of [[SlackUserInfo]]
+ * @note
+ *   This class was extracted for convenience and to avoid very big class definition of [[SlackUserInfo]]
  */
 case class SlackUserFlags(
     is_admin: Option[Boolean] = None,

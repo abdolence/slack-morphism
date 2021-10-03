@@ -56,8 +56,10 @@ object SlackApiToken {
 
   /**
    * Convert scope defined as a str to set of permissions
-   * @param scopeAsStr scope as a str
-   * @return set of permissions
+   * @param scopeAsStr
+   *   scope as a str
+   * @return
+   *   set of permissions
    */
   private[client] def scopeToPermissionSet( scope: Option[SlackApiTokenScope] ): Set[SlackApiTokenScopePermission] = {
     scope
@@ -67,11 +69,16 @@ object SlackApiToken {
 
   /**
    * Create an API token instance provided its type, value and scope
-   * @param tokenType a token type
-   * @param tokenValue a token value
-   * @param scope a token scope
-   * @param teamId a workspace/team id for this token
-   * @return an API token instance for Slack API client
+   * @param tokenType
+   *   a token type
+   * @param tokenValue
+   *   a token value
+   * @param scope
+   *   a token scope
+   * @param teamId
+   *   a workspace/team id for this token
+   * @return
+   *   an API token instance for Slack API client
    */
   def createFrom(
       tokenType: SlackApiTokenType,
@@ -89,9 +96,12 @@ object SlackApiToken {
   /**
    * Find a required token in the list by type
    *
-   * @param tokens token list
-   * @param tokenType a token has this typ
-   * @param permissions a token has those permissions (optionally)
+   * @param tokens
+   *   token list
+   * @param tokenType
+   *   a token has this typ
+   * @param permissions
+   *   a token has those permissions (optionally)
    */
   def findFirst[A <: SlackApiToken](
       tokens: Iterable[SlackApiToken],
@@ -109,9 +119,12 @@ object SlackApiToken {
  * Slack API user token
  * @group TokenDefs
  *
- * @param accessToken token value
- * @param scope token scope in a string form
- * @param teamId a workspace/team id for this token
+ * @param accessToken
+ *   token value
+ * @param scope
+ *   token scope in a string form
+ * @param teamId
+ *   a workspace/team id for this token
  */
 case class SlackApiUserToken(
     override val accessToken: SlackAccessTokenValue,
@@ -126,9 +139,12 @@ case class SlackApiUserToken(
  * Slack API bot token
  * @group TokenDefs
  *
- * @param accessToken token value
- * @param scope token scope in a string form
- * @param teamId a workspace/team id for this token
+ * @param accessToken
+ *   token value
+ * @param scope
+ *   token scope in a string form
+ * @param teamId
+ *   a workspace/team id for this token
  */
 case class SlackApiBotToken(
     override val accessToken: SlackAccessTokenValue,
@@ -143,9 +159,12 @@ case class SlackApiBotToken(
  * Slack API app token
  * @group TokenDefs
  *
- * @param accessToken token value
- * @param scope token scope in a string form
- * @param teamId a workspace/team id for this token
+ * @param accessToken
+ *   token value
+ * @param scope
+ *   token scope in a string form
+ * @param teamId
+ *   a workspace/team id for this token
  */
 case class SlackApiAppToken(
     override val accessToken: SlackAccessTokenValue,

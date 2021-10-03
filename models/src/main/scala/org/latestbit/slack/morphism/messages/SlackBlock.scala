@@ -23,8 +23,8 @@ import org.latestbit.circe.adt.codec._
 import org.latestbit.slack.morphism.common._
 
 /**
- * Blocks are a series of components that can be combined to create visually rich and compellingly interactive messages and views.
- * https://api.slack.com/reference/block-kit/blocks
+ * Blocks are a series of components that can be combined to create visually rich and compellingly interactive messages
+ * and views. https://api.slack.com/reference/block-kit/blocks
  */
 sealed trait SlackBlock {
   val block_id: Option[SlackBlockId]

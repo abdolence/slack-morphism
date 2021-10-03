@@ -21,8 +21,7 @@ package org.latestbit.slack.morphism.client.reqresp.oauth
 import org.latestbit.slack.morphism.common._
 
 /**
- * Slack OAuth v2 access response
- * https://api.slack.com/methods/oauth.v2.access
+ * Slack OAuth v2 access response https://api.slack.com/methods/oauth.v2.access
  */
 case class SlackOAuthV2AccessTokenResponse(
     access_token: SlackAccessTokenValue,
@@ -37,8 +36,7 @@ case class SlackOAuthV2AccessTokenResponse(
 )
 
 /**
- * Slack OAuth v2 user info that installed a bot
- * https://api.slack.com/methods/oauth.v2.access
+ * Slack OAuth v2 user info that installed a bot https://api.slack.com/methods/oauth.v2.access
  */
 case class SlackOAuthV2AuthedUser(
     id: SlackUserId,

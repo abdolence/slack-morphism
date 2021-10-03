@@ -35,8 +35,10 @@ trait SlackApiEventsCallbackClient[F[_]] extends SlackApiHttpProtocolSupport[F] 
      * Reply an event message response using response_url from Slack Events
      * https://api.slack.com/interactivity/handling#message_responses
      *
-     * @param response_url a url from Slack Event
-     * @param reply reply to an event
+     * @param response_url
+     *   a url from Slack Event
+     * @param reply
+     *   reply to an event
      */
     def reply( response_url: String, reply: SlackApiEventMessageReply )( implicit
         backendType: SlackApiClientBackend.BackendType[F]

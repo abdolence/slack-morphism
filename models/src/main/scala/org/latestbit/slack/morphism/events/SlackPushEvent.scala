@@ -22,21 +22,18 @@ import org.latestbit.circe.adt.codec._
 import org.latestbit.slack.morphism.common._
 
 /**
- * Incoming Slack push event
- * https://api.slack.com/types/event
+ * Incoming Slack push event https://api.slack.com/types/event
  */
 sealed trait SlackPushEvent
 
 /**
- * Push URL verification event
- * https://api.slack.com/events-api#request_url_configuration__amp__verification
+ * Push URL verification event https://api.slack.com/events-api#request_url_configuration__amp__verification
  */
 @JsonAdt( "url_verification" )
 case class SlackUrlVerificationEvent( challenge: String ) extends SlackPushEvent
 
 /**
- * Incoming Slack callback Event
- * https://api.slack.com/types/event
+ * Incoming Slack callback Event https://api.slack.com/types/event
  */
 @JsonAdt( "event_callback" )
 case class SlackEventCallback(
@@ -51,8 +48,7 @@ case class SlackEventCallback(
 ) extends SlackPushEvent
 
 /**
- * Rate limit event
- * https://api.slack.com/events-api#rate_limiting_event
+ * Rate limit event https://api.slack.com/events-api#rate_limiting_event
  */
 @JsonAdt( "app_rate_limited" )
 case class SlackAppRateLimitedEvent( team_id: SlackTeamId, minute_rate_limited: SlackDateTime, api_app_id: SlackAppId )

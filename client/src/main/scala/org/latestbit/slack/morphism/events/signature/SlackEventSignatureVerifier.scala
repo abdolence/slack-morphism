@@ -54,11 +54,16 @@ class SlackEventSignatureVerifier() {
 
   /**
    * Verify a signature for an event
-   * @param signingSecret a secret from you Slack profile
-   * @param receivedHash a hash received from Slack HTTP param
-   * @param timestamp a timestamp received from Slack HTTP param
-   * @param body an event body
-   * @return either an success or verification error with details
+   * @param signingSecret
+   *   a secret from you Slack profile
+   * @param receivedHash
+   *   a hash received from Slack HTTP param
+   * @param timestamp
+   *   a timestamp received from Slack HTTP param
+   * @param body
+   *   an event body
+   * @return
+   *   either an success or verification error with details
    */
   def verify(
       signingSecret: String,

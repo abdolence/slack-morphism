@@ -27,8 +27,10 @@ import scala.concurrent.duration._
 
 /**
  * Lazy collection support for Scala 2.13 based on LazyList
- * @tparam IT item type
- * @tparam PT position/cursor type
+ * @tparam IT
+ *   item type
+ * @tparam PT
+ *   position/cursor type
  */
 trait LazyScalaCollectionSupport[F[_], IT, PT, SR <: SlackApiScrollableResponse[IT, PT]] {
   self: SlackApiResponseScroller[F, IT, PT, SR] =>
@@ -37,8 +39,10 @@ trait LazyScalaCollectionSupport[F[_], IT, PT, SR <: SlackApiScrollableResponse[
   /**
    * Lazy load data synchronously batching using standard lazy container
    *
-   * @param scrollerTimeout timeout to receive next batch
-   * @return lazy stream of data
+   * @param scrollerTimeout
+   *   timeout to receive next batch
+   * @return
+   *   lazy stream of data
    */
   def toSyncScroller(
       scrollerTimeout: FiniteDuration = 60.seconds

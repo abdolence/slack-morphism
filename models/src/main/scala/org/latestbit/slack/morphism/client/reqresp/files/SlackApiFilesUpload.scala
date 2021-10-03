@@ -17,6 +17,6 @@ case class SlackApiFilesUploadRequest(
 )
 
 /**
- * Request of  https://api.slack.com/methods/files.upload
+ * Request of https://api.slack.com/methods/files.upload
  */
 case class SlackApiFilesUploadResponse( file: SlackFileInfo )

@@ -94,8 +94,7 @@ trait SlackApiFilesClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     }
 
     /**
-     * Scrolling support for
-     * https://api.slack.com/methods/files.list
+     * Scrolling support for https://api.slack.com/methods/files.list
      */
     def listScroller( req: SlackApiFilesListRequest )( implicit
         slackApiToken: SlackApiToken,

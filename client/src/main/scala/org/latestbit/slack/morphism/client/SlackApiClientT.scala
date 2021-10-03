@@ -47,29 +47,32 @@ class SlackApiClientT[F[_] : SlackApiClientBackend.BackendType] private[client] 
     with SlackApiEventsCallbackClient[F] {
 
   /**
-   * Release all resources allocated by a client.
-   * Depends on your configuration, the Slack API client may allocate threads for example.
+   * Release all resources allocated by a client. Depends on your configuration, the Slack API client may allocate
+   * threads for example.
    */
   def shutdown(): Unit = {
     throttler.shutdown()
   }
 
   /**
-   * An auxiliary function to help in for-comprehensions with tokens,
-   * where you still can't define implicit vals at the moment:
+   * An auxiliary function to help in for-comprehensions with tokens, where you still can't define implicit vals at the
+   * moment:
    *
    * {{{
-   *  for {
+   *   for {
    *     ...
    *     tokenValue <- readToken()
    *     result <- client.withToken( tokenValue )( implicit token => _.api.test( SlackApiTestRequest() ) )
    *     ...
-   *  }
+   *   }
    * }}}
    *
-   * @param token a Slack API token
-   * @param request request requires a token
-   * @return result of execution
+   * @param token
+   *   a Slack API token
+   * @param request
+   *   request requires a token
+   * @return
+   *   result of execution
    */
   def withToken[T <: SlackApiToken, RS]( token: T )(
       request: T => SlackApiClientT[F] => F[Either[SlackApiClientError, RS]]

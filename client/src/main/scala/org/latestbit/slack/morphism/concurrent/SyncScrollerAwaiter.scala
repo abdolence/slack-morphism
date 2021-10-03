@@ -24,9 +24,8 @@ import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ Await, Future }
 
 /**
- * Mostly for testing purposes we provide a sync scroller,
- * so we need this auxiliary interface to provide
- * blocking await for synchronous streams
+ * Mostly for testing purposes we provide a sync scroller, so we need this auxiliary interface to provide blocking await
+ * for synchronous streams
  */
 trait SyncScrollerAwaiter[F[_]] {
   def await[A]( instance: F[A], duration: FiniteDuration ): A

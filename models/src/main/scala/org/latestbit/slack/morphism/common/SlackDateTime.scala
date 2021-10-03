@@ -26,14 +26,13 @@ import io.circe.{ Decoder, Encoder, HCursor, Json }
 import scala.language.implicitConversions
 
 /**
- * Represents Slack Date Time defined as Epoch time in seconds and
- * implicit conversation to java.time.Instant
+ * Represents Slack Date Time defined as Epoch time in seconds and implicit conversation to java.time.Instant
  */
 case class SlackDateTime( value: Instant ) extends AnyVal
 
 /**
- * Represents Slack Date Time defined as String with Epoch time in seconds and
- * implicit conversation to java.time.Instant
+ * Represents Slack Date Time defined as String with Epoch time in seconds and implicit conversation to
+ * java.time.Instant
  */
 case class SlackDateTimeAsStr( value: Instant ) extends AnyVal
 

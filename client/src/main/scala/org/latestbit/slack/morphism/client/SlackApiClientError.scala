@@ -28,9 +28,12 @@ import sttp.model.{ StatusCode, Uri }
  * Slack Web API error
  * @group ErrorDefs
  *
- * @param uri Web method URL
- * @param message error message
- * @param cause original cause
+ * @param uri
+ *   Web method URL
+ * @param message
+ *   error message
+ * @param cause
+ *   original cause
  */
 sealed abstract class SlackApiClientError( uri: Uri, message: String, cause: Option[Throwable] = None )
     extends SlackApiError( message, cause )
@@ -44,8 +47,10 @@ trait SlackApiRetryableError
  * System/unexpected Slack Web API error
  * @group ErrorDefs
  *
- * @param uri Web method URL
- * @param cause original cause
+ * @param uri
+ *   Web method URL
+ * @param cause
+ *   original cause
  */
 case class SlackApiSystemError( uri: Uri, cause: Throwable )
     extends SlackApiClientError( uri = uri, message = cause.getMessage, cause = Some( cause ) )
@@ -54,8 +59,10 @@ case class SlackApiSystemError( uri: Uri, cause: Throwable )
  * Slack Web API network/connection error
  * @group ErrorDefs
  *
- * @param uri Web method URL
- * @param cause original cause
+ * @param uri
+ *   Web method URL
+ * @param cause
+ *   original cause
  */
 case class SlackApiConnectionError( uri: Uri, cause: IOException )
     extends SlackApiClientError( uri = uri, message = cause.getMessage, cause = Some( cause ) )
@@ -65,10 +72,14 @@ case class SlackApiConnectionError( uri: Uri, cause: IOException )
  * Slack Web API HTTP protocol error
  * @group ErrorDefs
  *
- * @param uri Web method URL
- * @param message error message
- * @param httpStatusCode HTTP status code
- * @param httpResponseBody HTTP response body
+ * @param uri
+ *   Web method URL
+ * @param message
+ *   error message
+ * @param httpStatusCode
+ *   HTTP status code
+ * @param httpResponseBody
+ *   HTTP response body
  */
 case class SlackApiHttpError(
     uri: Uri,
@@ -82,12 +93,18 @@ case class SlackApiHttpError(
  * Slack Web API protocol general error
  * @group ErrorDefs
  *
- * @param uri Web method URL
- * @param errorCode Slack error code
- * @param httpStatusCode HTTP status code
- * @param details error detail message
- * @param warning Slack warnings
- * @param messages Slack error messages
+ * @param uri
+ *   Web method URL
+ * @param errorCode
+ *   Slack error code
+ * @param httpStatusCode
+ *   HTTP status code
+ * @param details
+ *   error detail message
+ * @param warning
+ *   Slack warnings
+ * @param messages
+ *   Slack error messages
  */
 case class SlackApiResponseError(
     uri: Uri,
@@ -108,11 +125,16 @@ case class SlackApiResponseError(
  * Slack Web API protocol rate limited error
  * @group ErrorDefs
  *
- * @param uri Web method URL
- * @param retryAfter retry after specified interval (in seconds)
- * @param details error detail message
- * @param warning Slack warnings
- * @param messages Slack error messages
+ * @param uri
+ *   Web method URL
+ * @param retryAfter
+ *   retry after specified interval (in seconds)
+ * @param details
+ *   error detail message
+ * @param warning
+ *   Slack warnings
+ * @param messages
+ *   Slack error messages
  */
 case class SlackApiRateLimitedError(
     uri: Uri,
@@ -133,9 +155,12 @@ case class SlackApiRateLimitedError(
  * Slack Web API JSON decoding error
  * @group ErrorDefs
  *
- * @param uri Web method URL
- * @param coderError JSON decoder error
- * @param httpResponseBody HTTP response body
+ * @param uri
+ *   Web method URL
+ * @param coderError
+ *   JSON decoder error
+ * @param httpResponseBody
+ *   HTTP response body
  */
 case class SlackApiDecodingError(
     uri: Uri,
@@ -152,7 +177,8 @@ case class SlackApiDecodingError(
  * Slack Wep API unexpected empty result has been received
  * @group ErrorDefs
  *
- * @param uri Web method URL
+ * @param uri
+ *   Web method URL
  */
 case class SlackApiEmptyResultError( uri: Uri )
     extends SlackApiClientError(
@@ -164,7 +190,9 @@ case class SlackApiEmptyResultError( uri: Uri )
  * Slack Web API rate limit max delay error
  * @group ErrorDefs
  *
- * @param uri Web method URL
- * @param message error message
+ * @param uri
+ *   Web method URL
+ * @param message
+ *   error message
  */
 case class SlackApiRateLimitMaxDelayError( uri: Uri, message: String ) extends SlackApiClientError( uri = uri, message )

@@ -22,7 +22,7 @@ import io.circe._
 import io.circe.syntax._
 
 /**
- *  Defines an auxiliary data type for images in different dimensions
+ * Defines an auxiliary data type for images in different dimensions
  */
 case class SlackIcon(
     image_original: Option[String] = None,

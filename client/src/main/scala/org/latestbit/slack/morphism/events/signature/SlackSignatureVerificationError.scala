@@ -24,8 +24,10 @@ import org.latestbit.slack.morphism.common.SlackApiError
  * Slack Events API verification errors
  * @group ErrorDefs
  *
- * @param message error message
- * @param cause original cause
+ * @param message
+ *   error message
+ * @param cause
+ *   original cause
  */
 sealed abstract class SlackSignatureVerificationError( message: String, cause: Option[Throwable] = None )
     extends SlackApiError( message, cause )
@@ -34,7 +36,8 @@ sealed abstract class SlackSignatureVerificationError( message: String, cause: O
  * Slack Events verifier init error
  * @group ErrorDefs
  *
- * @param cause original cause
+ * @param cause
+ *   original cause
  */
 case class SlackSignatureCryptoInitError( cause: Throwable )
     extends SlackSignatureVerificationError(
@@ -46,10 +49,14 @@ case class SlackSignatureCryptoInitError( cause: Throwable )
  * Wrong or absent signature has been received
  * @group ErrorDefs
  *
- * @param receivedHash received hash in an event
- * @param generatedHash generated hash
- * @param timestamp received timestamp in an event
- * @param cause original cause
+ * @param receivedHash
+ *   received hash in an event
+ * @param generatedHash
+ *   generated hash
+ * @param timestamp
+ *   received timestamp in an event
+ * @param cause
+ *   original cause
  */
 case class SlackSignatureWrongSignatureError(
     receivedHash: String,

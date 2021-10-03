@@ -23,10 +23,14 @@ import org.latestbit.slack.morphism.concurrent.AsyncSeqIterator
 
 /**
  * Support for batch loading remote data
- * @param initialLoader a function to initial request for data
- * @param batchLoader a function to load next batch based on previous state
- * @tparam IT batch item type
- * @tparam PT batch value type
+ * @param initialLoader
+ *   a function to initial request for data
+ * @param batchLoader
+ *   a function to load next batch based on previous state
+ * @tparam IT
+ *   batch item type
+ * @tparam PT
+ *   batch value type
  */
 class SlackApiResponseScroller[F[_] : SlackApiClientBackend.BackendType, IT, PT, SR <: SlackApiScrollableResponse[
   IT,
@@ -42,16 +46,22 @@ class SlackApiResponseScroller[F[_] : SlackApiClientBackend.BackendType, IT, PT,
   /**
    * Read the initial data
    *
-   * @note this functions is mostly available to help to implement your own batching. If it wasn't your intention look at toAsync/SyncScroller or toPublisher
-   * @return a scrollable response with a cursor position
+   * @note
+   *   this functions is mostly available to help to implement your own batching. If it wasn't your intention look at
+   *   toAsync/SyncScroller or toPublisher
+   * @return
+   *   a scrollable response with a cursor position
    */
   def first(): F[Either[SlackApiClientError, SR]] = initialLoader()
 
   /**
    * Read a next batch providing a last position
    *
-   * @note this functions is mostly available to help to implement your own batching. If it wasn't your intention look at toAsync/SyncScroller or toPublisher
-   * @param lastPosition a cursor position
+   * @note
+   *   this functions is mostly available to help to implement your own batching. If it wasn't your intention look at
+   *   toAsync/SyncScroller or toPublisher
+   * @param lastPosition
+   *   a cursor position
    * @return
    */
   def next( lastPosition: PT ): F[Either[SlackApiClientError, SR]] =
@@ -59,7 +69,8 @@ class SlackApiResponseScroller[F[_] : SlackApiClientBackend.BackendType, IT, PT,
 
   /**
    * Read data as an infinite async iterator of batches
-   * @return infinite async sequence iterator
+   * @return
+   *   infinite async sequence iterator
    */
   def toAsyncScroller(): AsyncSeqIterator[F, AsyncItemType, AsyncValueType] = {
     AsyncSeqIterator.cons(

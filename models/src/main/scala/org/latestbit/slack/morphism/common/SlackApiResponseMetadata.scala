@@ -20,8 +20,10 @@ package org.latestbit.slack.morphism.common
 
 /**
  * Slack common response metadata
- * @param next_cursor cursor for next batch of data
- * @param warnings warnings from Slack
+ * @param next_cursor
+ *   cursor for next batch of data
+ * @param warnings
+ *   warnings from Slack
  */
 case class SlackApiResponseMetadata(
     next_cursor: Option[SlackCursorId] = None,

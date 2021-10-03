@@ -74,12 +74,12 @@ class SlackPushEventsRoutes( implicit
         title = "Google claimed quantum supremacy in 2019 — and sparked controversy",
         body =
           "In October, researchers from Google claimed to have achieved a milestone known as quantum supremacy.\nThey had created the first quantum computer that could perform a calculation that is impossible for a standard computer.",
-        published = LocalDateTime.of(2019, 12, 16, 10, 20, 0 ).atZone( ZoneId.systemDefault() ).toInstant
+        published = LocalDateTime.of( 2019, 12, 16, 10, 20, 0 ).atZone( ZoneId.systemDefault() ).toInstant
       ),
       SlackHomeNewsItem(
         title = "Quantum jitter lets heat travel across a vacuum",
         body = "A new experiment shows that quantum fluctuations permit heat to bridge empty space.",
-        published = LocalDateTime.of(2019, 12, 11, 10, 20, 0 ).atZone( ZoneId.systemDefault() ).toInstant
+        published = LocalDateTime.of( 2019, 12, 11, 10, 20, 0 ).atZone( ZoneId.systemDefault() ).toInstant
       )
     )
   }

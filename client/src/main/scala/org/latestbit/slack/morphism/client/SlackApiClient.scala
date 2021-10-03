@@ -27,9 +27,12 @@ object SlackApiClient {
   /**
    * Create an instance of Slack API client for the specified backend kind (Future|cats-effect IO, etc)
    *
-   * @param sttpBackend an implicitly defined STTP backend
-   * @tparam F scala.concurrent.Future or cats.effect.IO
-   * @return an instance of Slack API client
+   * @param sttpBackend
+   *   an implicitly defined STTP backend
+   * @tparam F
+   *   scala.concurrent.Future or cats.effect.IO
+   * @return
+   *   an instance of Slack API client
    *
    * For example:
    *
@@ -66,14 +69,17 @@ object SlackApiClient {
    * {{{
    *
    * SlackApiClient
-   *  .build(AsyncHttpClientFutureBackend())
-   *  .withThrottler( SlackApiRateThrottler.createStandardThrottler() )
-   *  .create()
+   *   .build(AsyncHttpClientFutureBackend())
+   *   .withThrottler( SlackApiRateThrottler.createStandardThrottler() )
+   *   .create()
    * }}}
    *
-   * @param sttpBackend an implicitly defined STTP backend
-   * @tparam F scala.concurrent.Future or cats.effect.IO
-   * @return an instance builder
+   * @param sttpBackend
+   *   an implicitly defined STTP backend
+   * @tparam F
+   *   scala.concurrent.Future or cats.effect.IO
+   * @return
+   *   an instance builder
    */
   def build[F[_] : SlackApiClientBackend.BackendType]( implicit
       sttpBackend: SlackApiClientBackend.SttpBackendType[F]
@@ -82,9 +88,12 @@ object SlackApiClient {
   /**
    * Build an instance of Slack API client with the specified backend and options
    *
-   * @param sttpBackend an STTP backend
-   * @tparam F scala.concurrent.Future or cats.effect.IO
-   * @return an instance builder
+   * @param sttpBackend
+   *   an STTP backend
+   * @tparam F
+   *   scala.concurrent.Future or cats.effect.IO
+   * @return
+   *   an instance builder
    */
   def build[F[_] : SlackApiClientBackend.BackendType](
       sttpBackend: SlackApiClientBackend.SttpBackendType[F]
@@ -95,9 +104,12 @@ object SlackApiClient {
 
   /**
    * Wrap a client instance into cats Resource
-   * @param client a client instance
-   * @tparam F scala.concurrent.Future or cats.effect.IO
-   * @return a resource
+   * @param client
+   *   a client instance
+   * @tparam F
+   *   scala.concurrent.Future or cats.effect.IO
+   * @return
+   *   a resource
    */
   def toResource[F[_] : SlackApiClientBackend.BackendType](
       client: SlackApiClientT[F]
@@ -112,8 +124,10 @@ object SlackApiClient {
 
     /**
      * Specify a throttler implementation
-     * @param throttler a throttler implementation
-     * @return a builder with options
+     * @param throttler
+     *   a throttler implementation
+     * @return
+     *   a builder with options
      */
     def withThrottler( throttler: SlackApiRateThrottler[F] ): SlackApiClientBuildOptions[F] =
       copy(
@@ -122,7 +136,8 @@ object SlackApiClient {
 
     /**
      * Create a client instance with the specified options
-     * @return a client instance
+     * @return
+     *   a client instance
      */
     def create(): SlackApiClientT[F] = {
       new SlackApiClientT[F]( throttler, sttpBackend )

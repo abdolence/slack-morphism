@@ -35,8 +35,10 @@ package object reactive {
 
     /**
      * Read data as a reactive publisher
-     * @param maxItems - limit optionally maximum items you want to receive
-     * @return reactive publisher
+     * @param maxItems
+     *   - limit optionally maximum items you want to receive
+     * @return
+     *   reactive publisher
      */
     def toPublisher(
         maxItems: Option[Long] = None

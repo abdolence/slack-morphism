@@ -25,8 +25,10 @@ import scala.language.implicitConversions
 
 /**
  * A rate limit definition
- * @param value elements or messages count
- * @param per time unit/interval
+ * @param value
+ *   elements or messages count
+ * @param per
+ *   time unit/interval
  */
 case class SlackApiRateControlLimit( value: Int, per: FiniteDuration ) {
   require( value > 0, "Value should be more than zero" )
@@ -63,8 +65,7 @@ object SlackApiRateControlParams {
   final val Tier4 = 4
 
   /**
-   * Rate limits according to
-   * https://api.slack.com/docs/rate-limits
+   * Rate limits according to https://api.slack.com/docs/rate-limits
    */
   object StandardLimits {
 

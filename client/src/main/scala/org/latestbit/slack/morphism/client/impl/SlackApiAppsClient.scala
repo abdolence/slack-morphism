@@ -73,8 +73,7 @@ trait SlackApiAppsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
         }
 
         /**
-         * Scrolling support for
-         * https://api.slack.com/methods/apps.event.authorizations.list
+         * Scrolling support for https://api.slack.com/methods/apps.event.authorizations.list
          */
         def listScroller( req: SlackApiEventAuthorizationsListRequest )( implicit
             slackApiToken: SlackApiAppToken,

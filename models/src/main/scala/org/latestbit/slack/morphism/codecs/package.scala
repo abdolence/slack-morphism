@@ -48,8 +48,7 @@ import org.latestbit.slack.morphism.client.reqresp.users._
 import org.latestbit.slack.morphism.client.reqresp.views._
 
 /**
- * This package contains implicit circe JSON encoders and decoders
- * for all of the events and request/response models
+ * This package contains implicit circe JSON encoders and decoders for all of the events and request/response models
  */
 package object codecs {
 

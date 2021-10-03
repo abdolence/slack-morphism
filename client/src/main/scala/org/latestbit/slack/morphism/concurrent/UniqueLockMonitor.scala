@@ -21,9 +21,8 @@ package org.latestbit.slack.morphism.concurrent
 import java.util.concurrent.locks.Lock
 
 /**
- * A stateful implementation of an auto-closable lock/monitor for the specified lock
- * with an ability to unlock it preliminarily.
- * The class philosophy and namings are borrowed from C++ std::unique_lock<>.
+ * A stateful implementation of an auto-closable lock/monitor for the specified lock with an ability to unlock it
+ * preliminarily. The class philosophy and namings are borrowed from C++ std::unique_lock<>.
  *
  * Usage example:
  * {{{
@@ -36,34 +35,35 @@ import java.util.concurrent.locks.Lock
  *   private val statusLock = new ReentrantLock()
  *
  *   def tryWithResourceExample() = {
- *      Using( UniqueLockMonitor.lockAndMonitor( statusLock ) ) { monitor =>
+ *       Using( UniqueLockMonitor.lockAndMonitor( statusLock ) ) { monitor =>
  *         // do something inside a lock
- *      }
+ *       }
  *   }
  *
  *   def preliminaryUnlockExample() = {
- *      Using( UniqueLockMonitor.lockAndMonitor( statusLock ) ) { monitor =>
- *          // do something inside a lock
- *          monitor.unlock()
- *          // do something else outside locking and UniqueLockMonitor.close() now does nothing
- *      }
+ *       Using( UniqueLockMonitor.lockAndMonitor( statusLock ) ) { monitor =>
+ *           // do something inside a lock
+ *           monitor.unlock()
+ *           // do something else outside locking and UniqueLockMonitor.close() now does nothing
+ *       }
  *   }
  *
  * }
  *
  * }}}
  *
- * @note this class isn't reentrant and isn't supposed to be shared across threads or used as a field.
- *       This class should be used as a stack/method local variable with try-with-resources.
+ * @note
+ *   this class isn't reentrant and isn't supposed to be shared across threads or used as a field. This class should be
+ *   used as a stack/method local variable with try-with-resources.
  */
 final class UniqueLockMonitor private ( private var monitorOnLock: Lock, private var isLocked: Boolean )
     extends AutoCloseable {
 
   /**
-   * Lock manually.
-   * Consequent multiple locks aren't allowed to avoid mistakes and sharing monitor instances.
+   * Lock manually. Consequent multiple locks aren't allowed to avoid mistakes and sharing monitor instances.
    *
-   * @return the same instance
+   * @return
+   *   the same instance
    */
   def lock(): UniqueLockMonitor = {
     require( monitorOnLock != null, "Monitor has been released" )
@@ -74,10 +74,10 @@ final class UniqueLockMonitor private ( private var monitorOnLock: Lock, private
   }
 
   /**
-   * Unlock manually.
-   * Consequent multiple unlocks aren't allowed to avoid mistakes and sharing monitor instances.
+   * Unlock manually. Consequent multiple unlocks aren't allowed to avoid mistakes and sharing monitor instances.
    *
-   * @return the same instance
+   * @return
+   *   the same instance
    */
   def unlock(): UniqueLockMonitor = {
     require( monitorOnLock != null, "Monitor has been released" )
@@ -88,8 +88,8 @@ final class UniqueLockMonitor private ( private var monitorOnLock: Lock, private
   }
 
   /**
-   * Release/take a lock from monitor, so it wouldn't be unlocked automatically in close.
-   * You can't use lock/unlock after releasing a monitor.
+   * Release/take a lock from monitor, so it wouldn't be unlocked automatically in close. You can't use lock/unlock
+   * after releasing a monitor.
    */
   def release(): Lock = {
     require( monitorOnLock != null, "Monitor has been already released" )
@@ -116,17 +116,22 @@ object UniqueLockMonitor {
   /**
    * Lock and monitor the user specified lock resource.
    *
-   * @param lock user lock implementation
-   * @return monitor instance
+   * @param lock
+   *   user lock implementation
+   * @return
+   *   monitor instance
    */
   def lockAndMonitor( lock: Lock ) = monitor( lock, isLocked = false ).lock()
 
   /**
    * Monitor the specified user lock.
    *
-   * @param lock a user lock
-   * @param isLocked current state of lock
-   * @return monitor instance
+   * @param lock
+   *   a user lock
+   * @param isLocked
+   *   current state of lock
+   * @return
+   *   monitor instance
    */
   def monitor( lock: Lock, isLocked: Boolean ): UniqueLockMonitor = new UniqueLockMonitor( lock, isLocked )
 }

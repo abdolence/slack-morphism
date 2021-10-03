@@ -149,9 +149,12 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
 
     /**
      * Post a webhook message using webhook url
-     * @param url a url from a Slack OAuth response or from a Slack app profile configuration
-     * @param req a webhook request message params
-     * @param rateControlLimit optionally you may specify your own rate limit for this function
+     * @param url
+     *   a url from a Slack OAuth response or from a Slack app profile configuration
+     * @param req
+     *   a webhook request message params
+     * @param rateControlLimit
+     *   optionally you may specify your own rate limit for this function
      */
     def postWebhookMessage(
         url: String,
@@ -246,8 +249,7 @@ trait SlackApiChatClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       }
 
       /**
-       * Scrolling support for
-       * https://api.slack.com/methods/chat.scheduledMessages.list
+       * Scrolling support for https://api.slack.com/methods/chat.scheduledMessages.list
        */
       def listScroller( req: SlackApiChatScheduledMessagesListRequest )( implicit
           slackApiToken: SlackApiToken,

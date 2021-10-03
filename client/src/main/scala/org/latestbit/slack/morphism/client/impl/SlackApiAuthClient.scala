@@ -85,8 +85,7 @@ trait SlackApiAuthClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
       }
 
       /**
-       * Scrolling support for
-       * https://api.slack.com/methods/auth.teams.list
+       * Scrolling support for https://api.slack.com/methods/auth.teams.list
        */
       def listScroller( req: SlackApiAuthTeamListRequest )( implicit
           slackApiToken: SlackApiToken,

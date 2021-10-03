@@ -22,8 +22,7 @@ import org.latestbit.slack.morphism.common._
 import org.latestbit.slack.morphism.messages.SlackBlock
 
 /**
- * A webhook message request model
- * https://api.slack.com/messaging/webhooks
+ * A webhook message request model https://api.slack.com/messaging/webhooks
  */
 case class SlackApiPostWebHookRequest(
     text: String,
@@ -32,7 +31,6 @@ case class SlackApiPostWebHookRequest(
 )
 
 /**
- * A webhook message response model
- * https://api.slack.com/messaging/webhooks
+ * A webhook message response model https://api.slack.com/messaging/webhooks
  */
 case class SlackApiPostWebHookResponse()

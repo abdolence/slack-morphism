@@ -87,8 +87,7 @@ trait SlackApiReactionsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     }
 
     /**
-     * Scrolling support for
-     * https://api.slack.com/methods/reactions.list
+     * Scrolling support for https://api.slack.com/methods/reactions.list
      */
     def listScroller( req: SlackApiReactionsListRequest )( implicit
         slackApiToken: SlackApiToken,

@@ -258,17 +258,21 @@ trait SlackApiHttpProtocolSupport[F[_]] extends SlackApiClientBackend[F] {
   }
 
   /**
-   * Some of Slack responses historically returns HTTP plain text responses with 'Ok' body, instead JSON.
-   * So, this auxiliary function helps to fix and hide this behaviour.
+   * Some of Slack responses historically returns HTTP plain text responses with 'Ok' body, instead JSON. So, this
+   * auxiliary function helps to fix and hide this behaviour.
    *
-   * @note There are very few methods that behave like that,
-   *       so we're fixing it for those particular functions,
-   *       instead of generalising this behaviour for other API methods.
+   * @note
+   *   There are very few methods that behave like that, so we're fixing it for those particular functions, instead of
+   *   generalising this behaviour for other API methods.
    *
-   * @param replacement what should be returned instead HTTP OK
-   * @param either a response result to fix
-   * @tparam RS response type
-   * @return either other error or fixed empty result
+   * @param replacement
+   *   what should be returned instead HTTP OK
+   * @param either
+   *   a response result to fix
+   * @tparam RS
+   *   response type
+   * @return
+   *   either other error or fixed empty result
    */
   protected def handleSlackEmptyRes[RS]( replacement: => RS )( either: Either[SlackApiClientError, RS] ) = {
     either.leftFlatMap {
@@ -283,10 +287,14 @@ trait SlackApiHttpProtocolSupport[F[_]] extends SlackApiClientBackend[F] {
 
     /**
      * Make HTTP GET to Slack API
-     * @param methodUri a relative method uri (like 'api.test')
-     * @param params HTTP GET URL params
-     * @tparam RS expected response type
-     * @return Decoded from JSON result
+     * @param methodUri
+     *   a relative method uri (like 'api.test')
+     * @param params
+     *   HTTP GET URL params
+     * @tparam RS
+     *   expected response type
+     * @return
+     *   Decoded from JSON result
      */
     def get[RS](
         methodUri: String,
@@ -303,11 +311,16 @@ trait SlackApiHttpProtocolSupport[F[_]] extends SlackApiClientBackend[F] {
 
     /**
      * Make HTTP POST to Slack API
-     * @param methodUri a relative method uri (like 'api.test')
-     * @param req a request model to encode to JSON
-     * @tparam RQ request type
-     * @tparam RS expected response type
-     * @return Decoded from JSON result
+     * @param methodUri
+     *   a relative method uri (like 'api.test')
+     * @param req
+     *   a request model to encode to JSON
+     * @tparam RQ
+     *   request type
+     * @tparam RS
+     *   expected response type
+     * @return
+     *   Decoded from JSON result
      */
     def post[RQ, RS]( methodUri: String, req: RQ, methodRateControl: Option[SlackApiMethodRateControlParams] = None )(
         implicit

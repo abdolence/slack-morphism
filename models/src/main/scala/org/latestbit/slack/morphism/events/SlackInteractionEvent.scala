@@ -24,9 +24,9 @@ import org.latestbit.slack.morphism.messages.{ SlackBlockChoiceItem, SlackBlockT
 import org.latestbit.slack.morphism.views.{ SlackStatefulView, SlackView }
 
 /**
- * An interaction payload is both a way of notifying your app about an interaction
- * and a bundle of information containing the where and when (and many other Ws)
- * of the interaction. It is vital to the interaction process, so your app has to be able to understand it.
+ * An interaction payload is both a way of notifying your app about an interaction and a bundle of information
+ * containing the where and when (and many other Ws) of the interaction. It is vital to the interaction process, so your
+ * app has to be able to understand it.
  *
  * https://api.slack.com/messaging/interactivity#components
  */

@@ -33,12 +33,18 @@ trait SlackApiRateThrottler[F[_]] {
   /**
    * Throttle and retry a Slack API call if it is necessary
    *
-   * @param uri Slack API method URI
-   * @param apiToken An API token
-   * @param methodRateControl method rate control parameters
-   * @param request An API async request
-   * @tparam RS Response data type
-   * @return a future of either source request or delayed request
+   * @param uri
+   *   Slack API method URI
+   * @param apiToken
+   *   An API token
+   * @param methodRateControl
+   *   method rate control parameters
+   * @param request
+   *   An API async request
+   * @tparam RS
+   *   Response data type
+   * @return
+   *   a future of either source request or delayed request
    */
   def throttle[RS](
       uri: Uri,
@@ -70,9 +76,9 @@ object SlackApiRateThrottler {
   }
 
   /**
-   * Create a Slack API throttler with default parameters
-   * accordingly to https://api.slack.com/docs/rate-limits
-   * @return a throttler implementation
+   * Create a Slack API throttler with default parameters accordingly to https://api.slack.com/docs/rate-limits
+   * @return
+   *   a throttler implementation
    */
   def createStandardThrottler[F[_]]()( implicit
       backendType: SlackApiClientBackend.BackendType[F],
@@ -84,7 +90,8 @@ object SlackApiRateThrottler {
 
   /**
    * Create a Slack API throttler with the specified parameters
-   * @return a throttler implementation
+   * @return
+   *   a throttler implementation
    */
   def createStandardThrottler[F[_]](
       params: SlackApiRateControlParams
@@ -100,7 +107,8 @@ object SlackApiRateThrottler {
 
   /**
    * Create an empty throttler (no throttling control)
-   * @return an empty throttler implementation
+   * @return
+   *   an empty throttler implementation
    */
   def createEmptyThrottler[F[_]](): SlackApiRateThrottler[F] = new SlackApiRateThrottler.Empty[F]
 

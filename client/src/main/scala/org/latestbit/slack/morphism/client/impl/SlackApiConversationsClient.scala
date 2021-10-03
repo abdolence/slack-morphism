@@ -112,8 +112,7 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     }
 
     /**
-     * Scrolling support for
-     * https://api.slack.com/methods/conversations.history
+     * Scrolling support for https://api.slack.com/methods/conversations.history
      */
     def historyScroller( req: SlackApiConversationsHistoryRequest )( implicit
         slackApiToken: SlackApiToken,
@@ -249,8 +248,7 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     }
 
     /**
-     * Scrolling support for
-     * https://api.slack.com/methods/conversations.list
+     * Scrolling support for https://api.slack.com/methods/conversations.list
      */
     def listScroller( req: SlackApiConversationsListRequest )( implicit
         slackApiToken: SlackApiToken,
@@ -291,8 +289,7 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     }
 
     /**
-     * Scrolling support for
-     * https://api.slack.com/methods/conversations.members
+     * Scrolling support for https://api.slack.com/methods/conversations.members
      */
     def membersScroller( req: SlackApiConversationsMembersRequest )( implicit
         slackApiToken: SlackApiToken,
@@ -313,8 +310,7 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     }
 
     /**
-     * https://api.slack.com/methods/conversations.open
-     * return_im is set to None
+     * https://api.slack.com/methods/conversations.open return_im is set to None
      */
     def open( req: SlackApiConversationsOpenRequest )( implicit
         slackApiToken: SlackApiToken,
@@ -332,8 +328,7 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     }
 
     /**
-     * https://api.slack.com/methods/conversations.open
-     * return_im is set to Some(true)
+     * https://api.slack.com/methods/conversations.open return_im is set to Some(true)
      */
     def openFullProfile( req: SlackApiConversationsOpenRequest )( implicit
         slackApiToken: SlackApiToken,
@@ -394,8 +389,7 @@ trait SlackApiConversationsClient[F[_]] extends SlackApiHttpProtocolSupport[F] {
     }
 
     /**
-     * Scrolling support for
-     * https://api.slack.com/methods/conversations.replies
+     * Scrolling support for https://api.slack.com/methods/conversations.replies
      */
     def repliesScroller( req: SlackApiConversationsRepliesRequest )( implicit
         slackApiToken: SlackApiToken,
