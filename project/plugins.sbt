@@ -8,4 +8,4 @@ addSbtPlugin( "com.47deg" % "sbt-microsites" % "1.3.4" )
 
 addSbtPlugin( "com.eed3si9n" % "sbt-unidoc" % "0.4.3" )
 
-addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.9.31")
+addSbtPlugin( "ch.epfl.scala" % "sbt-scalafix" % "0.9.31" )
