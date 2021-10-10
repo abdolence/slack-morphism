@@ -10,7 +10,7 @@ name := "slack-morphism-root"
 
 ThisBuild / version := "4.0.0-SNAPSHOT"
 
-ThisBuild / versionScheme := Some("semver-spec")
+ThisBuild / versionScheme := Some( "semver-spec" )
 
 ThisBuild / description := "Open Type-Safe Reactive Client with Blocks Templating for Slack"
 
@@ -24,7 +24,7 @@ ThisBuild / licenses := Seq(
 
 ThisBuild / crossScalaVersions := Seq( "2.13.6", "2.12.13" )
 
-ThisBuild / scalaVersion := ( ThisBuild / crossScalaVersions).value.head
+ThisBuild / scalaVersion := ( ThisBuild / crossScalaVersions ).value.head
 
 ThisBuild / scalacOptions ++= Seq( "-feature" )
 
@@ -36,7 +36,7 @@ ThisBuild / semanticdbEnabled := true
 
 ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
 
-ThisBuild / scalafixScalaBinaryVersion := CrossVersion.binaryScalaVersion(scalaVersion.value)
+ThisBuild / scalafixScalaBinaryVersion := CrossVersion.binaryScalaVersion( scalaVersion.value )
 
 ThisBuild / publishTo := {
   val nexus = "https://oss.sonatype.org/"
@@ -70,13 +70,13 @@ ThisBuild / scalacOptions := Seq(
   "-language:higherKinds",
   "-Ywarn-dead-code",
   "-Ywarn-numeric-widen",
-  "-Ywarn-value-discard"/*,
+  "-Ywarn-value-discard" /*,
   "-Ywarn-unused"*/
 ) ++ ( CrossVersion.partialVersion( scalaVersion.value ) match {
   case Some( ( 2, n ) ) if n >= 13 => Seq( "-Xsource:3" )
   case Some( ( 2, n ) ) if n < 13  => Seq( "-Ypartial-unification" )
   case _                           => Seq()
-})
+} )
 
 ThisBuild / javacOptions ++= Seq(
   "-Xlint:deprecation",
@@ -107,7 +107,7 @@ val catsVersion                   = "2.6.1"
 val catsEffectVersion             = "3.2.9"
 val circeVersion                  = "0.14.1"
 val scalaCollectionsCompatVersion = "2.5.0"
-val sttp3Version                   = "3.3.15"
+val sttp3Version                  = "3.3.15"
 val circeAdtCodecVersion          = "0.10.0"
 
 // For tests
@@ -155,43 +155,42 @@ val baseDependencies =
       "io.circe" %% "circe-parser"
     ).map(
       _ % circeVersion
-        exclude ( "org.typelevel", "cats-core")
+        exclude ( "org.typelevel", "cats-core" )
     ) ++
     Seq(
       "org.latestbit" %% "circe-tagged-adt-codec" % circeAdtCodecVersion
         excludeAll ( ExclusionRule( organization = "io.circe" ) )
     ) ++
     Seq(
-      "org.scalactic"                %% "scalactic"                        % scalaTestVersion,
-      "org.scalatest"                %% "scalatest"                        % scalaTestVersion,
-      "org.scalacheck"               %% "scalacheck"                       % scalaCheckVersion,
-      "org.scalamock"                %% "scalamock"                        % scalaMockVersion,
-      "org.typelevel"                %% "cats-laws"                        % catsVersion,
-      "org.typelevel"                %% "cats-testkit"                     % catsVersion,
-      "org.scalatestplus"            %% "scalacheck-1-14"                  % scalaTestPlusCheck,
-      "org.scalatestplus"            %% "testng-6-7"                       % scalaTestPlusTestNG,
-      "com.github.alexarchambault"   %% "scalacheck-shapeless_1.14"        % scalaCheckShapeless,
+      "org.scalactic"                 %% "scalactic"                        % scalaTestVersion,
+      "org.scalatest"                 %% "scalatest"                        % scalaTestVersion,
+      "org.scalacheck"                %% "scalacheck"                       % scalaCheckVersion,
+      "org.scalamock"                 %% "scalamock"                        % scalaMockVersion,
+      "org.typelevel"                 %% "cats-laws"                        % catsVersion,
+      "org.typelevel"                 %% "cats-testkit"                     % catsVersion,
+      "org.scalatestplus"             %% "scalacheck-1-14"                  % scalaTestPlusCheck,
+      "org.scalatestplus"             %% "testng-6-7"                       % scalaTestPlusTestNG,
+      "com.github.alexarchambault"    %% "scalacheck-shapeless_1.14"        % scalaCheckShapeless,
       "com.softwaremill.sttp.client3" %% "async-http-client-backend-future" % sttp3Version,
       "com.softwaremill.sttp.client3" %% "async-http-client-backend-cats"   % sttp3Version,
       //"com.softwaremill.sttp.client3" %% "async-http-client-backend-monix"  % sttp3Version,
-      "com.softwaremill.sttp.client3" %% "http4s-backend"                   % sttp3Version,
-      "org.http4s" %% "http4s-blaze-client" % http4sVersion
-          exclude ( "org.typelevel", "cats-core")
-          exclude ( "org.typelevel", "cats-effect")
-          excludeAll ( ExclusionRule( organization = "io.circe" )
-      ),
-      "ch.qos.logback"                % "logback-classic"                  % logbackVersion
-        exclude ( "org.slf4j", "slf4j-api"),
+      "com.softwaremill.sttp.client3" %% "http4s-backend"      % sttp3Version,
+      "org.http4s"                    %% "http4s-blaze-client" % http4sVersion
+        exclude ( "org.typelevel", "cats-core" )
+        exclude ( "org.typelevel", "cats-effect" )
+        excludeAll ( ExclusionRule( organization = "io.circe" ) ),
+      "ch.qos.logback" % "logback-classic" % logbackVersion
+        exclude ( "org.slf4j", "slf4j-api" ),
       "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion
     ).map(
       _ % Test
-        exclude ( "org.typelevel", "cats-core")
-        exclude ( "org.typelevel", "cats-effect")
+        exclude ( "org.typelevel", "cats-core" )
+        exclude ( "org.typelevel", "cats-effect" )
     )
 
 lazy val noPublishSettings = Seq(
-  publish := {},
-  publishLocal := {},
+  publish         := {},
+  publishLocal    := {},
   publishArtifact := false
 )
 
@@ -202,9 +201,9 @@ lazy val overwritePublishSettings = Seq(
 lazy val scalaDocSettings = Seq(
   Compile / doc / scalacOptions ++= Seq( "-groups", "-skip-packages", "sttp.client" ) ++
     ( if (priorTo2_13( scalaVersion.value ))
-       Seq( "-Yno-adapted-args" )
-     else
-       Seq( "-Ymacro-annotations" ))
+        Seq( "-Yno-adapted-args" )
+      else
+        Seq( "-Ymacro-annotations" ) )
 )
 
 lazy val compilerPluginSettings = Seq(
@@ -224,7 +223,7 @@ lazy val slackMorphismRoot = project
   .settings( noPublishSettings )
 
 lazy val slackMorphismModels =
-  ( project in file( "models" ))
+  ( project in file( "models" ) )
     .settings(
       name := "slack-morphism-models",
       libraryDependencies ++= baseDependencies ++ Seq()
@@ -234,15 +233,15 @@ lazy val slackMorphismModels =
     .settings( overwritePublishSettings )
 
 lazy val slackMorphismClient =
-  ( project in file( "client" ))
+  ( project in file( "client" ) )
     .settings(
       name := "slack-morphism-client",
       libraryDependencies ++= ( baseDependencies ++ Seq(
         "com.softwaremill.sttp.client3" %% "core"                    % sttp3Version,
-        "org.scala-lang.modules"       %% "scala-collection-compat" % scalaCollectionsCompatVersion
+        "org.scala-lang.modules"        %% "scala-collection-compat" % scalaCollectionsCompatVersion
       ) ++ ( if (priorTo2_13( scalaVersion.value ))
-              Seq( "com.github.bigwheel" %% "util-backports" % bigwheelUtilBackports )
-            else Seq()))
+               Seq( "com.github.bigwheel" %% "util-backports" % bigwheelUtilBackports )
+             else Seq() ) )
     )
     .settings( scalaDocSettings )
     .settings( compilerPluginSettings )
@@ -250,7 +249,7 @@ lazy val slackMorphismClient =
     .dependsOn( slackMorphismModels )
 
 lazy val slackMorphismAkkaExample =
-  ( project in file( "examples/akka-http" ))
+  ( project in file( "examples/akka-http" ) )
     .settings(
       name := "slack-morphism-akka",
       libraryDependencies ++= baseDependencies ++ Seq(
@@ -259,22 +258,22 @@ lazy val slackMorphismAkkaExample =
         "com.typesafe.akka" %% "akka-actor-typed"  % akkaVersion,
         "com.github.scopt"  %% "scopt"             % scoptVersion,
         "ch.qos.logback"     % "logback-classic"   % logbackVersion
-          exclude ( "org.slf4j", "slf4j-api"),
+          exclude ( "org.slf4j", "slf4j-api" ),
         "com.typesafe.scala-logging" %% "scala-logging"   % scalaLoggingVersion,
         "de.heikoseeberger"          %% "akka-http-circe" % akkaHttpCirceVersion
           excludeAll (
             ExclusionRule( organization = "com.typesafe.akka" ),
             ExclusionRule( organization = "io.circe" )
-        ),
+          ),
         "com.softwaremill.sttp.client3" %% "akka-http-backend" % sttp3Version
           excludeAll (
             ExclusionRule( organization = "com.typesafe.akka" )
           ),
-        "io.swaydb"                    %% "swaydb"            % swayDbVersion
+        "io.swaydb" %% "swaydb" % swayDbVersion
           excludeAll (
             ExclusionRule( organization = "org.scala-lang.modules" ),
             ExclusionRule( organization = "org.reactivestreams" )
-        )
+          )
       )
     )
     .settings( noPublishSettings )
@@ -282,7 +281,7 @@ lazy val slackMorphismAkkaExample =
     .dependsOn( slackMorphismClient )
 
 lazy val slackMorphismHttp4sExample =
-  ( project in file( "examples/http4s" ))
+  ( project in file( "examples/http4s" ) )
     .settings(
       name := "slack-morphism-http4s",
       libraryDependencies ++= baseDependencies ++ ( Seq(
@@ -292,19 +291,18 @@ lazy val slackMorphismHttp4sExample =
         "org.http4s" %% "http4s-dsl"
       ).map(
         _ % http4sVersion
-          exclude ( "org.typelevel", "cats-core")
-          exclude ( "org.typelevel", "cats-effect")
+          exclude ( "org.typelevel", "cats-core" )
+          exclude ( "org.typelevel", "cats-effect" )
           excludeAll ( ExclusionRule( organization = "io.circe" ) )
       ) ) ++ Seq(
         "com.monovore" %% "decline" % declineVersion
-          exclude ( "org.typelevel", "cats-core")
-        ,
+          exclude ( "org.typelevel", "cats-core" ),
         "com.monovore" %% "decline-effect" % declineVersion
-          exclude ( "org.typelevel", "cats-core")
-          exclude ( "org.typelevel", "cats-effect"),
+          exclude ( "org.typelevel", "cats-core" )
+          exclude ( "org.typelevel", "cats-effect" ),
         "ch.qos.logback" % "logback-classic" % logbackVersion
-          exclude ( "org.slf4j", "slf4j-api"),
-        "com.typesafe.scala-logging"   %% "scala-logging"  % scalaLoggingVersion,
+          exclude ( "org.slf4j", "slf4j-api" ),
+        "com.typesafe.scala-logging"    %% "scala-logging"  % scalaLoggingVersion,
         "com.softwaremill.sttp.client3" %% "http4s-backend" % sttp3Version
           excludeAll ( ExclusionRule( organization = "org.http4s" ) )
           excludeAll ( ExclusionRule( organization = "io.circe" ) ),
@@ -312,7 +310,7 @@ lazy val slackMorphismHttp4sExample =
           excludeAll (
             ExclusionRule( organization = "org.scala-lang.modules" ),
             ExclusionRule( organization = "org.reactivestreams" )
-        )
+          )
 //        SwayDB effect doesn't support Cats Effect 3,
 //        "io.swaydb" %% "cats-effect" % swayDbVersion
 //          excludeAll (
@@ -327,13 +325,13 @@ lazy val slackMorphismHttp4sExample =
     .dependsOn( slackMorphismClient )
 
 lazy val slackMorphismFs2 =
-  ( project in file( "fs2" ))
+  ( project in file( "fs2" ) )
     .settings(
       name := "slack-morphism-fs2",
       libraryDependencies ++= baseDependencies ++ Seq(
         "co.fs2" %% "fs2-core" % fs2Version
-          exclude ( "org.typelevel", "cats-core")
-          exclude ( "org.typelevel", "cats-effect")
+          exclude ( "org.typelevel", "cats-core" )
+          exclude ( "org.typelevel", "cats-effect" )
           excludeAll ( ExclusionRule( organization = "io.circe" ) )
       )
     )
@@ -343,7 +341,7 @@ lazy val slackMorphismFs2 =
     .dependsOn( slackMorphismClient % "compile->compile;test->test" )
 
 lazy val slackMorphismReactiveStreams =
-  ( project in file( "reactive-streams" ))
+  ( project in file( "reactive-streams" ) )
     .settings(
       name := "slack-morphism-reactive-streams",
       libraryDependencies ++= baseDependencies ++ Seq(
@@ -360,26 +358,26 @@ lazy val slackMorphismReactiveStreams =
 lazy val apiDocsDir = settingKey[String]( "Name of subdirectory for api docs" )
 
 lazy val docSettings = Seq(
-  micrositeName := "Slack Morphism for Scala",
-  micrositeUrl := "https://slack.abdolence.dev",
-  micrositeDocumentationUrl := "/docs",
+  micrositeName                          := "Slack Morphism for Scala",
+  micrositeUrl                           := "https://slack.abdolence.dev",
+  micrositeDocumentationUrl              := "/docs",
   micrositeDocumentationLabelDescription := "Docs",
-  micrositeAuthor := "Abdulla Abdurakhmanov",
-  micrositeHomepage := "https://slack.abdolence.dev",
-  micrositeOrganizationHomepage := "https://abdolence.dev",
-  micrositeGithubOwner := "abdolence",
-  micrositeGithubRepo := "slack-morphism",
-  micrositePushSiteWith := GHPagesPlugin,
-  autoAPIMappings := true,
-  micrositeTheme := "light",
+  micrositeAuthor                        := "Abdulla Abdurakhmanov",
+  micrositeHomepage                      := "https://slack.abdolence.dev",
+  micrositeOrganizationHomepage          := "https://abdolence.dev",
+  micrositeGithubOwner                   := "abdolence",
+  micrositeGithubRepo                    := "slack-morphism",
+  micrositePushSiteWith                  := GHPagesPlugin,
+  autoAPIMappings                        := true,
+  micrositeTheme                         := "light",
   micrositePalette := Map(
     "brand-primary"   -> "#bf360c",
     "brand-secondary" -> "#37474f",
     "white-color"     -> "#FFFFFF"
   ),
-  micrositeGithubToken := sys.env.get( "GITHUB_TOKEN" ),
+  micrositeGithubToken   := sys.env.get( "GITHUB_TOKEN" ),
   micrositeGitterChannel := false,
-  micrositeFooterText := None,
+  micrositeFooterText    := None,
   micrositeFavicons := Seq(
     MicrositeFavicon( "favicon-16x16.png", "16x16" ),
     MicrositeFavicon( "favicon-32x32.png", "32x32" ),
@@ -387,13 +385,13 @@ lazy val docSettings = Seq(
     MicrositeFavicon( "favicon-128.png", "128x128" ),
     MicrositeFavicon( "favicon-196x196.png", "196x196" )
   ),
-  apiDocsDir := "api",
+  apiDocsDir                                 := "api",
   ScalaUnidoc / unidoc / unidocProjectFilter := inProjects( slackMorphismModels, slackMorphismClient ),
-  addMappingsToSiteDir(  ScalaUnidoc / packageDoc / mappings, apiDocsDir ),
-  makeSite / includeFilter := ( makeSite / includeFilter).value || "*.txt" || "*.xml",
+  addMappingsToSiteDir( ScalaUnidoc / packageDoc / mappings, apiDocsDir ),
+  makeSite / includeFilter := ( makeSite / includeFilter ).value || "*.txt" || "*.xml",
   makeSite / mappings ++= Seq(
-    ( Compile / resourceDirectory).value / "microsite" / "robots.txt"  -> "robots.txt",
-    ( Compile / resourceDirectory).value / "microsite" / "sitemap.xml" -> "sitemap.xml"
+    ( Compile / resourceDirectory ).value / "microsite" / "robots.txt"  -> "robots.txt",
+    ( Compile / resourceDirectory ).value / "microsite" / "sitemap.xml" -> "sitemap.xml"
   )
 )
 
