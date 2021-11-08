@@ -173,7 +173,7 @@ val baseDependencies =
       "com.github.alexarchambault"    %% "scalacheck-shapeless_1.14"        % scalaCheckShapeless,
       "com.softwaremill.sttp.client3" %% "async-http-client-backend-future" % sttp3Version,
       "com.softwaremill.sttp.client3" %% "async-http-client-backend-cats"   % sttp3Version,
-      //"com.softwaremill.sttp.client3" %% "async-http-client-backend-monix"  % sttp3Version,
+      // "com.softwaremill.sttp.client3" %% "async-http-client-backend-monix"  % sttp3Version,
       "com.softwaremill.sttp.client3" %% "http4s-backend"      % sttp3Version,
       "org.http4s"                    %% "http4s-blaze-client" % http4sVersion
         exclude ( "org.typelevel", "cats-core" )
