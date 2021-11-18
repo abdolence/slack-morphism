@@ -8,7 +8,7 @@ permalink: docs/getting-started
 Add the following to your `build.sbt`:
 
 ```scala
-libraryDependencies += "org.latestbit" %% "slack-morphism-client" % "4.0.0"
+libraryDependencies += "org.latestbit" %% "slack-morphism-client" % "4.0.1"
 ```
 
 Have a look at full-featured examples for Akka HTTP and http4s [here](https://github.com/abdolence/slack-morphism/tree/master/examples), which supports:

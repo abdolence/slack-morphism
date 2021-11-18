@@ -8,7 +8,7 @@ import sbt.Package.ManifestAttributes
 
 name := "slack-morphism-root"
 
-ThisBuild / version := "4.0.0"
+ThisBuild / version := "4.0.1"
 
 ThisBuild / versionScheme := Some( "semver-spec" )
 
