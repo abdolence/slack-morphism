@@ -123,10 +123,10 @@
 				<section><h1 id="getting-started">Getting Started</h1>
 <p>Add the following to your <code class="language-plaintext highlighter-rouge">build.sbt</code>:</p>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.latestbit"</span> <span class="o">%%</span> <span class="s">"slack-morphism-client"</span> <span class="o">%</span> <span class="s">"3.2.0"</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.latestbit"</span> <span class="o">%%</span> <span class="s">"slack-morphism-client"</span> <span class="o">%</span> <span class="s">"4.0.1"</span>
 </code></pre></div></div>
 
-<p>or if you’d like to start with a full-featured example and template of a Slack bot, which supports:</p>
+<p>Have a look at full-featured examples for Akka HTTP and http4s <a href="https://github.com/abdolence/slack-morphism/tree/master/examples">here</a>, which supports:</p>
 <ul>
   <li>Slack Events API, including interactivity controls, commands, home tab and shortcuts (actions)</li>
   <li>Slack Blocks in messages and modals</li>
@@ -135,21 +135,6 @@
 
 <p><img src="https://slack.abdolence.dev/img/sample-bot-features.png" alt="sbt-example-command" /></p>
 
-<p>follow to the next sections:</p>
-
-<h2 id="start-with-akka-http">Start with Akka HTTP</h2>
-<p>The template is using Slack-Morphism with Akka HTTP and classic scala Futures.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sbt new abdolence/slack-morphism-akka-http.g8
-</code></pre></div></div>
-<p>Read more about this template <a href="akka-http">here</a>.</p>
-
-<h2 id="start-with-http4s">Start with http4s</h2>
-<p>The template is using Slack-Morphism in a pure functional way with http4s and cats-effect.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sbt new abdolence/slack-morphism-http4s.g8
-</code></pre></div></div>
-<p>Read more about this template <a href="http4s">here</a>.</p>
 </section>
 			</div>
 		</div>
