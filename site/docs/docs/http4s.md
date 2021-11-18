@@ -53,6 +53,11 @@ sbt new abdolence/slack-morphism-http4s.g8
 ```
 ![sbt-example-command](https://slack.abdolence.dev/img/create-sbt-bot-command-http4s.png)
 
+*Warning*
+
+The template is outdated and uses old version of the library. 
+For updated example have a look [here](https://github.com/abdolence/slack-morphism/tree/master/examples).
+
 * Compile and run it with `sbt`:
 ```bash
 sbt "run \
