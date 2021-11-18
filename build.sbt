@@ -22,7 +22,7 @@ ThisBuild / licenses := Seq(
   ( "Apache License v2.0", url( "http://www.apache.org/licenses/LICENSE-2.0.html" ) )
 )
 
-ThisBuild / crossScalaVersions := Seq( "2.13.6", "2.12.13" )
+ThisBuild / crossScalaVersions := Seq( "2.13.7", "2.12.15" )
 
 ThisBuild / scalaVersion := ( ThisBuild / crossScalaVersions ).value.head
 

@@ -27,7 +27,7 @@ import org.testng.annotations.Test
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.latestbit.slack.morphism.client.streaming.SlackApiResponseScroller
 
-import cats.instances.future.*
+import cats.instances.future._
 import scala.concurrent.Future
 
 class ScrollablePublisherTestsSuite( env: TestEnvironment, publisherShutdownTimeout: Long )
@@ -46,7 +46,7 @@ class ScrollablePublisherTestsSuite( env: TestEnvironment, publisherShutdownTime
   }
 
   override def createFailedPublisher(): Publisher[Int] =
-    ( s: Subscriber[? >: Int] ) => {
+    ( s: Subscriber[_ >: Int] ) => {
       s.onSubscribe( new Subscription {
         override def request( n: Long ): Unit = {
           s.onError( new Exception( "Unable to serve subscribers right now!" ) )

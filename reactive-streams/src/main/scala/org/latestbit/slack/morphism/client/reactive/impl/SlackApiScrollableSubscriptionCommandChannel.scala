@@ -19,24 +19,23 @@
 package org.latestbit.slack.morphism.client.reactive.impl
 
 import cats.Monad
-import cats.effect.*
+import cats.effect._
 import cats.effect.std.Queue
 import cats.effect.unsafe.IORuntime
-import cats.implicits.*
+import cats.implicits._
 import org.latestbit.slack.morphism.client.SlackApiClientError
 import org.latestbit.slack.morphism.client.streaming.{ SlackApiResponseScroller, SlackApiScrollableResponse }
-import org.latestbit.slack.morphism.concurrent.{ AsyncSeqIterator, UniqueLockMonitor }
+import org.latestbit.slack.morphism.concurrent.AsyncSeqIterator
 import org.reactivestreams.Subscriber
 
-import scala.util.Using
 
 class SlackApiScrollableSubscriptionCommandChannel[F[_] : Monad, IT, PT, SR <: SlackApiScrollableResponse[IT, PT]](
     commandQueue: SlackApiScrollableSubscriptionCommandChannel.CommandQueue,
-    subscriber: Subscriber[? >: IT],
+    subscriber: Subscriber[_ >: IT],
     scrollableResponse: SlackApiResponseScroller[F, IT, PT, SR],
     maxItems: Option[Long] = None
 )( implicit ioRuntime: IORuntime ) {
-  import SlackApiScrollableSubscriptionCommandChannel.*
+  import SlackApiScrollableSubscriptionCommandChannel._
 
   private def consumerTask( currentState: ConsumerState[F, IT, PT, SR] ): IO[Unit] = {
     commandQueue.take.flatMap {

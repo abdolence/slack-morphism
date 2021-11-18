@@ -33,7 +33,7 @@ class SlackApiScrollableReactivePublisher[F[_] : Monad, IT, PT, SR <: SlackApiSc
 
   private final class SlackApiScrollableSubscription(
       queue: SlackApiScrollableSubscriptionCommandChannel.CommandQueue,
-      subscriber: Subscriber[? >: IT]
+      subscriber: Subscriber[_ >: IT]
   ) extends Subscription {
 
     private val commandsChannel = new SlackApiScrollableSubscriptionCommandChannel[F, IT, PT, SR](
@@ -68,7 +68,7 @@ class SlackApiScrollableReactivePublisher[F[_] : Monad, IT, PT, SR <: SlackApiSc
     }
   }
 
-  override def subscribe( srcSubscriber: Subscriber[? >: IT] ): Unit = {
+  override def subscribe( srcSubscriber: Subscriber[_ >: IT] ): Unit = {
     Option( srcSubscriber ) match {
       case Some( subscriber ) =>
         ( for {
