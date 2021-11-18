@@ -28,7 +28,6 @@ import org.latestbit.slack.morphism.client.streaming.{ SlackApiResponseScroller,
 import org.latestbit.slack.morphism.concurrent.AsyncSeqIterator
 import org.reactivestreams.Subscriber
 
-
 class SlackApiScrollableSubscriptionCommandChannel[F[_] : Monad, IT, PT, SR <: SlackApiScrollableResponse[IT, PT]](
     commandQueue: SlackApiScrollableSubscriptionCommandChannel.CommandQueue,
     subscriber: Subscriber[_ >: IT],
@@ -127,7 +126,9 @@ class SlackApiScrollableSubscriptionCommandChannel[F[_] : Monad, IT, PT, SR <: S
               finishState( state )
             } else {
               val ( toSend, toBuffer ) = state.remainItems.splitAt( n.toInt )
-              toSend.foreach { item => subscriber.onNext( item ) }
+              toSend.foreach { item =>
+                subscriber.onNext( item )
+              }
               val updatedState: ConsumerState[F, IT, PT, SR] = state
                 .copy(
                   sent = state.sent + toSend.size,
@@ -161,16 +162,16 @@ class SlackApiScrollableSubscriptionCommandChannel[F[_] : Monad, IT, PT, SR <: S
   }
 
   def enqueue( command: Command ): Unit = {
-    commandQueue.offer( command ).unsafeRunAndForget()
+    commandQueue.offer( command ).unsafeRunSync()
   }
 
-  def start(): Unit = {
-    ( for {
+  def start(): IO[Unit] = {
+    for {
       _ <- IO.unit
       consumer = consumerTask( ConsumerState( Some( scrollableResponse.toAsyncScroller() ) ) )
       fc <- consumer.start
       _  <- fc.join
-    } yield () ).unsafeRunAndForget()
+    } yield ()
   }
 
   def shutdown(): Unit = {

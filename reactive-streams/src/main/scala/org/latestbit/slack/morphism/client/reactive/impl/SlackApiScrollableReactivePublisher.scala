@@ -63,7 +63,7 @@ class SlackApiScrollableReactivePublisher[F[_] : Monad, IT, PT, SR <: SlackApiSc
       commandsChannel.shutdown()
     }
 
-    private[impl] def start(): Unit = {
+    private[impl] def startConsuming(): IO[Unit] = {
       commandsChannel.start()
     }
   }
@@ -74,8 +74,8 @@ class SlackApiScrollableReactivePublisher[F[_] : Monad, IT, PT, SR <: SlackApiSc
         ( for {
           commandQueue <- Queue.unbounded[IO, SlackApiScrollableSubscriptionCommandChannel.Command]
           subscription = new SlackApiScrollableSubscription( commandQueue, subscriber )
-          _            = subscription.start()
           _            = subscriber.onSubscribe( subscription )
+          _ <- subscription.startConsuming()
         } yield () ).unsafeRunAndForget()
       case None => throw new NullPointerException( "Subscriber can't be null" )
     }
