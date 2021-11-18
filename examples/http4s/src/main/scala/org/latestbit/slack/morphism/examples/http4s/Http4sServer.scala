@@ -21,7 +21,7 @@ object Http4sServer {
       config: AppConfig
   ): Stream[IO, Nothing] = {
     for {
-      httpClient <- BlazeClientBuilder[IO]( global ).stream
+      httpClient <- BlazeClientBuilder[IO].stream
       slackApiClient <- Stream.resource(
                           SlackApiClient
                             .build[IO](
@@ -45,7 +45,7 @@ object Http4sServer {
       // With Middlewares in place
       finalHttpApp = Logger.httpApp( logHeaders = true, logBody = true )( httpApp )
 
-      exitCode <- BlazeServerBuilder[IO]( global )
+      exitCode <- BlazeServerBuilder[IO]
                     .bindHttp( config.httpServerPort, config.httpServerHost )
                     .withHttpApp( finalHttpApp )
                     .serve

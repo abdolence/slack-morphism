@@ -134,7 +134,7 @@ class SttpBackendTests extends AsyncFlatSpec {
 
     def createHttp4sClient(): Resource[IO, Client[IO]] = {
       for {
-        httpClient <- BlazeClientBuilder[IO]( scala.concurrent.ExecutionContext.global ).resource
+        httpClient <- BlazeClientBuilder[IO].resource
       } yield httpClient
     }
 

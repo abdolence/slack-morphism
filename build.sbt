@@ -310,14 +310,13 @@ lazy val slackMorphismHttp4sExample =
           excludeAll (
             ExclusionRule( organization = "org.scala-lang.modules" ),
             ExclusionRule( organization = "org.reactivestreams" )
-          )
-//        SwayDB effect doesn't support Cats Effect 3,
-//        "io.swaydb" %% "cats-effect" % swayDbVersion
-//          excludeAll (
-//            ExclusionRule( organization = "org.scala-lang.modules" ),
-//            ExclusionRule( organization = "org.reactivestreams" ),
-//            ExclusionRule( organization = "org.typelevel" )
-//        )
+          ),
+        "io.swaydb" %% "cats-effect" % swayDbVersion
+          excludeAll (
+            ExclusionRule( organization = "org.scala-lang.modules" ),
+            ExclusionRule( organization = "org.reactivestreams" ),
+            ExclusionRule( organization = "org.typelevel" )
+        )
       )
     )
     .settings( noPublishSettings )
