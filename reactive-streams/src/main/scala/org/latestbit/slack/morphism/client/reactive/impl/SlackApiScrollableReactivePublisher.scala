@@ -19,6 +19,8 @@
 package org.latestbit.slack.morphism.client.reactive.impl
 
 import cats.Monad
+import cats.effect.IO
+import cats.effect.std.Queue
 import cats.effect.unsafe.IORuntime
 import org.latestbit.slack.morphism.client.streaming.{ SlackApiResponseScroller, SlackApiScrollableResponse }
 import org.reactivestreams.{ Publisher, Subscriber, Subscription }
@@ -29,9 +31,13 @@ class SlackApiScrollableReactivePublisher[F[_] : Monad, IT, PT, SR <: SlackApiSc
 ) extends Publisher[IT] {
   private implicit val ioRuntime: IORuntime = cats.effect.unsafe.IORuntime.global
 
-  private final class SlackApiScrollableSubscription( subscriber: Subscriber[_ >: IT] ) extends Subscription {
+  private final class SlackApiScrollableSubscription(
+      queue: SlackApiScrollableSubscriptionCommandChannel.CommandQueue,
+      subscriber: Subscriber[? >: IT]
+  ) extends Subscription {
 
     private val commandsChannel = new SlackApiScrollableSubscriptionCommandChannel[F, IT, PT, SR](
+      queue,
       subscriber,
       scrollableResponse,
       maxItems
@@ -62,9 +68,16 @@ class SlackApiScrollableReactivePublisher[F[_] : Monad, IT, PT, SR <: SlackApiSc
     }
   }
 
-  override def subscribe( subscriber: Subscriber[_ >: IT] ): Unit = {
-    val subscription = new SlackApiScrollableSubscription( subscriber )
-    subscriber.onSubscribe( subscription )
-    subscription.start()
+  override def subscribe( srcSubscriber: Subscriber[? >: IT] ): Unit = {
+    Option( srcSubscriber ) match {
+      case Some( subscriber ) =>
+        ( for {
+          commandQueue <- Queue.unbounded[IO, SlackApiScrollableSubscriptionCommandChannel.Command]
+          subscription = new SlackApiScrollableSubscription( commandQueue, subscriber )
+          _            = subscription.start()
+          _            = subscriber.onSubscribe( subscription )
+        } yield () ).unsafeRunAndForget()
+      case None => throw new NullPointerException( "Subscriber can't be null" )
+    }
   }
 }

@@ -18,12 +18,11 @@
 
 package org.latestbit.slack.morphism.client.reactive.impl
 
-import java.util.concurrent.locks.ReentrantLock
 import cats.Monad
-import cats.effect._
+import cats.effect.*
 import cats.effect.std.Queue
 import cats.effect.unsafe.IORuntime
-import cats.implicits._
+import cats.implicits.*
 import org.latestbit.slack.morphism.client.SlackApiClientError
 import org.latestbit.slack.morphism.client.streaming.{ SlackApiResponseScroller, SlackApiScrollableResponse }
 import org.latestbit.slack.morphism.concurrent.{ AsyncSeqIterator, UniqueLockMonitor }
@@ -32,65 +31,23 @@ import org.reactivestreams.Subscriber
 import scala.util.Using
 
 class SlackApiScrollableSubscriptionCommandChannel[F[_] : Monad, IT, PT, SR <: SlackApiScrollableResponse[IT, PT]](
-    subscriber: Subscriber[_ >: IT],
+    commandQueue: SlackApiScrollableSubscriptionCommandChannel.CommandQueue,
+    subscriber: Subscriber[? >: IT],
     scrollableResponse: SlackApiResponseScroller[F, IT, PT, SR],
     maxItems: Option[Long] = None
 )( implicit ioRuntime: IORuntime ) {
-  import SlackApiScrollableSubscriptionCommandChannel._
+  import SlackApiScrollableSubscriptionCommandChannel.*
 
-  @volatile private var commandBuffer: Vector[Command]   = Vector()
-  @volatile private var notifyAsyncCommandCb: () => Unit = _
-  private val statusLock                                 = new ReentrantLock()
-
-  private def consumerTask( commandQueue: CommandQueue, currentState: ConsumerState[F, IT, PT, SR] ): IO[Unit] = {
+  private def consumerTask( currentState: ConsumerState[F, IT, PT, SR] ): IO[Unit] = {
     commandQueue.take.flatMap {
       case RequestElements( n ) => {
         for {
           updatedState <- pumpNextBatchAsync( n, currentState )
-          _            <- consumerTask( commandQueue, updatedState )
+          _            <- consumerTask( updatedState )
         } yield ()
       }
       case Close => {
         IO.unit
-      }
-    }
-  }
-
-  private def producerCommandLoop( commandQueue: CommandQueue ): IO[Unit] = {
-    for {
-      command <- takeNewCommand()
-      producer = commandQueue.offer( command )
-      fp <- producer.start
-      _  <- fp.join
-      _ <- (
-             command match {
-               case Close => IO.unit
-               case _     => producerCommandLoop( commandQueue )
-             }
-           )
-    } yield ()
-  }
-
-  def takeNewCommand(): IO[Command] = {
-    Async[IO].async_[Command] { cb =>
-      val _ = Using( UniqueLockMonitor.lockAndMonitor( statusLock ) ) { monitor =>
-        if (commandBuffer.isEmpty) {
-          notifyAsyncCommandCb = () => {
-            val _ = Using( UniqueLockMonitor.lockAndMonitor( statusLock ) ) { monitorInAsyncCb =>
-              val cmd = commandBuffer.head
-              commandBuffer = commandBuffer.drop( 1 )
-              notifyAsyncCommandCb = null
-              monitorInAsyncCb.unlock()
-              cb( cmd.asRight )
-            }
-          }
-        } else {
-          val cmd = commandBuffer.head
-          commandBuffer = commandBuffer.drop( 1 )
-          notifyAsyncCommandCb = null
-          monitor.unlock()
-          cb( cmd.asRight )
-        }
       }
     }
   }
@@ -204,28 +161,20 @@ class SlackApiScrollableSubscriptionCommandChannel[F[_] : Monad, IT, PT, SR <: S
     }
   }
 
-  def enqueue( command: Command ) = {
-    val _ = Using( UniqueLockMonitor.lockAndMonitor( statusLock ) ) { monitor =>
-      commandBuffer = commandBuffer :+ command
-      val notify = notifyAsyncCommandCb
-      notifyAsyncCommandCb = null
-      monitor.unlock()
-      Option( notify ).foreach( _.apply() )
-    }
+  def enqueue( command: Command ): Unit = {
+    commandQueue.offer( command ).unsafeRunAndForget()
   }
 
   def start(): Unit = {
     ( for {
-      commandQueue <- Queue.unbounded[IO, Command]
-      consumer = consumerTask( commandQueue, ConsumerState( Some( scrollableResponse.toAsyncScroller() ) ) )
+      _ <- IO.unit
+      consumer = consumerTask( ConsumerState( Some( scrollableResponse.toAsyncScroller() ) ) )
       fc <- consumer.start
-      _  <- producerCommandLoop( commandQueue )
       _  <- fc.join
     } yield () ).unsafeRunAndForget()
   }
 
   def shutdown(): Unit = {
-    Using( UniqueLockMonitor.lockAndMonitor( statusLock ) ) { _ => commandBuffer = Vector() }
     enqueue( Close )
   }
 }
