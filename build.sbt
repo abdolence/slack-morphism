@@ -107,7 +107,7 @@ val catsVersion                   = "2.6.1"
 val catsEffectVersion             = "3.2.9"
 val circeVersion                  = "0.14.1"
 val scalaCollectionsCompatVersion = "2.6.0"
-val sttp3Version                  = "3.3.16"
+val sttp3Version                  = "3.3.17"
 val circeAdtCodecVersion          = "0.10.0"
 
 // For tests
@@ -316,7 +316,7 @@ lazy val slackMorphismHttp4sExample =
             ExclusionRule( organization = "org.scala-lang.modules" ),
             ExclusionRule( organization = "org.reactivestreams" ),
             ExclusionRule( organization = "org.typelevel" )
-        )
+          )
       )
     )
     .settings( noPublishSettings )
