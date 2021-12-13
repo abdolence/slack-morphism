@@ -103,11 +103,11 @@ def priorTo2_13( scalaVersion: String ): Boolean =
     case _                                  => false
   }
 
-val catsVersion                   = "2.6.1"
-val catsEffectVersion             = "3.2.9"
+val catsVersion                   = "2.7.0"
+val catsEffectVersion             = "3.3.0"
 val circeVersion                  = "0.14.1"
 val scalaCollectionsCompatVersion = "2.6.0"
-val sttp3Version                  = "3.3.16"
+val sttp3Version                  = "3.3.18"
 val circeAdtCodecVersion          = "0.10.0"
 
 // For tests
@@ -126,11 +126,11 @@ val logbackVersion       = "1.2.7"
 val scalaLoggingVersion  = "3.9.4"
 val scoptVersion         = "3.7.1"
 val swayDbVersion        = "0.16.2"
-val http4sVersion        = "0.23.6"
+val http4sVersion        = "0.23.7"
 val declineVersion       = "2.2.0"
 
 // For fs2 integration module
-val fs2Version = "3.2.2"
+val fs2Version = "3.2.3"
 
 // For reactive-streams integration module
 val reactiveStreamsVersion = "1.0.3"
@@ -316,7 +316,7 @@ lazy val slackMorphismHttp4sExample =
             ExclusionRule( organization = "org.scala-lang.modules" ),
             ExclusionRule( organization = "org.reactivestreams" ),
             ExclusionRule( organization = "org.typelevel" )
-        )
+          )
       )
     )
     .settings( noPublishSettings )
