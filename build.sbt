@@ -116,7 +116,7 @@ val scalaCheckVersion   = "1.15.4"
 val scalaTestPlusCheck  = "3.2.2.0"
 val scalaTestPlusTestNG = "3.2.10.0" // reactive publishers tck testing
 val scalaCheckShapeless = "1.2.5"
-val scalaMockVersion    = "5.1.0"
+val scalaMockVersion    = "5.2.0"
 
 // For full-featured examples we use additional libs
 val akkaVersion          = "2.6.18"
