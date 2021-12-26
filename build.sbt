@@ -104,7 +104,7 @@ def priorTo2_13( scalaVersion: String ): Boolean =
   }
 
 val catsVersion                   = "2.7.0"
-val catsEffectVersion             = "3.3.0"
+val catsEffectVersion             = "3.3.1"
 val circeVersion                  = "0.14.1"
 val scalaCollectionsCompatVersion = "2.6.0"
 val sttp3Version                  = "3.3.18"
@@ -116,13 +116,13 @@ val scalaCheckVersion   = "1.15.4"
 val scalaTestPlusCheck  = "3.2.2.0"
 val scalaTestPlusTestNG = "3.2.10.0" // reactive publishers tck testing
 val scalaCheckShapeless = "1.2.5"
-val scalaMockVersion    = "5.1.0"
+val scalaMockVersion    = "5.2.0"
 
 // For full-featured examples we use additional libs
-val akkaVersion          = "2.6.17"
+val akkaVersion          = "2.6.18"
 val akkaHttpVersion      = "10.2.7"
-val akkaHttpCirceVersion = "1.39.2"
-val logbackVersion       = "1.2.9"
+val akkaHttpCirceVersion = "1.38.2"
+val logbackVersion       = "1.2.10"
 val scalaLoggingVersion  = "3.9.4"
 val scoptVersion         = "3.7.1"
 val swayDbVersion        = "0.16.2"
@@ -130,7 +130,7 @@ val http4sVersion        = "0.23.7"
 val declineVersion       = "2.2.0"
 
 // For fs2 integration module
-val fs2Version = "3.2.3"
+val fs2Version = "3.2.4"
 
 // For reactive-streams integration module
 val reactiveStreamsVersion = "1.0.3"
