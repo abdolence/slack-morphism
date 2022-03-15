@@ -104,7 +104,7 @@ def priorTo2_13( scalaVersion: String ): Boolean =
   }
 
 val catsVersion                   = "2.7.0"
-val catsEffectVersion             = "3.3.6"
+val catsEffectVersion             = "3.3.7"
 val circeVersion                  = "0.14.1"
 val scalaCollectionsCompatVersion = "2.6.0"
 val sttp3Version                  = "3.4.2"
