@@ -113,7 +113,7 @@ val circeAdtCodecVersion          = "0.10.0"
 // For tests
 val scalaTestVersion    = "3.2.12"
 val scalaCheckVersion   = "1.16.0"
-val scalaTestPlusCheck  = "3.2.2.0"
+val scalaTestPlusCheck  = "3.2.11.0"
 val scalaTestPlusTestNG = "3.2.10.0" // reactive publishers tck testing
 val scalaCheckShapeless = "1.2.5"
 val scalaMockVersion    = "5.2.0"
@@ -168,7 +168,7 @@ val baseDependencies =
       "org.scalamock"                 %% "scalamock"                        % scalaMockVersion,
       "org.typelevel"                 %% "cats-laws"                        % catsVersion,
       "org.typelevel"                 %% "cats-testkit"                     % catsVersion,
-      "org.scalatestplus"             %% "scalacheck-1-14"                  % scalaTestPlusCheck,
+      "org.scalatestplus"             %% "scalacheck-1-15"                  % scalaTestPlusCheck,
       "org.scalatestplus"             %% "testng-6-7"                       % scalaTestPlusTestNG,
       "com.github.alexarchambault"    %% "scalacheck-shapeless_1.14"        % scalaCheckShapeless,
       "com.softwaremill.sttp.client3" %% "async-http-client-backend-future" % sttp3Version,
