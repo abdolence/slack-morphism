@@ -115,7 +115,7 @@ val scalaTestVersion    = "3.2.12"
 val scalaCheckVersion   = "1.16.0"
 val scalaTestPlusCheck  = "3.2.2.0"
 val scalaTestPlusTestNG = "3.2.10.0" // reactive publishers tck testing
-val scalaCheckShapeless = "1.2.5"
+val scalaCheckShapeless = "1.3.0"
 val scalaMockVersion    = "5.2.0"
 
 // For full-featured examples we use additional libs
@@ -170,7 +170,7 @@ val baseDependencies =
       "org.typelevel"                 %% "cats-testkit"                     % catsVersion,
       "org.scalatestplus"             %% "scalacheck-1-14"                  % scalaTestPlusCheck,
       "org.scalatestplus"             %% "testng-6-7"                       % scalaTestPlusTestNG,
-      "com.github.alexarchambault"    %% "scalacheck-shapeless_1.14"        % scalaCheckShapeless,
+      "com.github.alexarchambault"    %% "scalacheck-shapeless_1.15"        % scalaCheckShapeless,
       "com.softwaremill.sttp.client3" %% "async-http-client-backend-future" % sttp3Version,
       "com.softwaremill.sttp.client3" %% "async-http-client-backend-cats"   % sttp3Version,
       // "com.softwaremill.sttp.client3" %% "async-http-client-backend-monix"  % sttp3Version,
