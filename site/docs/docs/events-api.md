@@ -55,7 +55,7 @@ post a message back using the specified url from those events.
 To help with these scenarios, you can use `SlackApiClient.events.reply()`, 
 which doesn't require any tokens to work:
 
-```
+```scala
 client.events
     .reply(
       response_url = response_url,
