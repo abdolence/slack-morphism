@@ -133,7 +133,7 @@ val declineVersion       = "2.2.0"
 val fs2Version = "3.2.7"
 
 // For reactive-streams integration module
-val reactiveStreamsVersion = "1.0.3"
+val reactiveStreamsVersion = "1.0.4"
 
 // Compiler plugins
 val kindProjectorVer = "0.13.2"
