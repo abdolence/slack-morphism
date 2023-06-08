@@ -120,7 +120,7 @@ val scalaMockVersion    = "5.2.0"
 
 // For full-featured examples we use additional libs
 val akkaVersion          = "2.6.19"
-val akkaHttpVersion      = "10.2.9"
+val akkaHttpVersion      = "10.2.10"
 val akkaHttpCirceVersion = "1.39.2"
 val logbackVersion       = "1.2.12"
 val scalaLoggingVersion  = "3.9.4"
