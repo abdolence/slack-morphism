@@ -8,4 +8,4 @@ addSbtPlugin( "com.47deg" % "sbt-microsites" % "1.3.4" )
 
 addSbtPlugin( "com.github.sbt" % "sbt-unidoc" % "0.5.0" )
 
-addSbtPlugin( "ch.epfl.scala" % "sbt-scalafix" % "0.10.0" )
+addSbtPlugin( "ch.epfl.scala" % "sbt-scalafix" % "0.14.2" )
