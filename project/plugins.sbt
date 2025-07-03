@@ -2,7 +2,7 @@ addSbtPlugin( "org.xerial.sbt" % "sbt-sonatype" % "3.9.12" )
 
 addSbtPlugin( "com.github.sbt" % "sbt-pgp" % "2.1.2" )
 
-addSbtPlugin( "org.scalameta" % "sbt-scalafmt" % "2.4.6" )
+addSbtPlugin( "org.scalameta" % "sbt-scalafmt" % "2.5.5" )
 
 addSbtPlugin( "com.47deg" % "sbt-microsites" % "1.3.4" )
 
