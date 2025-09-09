@@ -112,7 +112,7 @@ val circeAdtCodecVersion          = "0.10.0"
 
 // For tests
 val scalaTestVersion    = "3.2.12"
-val scalaCheckVersion   = "1.16.0"
+val scalaCheckVersion   = "1.19.0"
 val scalaTestPlusCheck  = "3.2.2.0"
 val scalaTestPlusTestNG = "3.2.10.0" // reactive publishers tck testing
 val scalaCheckShapeless = "1.2.5"
